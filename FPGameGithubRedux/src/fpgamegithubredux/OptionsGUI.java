@@ -32,14 +32,21 @@ public class OptionsGUI implements ActionListener{
     public JTextPane text_field;
     public int[] textsizes = new int[]{8,10,11,12,13,14,16};
     public int textsizechosen;
+    public int buttonwidth = 90, buttonheight = 22, buttony=20;
+    public int[] buttonx = {5,95,185,275,365,455,545};
     public Font newfont;
+    public JButton buttons[] = {new JButton("Smallest"), new JButton("Smaller"),
+        new JButton("Small"), new JButton("Normal"), new JButton("Large"), 
+        new JButton("Larger"), new JButton("Largest")};
+    public String[] commands = {"Smallest","Smaller","Small","Normal","Large",
+    "Larger","Largest"};
     public JButton Smallest_text_button, Smaller_text_button,
             Small_text_button,Normal_text_button,Large_text_button, 
             Larger_text_button,Largest_text_button;
     public void notoptions(JPanel MainGUI){
         MainGUI.remove(options_text_field);
     }
-    public void setoptions(JPanel MainGUI,JTextPane upper_text_field, int mini_map_status ,int textfield_size , int combattext_size,int keybind_to_change){
+    public void setoptions(JPanel MainGUI,JTextPane upper_text_field,JButton[] superbuttons, int mini_map_status ,int textfield_size , int combattext_size,int keybind_to_change){
         //input_text.setVisible(false);
         //input_text.setEnabled(false);
         text_field = upper_text_field;
@@ -61,55 +68,12 @@ public class OptionsGUI implements ActionListener{
             doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
         ret += "options set!\n\n";
         }
-        Smallest_text_button = new JButton("Smallest");
-        Smallest_text_button.setBounds(5,20,90,22);
-        Smallest_text_button.setEnabled(true);
-        Smallest_text_button.setActionCommand("textfieldsmallest");
-        Smallest_text_button.addActionListener(this);
-        options_text_field.add(Smallest_text_button);
-                
-        Smaller_text_button = new JButton("Smaller");
-        Smaller_text_button.setBounds(95,20,90,22);
-        Smaller_text_button.setEnabled(true);
-        Smaller_text_button.setActionCommand("textfieldsmaller");
-        Smaller_text_button.addActionListener(this);
-        options_text_field.add(Smaller_text_button);
-        
-        Small_text_button = new JButton("Small");
-        Small_text_button.setBounds(185,20,90,22);
-        Small_text_button.setEnabled(true);
-        Small_text_button.setActionCommand("textfieldsmall");
-        Small_text_button.addActionListener(this);
-        options_text_field.add(Small_text_button);
-        
-        Normal_text_button = new JButton("Normal");
-        Normal_text_button.setBounds(275,20,90,22);
-        Normal_text_button.setEnabled(true);
-        Normal_text_button.setActionCommand("textfieldnormal");
-        Normal_text_button.addActionListener(this);
-        options_text_field.add(Normal_text_button);
-                
-        Large_text_button = new JButton("Large");
-        Large_text_button.setBounds(365,20,90,22);
-        Large_text_button.setEnabled(true);
-        Large_text_button.setActionCommand("textfieldlarge");
-        Large_text_button.addActionListener(this);
-        options_text_field.add(Large_text_button);
-                
-        Larger_text_button = new JButton("Larger");
-        Larger_text_button.setBounds(455,20,90,22);
-        Larger_text_button.setEnabled(true);
-        Larger_text_button.setActionCommand("textfieldlarger");
-        Larger_text_button.addActionListener(this);
-        options_text_field.add(Larger_text_button);
-        
-        Largest_text_button = new JButton("Largest");
-        Largest_text_button.setBounds(545,20,90,22);
-        Largest_text_button.setEnabled(true);
-        Largest_text_button.setActionCommand("textfieldlargest");
-        Largest_text_button.addActionListener(this);
-        options_text_field.add(Largest_text_button);
-        
+        for(int i=0;i<7;i++){
+            buttons[i].setBounds(buttonx[i],buttony,buttonwidth,buttonheight);
+            buttons[i].setActionCommand("textfield"+commands[i]);
+            buttons[i].addActionListener(this);
+            options_text_field.add(buttons[i]);
+        }
         /*
         if(mini_map <= 0){
 				ret += "mini-map: <b>off</b>  <a href=\"event:options,1\">small</a>  <a href=\"event:options,2\">large</a>" +  "\n";
@@ -127,38 +91,34 @@ public class OptionsGUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             System.out.println(command);
-            if(command.equals("Options")){
-                System.out.println("Options pressed");
-            }
-            else if(command.contains("textfield")){
-                System.out.println("contained");
+            if(command.contains("textfield")){
                 MutableAttributeSet attrs = text_field.getInputAttributes();
                 int text_field_size = StyleConstants.getFontSize(attrs);
-                if(command.equals("textfieldsmallest")){
+                if(command.equals("textfieldSmallest")){
                     StyleConstants.setFontSize(attrs, 8);
                     textsizechosen = 8;
                 }
-                else if(command.equals("textfieldsmaller")){
+                else if(command.equals("textfieldSmaller")){
                     StyleConstants.setFontSize(attrs, 10);
                     textsizechosen = 10;
                 }
-                else if(command.equals("textfieldsmall")){
+                else if(command.equals("textfieldSmall")){
                     StyleConstants.setFontSize(attrs, 11);
                     textsizechosen =11;
                 }
-                else if(command.equals("textfieldnormal")){
+                else if(command.equals("textfieldNormal")){
                     StyleConstants.setFontSize(attrs, 12);
                     textsizechosen = 12;
                 }
-                else if(command.equals("textfieldlarge")){
+                else if(command.equals("textfieldLarge")){
                     StyleConstants.setFontSize(attrs, 13);
                     textsizechosen = 13;
                 }
-                else if(command.equals("textfieldlarger")){
+                else if(command.equals("textfieldLarger")){
                     StyleConstants.setFontSize(attrs, 14);
                     textsizechosen = 14;
                 }
-                else if(command.equals("textfieldlargest")){
+                else if(command.equals("textfieldLargest")){
                     StyleConstants.setFontSize(attrs, 16);
                     textsizechosen = 16;
                 }
@@ -169,12 +129,8 @@ public class OptionsGUI implements ActionListener{
                 newfont = new Font(textfont.getName(),textfont.getStyle(),textsizechosen);
                 text_field.setFont(newfont);
             }
-
-            
             else{
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    
             }
-    }
-    
+    } 
 }
