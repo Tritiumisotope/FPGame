@@ -6,6 +6,7 @@
 package fpgamegithubredux;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -61,37 +62,8 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
   
     }
     @Override
-    public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-            System.out.println(command);
-            if(command.equals("Options")){
-                options.setoptions(this,text_field,-1,-1,-1,-1);
-                text_field.setVisible(false);
-                text_field.setEnabled(false);
-                /*
-                    cleanup_gui();
-                    if(mini_map > 0){
-			create_mini_map();
-                    }
-                */
-                System.out.println("Options pressed");
-            }
-          
-            else if(command.equals("Load")){
-                options.notoptions(this);
-                text_field.setVisible(true);
-                text_field.setEnabled(true);
-                System.out.println(text_field.getFont());
-            }
-            
-            else{
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    
-            }
-    }
-    @Override
     public void optionsPressed(){
-                options.setoptions(this,text_field,-1,-1,-1,-1);
+                options.setoptions(this,text_field,super.buttons,-1,-1,-1,-1);
                 text_field.setVisible(false);
                 text_field.setEnabled(false);
     }
@@ -100,7 +72,6 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
                 options.notoptions(this);
                 text_field.setVisible(true);
                 text_field.setEnabled(true);
-                System.out.println(text_field.getFont());
     }
     public void cleanup_gui(){
 			int i = 0;
