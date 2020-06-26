@@ -1,1 +1,3 @@
 # FPGame
+
+Please be patient as I learn how to make games in GitHub and adapt a large one across engines...
