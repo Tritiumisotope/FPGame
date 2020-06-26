@@ -15,77 +15,47 @@ import javax.swing.JPanel;
  * @author hhhin
  */
 public class GUIButtons extends JPanel implements ActionListener{
-        public JButton Inventory_button, Map_button, Look_button, Wait_button, Status_button,
-            Skill_button, Newgame_button, Appearance_button, Save_button,
-            Load_button, Options_button;
-        
+        public JButton buttons[] = {new JButton("Look"),new JButton("Inventory"),
+        new JButton("Map"),new JButton("Wait"),new JButton("Status"),
+        new JButton("Skills"),new JButton("New Game"),new JButton("Appearance"),
+        new JButton("Save"),new JButton("Load"),new JButton("Options")};
+        public int buttonwidth = 100;
+        public int buttonheight = 22;
+        public int[] buttonx = {170,320,470,620,17,17,17,17,17,17,17};
+        public int[] buttony = {20,20,20,20,157,217,277,337,397,457,517};
+        public String[] commands = {"Look","Inventory","Map","Wait","Status",
+            "Train","New Game","Appearance","Save","Load", "Options"};
         public GUIButtons(){
-        //GUI buttons
-        Inventory_button = new JButton("Inventory");
-        Inventory_button.setBounds(320,20,100,22);
-        Inventory_button.setEnabled(false);
-        add(Inventory_button);
-        
-        Map_button = new JButton("Map");
-        Map_button.setBounds(470,20,100,22);
-        Map_button.setEnabled(false);
-        add(Map_button);
-        
-        Look_button = new JButton("Look");
-        Look_button.setBounds(170,20,100,22);
-        Look_button.setEnabled(false);
-        add(Look_button);
-        
-        Wait_button = new JButton("Wait");
-        Wait_button.setBounds(620,20,100,22);
-        Wait_button.setEnabled(false);
-        add(Wait_button);
-        
-        Status_button = new JButton("Status");
-        Status_button.setBounds(17,157,100,22);
-        Status_button.setEnabled(false);
-        add(Status_button);
-        
-        Skill_button = new JButton("Train");
-        Skill_button.setBounds(17,217,100,22);
-        Skill_button.setEnabled(false);
-        add(Skill_button);
-        
-        Newgame_button = new JButton("New Game");
-        Newgame_button.setBounds(17,277,100,22);
-        add(Newgame_button);
-        
-        Appearance_button = new JButton("Appearance");
-        Appearance_button.setBounds(17,337,100,22);
-        Appearance_button.setEnabled(false);
-        add(Appearance_button);
-        
-        Save_button = new JButton("Save");
-        Save_button.setBounds(17,397,100,22);
-        Save_button.setEnabled(false);
-        add(Save_button);
-        
-        Load_button = new JButton("Load");
-        Load_button.setBounds(17,457,100,22);
-        Load_button.setActionCommand("Load");
-        Load_button.addActionListener(this);
-        add(Load_button);
-        
-        Options_button = new JButton("Options");
-        Options_button.setBounds(17,517,100,22);
-        Options_button.setActionCommand("Options");
-        Options_button.addActionListener(this);
-        add(Options_button);
-        }
+            //GUI buttons
+            //Look, Inventory, Map, Wait, Status, Skills(Train), New Game, Appearance,
+            //Save, Load, Options
+            for (int i=0;i<11;i++){
+                buttons[i].setBounds(buttonx[i],buttony[i],buttonwidth,buttonheight);
+                buttons[i].addActionListener(this);
+                buttons[i].setActionCommand(commands[i]);
+                if(i<6 || i==7 ||i==8){
+                    buttons[i].setEnabled(false);
+                    
+                }
+                add(buttons[i]);
+            }
 
+        }
         @Override
         public void actionPerformed(ActionEvent e) {
-
+             String command = e.getActionCommand();
+            if(command.equals("Options")){
+                optionsPressed();
+            }
+            else if(command.equals("Load")){
+                loadPressed();
+            }
+            else{
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
         }
         public void loadPressed() {
-
         }
         public void optionsPressed() {
-
         }
 }
