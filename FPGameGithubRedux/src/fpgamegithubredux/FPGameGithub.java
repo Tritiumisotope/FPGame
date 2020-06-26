@@ -5,8 +5,11 @@
  */
 package fpgamegithubredux;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.TextArea;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.text.Format;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,55 +37,49 @@ public class FPGameGithub {
 		public int GUI_height;//unused
 		public int  GUI_width;//unused
                 static long tm = 0,  tm2 = 0;
+                
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        //Format button_text_format = new Format();
-	//button_text_format.size = 16;
-        
-        /*
-        textfield_text_format = new TextFormat();
-        textfield_text_format.size = 12;
-        textfield_text_format.color = 0x000000;
-        textfield_text_format.font = "Times New Roman";
-        textfield_text_format.italic = false;
-        textfield_text_format.leftMargin
-
-        combat_text_format = new TextFormat();
-        combat_text_format.size = 20;
-        combat_text_format.color = Main_gui.combat_txt_colour;
-
-        array_of_fate = null;
-        */
         FPGameGithub Main = new FPGameGithub();
         Main.background_img_id = -1;
-        JFrame Window = new JFrame();
-        GridBagLayout gbl = new GridBagLayout();
+        JFrame Window = new JFrame();        
         Window.setTitle("Welcome...");
-        Window.setSize(1639,1024);
+        Window.setSize(800, 600);
         MainGUIPanel primarypanel = new MainGUIPanel();
-        
-        int appWidth  = Window.getWidth();
-        int appHeight = Window.getHeight();
+
         Window.add(primarypanel);
         Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Window.pack();
+        Window.setMinimumSize(new Dimension(800, 600));
+        Window.addComponentListener(new ComponentAdapter() {
+          public void componentResized(ComponentEvent evt) {
+            Dimension size = Window.getSize();
+            Dimension min = Window.getMinimumSize();
+            if (size.getWidth() < min.getWidth()) {
+              Window.setSize((int) min.getWidth(), (int) size.getHeight());
+            }
+            if (size.getHeight() < min.getHeight()) {
+              Window.setSize((int) size.getWidth(), (int) min.getHeight());
+            }
+          }
+        });
         Window.setVisible(true);
+        /*
         try{
-        Thread.sleep(1000);
+            Thread.sleep(1000);
         }
         catch (InterruptedException ex) {}
         
         while (primarypanel.isVisible()) {
-        tm = System.currentTimeMillis();
-        primarypanel.repaint();
-        try {
-            tm2 = System.currentTimeMillis();
-            Thread.sleep(Math.max(0, tm + 1000 - tm2));
-            }
-        catch (InterruptedException ex) {}
+            tm = System.currentTimeMillis();
+            primarypanel.repaint();
+            try {
+                tm2 = System.currentTimeMillis();
+                Thread.sleep(Math.max(0, tm + 1000 - tm2));
+                }
+            catch (InterruptedException ex) {}
         }
+        */
     }  
 }
