@@ -40,9 +40,23 @@ public class OptionsGUI implements ActionListener{
         new JButton("Larger"), new JButton("Largest")};
     public String[] commands = {"Smallest","Smaller","Small","Normal","Large",
     "Larger","Largest"};
+    public String ret;
     public JButton Smallest_text_button, Smaller_text_button,
             Small_text_button,Normal_text_button,Large_text_button, 
             Larger_text_button,Largest_text_button;
+    public OptionsGUI(){
+        ret= "";
+        options_text_field.setText("");
+        options_text_field.setVisible(true);
+        options_text_field.setEnabled(true);
+        options_text_field.setEditable(false);
+        for(int i=0;i<7;i++){
+            buttons[i].setBounds(buttonx[i],buttony,buttonwidth,buttonheight);
+            buttons[i].setActionCommand("textfield"+commands[i]);
+            buttons[i].addActionListener(this);
+            options_text_field.add(buttons[i]);
+        }
+    }
     public void notoptions(JPanel MainGUI){
         MainGUI.remove(options_text_field);
     }
@@ -53,11 +67,6 @@ public class OptionsGUI implements ActionListener{
         options_text_field.setBounds(124,69,MainGUI.getWidth()-124,MainGUI.getHeight()-69);
         options_text_field.setContentType("text/html");
         MainGUI.add(options_text_field);
-        String ret= "";
-        options_text_field.setText("");
-        options_text_field.setVisible(true);
-        options_text_field.setEnabled(true);
-        options_text_field.setEditable(false);
         
         MutableAttributeSet attrs = text_field.getInputAttributes();
         int text_field_size = StyleConstants.getFontSize(attrs);
@@ -68,12 +77,7 @@ public class OptionsGUI implements ActionListener{
             doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
         ret += "options set!\n\n";
         }
-        for(int i=0;i<7;i++){
-            buttons[i].setBounds(buttonx[i],buttony,buttonwidth,buttonheight);
-            buttons[i].setActionCommand("textfield"+commands[i]);
-            buttons[i].addActionListener(this);
-            options_text_field.add(buttons[i]);
-        }
+
         /*
         if(mini_map <= 0){
 				ret += "mini-map: <b>off</b>  <a href=\"event:options,1\">small</a>  <a href=\"event:options,2\">large</a>" +  "\n";
