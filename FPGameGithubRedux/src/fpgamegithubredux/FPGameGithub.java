@@ -46,12 +46,12 @@ public class FPGameGithub {
         Main.background_img_id = -1;
         JFrame Window = new JFrame();        
         Window.setTitle("Welcome...");
-        Window.setSize(800, 600);
+        Window.setSize(800, 800);
         MainGUIPanel primarypanel = new MainGUIPanel();
 
         Window.add(primarypanel);
         Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Window.setMinimumSize(new Dimension(800, 600));
+        Window.setMinimumSize(new Dimension(800, 800));
         Window.addComponentListener(new ComponentAdapter() {
           public void componentResized(ComponentEvent evt) {
             Dimension size = Window.getSize();
