@@ -33,18 +33,24 @@ import javax.swing.text.StyledDocument;
 public class MainGUIPanel extends GUIButtons implements ActionListener, ComponentListener{
     public JTextField input_text;
     public JTextPane text_field;
+    
     //public JTextPane options_text_field;
     public Font font;
     public int[] textsizes = new int[]{8,10,11,12,13,14,16};
     public String contents;
     public OptionsGUI options;
+    public newGameGUI newgame;
+    public boolean optguion = false;
+    public boolean startingagame = false;
     public StartupGUI startup = new StartupGUI();
+    public Character Player;
     
     public MainGUIPanel(){
         //this was Main.as
         setLayout(null);
         Insets in = getInsets();
         options = new OptionsGUI();
+        newgame = new newGameGUI();
         text_field = new JTextPane();
         
         text_field.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
@@ -63,15 +69,52 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     }
     @Override
     public void optionsPressed(){
+        if(optguion == false){
+                optguion = true;
                 options.setoptions(this,text_field,super.buttons,-1,-1,-1,-1);
                 text_field.setVisible(false);
-                text_field.setEnabled(false);
+                text_field.setEnabled(false);}
+        else{
+                options.notoptions(this);
+                optguion = false;
+                text_field.setVisible(true);
+                text_field.setEnabled(true);
+        }
     }
     @Override
     public void loadPressed(){
                 options.notoptions(this);
                 text_field.setVisible(true);
                 text_field.setEnabled(true);
+    }
+    @Override
+    public void newGamePressed(){
+        if(startingagame == false){
+            startingagame = true;
+            newgame.newGameStart(this,text_field, super.buttons[0],Player);
+            startup.exitStartup(text_field);
+            for (int i=0;i<11;i++){
+                if(i!=6 && i!=9){
+                super.buttons[i].setEnabled(false);
+                }
+            }
+            
+        }
+        else{
+            newgame.newGameStart(this,text_field,super.buttons[0],Player);
+            startup.exitStartup(text_field);
+            for (int i=0;i<11;i++){
+                if(i!=6 && i!=9){
+                super.buttons[i].setEnabled(false);
+                }
+            }
+            
+        }
+    }
+    public void lookPressed(){
+                text_field.setVisible(true);
+                text_field.setEnabled(true);
+                text_field.setText("You are"+ Player.name);
     }
     public void cleanup_gui(){
 			int i = 0;
@@ -106,7 +149,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     public void componentResized(ComponentEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         options.reSize(this);
-        text_field.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
+        text_field.setBounds(124,69,super.getWidth()-124-60,super.getHeight()-69-120);
     }
 
     @Override
