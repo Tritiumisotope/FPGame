@@ -19,6 +19,7 @@ import javax.swing.event.HyperlinkListener;
 public class StartupGUI {
     public String contents;
     public String FPlink;
+    public HyperlinkListener HLlisten;
     public StartupGUI(){
         contents = "Click 'New Game' to begin a new game. You can use the numpad to move in the cardinal directions," +
                                 "as well as to look at where you are and check your status. Keybinds can be changed in the options menu. "
@@ -29,7 +30,7 @@ public class StartupGUI {
     public void setStartup(JTextPane upper_text_field){
         upper_text_field.setText(contents+ FPlink);
         upper_text_field.setEditable(false);
-        upper_text_field.addHyperlinkListener(new HyperlinkListener() {
+        HLlisten = new HyperlinkListener()  {
         @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -54,6 +55,10 @@ public class StartupGUI {
                     }
                 }
             }
-        });
+        };
+        upper_text_field.addHyperlinkListener(HLlisten);
+    }
+    public void exitStartup(JTextPane upper_text_field){
+        upper_text_field.removeHyperlinkListener(HLlisten);
     }
 }
