@@ -69,7 +69,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     }
     @Override
     public void optionsPressed(){
-        if(optguion == false){
+        if(!optguion){
                 optguion = true;
                 options.setoptions(this,text_field,super.buttons,-1,-1,-1,-1);
                 text_field.setVisible(false);
@@ -89,7 +89,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     }
     @Override
     public void newGamePressed(){
-        if(startingagame == false){
+        if(!startingagame){
             startingagame = true;
             newgame.newGameStart(this,text_field, super.buttons[0],Player);
             startup.exitStartup(text_field);
@@ -101,6 +101,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
             
         }
         else{
+            newgame.exitNewGameStart();
             newgame.newGameStart(this,text_field,super.buttons[0],Player);
             startup.exitStartup(text_field);
             for (int i=0;i<11;i++){

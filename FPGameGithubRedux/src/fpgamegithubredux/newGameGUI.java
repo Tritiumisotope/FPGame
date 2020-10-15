@@ -157,4 +157,9 @@ public class newGameGUI implements ActionListener {
                 setFitness();
         }
     }
+    public void exitNewGameStart(){
+
+        text_field.removeHyperlinkListener(HLlisten);
+        text_field.removeAll();
+    }
 }
