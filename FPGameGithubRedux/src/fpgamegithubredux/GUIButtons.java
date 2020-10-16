@@ -15,6 +15,8 @@ import javax.swing.JPanel;
  * @author hhhin
  */
 public class GUIButtons extends JPanel implements ActionListener{
+        static final long serialVersionUID = 1;
+
         public JButton buttons[] = {new JButton("Look"),new JButton("Inventory"),
         new JButton("Map"),new JButton("Wait"),new JButton("Status"),
         new JButton("Skills"),new JButton("New Game"),new JButton("Appearance"),
