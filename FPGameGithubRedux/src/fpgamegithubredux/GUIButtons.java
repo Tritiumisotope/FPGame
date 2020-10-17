@@ -58,6 +58,9 @@ public class GUIButtons extends JPanel implements ActionListener{
             else if(command.equals("Look")){
                 lookPressed();
             }
+            else if(command.equals("Appearance")){
+                appearancePressed();
+            }
             else{
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -66,10 +69,10 @@ public class GUIButtons extends JPanel implements ActionListener{
         }
         public void optionsPressed() {
         }
-        public void newGamePressed(){
-        
+        public void newGamePressed(){        
         }
-        public void lookPressed(){
-            
+        public void lookPressed(){            
+        }
+        public void appearancePressed(){            
         }
 }

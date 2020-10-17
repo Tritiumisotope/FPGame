@@ -68,4 +68,20 @@ public class Character {
 
         return ret;
     }
+
+    public String appearance(int look_id, Character c){
+        String ret = "You are " + name;
+
+        return ret;
+    }
+
+    public String look(int char_id, int look_id){
+        String ret = "";
+
+        if(location != null){
+            ret = location.get_room_description(this);
+        }
+
+        return ret;
+    }
 }

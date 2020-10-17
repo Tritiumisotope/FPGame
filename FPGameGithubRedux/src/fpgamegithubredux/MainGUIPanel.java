@@ -10,7 +10,7 @@ package fpgamegithubredux;
 import java.awt.Font;
 //import java.awt.Insets;
 //import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import java.awt.event.ActionListener;
 //import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -30,7 +30,7 @@ import javax.swing.JTextPane;
  *
  * @author hhhin
  */
-public class MainGUIPanel extends GUIButtons implements ActionListener, ComponentListener{
+public class MainGUIPanel extends GUIButtons implements ComponentListener{
     static final long serialVersionUID = 0;
     
     public JTextField input_text;
@@ -118,6 +118,11 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
                 text_field.setVisible(true);
                 text_field.setEnabled(true);
                 text_field.setText("You are "+ Player.name);
+    }
+    public void appearancePressed(){
+            text_field.setVisible(true);
+            text_field.setEnabled(true);
+            text_field.setText(Player.appearance(1, null));       
     }
     public void cleanup_gui(){
 			//int i = 0;
