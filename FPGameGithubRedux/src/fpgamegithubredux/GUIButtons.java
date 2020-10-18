@@ -15,6 +15,8 @@ import javax.swing.JPanel;
  * @author Ailer and Tritium
  */
 public class GUIButtons extends JPanel implements ActionListener{
+        static final long serialVersionUID = 1;
+
         public JButton buttons[] = {new JButton("Look"),new JButton("Inventory"),
         new JButton("Map"),new JButton("Wait"),new JButton("Status"),
         new JButton("Skills"),new JButton("New Game"),new JButton("Appearance"),
@@ -56,18 +58,28 @@ public class GUIButtons extends JPanel implements ActionListener{
             else if(command.equals("Look")){
                 lookPressed();
             }
+            else if(command.equals("Appearance")){
+                appearancePressed();
+            }
+            else if(command.equals("Inventory")){
+                inventoryPressed();
+            }
+            else if(command.equals("Status")){
+                statusPressed();
+            }
+            else if(command.equals("Train")){
+                trainPressed();
+            }
             else{
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }
-        public void loadPressed() {
-        }
-        public void optionsPressed() {
-        }
-        public void newGamePressed(){
-        
-        }
-        public void lookPressed(){
-            
-        }
+        public void loadPressed() {}
+        public void optionsPressed(){}
+        public void newGamePressed(){}
+        public void lookPressed(){}
+        public void appearancePressed(){}
+        public void inventoryPressed(){}
+        public void statusPressed(){}
+        public void trainPressed(){}
 }

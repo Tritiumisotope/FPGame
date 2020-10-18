@@ -5,19 +5,19 @@
  */
 package fpgamegithubredux;
 
-import java.awt.Desktop;
+//import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.Insets;
+//import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
-import java.net.URL;
+//import java.net.URI;
+//import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+//import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+//import javax.swing.event.HyperlinkEvent;
+//import javax.swing.event.HyperlinkListener;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -70,7 +70,7 @@ public class OptionsGUI implements ActionListener{
         MainGUI.add(options_text_field);
         
         MutableAttributeSet attrs = text_field.getInputAttributes();
-        int text_field_size = StyleConstants.getFontSize(attrs);
+        //int text_field_size = StyleConstants.getFontSize(attrs);
         
         if(textfield_size > -1){
             StyleConstants.setFontSize(attrs, textsizes[textfield_size-1]);
@@ -98,7 +98,7 @@ public class OptionsGUI implements ActionListener{
             System.out.println(command);
             if(command.contains("textfield")){
                 MutableAttributeSet attrs = text_field.getInputAttributes();
-                int text_field_size = StyleConstants.getFontSize(attrs);
+                //int text_field_size = StyleConstants.getFontSize(attrs);
                 if(command.equals("textfieldSmallest")){
                     StyleConstants.setFontSize(attrs, 8);
                     textsizechosen = 8;

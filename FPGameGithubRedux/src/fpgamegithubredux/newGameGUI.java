@@ -5,11 +5,11 @@
  */
 package fpgamegithubredux;
 
-import java.awt.Desktop;
+//import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
-import java.net.URL;
+//import java.net.URI;
+//import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -113,17 +113,17 @@ public class newGameGUI implements ActionListener {
                         if("fitness,1".equals(result)){
                             System.out.println("Male");
                             //fitness = 0;
-                            newPlayer.setFitnessLevel(0);
+                            newPlayer.apply_affect_by_id(0,0);
                             afterName();
                         }
                         else if ("fitness,2".equals(result)){
                             //fitness = 1;
-                            newPlayer.setFitnessLevel(1);
+                            newPlayer.apply_affect_by_id(0,1);
                             afterName();
                         }
                         else if ("fitness,3".equals(result)){
                             //fitness = 2;
-                            newPlayer.setFitnessLevel(2);
+                            newPlayer.apply_affect_by_id(0,2);
                             afterName();
                         }
                     
@@ -141,8 +141,13 @@ public class newGameGUI implements ActionListener {
     private void afterName(){
         text_field.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
         //newPlayer = new Character(name, sex, fitness);
+        Room temp_room = new Room();
+        
+        newPlayer.location = temp_room;
+
         goBack.setEnabled(true);
         TheMainGUI.Player = newPlayer;
+        TheMainGUI.enableButtons();
         System.out.println(newPlayer.name);
     }
     @Override

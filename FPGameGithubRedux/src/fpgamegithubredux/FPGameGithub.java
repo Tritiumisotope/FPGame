@@ -6,14 +6,14 @@
 package fpgamegithubredux;
 
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.TextArea;
+//import java.awt.GridBagLayout;
+//import java.awt.TextArea;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.text.Format;
-import javax.swing.JButton;
+//import java.text.Format;
+//import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
+//import javax.swing.JTextArea;
 import javax.swing.JTextField;
 /**
  *
@@ -21,7 +21,7 @@ import javax.swing.JTextField;
  */
 public class FPGameGithub {
 //timescales 1:180, 1:6		
-    		public static int t6_sec = 1;
+    public static int t6_sec = 1;
 		public static int t1_min = 1;//10;//
 		public static int t10_min = 3;//100;//
 		public static int t30_min = 9;//300;//
@@ -36,7 +36,8 @@ public class FPGameGithub {
 		public int  background_img_id;
 		public int GUI_height;//unused
 		public int  GUI_width;//unused
-                static long tm = 0,  tm2 = 0;
+    
+    static long tm = 0,  tm2 = 0;
                 
     /**
      * @param args the command line arguments

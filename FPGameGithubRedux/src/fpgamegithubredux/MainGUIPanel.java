@@ -5,32 +5,34 @@
  */
 package fpgamegithubredux;
 
-import java.awt.Desktop;
-import java.awt.Dimension;
+//import java.awt.Desktop;
+//import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
+//import java.awt.Insets;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.net.URI;
-import java.net.URL;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+//import java.net.URI;
+//import java.net.URL;
+//import javax.swing.JButton;
+//import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+//import javax.swing.event.HyperlinkEvent;
+//import javax.swing.event.HyperlinkListener;
+//import javax.swing.text.MutableAttributeSet;
+//import javax.swing.text.StyleConstants;
+//import javax.swing.text.StyledDocument;
 
 /**
  *
  * @author Ailer and Tritium
  */
-public class MainGUIPanel extends GUIButtons implements ActionListener, ComponentListener{
+public class MainGUIPanel extends GUIButtons implements ComponentListener{
+    static final long serialVersionUID = 0;
+    
     public JTextField input_text;
     public JTextPane text_field;
     
@@ -48,7 +50,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     public MainGUIPanel(){
         //this was Main.as
         setLayout(null);
-        Insets in = getInsets();
+        //Insets in = getInsets();
         options = new OptionsGUI();
         newgame = new newGameGUI();
         text_field = new JTextPane();
@@ -61,6 +63,8 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
         startup.setStartup(text_field);
         add(text_field);
         addComponentListener(this);
+
+        Player = null;
 
         
         //input_text = new JTextField();
@@ -112,7 +116,34 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
     public void lookPressed(){
                 text_field.setVisible(true);
                 text_field.setEnabled(true);
-                text_field.setText("You are"+ Player.name);
+                text_field.setText(Player.look(0,0));
+    }
+    public void appearancePressed(){
+            text_field.setVisible(true);
+            text_field.setEnabled(true);
+            text_field.setText(Player.appearance(1, null));       
+    }
+    public void inventoryPressed(){
+            text_field.setVisible(true);
+            text_field.setEnabled(true);
+            text_field.setText(Player.inventory());   
+    }
+    public void statusPressed(){
+            text_field.setVisible(true);
+            text_field.setEnabled(true);
+            text_field.setText(Player.statistics());  
+    }
+    public void trainPressed(){
+            text_field.setVisible(true);
+            text_field.setEnabled(true);
+            text_field.setText(Player.show_all_skills());  
+    }
+    public void enableButtons(){
+        for (int i=0;i<11;i++){
+            if(i!=6 && i!=9){
+            super.buttons[i].setEnabled(true);
+            }
+        }
     }
     private void cleanOptions(){
         options.notoptions(this);
@@ -121,7 +152,7 @@ public class MainGUIPanel extends GUIButtons implements ActionListener, Componen
         text_field.setEnabled(true);
     }
     public void cleanup_gui(){
-			int i = 0;
+			//int i = 0;
 			//Map_button.setText("Map");
                         /*
 			for(i;i<numChildren;i++){
