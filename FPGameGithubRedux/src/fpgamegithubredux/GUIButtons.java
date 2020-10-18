@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class GUIButtons extends JPanel implements ActionListener{
         public JButton buttons[] = {new JButton("Look"),new JButton("Inventory"),

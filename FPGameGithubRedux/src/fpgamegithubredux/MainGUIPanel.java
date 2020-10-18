@@ -28,7 +28,7 @@ import javax.swing.text.StyledDocument;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class MainGUIPanel extends GUIButtons implements ActionListener, ComponentListener{
     public JTextField input_text;

@@ -18,7 +18,7 @@ import javax.swing.event.HyperlinkListener;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class newGameGUI implements ActionListener {
     public Character newPlayer;

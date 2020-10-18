@@ -7,13 +7,16 @@ package fpgamegithubredux;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class Character {
+    public String name;
+    public Character mother;
+    public Character father;
     public String[] sexChoices = {"Male","Female","Futa"};
     public String sex;
-    public String name;
     public int fitness;
+
             
     public Character(){
         name = "Jeff";

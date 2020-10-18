@@ -14,7 +14,7 @@ import javax.swing.event.HyperlinkListener;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class StartupGUI {
     public String contents;
