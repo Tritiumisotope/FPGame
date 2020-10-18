@@ -79,20 +79,17 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                 text_field.setVisible(false);
                 text_field.setEnabled(false);}
         else{
-                options.notoptions(this);
-                optguion = false;
-                text_field.setVisible(true);
-                text_field.setEnabled(true);
+            cleanOptions();
         }
     }
     @Override
     public void loadPressed(){
-                options.notoptions(this);
-                text_field.setVisible(true);
-                text_field.setEnabled(true);
+        cleanOptions();
     }
     @Override
     public void newGamePressed(){
+        //same as second options press, i.e. put it away.
+        cleanOptions();
         if(!startingagame){
             startingagame = true;
             newgame.newGameStart(this,text_field, super.buttons[0],Player);
@@ -148,6 +145,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             }
         }
     }
+    private void cleanOptions(){
+        options.notoptions(this);
+        optguion = false;
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+    }
     public void cleanup_gui(){
 			//int i = 0;
 			//Map_button.setText("Map");
@@ -199,4 +202,3 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
-

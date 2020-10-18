@@ -58,6 +58,7 @@ public class OptionsGUI implements ActionListener{
         }
     }
     public void notoptions(JPanel MainGUI){
+        options_text_field.removeAll();
         MainGUI.remove(options_text_field);
     }
     public void setoptions(JPanel MainGUI,JTextPane upper_text_field,JButton[] superbuttons, int mini_map_status ,int textfield_size , int combattext_size,int keybind_to_change){
@@ -78,7 +79,7 @@ public class OptionsGUI implements ActionListener{
         ret += "options set!\n\n";
         }
 
-        /*
+        /* to be determined what the heck this did
         if(mini_map <= 0){
 				ret += "mini-map: <b>off</b>  <a href=\"event:options,1\">small</a>  <a href=\"event:options,2\">large</a>" +  "\n";
 	}else if(mini_map == 1){
@@ -92,7 +93,7 @@ public class OptionsGUI implements ActionListener{
     public void reSize(JPanel MainGUI){
         options_text_field.setBounds(124,69,MainGUI.getWidth()-124,MainGUI.getHeight()-69);
     }
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {//all the resizing code from clicking
             String command = e.getActionCommand();
             System.out.println(command);
             if(command.contains("textfield")){
