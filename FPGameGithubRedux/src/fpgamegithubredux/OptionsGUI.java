@@ -25,7 +25,7 @@ import javax.swing.text.StyledDocument;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class OptionsGUI implements ActionListener{
     public JTextPane options_text_field = new JTextPane();

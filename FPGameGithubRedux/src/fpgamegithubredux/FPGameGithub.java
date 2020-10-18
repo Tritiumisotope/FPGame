@@ -17,7 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class FPGameGithub {
 //timescales 1:180, 1:6		

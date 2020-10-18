@@ -28,7 +28,7 @@ import javax.swing.JTextPane;
 
 /**
  *
- * @author hhhin
+ * @author Ailer and Tritium
  */
 public class MainGUIPanel extends GUIButtons implements ComponentListener{
     static final long serialVersionUID = 0;
