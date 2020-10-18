@@ -141,8 +141,13 @@ public class newGameGUI implements ActionListener {
     private void afterName(){
         text_field.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
         //newPlayer = new Character(name, sex, fitness);
+        Room temp_room = new Room();
+        
+        newPlayer.location = temp_room;
+
         goBack.setEnabled(true);
         TheMainGUI.Player = newPlayer;
+        TheMainGUI.enableButtons();
         System.out.println(newPlayer.name);
     }
     @Override

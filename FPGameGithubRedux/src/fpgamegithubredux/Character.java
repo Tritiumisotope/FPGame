@@ -84,4 +84,43 @@ public class Character {
 
         return ret;
     }
+
+    public String inventory(){
+        String return_string = "";
+
+        if(possessions.size() <= 0){
+            return_string = "</n> Inventory contains nothing.";
+        }else{
+            return_string = "</n> Inventory contains: ";
+            for(Object o : possessions){
+                return_string += "something, ";
+            }
+        }
+
+        if(return_string.charAt(return_string.length()-2) == ',')return_string = return_string.substring(0, return_string.length()-2);
+
+        return sanitize(return_string);
+    }
+
+    public String statistics(){
+        String return_string = "";
+
+        return_string = "Name: " + name + "\n";
+
+        return return_string;
+    }
+
+    public String show_all_skills(){
+        String return_string = "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
+
+        return return_string;
+    }
+
+    public String sanitize(String string_to_sanitize){
+        String return_string = string_to_sanitize;
+        while(return_string.indexOf("</n>") >= 0){
+            return_string = return_string.replace("</n>", name);
+        }
+        return return_string;
+    }
 }

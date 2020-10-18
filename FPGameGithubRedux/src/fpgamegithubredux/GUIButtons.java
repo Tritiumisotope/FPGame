@@ -61,18 +61,25 @@ public class GUIButtons extends JPanel implements ActionListener{
             else if(command.equals("Appearance")){
                 appearancePressed();
             }
+            else if(command.equals("Inventory")){
+                inventoryPressed();
+            }
+            else if(command.equals("Status")){
+                statusPressed();
+            }
+            else if(command.equals("Train")){
+                trainPressed();
+            }
             else{
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }
-        public void loadPressed() {
-        }
-        public void optionsPressed() {
-        }
-        public void newGamePressed(){        
-        }
-        public void lookPressed(){            
-        }
-        public void appearancePressed(){            
-        }
+        public void loadPressed() {}
+        public void optionsPressed(){}
+        public void newGamePressed(){}
+        public void lookPressed(){}
+        public void appearancePressed(){}
+        public void inventoryPressed(){}
+        public void statusPressed(){}
+        public void trainPressed(){}
 }
