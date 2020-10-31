@@ -51,7 +51,6 @@ public class FPGameGithub {
         MainGUIPanel primarypanel = new MainGUIPanel();
 
         Window.add(primarypanel);
-        Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Window.setMinimumSize(new Dimension(800, 800));
         Window.addComponentListener(new ComponentAdapter() {
           public void componentResized(ComponentEvent evt) {

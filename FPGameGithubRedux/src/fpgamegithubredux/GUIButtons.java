@@ -17,16 +17,17 @@ import javax.swing.JPanel;
 public class GUIButtons extends JPanel implements ActionListener{
         static final long serialVersionUID = 1;
 
-        public JButton buttons[] = {new JButton("Look"),new JButton("Inventory"),
-        new JButton("Map"),new JButton("Wait"),new JButton("Status"),
-        new JButton("Skills"),new JButton("New Game"),new JButton("Appearance"),
-        new JButton("Save"),new JButton("Load"),new JButton("Options")};
-        public int buttonwidth = 100;
-        public int buttonheight = 22;
-        public int[] buttonx = {170,320,470,620,17,17,17,17,17,17,17};
-        public int[] buttony = {20,20,20,20,157,217,277,337,397,457,517};
-        public String[] commands = {"Look","Inventory","Map","Wait","Status",
-            "Train","New Game","Appearance","Save","Load", "Options"};
+        private String[] commands = {"Look","Inventory","Map","Wait","Status",
+        "Train","New Game","Appearance","Save","Load", "Options"};
+        protected JButton[] buttons = {new JButton(commands[0]),new JButton(commands[1]),
+        new JButton(commands[2]),new JButton(commands[3]),new JButton(commands[4]),
+        new JButton(commands[5]),new JButton(commands[6]),new JButton(commands[7]),
+        new JButton(commands[8]),new JButton(commands[9]),new JButton(commands[10])};
+        private int buttonwidth = 100;
+        private int buttonheight = 22;
+        private int[] buttonx = {170,320,470,620,17,17,17,17,17,17,17};
+        private int[] buttony = {20,20,20,20,157,217,277,337,397,457,517};
+
         public GUIButtons(){
             //GUI buttons
             //Look, Inventory, Map, Wait, Status, Skills(Train), New Game, Appearance,
@@ -45,41 +46,76 @@ public class GUIButtons extends JPanel implements ActionListener{
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-             String command = e.getActionCommand();
-            if(command.equals("Options")){
-                optionsPressed();
-            }
-            else if(command.equals("Load")){
-                loadPressed();
-            }
-            else if(command.equals("New Game")){
-                newGamePressed();
-            }
-            else if(command.equals("Look")){
-                lookPressed();
-            }
-            else if(command.equals("Appearance")){
-                appearancePressed();
-            }
-            else if(command.equals("Inventory")){
-                inventoryPressed();
-            }
-            else if(command.equals("Status")){
-                statusPressed();
-            }
-            else if(command.equals("Train")){
-                trainPressed();
-            }
-            else{
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+            String command = e.getActionCommand();
+            switch(command){
+                case "Look":
+                    lookPressed();
+                    break;
+                case "Inventory":
+                    inventoryPressed();
+                    break;
+                case "Map":
+                    mapPressed();
+                    break;
+                case "Wait":
+                    waitPressed();
+                    break;
+                case "Status":
+                    statusPressed();
+                    break;
+                case "Train":
+                    trainPressed();
+                    break;
+                case "New Game":
+                    newGamePressed();
+                    break;
+                case "Appearance":
+                    appearancePressed();
+                    break;
+                case "Save":
+                    savePressed();
+                    break;
+                case "Load":
+                    loadPressed();
+                    break;
+                case "Options":
+                    optionsPressed();
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
         }
-        public void loadPressed() {}
-        public void optionsPressed(){}
-        public void newGamePressed(){}
-        public void lookPressed(){}
-        public void appearancePressed(){}
-        public void inventoryPressed(){}
-        public void statusPressed(){}
-        public void trainPressed(){}
+        public void lookPressed(){
+            //Overridden
+        }
+        public void inventoryPressed(){
+            //Overridden
+        }
+        public void mapPressed(){
+            //Overridden
+        }
+        public void waitPressed(){
+            //Overridden
+        }
+        public void statusPressed(){
+            //Overridden
+        }
+        public void trainPressed(){
+            //Overridden
+        }
+        public void newGamePressed(){
+            //Overridden
+        }
+        public void appearancePressed(){
+            //Overridden
+        }
+        public void savePressed(){
+            //Overridden
+        }
+        public void loadPressed() {
+            //Overridden
+        }
+        public void optionsPressed(){
+            //Overridden
+        }
 }

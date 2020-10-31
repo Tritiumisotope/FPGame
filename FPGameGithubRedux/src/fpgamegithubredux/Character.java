@@ -119,7 +119,7 @@ public class Character {
     }
 
     public String sanitize(String string_to_sanitize){
-        String return_string = string_to_sanitize.replaceAll("</n>", name);
+        String return_string = string_to_sanitize.replace("</n>", name);
         return return_string;
     }
 }

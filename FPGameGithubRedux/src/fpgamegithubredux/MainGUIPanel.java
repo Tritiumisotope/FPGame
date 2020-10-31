@@ -37,7 +37,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public JTextPane text_field;
     
     //public JTextPane options_text_field;
-    public Font font;
+    public Font theFont;
     public int[] textsizes = new int[]{8,10,11,12,13,14,16};
     public String contents;
     public OptionsGUI options;
@@ -46,6 +46,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public boolean startingagame = false;
     public StartupGUI startup = new StartupGUI();
     public Character Player;
+    private String[] messages = {"Not Supported Yet"};
     
     public MainGUIPanel(){
         //this was Main.as
@@ -58,8 +59,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         text_field.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
         text_field.setContentType("text/html");
 
-        font = new Font("Serif", Font.ITALIC, 12);
-        text_field.setFont(font);
+        theFont = new Font("Serif", Font.ITALIC, 12);
+        text_field.setFont(theFont);
         startup.setStartup(text_field);
         add(text_field);
         addComponentListener(this);
@@ -113,26 +114,31 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             
         }
     }
+    @Override
     public void lookPressed(){
                 text_field.setVisible(true);
                 text_field.setEnabled(true);
                 text_field.setText(Player.look(0,0));
     }
+    @Override
     public void appearancePressed(){
             text_field.setVisible(true);
             text_field.setEnabled(true);
             text_field.setText(Player.appearance(1, null));       
     }
+    @Override
     public void inventoryPressed(){
             text_field.setVisible(true);
             text_field.setEnabled(true);
             text_field.setText(Player.inventory());   
     }
+    @Override
     public void statusPressed(){
             text_field.setVisible(true);
             text_field.setEnabled(true);
             text_field.setText(Player.statistics());  
     }
+    @Override
     public void trainPressed(){
             text_field.setVisible(true);
             text_field.setEnabled(true);
@@ -177,7 +183,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                         */
     }
     public void resetBounds(){
-        
+        //something for later
     }
 
     @Override
@@ -189,16 +195,16 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(messages[0]); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void componentShown(ComponentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(messages[0]); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(messages[0]); //To change body of generated methods, choose Tools | Templates.
     }
 }
