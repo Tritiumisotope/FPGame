@@ -67,41 +67,52 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                     if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                         try {
                             String result = e.getDescription();
-                            String[] split_result = result.split(",");
-                            
-                            if(result.contains("event:look")){
-                                if(split_result.length > 1){
-                                    int content_id = Integer.parseInt(split_result[1]);
-                                    textField.setText(player.look(content_id));
-                                }                                
-                            }else if(result.contains("event:pick_up")){
-                                if(split_result.length > 1){
-                                    int content_id = Integer.parseInt(split_result[1]);
-                                    textField.setText(player.pick_up(content_id));
+                            if(result.contains("event:")){
+                                //Parse out our command and its arguments
+                                String[] split_result = result.split(",");
+                                if(result.contains("event:look")){
+                                    if(split_result.length > 1){
+                                        int content_id = Integer.parseInt(split_result[1]);
+                                        textField.setText(player.look(content_id));
+                                    }else{
+                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+                                    }                               
+                                }else if(result.contains("event:pick_up")){
+                                    if(split_result.length > 1){
+                                        int content_id = Integer.parseInt(split_result[1]);
+                                        textField.setText(player.pick_up(content_id));
+                                    }else{
+                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+                                    }
+                                }else if(result.contains("event:action")){
+                                    if(split_result.length > 2){
+                                        int content_id = Integer.parseInt(split_result[1]);
+                                        int action_id = Integer.parseInt(split_result[2]);
+                                        textField.setText(player.fire_action(content_id, action_id));
+                                    }else{
+                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+                                    }
+                                }else if(result.contains("event:challenge")){
+                                    if(split_result.length > 4){
+                                        int content_id = Integer.parseInt(split_result[1]);
+                                        int action_id = Integer.parseInt(split_result[2]);
+                                        int challenge_id = Integer.parseInt(split_result[3]);
+                                        int triggering_content_id = Integer.parseInt(split_result[4]);
+                                        textField.setText(player.fire_challenge(content_id, action_id, challenge_id, triggering_content_id));
+                                    }else{
+                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+                                    }
+                                }else{
+                                    System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
                                 }
                             }else{
-                                System.out.println("(MainGUIPanel.java)got unexpected result:" + result);
-                            }
-
-
-                            
-                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                                //System.out.println(2.5);
-                                try {
-                                    //System.out.println(3);
-                                    //System.out.println(e.getURL());
+                                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                                     URL url = e.getURL();
-                                    //System.out.println(url);
                                     if(url != null){
                                         URI uri = url.toURI();   
-                                        //System.out.println(uri);
-                                        
                                         desktop.browse(uri);
                                     }
-        
-                                } catch (Exception e2) {
-                                    e2.printStackTrace();
                                 }
                             }
                             

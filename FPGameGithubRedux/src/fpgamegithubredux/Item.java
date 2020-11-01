@@ -1,8 +1,8 @@
 package fpgamegithubredux;
 
 public class Item {
-    public String name;
-    public int value;
+    protected String name;
+    protected int value;
 
     public Item(){
         name = "";

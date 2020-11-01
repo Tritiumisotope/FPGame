@@ -12,35 +12,36 @@ import java.util.ArrayList;
  * @author Ailer and Tritium
  */
 public class Character {
-    public String name;
-    public Character mother;
-    public Character father;
-    public String[] sexChoices = {"Male","Female","Futa"};
-    public String sex;
-    public int gold;
-    public int busy;
-    public int wait_time;
+    protected String name;
+    protected Character mother;
+    protected Character father;
+    protected String[] sexChoices = {"Male","Female","Futa"};
+    protected String sex;
+    protected int gold;
+    protected int busy;
+    protected int wait_time;
     //public int fitness;
 
-    public ArrayList<Item> possessions;
-    public ArrayList<Integer> statID;
-    public ArrayList<Object> stats;
+    protected ArrayList<Item> possessions;
+    protected ArrayList<Integer> statID;
+    protected ArrayList<Stat> stats;
 
-    public ArrayList<CharAction> actions;
-
-    public ArrayList<Object> current_tick_effects;
+    protected ArrayList<CharAction> actions;
 
     protected ArrayList<Object> currentTickEffects;
 
     protected Room location;
             
     public Character(){
-        name = "Jeff";
-        sex = "Male";
-        
+        this("Jeff", 0, 0.0);
+    }
+    public Character(String newName,int newSex, double newFitness){
+        setName(newName);
+        setSex(newSex);
+
         possessions = new ArrayList<Item>();
         statID = new ArrayList<Integer>();
-        stats = new ArrayList<Object>();
+        stats = new ArrayList<Stat>();
         actions = new ArrayList<CharAction>();
 
         location = null;
@@ -49,13 +50,14 @@ public class Character {
 
         busy = 0;
         wait_time = 0;
-    }
-    public Character(String newName,int newSex, double newFitness){
-        setName(newName);
-        setSex(newSex);
-        newStat(0, newFitness);
         
+        Stat temp_stat = new Stat();
+        temp_stat.ID = 0;
+        temp_stat.stat_value = newFitness;
+        
+        newStat(temp_stat.ID, temp_stat);        
     }
+
     public void setName(String theName){
         name = theName;
     }
@@ -64,19 +66,32 @@ public class Character {
         sex = sexChoices[theSex];
     }
 
-    public void newStat(int newStatID, double statVal){
+    public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
+    public void newStat(int newStatID, Stat newStat, Double stat_val){
         if(!statID.contains(newStatID)){
             statID.add(newStatID);
-            stats.add(statVal);
+            newStat.set_stat_value(stat_val);
+            stats.add(newStat);
         }
+    }
+
+    public Double get_stat(int statID){
+        Double ret = -1.0;
+        for(Stat tempStat : stats){
+            if(tempStat.ID == statID){
+                ret = tempStat.stat_value;
+            }
+        }
+
+        return ret;
     }
 
     public String applyAffectByID(int statIDForChange, double changeBy){
         String ret = "";
         int index = statID.indexOf(statIDForChange);
         if(index >= 0){
-            Double temp = (Double)stats.get(index);
-            temp += changeBy;
+            Stat temp = ((Stat)stats.get(index));
+            temp.stat_value += changeBy;
         }
 
         return ret;
@@ -102,9 +117,16 @@ public class Character {
         return ret;
     }
 
+    public String fire_challenge(int content_id, int action_id, int challenge_id, int triggering_content_id){
+        String ret = "";
+            if(content_id<0){
+                ret = location.fire_challenge(action_id, challenge_id, this);
+            }
+        return ret;
+    }
+
     public String inventory(){
         String returnString = "";
-        StringBuilder bld = new StringBuilder();//added
         if(possessions.isEmpty()){
             returnString = "</n> Inventory contains nothing.";
         }else{
@@ -112,8 +134,6 @@ public class Character {
             for(Item o : possessions){
                 returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.name + "</a>,";
             }
-            returnString = returnString + bld.toString();
-            //no idea why it prefers this...assume compilation simplifies the run
         }
 
         if(returnString.charAt(returnString.length()-1) == ',')returnString = returnString.substring(0, returnString.length()-1);
@@ -161,6 +181,21 @@ public class Character {
         ArrayList<CharAction> ret = new ArrayList<CharAction>();
         
         for(CharAction a : actions )ret.add(a);
+
+        return ret;
+    }
+
+    public String fire_action(int content_id, int action_id){
+        String ret = "";
+        if(location != null){
+            CharAction tempAction;
+            if(content_id < 0){
+                tempAction = location.getAction(action_id);
+                ret = sanitize(tempAction.trigger(this));
+            }else{
+
+            }
+        }
 
         return ret;
     }
