@@ -23,10 +23,10 @@ public class Consequence {
             int statID = statEffected.get(index);
             int neededRoll = rollRequired.get(index);
 
-            if(neededRoll >= 0 && roll >= neededRoll && defender.get_stat(statID) > -1){
+            if(neededRoll >= 0 && roll >= neededRoll && defender.getStat(statID) > -1){
                 ret += desc;
             }
-            if(neededRoll < 0 && roll <= neededRoll && defender.get_stat(statID) > -1){
+            if(neededRoll < 0 && roll <= neededRoll && defender.getStat(statID) > -1){
                 ret += desc;
             }
         }
@@ -34,7 +34,7 @@ public class Consequence {
         return ret;
     }
 
-    public void add_consequence(int statID, Double changeBy, String desc, int requireRoll){
+    public void addConsequence(int statID, Double changeBy, String desc, int requireRoll){
         statEffected.add(statID);
         effectAmount.add(changeBy);
         conseqDescr.add(desc);

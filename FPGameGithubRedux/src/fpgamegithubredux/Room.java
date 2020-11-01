@@ -18,12 +18,12 @@ public class Room{
         tempAction.dialogue = "You </c0> around.";
 
         Challenge tempChal = new Challenge();
-        tempChal.set_text("look");
+        tempChal.setText("look");
 
         Consequence tempConseq = new Consequence();
-        tempConseq.add_consequence(0, 0.0, "It looks like someone has completely disinfected everything in this room. The smell is horrible. ", 0);
-        tempConseq.add_consequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
-        tempConseq.add_consequence(0, 0.0, "You decide the ground looks nice. ", -1);
+        tempConseq.addConsequence(0, 0.0, "It looks like someone has completely disinfected everything in this room. The smell is horrible. ", 0);
+        tempConseq.addConsequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
+        tempConseq.addConsequence(0, 0.0, "You decide the ground looks nice. ", -1);
 
         tempAction.add_challenge(tempChal, tempConseq);
 
@@ -34,28 +34,25 @@ public class Room{
         String ret = "";
 
         ret = "<br>" + description + "<br>";
-
+        ret += "The room contains: ";
         Boolean nothing = true;
         if(contents.size() > 0){
-            ret += "The room contains: ";
             for(Object o : contents){
                 if(o instanceof Character){
                     Character temp_char = (Character)o;
                     if(temp_char != lookingCharacter){
-                        ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +temp_char.get_status(lookingCharacter) + "</a>,";
+                        ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +temp_char.getStatus(lookingCharacter) + "</a>,";
                         nothing = false;
                     }
                 }else if(o instanceof Item){
                     Item temp_item = (Item)o;
 
-                    ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + temp_item.get_dropped_description() + "</a>,";
+                    ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + temp_item.getDroppedDescription() + "</a>,";
                     nothing = false;
                 }
             }
-
-            if(nothing)ret += "Nothing!";
         }
-
+        if(nothing)ret += "Nothing!";
         for(CharAction a : actions){
             if(a != null){
                 ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.get_name() +"</i></a>");
@@ -65,12 +62,12 @@ public class Room{
         return ret;
     }
 
-    public String fire_challenge(int action_id, int challenge_id, Character triggeringCharacter){
+    public String fireChallenge(int actionID, int challengeID, Character triggeringCharacter){
         String ret = "";
 
-        CharAction tempAction = getAction(action_id);
+        CharAction tempAction = getAction(actionID);
         if(tempAction != null){
-            ret = tempAction.challenge(challenge_id, triggeringCharacter);
+            ret = tempAction.challenge(challengeID, triggeringCharacter);
         }
 
         return ret;
@@ -101,7 +98,7 @@ public class Room{
         return contents.get(ID);
     }
 
-    public Item item_loss(int content_id){
+    public Item itemLoss(int content_id){
         if(content_id >= 0 && content_id < contents.size()){
             if(contents.get(content_id) instanceof Item){
                 Item temp_item = (Item)contents.get(content_id);

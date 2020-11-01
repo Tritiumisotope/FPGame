@@ -4,30 +4,30 @@ public class Stat {
 
     protected int ID;
     protected String name;
-    protected Double stat_value;
-    protected Double temp_stat_value;
+    protected Double statValue;
+    protected Double tempStatValue;
 
     public Stat(){
         ID = 0;
-        stat_value = 0.0;
-        temp_stat_value = 0.0;
+        statValue = 0.0;
+        tempStatValue = 0.0;
     }
 
-    public void set_name(String _name){
-        name = _name;
+    public void setName(String newName){
+        name = newName;
     }
 
-    public String get_name(){
+    public String getName(){
         return name;
     }
 
-    public void set_stat_value(Double val){set_stat_value(val,false);}
-    public void set_stat_value(Double val, Boolean temp_flag){
-        if(!temp_flag){
-            stat_value = val;
-            temp_stat_value = val;
+    public void setStatValue(Double val){setStatValue(val,false);}
+    public void setStatValue(Double val, Boolean tempFlag){
+        if(!tempFlag){
+            statValue = val;
+            tempStatValue = val;
         }else{
-            temp_stat_value = val;
+            tempStatValue = val;
         }
     }
 }

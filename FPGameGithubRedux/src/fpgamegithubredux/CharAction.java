@@ -39,7 +39,7 @@ public class CharAction {
 
         //here we weave the challenges in, replacing their tags (</c1></c2>...</cn>) in the dialogue
         for(Challenge c : challenges){
-            ret = ret.replaceAll("</c" + challenges.indexOf(c) + ">", "<a href=\"event:challenge,"+ cont_id +","+ ID +"," + challenges.indexOf(c) +"," + triggeringChar.location.get_content_id(triggeringChar) + "\"><i>" + c.get_text() + "</i></a>");
+            ret = ret.replaceAll("</c" + challenges.indexOf(c) + ">", "<a href=\"event:challenge,"+ cont_id +","+ ID +"," + challenges.indexOf(c) +"," + triggeringChar.location.get_content_id(triggeringChar) + "\"><i>" + c.getText() + "</i></a>");
         }
 
         return ret;

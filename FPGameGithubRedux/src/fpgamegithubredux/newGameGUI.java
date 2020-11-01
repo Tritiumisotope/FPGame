@@ -59,31 +59,27 @@ public class newGameGUI implements ActionListener {
 				+"What sex would you like to be? <font color='#0000FF'><a href=\"event:new_player,1\">Male</a> <a href=\"event:new_player,2\">Female</a></font>";
     
     textField.setText(output);
-    hlListen = new HyperlinkListener()  {
-        @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    try {
-                        String result = e.getDescription();
-                        if("event:new_player,1".equals(result)){
-                            System.out.println("Male");
-                            newPlayer.setSex(0);
-                            setName();
-                        }
-                        else if ("event:new_player,2".equals(result)){
-                            newPlayer.setSex(1);
-                            setName();
-                        }else{
-                            System.out.println("(newGameGui.java)got unexpected result:" + result);
-                        }
-                    
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
-                    }
-
+    hlListen = e -> {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            try {
+                String result = e.getDescription();
+                if ("event:new_player,1".equals(result)) {
+                    System.out.println("Male");
+                    newPlayer.setSex(0);
+                    setName();
+                } else if ("event:new_player,2".equals(result)) {
+                    newPlayer.setSex(1);
+                    setName();
+                } else {
+                    System.out.println("(newGameGui.java)got unexpected result:" + result);
                 }
 
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+
         }
+
     };
         textField.addHyperlinkListener(hlListen);
     }

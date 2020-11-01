@@ -61,7 +61,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
         player = null;
 
-        HyperlinkListener HLlisten = new HyperlinkListener()  {
+        HyperlinkListener hlListen = new HyperlinkListener()  {
             @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -69,39 +69,23 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                             String result = e.getDescription();
                             if(result.contains("event:")){
                                 //Parse out our command and its arguments
-                                String[] split_result = result.split(",");
-                                if(result.contains("event:look")){
-                                    if(split_result.length > 1){
-                                        int content_id = Integer.parseInt(split_result[1]);
-                                        textField.setText(player.look(content_id));
-                                    }else{
-                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
-                                    }                               
-                                }else if(result.contains("event:pick_up")){
-                                    if(split_result.length > 1){
-                                        int content_id = Integer.parseInt(split_result[1]);
-                                        textField.setText(player.pick_up(content_id));
-                                    }else{
-                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
-                                    }
-                                }else if(result.contains("event:action")){
-                                    if(split_result.length > 2){
-                                        int content_id = Integer.parseInt(split_result[1]);
-                                        int action_id = Integer.parseInt(split_result[2]);
-                                        textField.setText(player.fire_action(content_id, action_id));
-                                    }else{
-                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
-                                    }
-                                }else if(result.contains("event:challenge")){
-                                    if(split_result.length > 4){
-                                        int content_id = Integer.parseInt(split_result[1]);
-                                        int action_id = Integer.parseInt(split_result[2]);
-                                        int challenge_id = Integer.parseInt(split_result[3]);
-                                        int triggering_content_id = Integer.parseInt(split_result[4]);
-                                        textField.setText(player.fire_challenge(content_id, action_id, challenge_id, triggering_content_id));
-                                    }else{
-                                        System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
-                                    }
+                                String[] splitResult = result.split(",");
+                                if(result.contains("event:look")&&splitResult.length > 1){
+                                    int contentID = Integer.parseInt(splitResult[1]);
+                                    textField.setText(player.look(contentID));                     
+                                }else if(result.contains("event:pick_up")&&splitResult.length > 1){
+                                    int contentID = Integer.parseInt(splitResult[1]);
+                                    textField.setText(player.pickUp(contentID));
+                                }else if(result.contains("event:action")&&splitResult.length > 2){
+                                    int contentID = Integer.parseInt(splitResult[1]);
+                                    int actionID = Integer.parseInt(splitResult[2]);
+                                    textField.setText(player.fireAction(contentID, actionID));
+                                }else if(result.contains("event:challenge")&&splitResult.length > 4){
+                                    int contentID = Integer.parseInt(splitResult[1]);
+                                    int actionID = Integer.parseInt(splitResult[2]);
+                                    int challengeID = Integer.parseInt(splitResult[3]);
+                                    int triggeringContentID = Integer.parseInt(splitResult[4]);
+                                    textField.setText(player.fireChallenge(contentID, actionID, challengeID, triggeringContentID));
                                 }else{
                                     System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
                                 }
@@ -116,6 +100,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                                 }
                             }
                             
+                            
                         
                         } catch (Exception e2) {
                             e2.printStackTrace();
@@ -126,7 +111,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
             };
         
-        textField.addHyperlinkListener(HLlisten);
+        textField.addHyperlinkListener(hlListen);
         //input_text = new JTextField();
         //input_text.setBounds(125,568,100,22);
   
