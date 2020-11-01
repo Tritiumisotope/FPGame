@@ -93,7 +93,11 @@ public class Character {
         String ret = "";
 
         if(location != null){
-            ret = location.get_room_description(this);
+            if(content_id >= 0){
+                ret = "something, something....";
+            }else{
+                ret = location.get_room_description(this);
+            }
         }
 
         return ret;

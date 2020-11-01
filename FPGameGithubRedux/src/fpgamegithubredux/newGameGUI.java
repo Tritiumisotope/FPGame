@@ -148,6 +148,10 @@ public class newGameGUI implements ActionListener {
         temp_item.name = "something";
 
         temp_room.new_content(temp_item);
+
+        Character temp_char = new Character();
+        temp_char.location = temp_room;
+        temp_room.new_content(temp_char);
         
         newPlayer.location = temp_room;
         temp_room.new_content(newPlayer);

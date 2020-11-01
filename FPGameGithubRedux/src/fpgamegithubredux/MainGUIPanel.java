@@ -168,33 +168,33 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     }
     @Override
     public void lookPressed(){
-                text_field.setVisible(true);
-                text_field.setEnabled(true);
-                text_field.setText(Player.look(0,0));
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+        text_field.setText(Player.look(0,0));
     }
     @Override
     public void appearancePressed(){
-            text_field.setVisible(true);
-            text_field.setEnabled(true);
-            text_field.setText(Player.appearance(1, null));       
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+        text_field.setText(Player.appearance(1, null));       
     }
     @Override
     public void inventoryPressed(){
-            text_field.setVisible(true);
-            text_field.setEnabled(true);
-            text_field.setText(Player.inventory());   
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+        text_field.setText(Player.inventory());   
     }
     @Override
     public void statusPressed(){
-            text_field.setVisible(true);
-            text_field.setEnabled(true);
-            text_field.setText(Player.statistics());  
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+        text_field.setText(Player.statistics());  
     }
     @Override
     public void trainPressed(){
-            text_field.setVisible(true);
-            text_field.setEnabled(true);
-            text_field.setText(Player.show_all_skills());  
+        text_field.setVisible(true);
+        text_field.setEnabled(true);
+        text_field.setText(Player.show_all_skills());  
     }
     public void enableButtons(){
         for (int i=0;i<11;i++){
