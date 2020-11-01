@@ -132,7 +132,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
     }
     private void cleanOptions(){
-        options.notoptions(this);
+        options.notOptions(this);
         optguion = false;
         textField.setVisible(true);
         textField.setEnabled(true);
