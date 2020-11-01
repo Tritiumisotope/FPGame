@@ -53,10 +53,10 @@ public class Character {
         
         Stat tempStat = new Stat();
         tempStat.setName("Fitness");
-        tempStat.ID = 0;
+        tempStat.statID = 0;
         tempStat.statValue = newFitness;
         
-        newStat(tempStat.ID, tempStat);
+        newStat(tempStat.statID, tempStat);
         
         CharAction tempAction = new CharAction();
         tempAction.name = "Talk";
@@ -85,7 +85,7 @@ public class Character {
     public Double getStat(int statID){
         Double ret = -1.0;
         for(Stat tempStat : stats){
-            if(tempStat.ID == statID){
+            if(tempStat.statID == statID){
                 ret = tempStat.statValue;
             }
         }
@@ -117,7 +117,7 @@ public class Character {
         }else{
             ArrayList<CharAction> tempList = getAllOverworldActions();
             for(CharAction act : tempList){
-                ret += "<a href=\"event:action," + location.get_content_id(this) + "," + tempList.indexOf(act) +"\"><font color='#0000FF'>"+act.get_name() +"</font></a>    ";
+                ret += "<a href=\"event:action," + location.getContentID(this) + "," + tempList.indexOf(act) +"\"><font color='#0000FF'>"+act.getName() +"</font></a>    ";
             }
         }
         
@@ -131,7 +131,7 @@ public class Character {
 
         if(location != null){
             if(contentID >= 0){
-                Object tempObject = location.get_content(contentID);
+                Object tempObject = location.getContent(contentID);
                 if(tempObject instanceof Character){
                     ret = ((Character)tempObject).appearance(lookID, this);
                 }
@@ -151,7 +151,7 @@ public class Character {
                 tempAction = location.getAction(actionID);
                 ret = sanitize(tempAction.trigger(this));
             }else{
-                Character tempChar = (Character)location.get_content(contendID);
+                Character tempChar = (Character)location.getContent(contendID);
                 tempAction = tempChar.getAllOverworldActions().get(actionID);
                 ret = sanitize(tempAction.trigger(this));
             }

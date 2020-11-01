@@ -23,8 +23,8 @@ public class StartupGUI {
 				+ "If you have any comments, criticism, or suggestions, please feel free to share! ";
         fpLink = "<br><a href=\"https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt\">https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt<a>";
     }
-    public void setStartup(JTextPane upper_text_field){
-        upper_text_field.setText(contents+ fpLink);
-        upper_text_field.setEditable(false);        
+    public void setStartup(JTextPane upperTextField){
+        upperTextField.setText(contents+ fpLink);
+        upperTextField.setEditable(false);        
     }
 }

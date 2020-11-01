@@ -61,60 +61,49 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
         player = null;
 
-        HyperlinkListener hlListen = new HyperlinkListener()  {
-            @Override
-                public void hyperlinkUpdate(HyperlinkEvent e) {
-                    if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        try {
-                            String result = e.getDescription();
-                            if(result.contains("event:")){
-                                //Parse out our command and its arguments
-                                String[] splitResult = result.split(",");
-                                if(result.contains("event:look")&&splitResult.length > 1){
-                                    int contentID = Integer.parseInt(splitResult[1]);
-                                    textField.setText(player.look(contentID));                     
-                                }else if(result.contains("event:pick_up")&&splitResult.length > 1){
-                                    int contentID = Integer.parseInt(splitResult[1]);
-                                    textField.setText(player.pickUp(contentID));
-                                }else if(result.contains("event:action")&&splitResult.length > 2){
-                                    int contentID = Integer.parseInt(splitResult[1]);
-                                    int actionID = Integer.parseInt(splitResult[2]);
-                                    textField.setText(player.fireAction(contentID, actionID));
-                                }else if(result.contains("event:challenge")&&splitResult.length > 4){
-                                    int contentID = Integer.parseInt(splitResult[1]);
-                                    int actionID = Integer.parseInt(splitResult[2]);
-                                    int challengeID = Integer.parseInt(splitResult[3]);
-                                    int triggeringContentID = Integer.parseInt(splitResult[4]);
-                                    textField.setText(player.fireChallenge(contentID, actionID, challengeID, triggeringContentID));
-                                }else{
-                                    System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
-                                }
-                            }else{
-                                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                                    URL url = e.getURL();
-                                    if(url != null){
-                                        URI uri = url.toURI();   
-                                        desktop.browse(uri);
-                                    }
-                                }
-                            }
-                            
-                            
-                        
-                        } catch (Exception e2) {
-                            e2.printStackTrace();
-                        }
-    
+        HyperlinkListener hlListen = e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                try {
+                    String result = e.getDescription();
+                    if (result.contains("event:")) {
+                        parseEvent(result);
+                    } else if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)
+                            && e.getURL() != null) {
+                        Desktop.getDesktop().browse(e.getURL().toURI());
                     }
+                } catch (Exception e2) {
+                    e2.printStackTrace();
                 }
-
-            };
+            }
+        };
         
         textField.addHyperlinkListener(hlListen);
         //input_text = new JTextField();
         //input_text.setBounds(125,568,100,22);
   
+    }
+    private void parseEvent(String result){
+         //Parse out our command and its arguments
+         String[] splitResult = result.split(",");
+         if(result.contains("event:look")&&splitResult.length > 1){
+             int contentID = Integer.parseInt(splitResult[1]);
+             textField.setText(player.look(contentID));                     
+         }else if(result.contains("event:pick_up")&&splitResult.length > 1){
+             int contentID = Integer.parseInt(splitResult[1]);
+             textField.setText(player.pickUp(contentID));
+         }else if(result.contains("event:action")&&splitResult.length > 2){
+             int contentID = Integer.parseInt(splitResult[1]);
+             int actionID = Integer.parseInt(splitResult[2]);
+             textField.setText(player.fireAction(contentID, actionID));
+         }else if(result.contains("event:challenge")&&splitResult.length > 4){
+             int contentID = Integer.parseInt(splitResult[1]);
+             int actionID = Integer.parseInt(splitResult[2]);
+             int challengeID = Integer.parseInt(splitResult[3]);
+             int triggeringContentID = Integer.parseInt(splitResult[4]);
+             textField.setText(player.fireChallenge(contentID, actionID, challengeID, triggeringContentID));
+         }else{
+             System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+         }
     }
     @Override
     public void optionsPressed(){

@@ -25,9 +25,9 @@ public class Room{
         tempConseq.addConsequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
         tempConseq.addConsequence(0, 0.0, "You decide the ground looks nice. ", -1);
 
-        tempAction.add_challenge(tempChal, tempConseq);
+        tempAction.addChallenge(tempChal, tempConseq);
 
-        add_action(tempAction);
+        addAction(tempAction);
     }
 
     public String getRoomDescription(Character lookingCharacter){
@@ -36,18 +36,18 @@ public class Room{
         ret = "<br>" + description + "<br>";
         ret += "The room contains: ";
         Boolean nothing = true;
-        if(contents.size() > 0){
+        if(!contents.isEmpty()){
             for(Object o : contents){
                 if(o instanceof Character){
-                    Character temp_char = (Character)o;
-                    if(temp_char != lookingCharacter){
-                        ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +temp_char.getStatus(lookingCharacter) + "</a>,";
+                    Character tempChar = (Character)o;
+                    if(tempChar != lookingCharacter){
+                        ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,";
                         nothing = false;
                     }
                 }else if(o instanceof Item){
-                    Item temp_item = (Item)o;
+                    Item tempItem = (Item)o;
 
-                    ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + temp_item.getDroppedDescription() + "</a>,";
+                    ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,";
                     nothing = false;
                 }
             }
@@ -55,7 +55,7 @@ public class Room{
         if(nothing)ret += "Nothing!";
         for(CharAction a : actions){
             if(a != null){
-                ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.get_name() +"</i></a>");
+                ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.getName() +"</i></a>");
             }
         }
 
@@ -73,38 +73,36 @@ public class Room{
         return ret;
     }
 
-    public void add_action(CharAction new_action){
-        new_action.ID = actions.size();
-        actions.add(new_action);
+    public void addAction(CharAction newAction){
+        newAction.charID = actions.size();
+        actions.add(newAction);
     }
 
-    public CharAction getAction(int action_id){
-        if(action_id>=0 && action_id < actions.size()){
-            return actions.get(action_id);
+    public CharAction getAction(int actionID){
+        if(actionID>=0 && actionID < actions.size()){
+            return actions.get(actionID);
         }
         return null;
     }
 
-    public void new_content(Object o){new_content(o, null);}
-    public void new_content(Object o, Room prev_room){
+    public void newContent(Object o){newContent(o, null);}
+    public void newContent(Object o, Room prevRoom){
         contents.add(o);
     }
 
-    public int get_content_id(Object o){
+    public int getContentID(Object o){
         return contents.indexOf(o);
     }
 
-    public Object get_content(int ID){
-        return contents.get(ID);
+    public Object getContent(int objID){
+        return contents.get(objID);
     }
 
-    public Item itemLoss(int content_id){
-        if(content_id >= 0 && content_id < contents.size()){
-            if(contents.get(content_id) instanceof Item){
-                Item temp_item = (Item)contents.get(content_id);
-                contents.remove(content_id);
-                return temp_item;
-            }
+    public Item itemLoss(int contentID){
+        if(contentID >= 0 && contentID < contents.size() && contents.get(contentID) instanceof Item){
+            Item tempItem = (Item)contents.get(contentID);
+            contents.remove(contentID);
+            return tempItem;
         }
         return null;
     }

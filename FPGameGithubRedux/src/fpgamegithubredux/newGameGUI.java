@@ -144,14 +144,14 @@ public class newGameGUI implements ActionListener {
         Item temp_item = new Item();
         temp_item.name = "something";
 
-        temp_room.new_content(temp_item);
+        temp_room.newContent(temp_item);
 
         Character temp_char = new Character();
         temp_char.location = temp_room;
-        temp_room.new_content(temp_char);
+        temp_room.newContent(temp_char);
         
         newPlayer.location = temp_room;
-        temp_room.new_content(newPlayer);
+        temp_room.newContent(newPlayer);
 
         goBack.setEnabled(true);
         theMainGUI.player = newPlayer;

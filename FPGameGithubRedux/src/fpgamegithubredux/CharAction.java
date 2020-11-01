@@ -8,7 +8,7 @@ public class CharAction {
     protected String dialogue;
     protected ArrayList<Challenge> challenges;
     protected ArrayList<Consequence> consequences;
-    protected int ID;
+    protected int charID;
     
     public CharAction(){
         name = "";
@@ -17,16 +17,16 @@ public class CharAction {
         consequences = new ArrayList<Consequence>();
     }
 
-    public String get_name(){
+    public String getName(){
         return name;
     }
 
-    public void set_name(String _name){
-        name = _name;
+    public void setName(String newName){
+        name = newName;
     }
 
-    public void add_challenge(Challenge chal){add_challenge(chal, null);}
-    public void add_challenge(Challenge chal, Consequence con){
+    public void addChallenge(Challenge chal){addChallenge(chal, null);}
+    public void addChallenge(Challenge chal, Consequence con){
         if(con == null) con = new Consequence();
         challenges.add(chal);
         consequences.add(con);
@@ -35,11 +35,11 @@ public class CharAction {
     public String trigger(Character triggeringChar){
         String ret = dialogue;
 
-        int cont_id = -1;
+        int contID = -1;
 
         //here we weave the challenges in, replacing their tags (</c1></c2>...</cn>) in the dialogue
         for(Challenge c : challenges){
-            ret = ret.replaceAll("</c" + challenges.indexOf(c) + ">", "<a href=\"event:challenge,"+ cont_id +","+ ID +"," + challenges.indexOf(c) +"," + triggeringChar.location.get_content_id(triggeringChar) + "\"><i>" + c.getText() + "</i></a>");
+            ret = ret.replaceAll("</c" + challenges.indexOf(c) + ">", "<a href=\"event:challenge,"+ contID +","+ charID +"," + challenges.indexOf(c) +"," + triggeringChar.location.getContentID(triggeringChar) + "\"><i>" + c.getText() + "</i></a>");
         }
 
         return ret;
@@ -48,14 +48,14 @@ public class CharAction {
     public String challenge(int challengeID, Character triggeringCharacter){
         String ret = "";
 
-        int roll = roll_challenge(challengeID, triggeringCharacter);
+        int roll = rollChallenge(challengeID, triggeringCharacter);
         ret += triggerConsequence(triggeringCharacter, triggeringCharacter, roll, challengeID);
 
         return ret;
     }
 
-    public int roll_challenge(int challengeID, Character attacker){return roll_challenge(challengeID, attacker, null);}
-    public int roll_challenge(int challengeID, Character attacker, Character defender){
+    public int rollChallenge(int challengeID, Character attacker){return rollChallenge(challengeID, attacker, null);}
+    public int rollChallenge(int challengeID, Character attacker, Character defender){
         int ret = 0;
         if(defender == null){
             defender = attacker;
