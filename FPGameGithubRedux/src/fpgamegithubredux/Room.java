@@ -7,6 +7,9 @@ public class Room{
     protected String description;
     protected ArrayList<Object> contents;
     protected ArrayList<CharAction> actions;
+    protected Room[] exits;
+    protected Area area;
+    protected String[] exitNames;
 
     public Room(){
         contents = new ArrayList<>();
@@ -88,6 +91,19 @@ public class Room{
     public void newContent(Object o){newContent(o, null);}
     public void newContent(Object o, Room prevRoom){
         contents.add(o);
+    }
+    public void removeContent(Object o){
+			//var found:Boolean;
+			//found = false;
+			for (int i=0;i<contents.size();i++){
+				if(contents.get(i)==o){
+                    //contents[i] = null;
+                    contents.set(i,null);
+					//if(i == contents.length - 1)found = true;
+					break;
+				}
+			}
+			//if(found) contents = contents.slice(0,contents.length-1);
     }
 
     public int getContentID(Object o){

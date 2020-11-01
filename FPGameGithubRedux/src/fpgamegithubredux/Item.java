@@ -221,7 +221,7 @@ public class Item {
                 if (buyer != null && buyer.possessions.isEmpty()){
                     for(int i = 0; i < buyer.possessions.size();i++){
                         if(Boolean.TRUE.equals(this.sameItem(buyer.possessions.get(i)))){
-                            buyerValue = Math.round((int)(buyerValue * 0.9));
+                            buyerValue = (int)(buyerValue * 0.9);
                         }
                     }
                 }
@@ -366,11 +366,82 @@ public class Item {
             return valToReturn;
         }
     }
+    public String getUseDescription(){
+        return useDescription;
+    }
     public String getDroppedDescription(){
-        return name;
+        return droppedDescription;
+    }
+    public String tick(Room currentRoom, Character character){
+        String desc = "";
+        tickCount++;
+        if(tickCount%FPGameGithub.T1_MONTH==0){
+            if(getPropogate()){
+                //pick an exit to spread to...
+                int spread = (int)Math.round(Math.random());
+                if(spread == 1){
+                    spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
+                    Room tempRoom = currentRoom.exits[spread];
+                    if(tempRoom != null){
+                        if(tempRoom.area != null){
+                            if(tempRoom.area == currentRoom.area){
+                                Item tempItem= itemCopy(this);
+                                tempRoom.newContent(tempItem);
+                            }
+                        }
+                    }						
+                }
+            }
+        }
+        if(destroyTick <= tickCount && destroyTick > 0){
+            if(spawnChar != null){
+                desc += "the " + getName() + "breaks open. ";
+                spawnChar.newLocation(currentRoom);
+            }
+            if(character != null){
+                
+                for(int i=0;i<character.possessions.size();i++){
+                    if(character.possessions.get(i) == this){
+                        character.drop(i);
+                        break;
+                    }
+                }
+            }else{
+                currentRoom.removeContent(this);
+            }
+        }
+        return desc;
     }
     public void setImageID(int newImageID){
         imageID = newImageID;
+    }
+    public Item itemCopy(Item toClone){
+        Item retItem = new Item();
+        retItem.name = toClone.name;
+        retItem.inventoryDescription = toClone.inventoryDescription;
+        retItem.droppedDescription = toClone.droppedDescription;
+        retItem.multiDroppedDescription = toClone.multiDroppedDescription;
+        retItem.value = toClone.value;
+        int count = 0;
+        //effects copy
+        retItem.useDescription = toClone.useDescription;
+        count = 0;
+        //change effects copy
+        retItem.propogate = toClone.propogate;
+        retItem.identDifficulty = toClone.identDifficulty;
+        retItem.weight = toClone.weight;
+        count = 0;
+        //stat action add copy
+        retItem.numUses = toClone.numUses;
+        retItem.imageID = toClone.imageID;
+        //topic
+        //crafting requirements
+
+        retItem.tickCount = 0;
+        retItem.destroyTick = toClone.destroyTick;
+        retItem.spawnChar = toClone.spawnChar;
+
+        return retItem;
     }
 
 }

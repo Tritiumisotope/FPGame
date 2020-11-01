@@ -123,7 +123,13 @@ public class Character {
         
         return ret;
     }
-
+    public String newLocation(Room newRoom){
+        //dummy
+        return "";
+    }
+    public void drop(int item){
+        //dummy
+    }
     public String look(){return look(-1, 0);}
     public String look(int contentID){return look(contentID, 0);}
     public String look(int contentID, int lookID){
