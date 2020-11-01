@@ -12,7 +12,7 @@ public class Room{
         description = "This is a room";
     }
 
-    public String get_room_description(Character lookingCharacter){
+    public String getRoomDescription(Character lookingCharacter){
         String ret = "";
 
         ret = "<br>" + description + "<br>";

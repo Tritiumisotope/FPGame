@@ -6,7 +6,6 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
-//import java.util.List;
 
 /**
  *
@@ -24,21 +23,23 @@ public class Character {
     //public int fitness;
 
     public ArrayList<Item> possessions;
-    public ArrayList<Integer> stat_id;
+    public ArrayList<Integer> statID;
     public ArrayList<Object> stats;
 
     public ArrayList<CharAction> actions;
 
     public ArrayList<Object> current_tick_effects;
 
-    public Room location;
+    protected ArrayList<Object> currentTickEffects;
+
+    protected Room location;
             
     public Character(){
         name = "Jeff";
         sex = "Male";
         
         possessions = new ArrayList<Item>();
-        stat_id = new ArrayList<Integer>();
+        statID = new ArrayList<Integer>();
         stats = new ArrayList<Object>();
         actions = new ArrayList<CharAction>();
 
@@ -52,7 +53,7 @@ public class Character {
     public Character(String newName,int newSex, double newFitness){
         setName(newName);
         setSex(newSex);
-        new_stat(0, newFitness);
+        newStat(0, newFitness);
         
     }
     public void setName(String theName){
@@ -63,28 +64,26 @@ public class Character {
         sex = sexChoices[theSex];
     }
 
-    public void new_stat(int new_stat_id, double stat_val){
-        if(!stat_id.contains(new_stat_id)){
-            stat_id.add(new_stat_id);
-            stats.add(stat_val);
+    public void newStat(int newStatID, double statVal){
+        if(!statID.contains(newStatID)){
+            statID.add(newStatID);
+            stats.add(statVal);
         }
     }
 
-    public String apply_affect_by_id(int stat_id_for_change, double change_by){
+    public String applyAffectByID(int statIDForChange, double changeBy){
         String ret = "";
-        int index = stat_id.indexOf(stat_id_for_change);
+        int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Double temp = (Double)stats.get(index);
-            temp += change_by;
+            temp += changeBy;
         }
 
         return ret;
     }
 
-    public String appearance(int look_id, Character c){
-        String ret = "You are " + name;
-
-        return ret;
+    public String appearance(int lookID, Character c){
+        return "You are " + name;
     }
 
     public String look(){return look(-1, 0);}
@@ -96,7 +95,7 @@ public class Character {
             if(content_id >= 0){
                 ret = "something, something....";
             }else{
-                ret = location.get_room_description(this);
+                ret = location.getRoomDescription(this);
             }
         }
 
@@ -104,20 +103,22 @@ public class Character {
     }
 
     public String inventory(){
-        String return_string = "";
-
-        if(possessions.size() <= 0){
-            return_string = "</n> Inventory contains nothing.";
+        String returnString = "";
+        StringBuilder bld = new StringBuilder();//added
+        if(possessions.isEmpty()){
+            returnString = "</n> Inventory contains nothing.";
         }else{
-            return_string = "</n> Inventory contains: ";
+            returnString = "</n> Inventory contains: ";
             for(Item o : possessions){
-                return_string += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.name + "</a>,";
+                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.name + "</a>,";
             }
+            returnString = returnString + bld.toString();
+            //no idea why it prefers this...assume compilation simplifies the run
         }
 
-        if(return_string.charAt(return_string.length()-1) == ',')return_string = return_string.substring(0, return_string.length()-1);
+        if(returnString.charAt(returnString.length()-1) == ',')returnString = returnString.substring(0, returnString.length()-1);
 
-        return sanitize(return_string);
+        return sanitize(returnString);
     }
 
     public String pick_up(int content_id){
@@ -132,17 +133,11 @@ public class Character {
     }
 
     public String statistics(){
-        String return_string = "";
-
-        return_string = "Name: " + name + "\n";
-
-        return return_string;
+        return "Name: " + name + "\n";
     }
 
-    public String show_all_skills(){
-        String return_string = "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
-
-        return return_string;
+    public String showAllSkills(){
+        return "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
     }
 
     public String sanitize(String string_to_sanitize){

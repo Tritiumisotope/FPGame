@@ -8,10 +8,6 @@ package fpgamegithubredux;
 import java.awt.Desktop;
 //import java.awt.Dimension;
 import java.awt.Font;
-//import java.awt.Insets;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.net.URI;
@@ -33,39 +29,37 @@ import javax.swing.event.HyperlinkListener;
 public class MainGUIPanel extends GUIButtons implements ComponentListener{
     static final long serialVersionUID = 0;
     
-    public JTextField input_text;
-    public JTextPane text_field;
+    protected JTextField inputText;
+    protected JTextPane textField;
     
-    //public JTextPane options_text_field;
-    public Font theFont;
-    public int[] textsizes = new int[]{8,10,11,12,13,14,16};
-    public String contents;
-    public OptionsGUI options;
-    public newGameGUI newgame;
-    public boolean optguion = false;
-    public boolean startingagame = false;
-    public StartupGUI startup = new StartupGUI();
-    public Character Player;
+    protected Font theFont;
+    protected int[] textsizes = new int[]{8,10,11,12,13,14,16};
+    protected String contents;
+    protected OptionsGUI options;
+    protected newGameGUI newgame;
+    protected boolean optguion = false;
+    protected boolean startingagame = false;
+    protected StartupGUI startup = new StartupGUI();
+    protected Character player;
     private String[] messages = {"Not Supported Yet"};
     
     public MainGUIPanel(){
         //this was Main.as
         setLayout(null);
-        //Insets in = getInsets();
         options = new OptionsGUI();
         newgame = new newGameGUI();
-        text_field = new JTextPane();
+        textField = new JTextPane();
         
-        text_field.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
-        text_field.setContentType("text/html");
+        textField.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
+        textField.setContentType("text/html");
 
         theFont = new Font("Serif", Font.ITALIC, 12);
-        text_field.setFont(theFont);
-        startup.setStartup(text_field);
-        add(text_field);
+        textField.setFont(theFont);
+        startup.setStartup(textField);
+        add(textField);
         addComponentListener(this);
 
-        Player = null;
+        player = null;
 
         HyperlinkListener HLlisten = new HyperlinkListener()  {
             @Override
@@ -78,12 +72,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                             if(result.contains("event:look")){
                                 if(split_result.length > 1){
                                     int content_id = Integer.parseInt(split_result[1]);
-                                    text_field.setText(Player.look(content_id));
+                                    textField.setText(player.look(content_id));
                                 }                                
                             }else if(result.contains("event:pick_up")){
                                 if(split_result.length > 1){
                                     int content_id = Integer.parseInt(split_result[1]);
-                                    text_field.setText(Player.pick_up(content_id));
+                                    textField.setText(player.pick_up(content_id));
                                 }
                             }else{
                                 System.out.println("(MainGUIPanel.java)got unexpected result:" + result);
@@ -121,7 +115,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
             };
         
-        text_field.addHyperlinkListener(HLlisten);
+        textField.addHyperlinkListener(HLlisten);
         //input_text = new JTextField();
         //input_text.setBounds(125,568,100,22);
   
@@ -130,9 +124,9 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void optionsPressed(){
         if(!optguion){
                 optguion = true;
-                options.setoptions(this,text_field,super.buttons,-1,-1,-1,-1);
-                text_field.setVisible(false);
-                text_field.setEnabled(false);}
+                options.setoptions(this,textField,super.buttons,-1,-1,-1,-1);
+                textField.setVisible(false);
+                textField.setEnabled(false);}
         else{
             cleanOptions();
         }
@@ -147,19 +141,21 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         cleanOptions();
         if(!startingagame){
             startingagame = true;
-            newgame.newGameStart(this,text_field, super.buttons[0],Player);
-           for (int i=0;i<11;i++){
-                if(i!=6 && i!=9){
+            newgame.newGameStart(this,textField, super.buttons[0]);
+            for (int i=0;i<11;i++){
+                if(i!=6 && i!=9 && i!=10){
                 super.buttons[i].setEnabled(false);
                 }
             }
             
         }
         else{
-            newgame.exitNewGameStart();
-            newgame.newGameStart(this,text_field,super.buttons[0],Player);
+            player = null;
+            newgame = new newGameGUI();
+            //newgame.exitNewGameStart();
+            newgame.newGameStart(this,textField,super.buttons[0]);
             for (int i=0;i<11;i++){
-                if(i!=6 && i!=9){
+                if(i!=6 && i!=9 && i!=10){
                 super.buttons[i].setEnabled(false);
                 }
             }
@@ -168,33 +164,33 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     }
     @Override
     public void lookPressed(){
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
-        text_field.setText(Player.look(0,0));
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        textField.setText(player.look());
     }
     @Override
     public void appearancePressed(){
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
-        text_field.setText(Player.appearance(1, null));       
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        textField.setText(player.appearance(1, null));       
     }
     @Override
     public void inventoryPressed(){
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
-        text_field.setText(Player.inventory());   
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        textField.setText(player.inventory());   
     }
     @Override
     public void statusPressed(){
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
-        text_field.setText(Player.statistics());  
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        textField.setText(player.statistics());  
     }
     @Override
     public void trainPressed(){
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
-        text_field.setText(Player.show_all_skills());  
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        textField.setText(player.showAllSkills());  
     }
     public void enableButtons(){
         for (int i=0;i<11;i++){
@@ -204,12 +200,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
     }
     private void cleanOptions(){
-        options.notoptions(this);
+        options.notOptions(this);
         optguion = false;
-        text_field.setVisible(true);
-        text_field.setEnabled(true);
+        textField.setVisible(true);
+        textField.setEnabled(true);
     }
-    public void cleanup_gui(){
+    public void cleanupGUI(){
 			//int i = 0;
 			//Map_button.setText("Map");
                         /*
@@ -242,7 +238,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void componentResized(ComponentEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         options.reSize(this);
-        text_field.setBounds(124,69,super.getWidth()-124-60,super.getHeight()-69-120);
+        textField.setBounds(124,69,super.getWidth()-124-60,super.getHeight()-69-120);
     }
 
     @Override
