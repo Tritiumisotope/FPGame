@@ -6,14 +6,8 @@
 package fpgamegithubredux;
 
 import java.awt.Dimension;
-//import java.awt.GridBagLayout;
-//import java.awt.TextArea;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-//import java.text.Format;
-//import javax.swing.JButton;
 import javax.swing.JFrame;
-//import javax.swing.JTextArea;
 import javax.swing.JTextField;
 /**
  *
@@ -21,65 +15,40 @@ import javax.swing.JTextField;
  */
 public class FPGameGithub {
 //timescales 1:180, 1:6		
-    public static int t6_sec = 1;
-		public static int t1_min = 1;//10;//
-		public static int t10_min = 3;//100;//
-		public static int t30_min = 9;//300;//
-		public static int t1_hour = 18;//600;//
-		public static int t1_day = 432;//14400;//
-		public static int t1_week = 3024;//100800;//
-		public static int t1_month = 12096;//403200;//
-		public static int t1_year = 145152;//4838400
-		public JTextField input_text;
-		//public var world_gen_progressbar:ProgressBar;
-		//public var sound_music_channel:SoundChannel;
-		public int  background_img_id;
-		public int GUI_height;//unused
-		public int  GUI_width;//unused
+    public static final int T6_SEC = 1;
+    public static final int T1_MIN = 1;//10
+    public static final int T10_MIN = 3;//100
+		public static final int T30_MIN = 9;//300
+		public static final int T1_HOUR = 18;//600
+		public static final int T1_DAY = 432;//14400
+		public static final int T1_WEEK = 3024;//100800
+		public static final int T1_MONTH = 12096;//403200
+		public static final int T1_YEAR = 145152;//4838400
+		protected JTextField inputText;
+		//for later: public var world_gen_progressbar:ProgressBar;
+		//for later: public var sound_music_channel:SoundChannel;
+		protected int  backgroundImgId;
+		protected int guiHeight;//unused
+		protected int  guiWidth;//unused
     
-    static long tm = 0,  tm2 = 0;
+    static long tm = 0;
+    static long tm2 = 0;
                 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FPGameGithub Main = new FPGameGithub();
-        Main.background_img_id = -1;
-        JFrame Window = new JFrame();        
-        Window.setTitle("Welcome...");
-        Window.setSize(800, 800);
+        FPGameGithub container = new FPGameGithub();
+        container.backgroundImgId = -1;
+        JFrame window = new JFrame();        
+        window.setTitle("Welcome...");
+        window.setSize(800, 800);
         MainGUIPanel primarypanel = new MainGUIPanel();
 
-        Window.add(primarypanel);
-        Window.setMinimumSize(new Dimension(800, 800));
-        Window.addComponentListener(new ComponentAdapter() {
-          public void componentResized(ComponentEvent evt) {
-            Dimension size = Window.getSize();
-            Dimension min = Window.getMinimumSize();
-            if (size.getWidth() < min.getWidth()) {
-              Window.setSize((int) min.getWidth(), (int) size.getHeight());
-            }
-            if (size.getHeight() < min.getHeight()) {
-              Window.setSize((int) size.getWidth(), (int) min.getHeight());
-            }
-          }
+        window.add(primarypanel);
+        window.setMinimumSize(new Dimension(800, 800));
+        window.addComponentListener(new ComponentAdapter() {
         });
-        Window.setVisible(true);
-        /*
-        try{
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException ex) {}
-        
-        while (primarypanel.isVisible()) {
-            tm = System.currentTimeMillis();
-            primarypanel.repaint();
-            try {
-                tm2 = System.currentTimeMillis();
-                Thread.sleep(Math.max(0, tm + 1000 - tm2));
-                }
-            catch (InterruptedException ex) {}
-        }
-        */
+        window.setVisible(true);
     }  
 }

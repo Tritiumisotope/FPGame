@@ -6,35 +6,36 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
-//import java.util.List;
 
 /**
  *
  * @author Ailer and Tritium
  */
 public class Character {
-    public String name;
-    public Character mother;
-    public Character father;
-    public String[] sexChoices = {"Male","Female","Futa"};
-    public String sex;
+    protected String name;
+    protected Character mother;
+    protected Character father;
+    private String[] sexChoices = {"Male","Female","Futa"};
+    protected String sex;
     //public int fitness;
 
-    public ArrayList<Object> possessions;
-    public ArrayList<Integer> stat_id;
-    public ArrayList<Object> stats;
+    protected ArrayList<Object> possessions;
+    protected ArrayList<Integer> statID;
+    protected ArrayList<Object> stats;
 
-    public ArrayList<Object> current_tick_effects;
+    protected String skillReturn = "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
 
-    public Room location;
+    protected ArrayList<Object> currentTickEffects;
+
+    protected Room location;
             
     public Character(){
         name = "Jeff";
         sex = "Male";
         
-        possessions = new ArrayList<Object>();
-        stat_id = new ArrayList<Integer>();
-        stats = new ArrayList<Object>();
+        possessions = new ArrayList<>();
+        statID = new ArrayList<>();
+        stats = new ArrayList<>();
 
         location = null;
 
@@ -42,7 +43,7 @@ public class Character {
     public Character(String newName,int newSex, double newFitness){
         setName(newName);
         setSex(newSex);
-        new_stat(0, newFitness);
+        newStat(0, newFitness);
         
     }
     public void setName(String theName){
@@ -53,73 +54,66 @@ public class Character {
         sex = sexChoices[theSex];
     }
 
-    public void new_stat(int new_stat_id, double stat_val){
-        if(!stat_id.contains(new_stat_id)){
-            stat_id.add(new_stat_id);
-            stats.add(stat_val);
+    public void newStat(int newStatID, double statVal){
+        if(!statID.contains(newStatID)){
+            statID.add(newStatID);
+            stats.add(statVal);
         }
     }
 
-    public String apply_affect_by_id(int stat_id_for_change, double change_by){
+    public String applyAffectByID(int statIDForChange, double changeBy){
         String ret = "";
-        int index = stat_id.indexOf(stat_id_for_change);
+        int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Double temp = (Double)stats.get(index);
-            temp += change_by;
+            temp += changeBy;
         }
 
         return ret;
     }
 
-    public String appearance(int look_id, Character c){
-        String ret = "You are " + name;
-
-        return ret;
+    public String appearance(int lookID, Character c){
+        return "You are " + name;
     }
 
-    public String look(int char_id, int look_id){
-        String ret = "";
+    public String look(int charID, int lookID){
 
         if(location != null){
-            ret = location.get_room_description(this);
+            return location.getRoomDescription(this);
         }
-
-        return ret;
+        else{
+            return "";
+        }
     }
 
     public String inventory(){
-        String return_string = "";
-
-        if(possessions.size() <= 0){
-            return_string = "</n> Inventory contains nothing.";
+        String returnString = "";
+        StringBuilder bld = new StringBuilder();//added
+        if(possessions.isEmpty()){
+            returnString = "</n> Inventory contains nothing.";
         }else{
-            return_string = "</n> Inventory contains: ";
+            returnString = "</n> Inventory contains: ";
             for(Object o : possessions){
-                return_string += "something, ";
+                bld.append("something, ");//instead of normal addition
             }
+            returnString = returnString + bld.toString();
+            //no idea why it prefers this...assume compilation simplifies the run
         }
 
-        if(return_string.charAt(return_string.length()-2) == ',')return_string = return_string.substring(0, return_string.length()-2);
+        if(returnString.charAt(returnString.length()-2) == ',')returnString = returnString.substring(0, returnString.length()-2);
 
-        return sanitize(return_string);
+        return sanitize(returnString);
     }
 
     public String statistics(){
-        String return_string = "";
-
-        return_string = "Name: " + name + "\n";
-
-        return return_string;
+        return "Name: " + name + "\n";
     }
 
-    public String show_all_skills(){
-        String return_string = "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
-
-        return return_string;
+    public String showAllSkills(){
+        return skillReturn;
     }
 
-    public String sanitize(String string_to_sanitize){
-        String return_string = string_to_sanitize.replace("</n>", name);
-        return return_string;
+    public String sanitize(String stringToSanitize){
+        return stringToSanitize.replace("</n>", name);
     }
 }

@@ -5,13 +5,13 @@ public class Room{
     String description;
 
     public Room(){
-        description = "This is a room";
+        description = "This is a room, where </n> resides.";
     }
 
-    public String get_room_description(Character lookingCharacter){
+    public String getRoomDescription(Character lookingCharacter){
         String ret = "";
 
-        ret = "\n" + description + "\n";
+        ret = "\n" + description.replace("</n>", lookingCharacter.name) + "\n";
 
         return ret;
     }

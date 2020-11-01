@@ -5,45 +5,44 @@
  */
 package fpgamegithubredux;
 
-//import java.awt.Desktop;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.net.URI;
-//import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Ailer and Tritium
  */
-public class newGameGUI implements ActionListener {
-    public Character newPlayer;
-    public String output;
-    public String output2;
-    public String name;
-    public String[] sexChoices = {"Male","Female","Futa"};
-    public JTextPane text_field;
-    public JTextField nameEntry;
-    public JButton confirmName = new JButton("->");
-    public JButton goBack;
-    public int sex;
-    public int fitness;
-    public HyperlinkListener HLlisten;
-    MainGUIPanel TheMainGUI;
-    public newGameGUI(){
+public class NewGameGUI implements ActionListener {
+    protected Character newPlayer;
+    protected String output;
+    protected String output2;
+    protected String name;
+    private static final Logger LOGGER = Logger.getLogger(NewGameGUI.class.getName());
+    protected String[] sexChoices = {"Male","Female","Futa"};
+    protected JTextPane textField;
+    protected JTextField nameEntry;
+    protected JButton confirmName = new JButton("->");
+    protected JButton goBack;
+    protected int sex;
+    protected int fitness;
+    protected HyperlinkListener hlListen;
+    MainGUIPanel theMainGUI;
+    public NewGameGUI(){
         confirmName.addActionListener(this);
         confirmName.setActionCommand("nameConfirmed");
     }
-    public void newGameStart(MainGUIPanel MainGUI,JTextPane upper_text_field, JButton look, Character newchar){
-        text_field = upper_text_field;
-        TheMainGUI = MainGUI;
+    public void newGameStart(MainGUIPanel mainGUI,JTextPane upperTextField, JButton look){
+        textField = upperTextField;
+        theMainGUI = mainGUI;
         goBack = look;
         newPlayer = new Character();
-        //newchar = newPlayer;
         getSex();
     }
     private void getSex(){
@@ -59,43 +58,40 @@ public class newGameGUI implements ActionListener {
 				+ "\"I'm sorry to ask...\" she says \"... but even I'm not what I used to be.\" The comment is punctuated by a coughing fit, before she continues. \"Silent as you are, I'm afraid I have to know before we start... are you a man, or a woman?\"<br><br>"
 				+"What sex would you like to be? <font color='#0000FF'><a href=\"event:new_player,1\">Male</a> <a href=\"event:new_player,2\">Female</a></font>";
     
-    text_field.setText(output);
-    HLlisten = new HyperlinkListener()  {
-        @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    try {
-                        String result = e.getDescription();
-                        System.out.println(result);
-                        if("event:new_player,1".equals(result)){
-                            System.out.println("Male");
-                            newPlayer.setSex(0);
-                            setName();
-                        }
-                        else if ("event:new_player,2".equals(result)){
-                            newPlayer.setSex(1);
-                            setName();
-                        }
-                    
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
-                    }
-
+    textField.setText(output);
+    hlListen = e -> {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            try {
+                String result = e.getDescription();
+                LOGGER.info(result);
+                if ("event:new_player,1".equals(result)) {
+                    LOGGER.info("Male");
+                    newPlayer.setSex(0);
+                    setName();
+                } else if ("event:new_player,2".equals(result)) {
+                    newPlayer.setSex(1);
+                    setName();
                 }
+
+            } catch (Exception e2) {
+                e2.printStackTrace();
             }
-        };
-        text_field.addHyperlinkListener(HLlisten);
+
+        }
+    };
+        textField.addHyperlinkListener(hlListen);
     }
     private void setName(){
+        textField.removeHyperlinkListener(hlListen);
         output2 = "\"And your name?\" the old gypsy asks, "
                 + "a distinct lack of surprise at your answer to the last question. "
                 + "Thinking over it for a few moments, you decide to tell the gypsy your name is ";
-        text_field.setText(output2);
+        textField.setText(output2);
         nameEntry = new JTextField();
         nameEntry.setBounds(10,40,300,22);
-        text_field.add(nameEntry);
+        textField.add(nameEntry);
         confirmName.setBounds(310,40,80,22);
-        text_field.add(confirmName);
+        textField.add(confirmName);
     }
     private void setFitness(){
         output = "The old gypsy looks a little taken aback at your answer, and you hear her mumble under her breath about thinking otherwise. She raises her voice and begins to speak to you in earnest once again. \"Could you tell me a bit more?\"<br><br>"
@@ -103,68 +99,66 @@ public class newGameGUI implements ActionListener {
 				+ "The screeching as your chair backs up stops her. \"Oh? Not interested?\" The grin on the gypsies face is mindnumbingly disturbing as drool steadily flows from a hanging lip. Before long you make the decision that it's time to leave, but the gypsy seems to sense your anxiety and begins to plead \"Don't go! Please! It was just a jest! A joke! Yes! You can forgive an old woman, yes?\" You get the sense that if she could move more easily, she would have been kissing your feet by the end, but instead she was bowing her head into the table. \"Please...\" she continue \"I only meant to ask what type of body you've ended up with.\" As if to drive the point home, she casually begins \"I'm blind you see...\" before trailing off.\n\n"
 				+ "What body type do you have? <font color='#0000FF'><a href=\"fitness,1\">Athletic</a> <a href=\"fitness,2\">Chubby</a> <a href=\"fitness,3\">Slim</a></font>";
 				//Slim, Muscular, Chubby for both sexes... Ectomorphic, Mesomorphic, Endomorphic in reality
-        HLlisten = new HyperlinkListener()  {
-        @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    try {
-                        String result = e.getDescription();
-                        System.out.println(result);
-                        if("fitness,1".equals(result)){
-                            System.out.println("Male");
-                            //fitness = 0;
-                            newPlayer.apply_affect_by_id(0,0);
-                            afterName();
-                        }
-                        else if ("fitness,2".equals(result)){
-                            //fitness = 1;
-                            newPlayer.apply_affect_by_id(0,1);
-                            afterName();
-                        }
-                        else if ("fitness,3".equals(result)){
-                            //fitness = 2;
-                            newPlayer.apply_affect_by_id(0,2);
-                            afterName();
-                        }
-                    
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
+        hlListen = e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                try {
+                    String result = e.getDescription();
+                    LOGGER.info(result);
+                    if ("fitness,1".equals(result)) {
+                        LOGGER.info("Athletic");
+                        // fitness = 0;
+                        newPlayer.applyAffectByID(0, 0);
+                        afterName();
+                    } else if ("fitness,2".equals(result)) {
+                        LOGGER.info("Chubby");
+                        // fitness = 1;
+                        newPlayer.applyAffectByID(0, 1);
+                        afterName();
+                    } else if ("fitness,3".equals(result)) {
+                        LOGGER.info("Slim");
+                        // fitness = 2;
+                        newPlayer.applyAffectByID(0, 2);
+                        afterName();
                     }
 
+                } catch (Exception e2) {
+                    e2.printStackTrace();
                 }
+
             }
         };
-        text_field.setText(output);
-        text_field.addHyperlinkListener(HLlisten);
+        textField.setText(output);
+        textField.addHyperlinkListener(hlListen);
     
     }
     private void afterName(){
-        text_field.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
+        textField.removeHyperlinkListener(hlListen);
+        textField.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
         //newPlayer = new Character(name, sex, fitness);
-        Room temp_room = new Room();
+        Room tempRoom = new Room();
         
-        newPlayer.location = temp_room;
+        newPlayer.location = tempRoom;
 
         goBack.setEnabled(true);
-        TheMainGUI.Player = newPlayer;
-        TheMainGUI.enableButtons();
-        System.out.println(newPlayer.name);
+        theMainGUI.player = newPlayer;
+        theMainGUI.enableButtons();
+        LOGGER.info(newPlayer.name);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if(command.equals("nameConfirmed")){
                 //name = nameEntry.getText();
-                System.out.println("buttonpressed");
+                LOGGER.info("nameconfirmationbuttonpressed");
                 newPlayer.setName(nameEntry.getText());
-                text_field.remove(nameEntry);
-                text_field.remove(confirmName);
+                textField.remove(nameEntry);
+                nameEntry = null;
+                textField.remove(confirmName);
                 setFitness();
         }
     }
     public void exitNewGameStart(){
-
-        text_field.removeHyperlinkListener(HLlisten);
-        text_field.removeAll();
+        textField.removeHyperlinkListener(hlListen);
+        textField.removeAll();
     }
 }

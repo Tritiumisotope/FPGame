@@ -17,38 +17,44 @@ import javax.swing.event.HyperlinkListener;
  * @author Ailer and Tritium
  */
 public class StartupGUI {
-    public String contents;
-    public String FPlink;
-    public HyperlinkListener HLlisten;
+    protected String contents;
+    protected String fpLink;
+    protected HyperlinkListener hlListen;
     public StartupGUI(){
         contents = "Click 'New Game' to begin a new game. You can use the numpad to move in the cardinal directions," +
                                 "as well as to look at where you are and check your status. Keybinds can be changed in the options menu. "
                                 +"You can interact with the world through various keywords, sometimes highlighted <font color='#4CC417'>like this</font>, or <i>this</i>, but othertimes not. Experiment to see what you can do!\n\n\n"
 				+ "If you have any comments, criticism, or suggestions, please feel free to share! ";
-        FPlink = "<br><a href=\"https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt\">https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt<a>";
+        fpLink = "<br><a href=\"https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt\">https://www.futanaripalace.com/showthread.php?37585-Well-here-s-my-attempt<a>";
     }
-    public void setStartup(JTextPane upper_text_field){
-        upper_text_field.setText(contents+ FPlink);
-        upper_text_field.setEditable(false);
-        HLlisten = new HyperlinkListener()  {
-        @Override
+    public void setStartup(JTextPane upperTextField){
+        upperTextField.setText(contents+ fpLink);
+        upperTextField.setEditable(false);
+        hlListen = e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        URL url = e.getURL();
+                        URI uri = url.toURI();
+                        desktop.browse(uri);
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+        };
+        /* apparently this is the same?
+        hlListen = new HyperlinkListener()  {
+            @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    //System.out.println(1);
                     Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                    //System.out.println(2);
-                    //System.out.println(e.getURL());
                     if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                        //System.out.println(2.5);
                         try {
-                            //System.out.println(3);
-                            //System.out.println(e.getURL());
                             URL url = e.getURL();
-                            //System.out.println(url);
                             URI uri = url.toURI();   
-                            //System.out.println(uri);
                             desktop.browse(uri);
-
                         } catch (Exception e2) {
                             e2.printStackTrace();
                         }
@@ -56,9 +62,10 @@ public class StartupGUI {
                 }
             }
         };
-        upper_text_field.addHyperlinkListener(HLlisten);
+        */
+        upperTextField.addHyperlinkListener(hlListen);
     }
-    public void exitStartup(JTextPane upper_text_field){
-        upper_text_field.removeHyperlinkListener(HLlisten);
+    public void exitStartup(JTextPane upperTextField){
+        upperTextField.removeHyperlinkListener(hlListen);
     }
 }
