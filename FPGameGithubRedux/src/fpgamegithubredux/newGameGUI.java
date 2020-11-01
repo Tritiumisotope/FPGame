@@ -66,7 +66,6 @@ public class newGameGUI implements ActionListener {
                 if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     try {
                         String result = e.getDescription();
-                        System.out.println(result);
                         if("event:new_player,1".equals(result)){
                             System.out.println("Male");
                             newPlayer.setSex(0);
@@ -75,6 +74,8 @@ public class newGameGUI implements ActionListener {
                         else if ("event:new_player,2".equals(result)){
                             newPlayer.setSex(1);
                             setName();
+                        }else{
+                            System.out.println("(newGameGui.java)got unexpected result:" + result);
                         }
                     
                     } catch (Exception e2) {
@@ -109,22 +110,22 @@ public class newGameGUI implements ActionListener {
                 if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     try {
                         String result = e.getDescription();
-                        System.out.println(result);
+                        
                         if("fitness,1".equals(result)){
                             System.out.println("Male");
                             //fitness = 0;
                             newPlayer.apply_affect_by_id(0,0);
                             afterName();
-                        }
-                        else if ("fitness,2".equals(result)){
+                        }else if ("fitness,2".equals(result)){
                             //fitness = 1;
                             newPlayer.apply_affect_by_id(0,1);
                             afterName();
-                        }
-                        else if ("fitness,3".equals(result)){
+                        }else if ("fitness,3".equals(result)){
                             //fitness = 2;
                             newPlayer.apply_affect_by_id(0,2);
                             afterName();
+                        }else{
+                            System.out.println("(newGameGui.java)got unexpected result:" + result);
                         }
                     
                     } catch (Exception e2) {
@@ -142,8 +143,14 @@ public class newGameGUI implements ActionListener {
         text_field.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
         //newPlayer = new Character(name, sex, fitness);
         Room temp_room = new Room();
+
+        Item temp_item = new Item();
+        temp_item.name = "something";
+
+        temp_room.new_content(temp_item);
         
         newPlayer.location = temp_room;
+        temp_room.new_content(newPlayer);
 
         goBack.setEnabled(true);
         TheMainGUI.Player = newPlayer;

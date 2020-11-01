@@ -5,11 +5,7 @@
  */
 package fpgamegithubredux;
 
-import java.awt.Desktop;
-import java.net.URI;
-import java.net.URL;
 import javax.swing.JTextPane;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 /**
@@ -29,36 +25,6 @@ public class StartupGUI {
     }
     public void setStartup(JTextPane upper_text_field){
         upper_text_field.setText(contents+ FPlink);
-        upper_text_field.setEditable(false);
-        HLlisten = new HyperlinkListener()  {
-        @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    //System.out.println(1);
-                    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                    //System.out.println(2);
-                    //System.out.println(e.getURL());
-                    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                        //System.out.println(2.5);
-                        try {
-                            //System.out.println(3);
-                            //System.out.println(e.getURL());
-                            URL url = e.getURL();
-                            //System.out.println(url);
-                            URI uri = url.toURI();   
-                            //System.out.println(uri);
-                            desktop.browse(uri);
-
-                        } catch (Exception e2) {
-                            e2.printStackTrace();
-                        }
-                    }
-                }
-            }
-        };
-        upper_text_field.addHyperlinkListener(HLlisten);
-    }
-    public void exitStartup(JTextPane upper_text_field){
-        upper_text_field.removeHyperlinkListener(HLlisten);
+        upper_text_field.setEditable(false);        
     }
 }

@@ -5,7 +5,7 @@
  */
 package fpgamegithubredux;
 
-//import java.awt.Desktop;
+import java.awt.Desktop;
 //import java.awt.Dimension;
 import java.awt.Font;
 //import java.awt.Insets;
@@ -14,14 +14,14 @@ import java.awt.Font;
 //import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-//import java.net.URI;
-//import java.net.URL;
+import java.net.URI;
+import java.net.URL;
 //import javax.swing.JButton;
 //import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-//import javax.swing.event.HyperlinkEvent;
-//import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.MutableAttributeSet;
 //import javax.swing.text.StyleConstants;
 //import javax.swing.text.StyledDocument;
@@ -67,7 +67,61 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
         Player = null;
 
+        HyperlinkListener HLlisten = new HyperlinkListener()  {
+            @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                        try {
+                            String result = e.getDescription();
+                            String[] split_result = result.split(",");
+                            
+                            if(result.contains("event:look")){
+                                if(split_result.length > 1){
+                                    int content_id = Integer.parseInt(split_result[1]);
+                                    text_field.setText(Player.look(content_id));
+                                }                                
+                            }else if(result.contains("event:pick_up")){
+                                if(split_result.length > 1){
+                                    int content_id = Integer.parseInt(split_result[1]);
+                                    text_field.setText(Player.pick_up(content_id));
+                                }
+                            }else{
+                                System.out.println("(MainGUIPanel.java)got unexpected result:" + result);
+                            }
+
+
+                            
+                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                                //System.out.println(2.5);
+                                try {
+                                    //System.out.println(3);
+                                    //System.out.println(e.getURL());
+                                    URL url = e.getURL();
+                                    //System.out.println(url);
+                                    if(url != null){
+                                        URI uri = url.toURI();   
+                                        //System.out.println(uri);
+                                        
+                                        desktop.browse(uri);
+                                    }
         
+                                } catch (Exception e2) {
+                                    e2.printStackTrace();
+                                }
+                            }
+                            
+                        
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+    
+                    }
+                }
+
+            };
+        
+        text_field.addHyperlinkListener(HLlisten);
         //input_text = new JTextField();
         //input_text.setBounds(125,568,100,22);
   
@@ -94,8 +148,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         if(!startingagame){
             startingagame = true;
             newgame.newGameStart(this,text_field, super.buttons[0],Player);
-            startup.exitStartup(text_field);
-            for (int i=0;i<11;i++){
+           for (int i=0;i<11;i++){
                 if(i!=6 && i!=9){
                 super.buttons[i].setEnabled(false);
                 }
@@ -105,7 +158,6 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         else{
             newgame.exitNewGameStart();
             newgame.newGameStart(this,text_field,super.buttons[0],Player);
-            startup.exitStartup(text_field);
             for (int i=0;i<11;i++){
                 if(i!=6 && i!=9){
                 super.buttons[i].setEnabled(false);
