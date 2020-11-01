@@ -97,6 +97,10 @@ public class Room{
         return contents.indexOf(o);
     }
 
+    public Object get_content(int ID){
+        return contents.get(ID);
+    }
+
     public Item item_loss(int content_id){
         if(content_id >= 0 && content_id < contents.size()){
             if(contents.get(content_id) instanceof Item){

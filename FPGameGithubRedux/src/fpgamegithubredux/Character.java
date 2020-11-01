@@ -52,10 +52,17 @@ public class Character {
         wait_time = 0;
         
         Stat temp_stat = new Stat();
+        temp_stat.set_name("Fitness");
         temp_stat.ID = 0;
         temp_stat.stat_value = newFitness;
         
-        newStat(temp_stat.ID, temp_stat);        
+        newStat(temp_stat.ID, temp_stat);
+        
+        CharAction tempAction = new CharAction();
+        tempAction.name = "Talk";
+        tempAction.dialogue = "</n> takes a moment to talk to </n2>";
+        
+        actions.add(tempAction);
     }
 
     public void setName(String theName){
@@ -98,7 +105,23 @@ public class Character {
     }
 
     public String appearance(int lookID, Character c){
-        return "You are " + name;
+        String ret = "";
+        if(c == this || c == null){
+            ret = "You are " + name + "<br>";
+        }else{
+            ret = "This is " + name + "<br>";
+        }
+
+        if(lookID !=0){
+
+        }else{
+            ArrayList<CharAction> tempList = get_all_overworld_actions();
+            for(CharAction act : tempList){
+                ret += "<a href=\"event:action," + location.get_content_id(this) + "," + tempList.indexOf(act) +"\"><font color='#0000FF'>"+act.get_name() +"</font></a>    ";
+            }
+        }
+        
+        return ret;
     }
 
     public String look(){return look(-1, 0);}
@@ -108,9 +131,29 @@ public class Character {
 
         if(location != null){
             if(content_id >= 0){
-                ret = "something, something....";
+                Object tempObject = location.get_content(content_id);
+                if(tempObject instanceof Character){
+                    ret = ((Character)tempObject).appearance(look_id, this);
+                }
             }else{
                 ret = location.getRoomDescription(this);
+            }
+        }
+
+        return ret;
+    }
+
+    public String fire_action(int contendID, int actionID){
+        String ret = "";
+        if(location != null){
+            CharAction tempAction;
+            if(contendID < 0){
+                tempAction = location.getAction(actionID);
+                ret = sanitize(tempAction.trigger(this));
+            }else{
+                Character tempChar = (Character)location.get_content(contendID);
+                tempAction = tempChar.get_all_overworld_actions().get(actionID);
+                ret = sanitize(tempAction.trigger(this));
             }
         }
 
@@ -153,7 +196,12 @@ public class Character {
     }
 
     public String statistics(){
-        return "Name: " + name + "\n";
+        String ret = "Name: " + name + "<br>";
+        for(Stat s:stats){
+            ret += s.get_name() + ": " + s.stat_value + "(" + s.temp_stat_value + ")";
+        }
+        
+        return ret;
     }
 
     public String showAllSkills(){
@@ -183,22 +231,7 @@ public class Character {
         for(CharAction a : actions )ret.add(a);
 
         return ret;
-    }
-
-    public String fire_action(int content_id, int action_id){
-        String ret = "";
-        if(location != null){
-            CharAction tempAction;
-            if(content_id < 0){
-                tempAction = location.getAction(action_id);
-                ret = sanitize(tempAction.trigger(this));
-            }else{
-
-            }
-        }
-
-        return ret;
-    }
+    }    
 
     public void add_to_possessions(Item new_item){
         if(new_item != null){
