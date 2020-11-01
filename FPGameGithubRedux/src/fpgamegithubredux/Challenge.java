@@ -10,15 +10,15 @@ public class Challenge {
         tag = "";
         variability = 20;
     }
-
-    public String getText(){
-        return tag;
+    public void setVariability(int newVari){
+        variability = newVari;
     }
-
     public void setText(String incomingTag){
         tag = incomingTag;
     }
-
+    public String getText(){
+        return tag;
+    }
     public int roll(Character attacker, Character defender){
         int ret = 0;
         
@@ -28,5 +28,8 @@ public class Challenge {
         ret = attackerRoll - defenderRoll;
 
         return ret;
+    }
+    public int roll(Character onlyChar){
+        return r.nextInt(variability);
     }
 }
