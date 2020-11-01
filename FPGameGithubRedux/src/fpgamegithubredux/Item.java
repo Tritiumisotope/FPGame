@@ -9,7 +9,7 @@ public class Item {
         value = 0;
     }
 
-    public String get_dropped_description(){
+    public String getDroppedDescription(){
         return name;
     }
 }

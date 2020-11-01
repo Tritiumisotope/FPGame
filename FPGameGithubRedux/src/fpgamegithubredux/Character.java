@@ -19,7 +19,7 @@ public class Character {
     protected String sex;
     protected int gold;
     protected int busy;
-    protected int wait_time;
+    protected int waitTime;
     //public int fitness;
 
     protected ArrayList<Item> possessions;
@@ -39,24 +39,24 @@ public class Character {
         setName(newName);
         setSex(newSex);
 
-        possessions = new ArrayList<Item>();
-        statID = new ArrayList<Integer>();
-        stats = new ArrayList<Stat>();
-        actions = new ArrayList<CharAction>();
+        possessions = new ArrayList<>();
+        statID = new ArrayList<>();
+        stats = new ArrayList<>();
+        actions = new ArrayList<>();
 
         location = null;
 
         gold = 0;
 
         busy = 0;
-        wait_time = 0;
+        waitTime = 0;
         
-        Stat temp_stat = new Stat();
-        temp_stat.set_name("Fitness");
-        temp_stat.ID = 0;
-        temp_stat.stat_value = newFitness;
+        Stat tempStat = new Stat();
+        tempStat.setName("Fitness");
+        tempStat.statID = 0;
+        tempStat.statValue = newFitness;
         
-        newStat(temp_stat.ID, temp_stat);
+        newStat(tempStat.statID, tempStat);
         
         CharAction tempAction = new CharAction();
         tempAction.name = "Talk";
@@ -74,19 +74,19 @@ public class Character {
     }
 
     public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
-    public void newStat(int newStatID, Stat newStat, Double stat_val){
+    public void newStat(int newStatID, Stat newStat, Double statVal){
         if(!statID.contains(newStatID)){
             statID.add(newStatID);
-            newStat.set_stat_value(stat_val);
+            newStat.setStatValue(statVal);
             stats.add(newStat);
         }
     }
 
-    public Double get_stat(int statID){
+    public Double getStat(int statID){
         Double ret = -1.0;
         for(Stat tempStat : stats){
-            if(tempStat.ID == statID){
-                ret = tempStat.stat_value;
+            if(tempStat.statID == statID){
+                ret = tempStat.statValue;
             }
         }
 
@@ -98,7 +98,7 @@ public class Character {
         int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Stat temp = ((Stat)stats.get(index));
-            temp.stat_value += changeBy;
+            temp.statValue += changeBy;
         }
 
         return ret;
@@ -113,11 +113,11 @@ public class Character {
         }
 
         if(lookID !=0){
-
+            //TBD
         }else{
-            ArrayList<CharAction> tempList = get_all_overworld_actions();
+            ArrayList<CharAction> tempList = getAllOverworldActions();
             for(CharAction act : tempList){
-                ret += "<a href=\"event:action," + location.get_content_id(this) + "," + tempList.indexOf(act) +"\"><font color='#0000FF'>"+act.get_name() +"</font></a>    ";
+                ret += "<a href=\"event:action," + location.getContentID(this) + "," + tempList.indexOf(act) +"\"><font color='#0000FF'>"+act.getName() +"</font></a>    ";
             }
         }
         
@@ -125,15 +125,15 @@ public class Character {
     }
 
     public String look(){return look(-1, 0);}
-    public String look(int content_id){return look(content_id, 0);}
-    public String look(int content_id, int look_id){
+    public String look(int contentID){return look(contentID, 0);}
+    public String look(int contentID, int lookID){
         String ret = "";
 
         if(location != null){
-            if(content_id >= 0){
-                Object tempObject = location.get_content(content_id);
+            if(contentID >= 0){
+                Object tempObject = location.getContent(contentID);
                 if(tempObject instanceof Character){
-                    ret = ((Character)tempObject).appearance(look_id, this);
+                    ret = ((Character)tempObject).appearance(lookID, this);
                 }
             }else{
                 ret = location.getRoomDescription(this);
@@ -143,7 +143,7 @@ public class Character {
         return ret;
     }
 
-    public String fire_action(int contendID, int actionID){
+    public String fireAction(int contendID, int actionID){
         String ret = "";
         if(location != null){
             CharAction tempAction;
@@ -151,8 +151,8 @@ public class Character {
                 tempAction = location.getAction(actionID);
                 ret = sanitize(tempAction.trigger(this));
             }else{
-                Character tempChar = (Character)location.get_content(contendID);
-                tempAction = tempChar.get_all_overworld_actions().get(actionID);
+                Character tempChar = (Character)location.getContent(contendID);
+                tempAction = tempChar.getAllOverworldActions().get(actionID);
                 ret = sanitize(tempAction.trigger(this));
             }
         }
@@ -160,10 +160,10 @@ public class Character {
         return ret;
     }
 
-    public String fire_challenge(int content_id, int action_id, int challenge_id, int triggering_content_id){
+    public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
         String ret = "";
-            if(content_id<0){
-                ret = location.fire_challenge(action_id, challenge_id, this);
+            if(contentID<0){
+                ret = location.fireChallenge(actionID, challengeID, this);
             }
         return ret;
     }
@@ -184,12 +184,12 @@ public class Character {
         return sanitize(returnString);
     }
 
-    public String pick_up(int content_id){
+    public String pickUp(int contentID){
         String ret = "";
-        Item new_item = location.item_loss(content_id);
-        if(new_item != null){
-            add_to_possessions(new_item);
-            ret += sanitize("</n> got " + new_item.name + ".<br>") + look();
+        Item newItem = location.itemLoss(contentID);
+        if(newItem != null){
+            addToPossessions(newItem);
+            ret += sanitize("</n> got " + newItem.name + ".<br>") + look();
         }
 
         return ret;
@@ -198,7 +198,7 @@ public class Character {
     public String statistics(){
         String ret = "Name: " + name + "<br>";
         for(Stat s:stats){
-            ret += s.get_name() + ": " + s.stat_value + "(" + s.temp_stat_value + ")";
+            ret += s.getName() + ": " + s.statValue + "(" + s.tempStatValue + ")";
         }
         
         return ret;
@@ -208,46 +208,42 @@ public class Character {
         return "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
     }
 
-    public String sanitize(String string_to_sanitize){
-        String return_string = string_to_sanitize.replaceAll("</n>", name);
-        return return_string;
+    public String sanitize(String stringToSanitize){
+        return stringToSanitize.replace("</n>", name);
     }
 
-    public void set_busy(){set_busy(1);}
-    public void set_busy(int num_ticks){
-        busy += num_ticks;
-        wait_time = 0;
+    public void setBusy(){setBusy(1);}
+    public void setBusy(int numTicks){
+        busy += numTicks;
+        waitTime = 0;
     }
 
-    public String get_personal_actions(){
-        String ret = "";
-
-        return ret;
+    public String getPersonalActions(){
+        return "";
     }
 
-    public ArrayList<CharAction> get_all_overworld_actions(){
-        ArrayList<CharAction> ret = new ArrayList<CharAction>();
+    public ArrayList<CharAction> getAllOverworldActions(){
+        ArrayList<CharAction> ret = new ArrayList<>();
         
         for(CharAction a : actions )ret.add(a);
 
         return ret;
     }    
 
-    public void add_to_possessions(Item new_item){
-        if(new_item != null){
-            if(new_item.name.toLowerCase() == "gold"){
-                gold += new_item.value;
+    public void addToPossessions(Item newItem){
+        if(newItem != null){
+            if(newItem.name.equalsIgnoreCase("gold")){
+                gold += newItem.value;
                 if(gold < 0)gold = 0;
             }else{
-                possessions.add(new_item);
+                possessions.add(newItem);
             }
         }
     }
 
-    public String get_status(){return get_status(null);}
-    public String get_status(Character lookingCharacter){
+    public String getStatus(){return getStatus(null);}
+    public String getStatus(Character lookingCharacter){
         String ret = name;
-
 
         return ret;
     }

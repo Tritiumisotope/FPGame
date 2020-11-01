@@ -1,29 +1,29 @@
 package fpgamegithubredux;
 
-import java.lang.Math;
+import java.util.Random;
 
 public class Challenge {
     protected String tag;
     protected int variability;
-
+    protected Random r = new Random();
     public Challenge(){
         tag = "";
         variability = 20;
     }
 
-    public String get_text(){
+    public String getText(){
         return tag;
     }
 
-    public void set_text(String _tag){
-        tag = _tag;
+    public void setText(String incomingTag){
+        tag = incomingTag;
     }
 
     public int roll(Character attacker, Character defender){
         int ret = 0;
         
-        int attackerRoll = (int)(Math.random()*variability);
-        int defenderRoll = (int)(Math.random()*variability);
+        int attackerRoll = (r.nextInt(variability));
+        int defenderRoll = (r.nextInt(variability));
 
         ret = attackerRoll - defenderRoll;
 
