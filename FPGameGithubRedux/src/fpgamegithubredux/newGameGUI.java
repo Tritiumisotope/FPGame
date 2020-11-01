@@ -19,12 +19,12 @@ import java.util.logging.Logger;
  *
  * @author Ailer and Tritium
  */
-public class newGameGUI implements ActionListener {
+public class NewGameGUI implements ActionListener {
     protected Character newPlayer;
     protected String output;
     protected String output2;
     protected String name;
-    private static final Logger LOGGER = Logger.getLogger(newGameGUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NewGameGUI.class.getName());
     protected String[] sexChoices = {"Male","Female","Futa"};
     protected JTextPane textField;
     protected JTextField nameEntry;
@@ -34,7 +34,7 @@ public class newGameGUI implements ActionListener {
     protected int fitness;
     protected HyperlinkListener hlListen;
     MainGUIPanel theMainGUI;
-    public newGameGUI(){
+    public NewGameGUI(){
         confirmName.addActionListener(this);
         confirmName.setActionCommand("nameConfirmed");
     }
@@ -64,14 +64,16 @@ public class newGameGUI implements ActionListener {
             try {
                 String result = e.getDescription();
                 if ("event:new_player,1".equals(result)) {
-                    System.out.println("Male");
+                    LOGGER.info("Male");
                     newPlayer.setSex(0);
                     setName();
                 } else if ("event:new_player,2".equals(result)) {
+                    LOGGER.info("Female");
                     newPlayer.setSex(1);
                     setName();
                 } else {
-                    System.out.println("(newGameGui.java)got unexpected result:" + result);
+                    String msg = "(newGameGui.java) got unexpected result: " +result;
+                    LOGGER.fine(msg);
                 }
 
             } catch (Exception e2) {
@@ -109,20 +111,23 @@ public class newGameGUI implements ActionListener {
                         String result = e.getDescription();
                         
                         if("fitness,1".equals(result)){
-                            System.out.println("Male");
+                            LOGGER.info("Athletic");
                             //fitness = 0;
                             newPlayer.applyAffectByID(0,0);
                             afterName();
                         }else if ("fitness,2".equals(result)){
+                            LOGGER.info("Chubby");
                             //fitness = 1;
                             newPlayer.applyAffectByID(0,1);
                             afterName();
                         }else if ("fitness,3".equals(result)){
+                            LOGGER.info("Slim");
                             //fitness = 2;
                             newPlayer.applyAffectByID(0,2);
                             afterName();
                         }else{
-                            System.out.println("(newGameGui.java)got unexpected result:" + result);
+                            String msg = "(newGameGui.java) got unexpected result: " +result;
+                            LOGGER.fine(msg);
                         }
                     
                     } catch (Exception e2) {
@@ -139,19 +144,19 @@ public class newGameGUI implements ActionListener {
         textField.removeHyperlinkListener(hlListen);
         textField.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
         //newPlayer = new Character(name, sex, fitness);
-        Room temp_room = new Room();
+        Room tempRoom = new Room();
 
-        Item temp_item = new Item();
-        temp_item.name = "something";
+        Item tempItem = new Item();
+        tempItem.name = "something";
 
-        temp_room.newContent(temp_item);
+        tempRoom.newContent(tempItem);
 
-        Character temp_char = new Character();
-        temp_char.location = temp_room;
-        temp_room.newContent(temp_char);
+        Character tempChar = new Character();
+        tempChar.location = tempRoom;
+        tempRoom.newContent(tempChar);
         
-        newPlayer.location = temp_room;
-        temp_room.newContent(newPlayer);
+        newPlayer.location = tempRoom;
+        tempRoom.newContent(newPlayer);
 
         goBack.setEnabled(true);
         theMainGUI.player = newPlayer;

@@ -39,10 +39,10 @@ public class Character {
         setName(newName);
         setSex(newSex);
 
-        possessions = new ArrayList<Item>();
-        statID = new ArrayList<Integer>();
-        stats = new ArrayList<Stat>();
-        actions = new ArrayList<CharAction>();
+        possessions = new ArrayList<>();
+        statID = new ArrayList<>();
+        stats = new ArrayList<>();
+        actions = new ArrayList<>();
 
         location = null;
 
@@ -223,7 +223,7 @@ public class Character {
     }
 
     public ArrayList<CharAction> getAllOverworldActions(){
-        ArrayList<CharAction> ret = new ArrayList<CharAction>();
+        ArrayList<CharAction> ret = new ArrayList<>();
         
         for(CharAction a : actions )ret.add(a);
 

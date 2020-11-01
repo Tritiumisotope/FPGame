@@ -82,11 +82,11 @@ public class OptionsGUI implements ActionListener{
         /* to be determined what the heck this did
         if(mini_map <= 0){
 				ret += "mini-map: <b>off</b>  <a href=\"event:options,1\">small</a>  <a href=\"event:options,2\">large</a>" +  "\n";
-	}else if(mini_map == 1){
-				ret += "mini-map: <a href=\"event:options,0\">off</a>  <b>small</b>  <a href=\"event:options,2\">large</a>" +  "\n";
-	}else{
-				ret += "mini-map: <a href=\"event:options,0\">off</a>   <a href=\"event:options,1\">small</a>  <b>large</b>" +  "\n";
-	}
+        }else if(mini_map == 1){
+                    ret += "mini-map: <a href=\"event:options,0\">off</a>  <b>small</b>  <a href=\"event:options,2\">large</a>" +  "\n";
+        }else{
+                    ret += "mini-map: <a href=\"event:options,0\">off</a>   <a href=\"event:options,1\">small</a>  <b>large</b>" +  "\n";
+        }
         */
         optionsTextField.setText(ret);
     }

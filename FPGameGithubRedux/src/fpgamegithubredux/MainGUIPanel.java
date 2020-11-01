@@ -6,21 +6,15 @@
 package fpgamegithubredux;
 
 import java.awt.Desktop;
-//import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.net.URI;
-import java.net.URL;
-//import javax.swing.JButton;
-//import javax.swing.JPanel;
+import java.util.logging.Logger;
+
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-//import javax.swing.text.MutableAttributeSet;
-//import javax.swing.text.StyleConstants;
-//import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -31,12 +25,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     
     protected JTextField inputText;
     protected JTextPane textField;
-    
+    private static final Logger LOGGER = Logger.getLogger(MainGUIPanel.class.getName());
     protected Font theFont;
     protected int[] textsizes = new int[]{8,10,11,12,13,14,16};
     protected String contents;
     protected OptionsGUI options;
-    protected newGameGUI newgame;
+    protected NewGameGUI newgame;
     protected boolean optguion = false;
     protected boolean startingagame = false;
     protected StartupGUI startup = new StartupGUI();
@@ -47,7 +41,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         //this was Main.as
         setLayout(null);
         options = new OptionsGUI();
-        newgame = new newGameGUI();
+        newgame = new NewGameGUI();
         textField = new JTextPane();
         
         textField.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
@@ -78,8 +72,6 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         };
         
         textField.addHyperlinkListener(hlListen);
-        //input_text = new JTextField();
-        //input_text.setBounds(125,568,100,22);
   
     }
     private void parseEvent(String result){
@@ -102,7 +94,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
              int triggeringContentID = Integer.parseInt(splitResult[4]);
              textField.setText(player.fireChallenge(contentID, actionID, challengeID, triggeringContentID));
          }else{
-             System.out.println("(MainGUIPanel.java)got unexpected result: " + result);
+             String msg = "(MainGUIPanel.java)got unexpected result: " + result;
+             LOGGER.info(msg);
          }
     }
     @Override
@@ -136,8 +129,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
         else{
             player = null;
-            newgame = new newGameGUI();
-            //newgame.exitNewGameStart();
+            newgame = new NewGameGUI();
             newgame.newGameStart(this,textField,super.buttons[0]);
             for (int i=0;i<11;i++){
                 if(i!=6 && i!=9 && i!=10){
@@ -191,9 +183,9 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         textField.setEnabled(true);
     }
     public void cleanupGUI(){
+            /*
 			//int i = 0;
 			//Map_button.setText("Map");
-                        /*
 			for(i;i<numChildren;i++){
 				if(getChildAt(i) is MovieClip){	
 					removeChildAt(i);
@@ -213,7 +205,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 			}
 			this.stage.stageFocusRect = false;
 			this.stage.focus = this;
-                        */
+            */
     }
     public void resetBounds(){
         //something for later

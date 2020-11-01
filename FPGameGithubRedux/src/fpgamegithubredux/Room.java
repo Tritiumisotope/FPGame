@@ -9,8 +9,8 @@ public class Room{
     protected ArrayList<CharAction> actions;
 
     public Room(){
-        contents = new ArrayList<Object>();
-        actions = new ArrayList<CharAction>();
+        contents = new ArrayList<>();
+        actions = new ArrayList<>();
         description = "This is a room. There is something <a0> about it.";
 
         CharAction tempAction = new CharAction();
@@ -52,7 +52,7 @@ public class Room{
                 }
             }
         }
-        if(nothing)ret += "Nothing!";
+        if(Boolean.TRUE.equals(nothing))ret += "Nothing!";
         for(CharAction a : actions){
             if(a != null){
                 ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.getName() +"</i></a>");

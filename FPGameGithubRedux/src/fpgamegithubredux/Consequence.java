@@ -9,10 +9,10 @@ public class Consequence {
     protected ArrayList<Integer> rollRequired;
 
     public Consequence(){
-        statEffected = new ArrayList<Integer>();
-        conseqDescr = new ArrayList<String>();
-        effectAmount = new ArrayList<Double>();
-        rollRequired = new ArrayList<Integer>();
+        statEffected = new ArrayList<>();
+        conseqDescr = new ArrayList<>();
+        effectAmount = new ArrayList<>();
+        rollRequired = new ArrayList<>();
     }
     
     public String trigger(int roll, Character attacker, Character defender){

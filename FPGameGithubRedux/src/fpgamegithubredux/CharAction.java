@@ -13,8 +13,8 @@ public class CharAction {
     public CharAction(){
         name = "";
         dialogue = "";
-        challenges = new ArrayList<Challenge>();
-        consequences = new ArrayList<Consequence>();
+        challenges = new ArrayList<>();
+        consequences = new ArrayList<>();
     }
 
     public String getName(){
