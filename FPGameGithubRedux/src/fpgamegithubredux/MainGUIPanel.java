@@ -34,7 +34,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     protected boolean optguion = false;
     protected boolean startingagame = false;
     protected StartupGUI startup = new StartupGUI();
-    protected Character player;
+    public Character player;
     private String[] messages = {"Not Supported Yet"};
     
     public MainGUIPanel(){
