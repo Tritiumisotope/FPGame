@@ -24,9 +24,11 @@ public class Item {
     protected int tickCount;
     protected int destroyTick;
     protected Character spawnChar;
-
     public Item(){
-        name = "";
+        this("");
+    }
+    public Item(String n){
+        name = n;
         droppedDescription = "";
 	    multiDroppedDescription = "";
 		inventoryDescription = "";
@@ -53,8 +55,8 @@ public class Item {
         otherItem.droppedDescription.equals(droppedDescription) &&
         otherItem.multiDroppedDescription.equals(multiDroppedDescription) &&
         otherItem.inventoryDescription.equals(inventoryDescription) &&
-        otherItem.value == value //&&
-        //otherItem.effects.toString().equals(effects.toString)
+        otherItem.value == value &&
+        otherItem.effects.toString().equals(effects.toString())
         );
     }
     public void setName(String newName){
