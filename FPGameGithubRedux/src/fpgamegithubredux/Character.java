@@ -22,7 +22,7 @@ public class Character {
     protected int gold;
     protected int busy;
     protected int waitTime;
-    //public int fitness;
+    public int fitness;
 
     protected ArrayList<Item> possessions;
     protected ArrayList<Integer> statID;
@@ -70,7 +70,9 @@ public class Character {
     public void setName(String theName){
         name = theName;
     }
-
+    public String getName(){
+        return name;
+    }
     public void setSex(int theSex){
         sex = sexChoices[theSex];
     }

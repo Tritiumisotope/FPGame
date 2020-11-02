@@ -1,5 +1,7 @@
 package fpgamegithubredux;
 
+import java.util.Arrays;
+
 public class Item {
     protected String droppedDescription;
     protected String multiDroppedDescription;
@@ -145,7 +147,28 @@ public class Item {
     public String useItem(Character user, int possessionID, int forceTags){
         int i = 0;
         String useDesc= getUseDescription();
-        //all changes to stats, body parts, and other effects
+        for (i=0;i<effects.length;i++){
+            //if (effects[i] != null) useDesc+= "\n" + user.apply_affect_by_id(i,effects[i], 0, null, Body.change_stats_total);
+        }
+        for (i=0;i<changeEffects.length;i++){
+            if (changeEffects[i] != null){
+                if(changeEffects[i] instanceof Consequence){//was is
+                    //useDesc += changeEffects[i].trigger(0, user);
+                }else{
+                    //changeEffects[i].set_originator(user);
+                    //changeEffects[i].set_id(user.get_all_overworld_actions().length+possessionID);
+                    //useDesc += changeEffects[i].trigger(user, forceTags);
+                    if((useDesc.indexOf("</a>") >=0 || useDesc.indexOf("</dc0>") >=0) && numUses > 0)numUses++;
+                }
+            }
+        }
+        
+        if(statActionAdd.length > 0){
+            for(i=0;i<Math.ceil(statActionAdd.length/2);i++){
+                //user.addStatAction(statActionAdd[i*2], statActionAdd[i*2+1]);
+            }
+        }
+        if(numUses > 0)numUses--;
         return useDesc;
     }
     public int findWeight(Integer[] identEfficacy, int identChance){
@@ -217,7 +240,7 @@ public class Item {
         return desc;
     }
     public String getDescription(Character owner, Integer[] identEfficacy, Boolean keepTags){
-        int identChance = 0;//ported over...no use seemingly
+        int identChance = 0;
         String desc = getName() + "\n";
         desc += "You guess it weighs about " + findWeight(identEfficacy, identChance) + "lbs.\n";
 
@@ -234,13 +257,13 @@ public class Item {
                         for(change_count = 0;change_count<changeEffects[count].changeEffects.length;change_count++){
                             if (changeEffects[count].changeEffects[changeCount] is Sex){
                                 desc += "You think it might change your sex.\n";
-                            }else if(change_effects[count].change_effects[change_count] is Character_class){
+                            }else if(changeEffects[count].changeEffects[change_count] is Character_class){
                                 desc += "You think it might change your class.\n";
-                            }else if(change_effects[count].change_effects[change_count] is Body_part){
+                            }else if(changeEffects[count].changeEffects[change_count] is Body_part){
                                 desc += "You think it might change your body.\n";
-                            }else if(change_effects[count].change_effects[change_count] is Race){
+                            }else if(changeEffects[count].changeEffects[change_count] is Race){
                                 desc += "You think it might change your race.\n";
-                            }else if(change_effects[count].change_effects[change_count] is Room){
+                            }else if(changeEffects[count].changeEffects[change_count] is Room){
                                 desc += "You think it might change where you are.\n";
                             }else{
                                 desc += "There's something off about it....\n";
@@ -274,8 +297,8 @@ public class Item {
         int valToReturn = value;
         int roll = 0;
         Challenge valueChallenge = new Challenge();
-        //set attack stat for valueChallenge
-        //set defense stat for valueChallenge
+        //valueChallenge.setAttackStat(FPalace_skills.valuing_id);
+        //valueChallenge.setDefenseStat(-1, Math.ceil(Math.sqrt(value) + 5));
         valueChallenge.setVariability(10);
         roll = valueChallenge.roll(checker);
             double variance = 1;
@@ -507,12 +530,12 @@ public class Item {
         String desc = "";
         tickCount++;
         int spread = (int)Math.round(Math.random());
-        if(tickCount%FPGameGithub.T1_MONTH==0 && getPropogate()&&spread==1){
+        if(Boolean.TRUE.equals(tickCount%FPGameGithub.T1_MONTH==0 && getPropogate()&&spread==1)){
             //pick an exit to spread to...
             spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
             Room tempRoom = currentRoom.exits[spread];
             if(tempRoom != null&&tempRoom.area != null&&tempRoom.area == currentRoom.area){
-                Item tempItem= itemCopy(this);
+                Item tempItem= itemCopy();
                 tempRoom.newContent(tempItem);
             }						
             
@@ -538,31 +561,41 @@ public class Item {
     public void setImageID(int newImageID){
         imageID = newImageID;
     }
-    public Item itemCopy(Item toClone){
+    public Item itemCopy(){
         Item retItem = new Item();
-        retItem.name = toClone.name;
-        retItem.inventoryDescription = toClone.inventoryDescription;
-        retItem.droppedDescription = toClone.droppedDescription;
-        retItem.multiDroppedDescription = toClone.multiDroppedDescription;
-        retItem.value = toClone.value;
+        retItem.name = name;
+        retItem.inventoryDescription = inventoryDescription;
+        retItem.droppedDescription = droppedDescription;
+        retItem.multiDroppedDescription = multiDroppedDescription;
+        retItem.value = value;
         int count = 0;
-        //effects copy
-        retItem.useDescription = toClone.useDescription;
-        count = 0;
-        //change effects copy
-        retItem.propogate = toClone.propogate;
-        retItem.identDifficulty = toClone.identDifficulty;
-        retItem.weight = toClone.weight;
-        count = 0;
-        //stat action add copy
-        retItem.numUses = toClone.numUses;
-        retItem.imageID = toClone.imageID;
+
+        //for(count=0;count<effects.length;count++){        //effects copy, maybe toClone.effects.length?
+            //retItem.effects[count] = effects[count];
+        //}
+        retItem.effects = Arrays.copyOf(effects, effects.length);//this might be enough?
+        //Collections.addAll(this.list, source);
+
+        retItem.useDescription = useDescription;
+        //for(count=0;count<changeEffects.length;count++){
+            //retItem.changeEffects[count] = changeEffects[count];
+        //}//change effects copy
+        retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.length);//this might be enough?
+        retItem.propogate = propogate;
+        retItem.identDifficulty = identDifficulty;
+        retItem.weight = weight;
+        //for(count=0;count < statActionAdd.length;count++){
+            //retItem.statActionAdd[count] = statActionAdd[count];
+        //}//stat action add copy
+        retItem.statActionAdd = Arrays.copyOf(statActionAdd, statActionAdd.length);//this might be enough?
+        retItem.numUses = numUses;
+        retItem.imageID = imageID;
         //topic
-        //crafting requirements
+        retItem.craftingRequirements = Arrays.copyOf(craftingRequirements, craftingRequirements.length);//crafting requirements
 
         retItem.tickCount = 0;
-        retItem.destroyTick = toClone.destroyTick;
-        retItem.spawnChar = toClone.spawnChar;
+        retItem.destroyTick = destroyTick;
+        retItem.spawnChar = spawnChar;
 
         return retItem;
     }

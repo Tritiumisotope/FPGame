@@ -16,22 +16,22 @@ public class Consequence {
     }
     
     public String trigger(int roll, Character attacker, Character defender){
-        String ret = "";
-
+        //String ret = ""
+        StringBuilder bld = new StringBuilder();
         for(String desc : conseqDescr){
             int index = conseqDescr.indexOf(desc);
             int statID = statEffected.get(index);
             int neededRoll = rollRequired.get(index);
 
             if(neededRoll >= 0 && roll >= neededRoll && defender.getStat(statID) > -1){
-                ret += desc;
+                bld.append(desc);//ret += desc
             }
             if(neededRoll < 0 && roll <= neededRoll && defender.getStat(statID) > -1){
-                ret += desc;
+                bld.append(desc);//ret += desc
             }
         }
 
-        return ret;
+        return bld.toString();//ret
     }
 
     public void addConsequence(int statID, Double changeBy, String desc, int requireRoll){

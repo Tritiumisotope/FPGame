@@ -12,6 +12,11 @@ public class Room{
     protected Area area;
     protected String[] exitNames;
 
+    protected String lastTick;
+    protected String nextTick;
+
+    protected int lastAreaTick;
+
     public Room(){
         contents = new ArrayList<>();
         actions = new ArrayList<>();
@@ -33,30 +38,40 @@ public class Room{
 
         addAction(tempAction);
     }
-
+    public String getLastTick(){
+        return lastTick;
+    }
+    
+    public void setLastTick(String s){
+        lastTick = nextTick + s;
+        nextTick = "";
+    }
     public String getRoomDescription(Character lookingCharacter){
-        String ret = "";
-
-        ret = "<br>" + description + "<br>";
-        ret += "The room contains: ";
+        String ret;
+        StringBuilder bld = new StringBuilder();
+        bld.append("<br>" + description + "<br>");//ret = "<br>" + description + "<br>"
+        bld.append("The room contains: ");//ret += "The room contains: "
         Boolean nothing = true;
         if(!contents.isEmpty()){
             for(Object o : contents){
                 if(o instanceof Character){
                     Character tempChar = (Character)o;
                     if(tempChar != lookingCharacter){
-                        ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,";
+                        bld.append("<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,");
+                        //ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,"
                         nothing = false;
                     }
                 }else if(o instanceof Item){
                     Item tempItem = (Item)o;
 
-                    ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,";
+                    bld.append("<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,");
+                    //ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,"
                     nothing = false;
                 }
             }
         }
-        if(Boolean.TRUE.equals(nothing))ret += "Nothing!";
+        ret = bld.toString();
+        if(Boolean.TRUE.equals(nothing))bld.append("Nothing!");//ret += "Nothing!"
         for(CharAction a : actions){
             if(a != null){
                 ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.getName() +"</i></a>");
@@ -91,22 +106,49 @@ public class Room{
 
     public void newContent(Object o){newContent(o, null);}
     public void newContent(Object o, Room prevRoom){
-        contents.add(o);
+        //contents.add(o)
+        int i = 0;
+        for(i=0;i<=contents.size();i++){//.length
+            if(contents.get(i) == null){//[i]
+                contents.set(i, o);//[i]
+                break;
+            }
+        }
+        
+        if(o instanceof Character){//was is
+            Character tempChar = (Character)(o);
+            String fromName = "somewhere";
+            
+            if(prevRoom != null){
+                
+                fromName = getExitName(prevRoom);
+                if(!fromName.equals("somewhere"))fromName = "the "+ fromName;
+                
+                if(prevRoom.lastAreaTick > lastAreaTick){
+                    nextTick += tempChar.getName() + " arrives from "+fromName+".\n";
+                }else{
+                    setLastTick(getLastTick() + tempChar.getName() + " arrives from "+fromName+".\n");
+                }
+            }else{
+                setLastTick(getLastTick() + tempChar.getName() + " arrives from "+fromName+".\n");
+            }
+        }
+    }
+    public String getExitName(Room r){
+        int i;
+        for(i=0;i<exits.length;i++){
+            if(exits[i] == r) return exitNames[i];
+        }
+        
+        return "somewhere";
     }
     public void removeContent(Object o){
-			Boolean found = false;
-			for (int i=0;i<contents.size();i++){
-				if(contents.get(i)==o){
-                    //contents[i] = null;
-                    //contents.set(i,null);
-                    //if(i == contents.length - 1)found = true;
-                    //if(i == contents.size()- 1)found = true;
-                    contents.remove(i);
-					break;
-				}
-			}
-            //if(found) contents = contents.slice(0,contents.length-1);\
-            //if(found) contents.remove(i);
+        for (int i=0;i<contents.size();i++){
+            if(contents.get(i)==o){
+                contents.remove(i);//contents[i] = null
+                break;
+            }
+        }
     }
 
     public int getContentID(Object o){

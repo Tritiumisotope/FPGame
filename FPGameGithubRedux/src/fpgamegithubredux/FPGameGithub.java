@@ -25,8 +25,8 @@ public class FPGameGithub {
 		public static final int T1_MONTH = 12096;//403200
 		public static final int T1_YEAR = 145152;//4838400
 		protected JTextField inputText;
-		//for later: public var world_gen_progressbar:ProgressBar;
-		//for later: public var sound_music_channel:SoundChannel;
+		//for later: public var world_gen_progressbar:ProgressBar
+		//for later: public var sound_music_channel:SoundChannel
 		protected int  backgroundImgId;
 		protected int guiHeight;//unused
 		protected int  guiWidth;//unused
