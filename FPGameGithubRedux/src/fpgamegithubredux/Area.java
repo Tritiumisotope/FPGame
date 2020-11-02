@@ -159,7 +159,7 @@ public class Area{
         Boolean found = false;
         for (x = 0;x<rooms.length;x++){
             if (rooms[x] != null){
-                /* what?!
+                // what?!
                 for(y = 0;y<rooms[x].length;y++){
                     if(rooms[x][y] != null){
                         for(z=0;z<rooms[x][y].length;z++){
@@ -171,7 +171,6 @@ public class Area{
                     }
                     if(found) break;
                 }
-                */
             }
             if(found) break;
         }
@@ -1213,13 +1212,11 @@ public class Area{
                         break;
                     }*/
                 }else{
-                    /*
-                    if(r.actions[count].name == act.name){
-                        act = r.actions[count];
+                    if(r.actions.get(count).name.equals(act.name)){
+                        act = r.actions.get(count);
                         break;
                     }
-                    */
-                    if(r.actions.get(count).name == act.name){
+                    if(r.actions.get(count).name.equals(act.name)){
                         act = r.actions.get(count);
                         break;
                     }

@@ -8,15 +8,15 @@ public class Item {
     protected int value;
     protected int identDifficulty;
     protected int weight;
-    //effects
-    //changeEffects
+    protected Double[] effects;//effects
+    protected Object[] changeEffects;//changeEffects
     protected String useDescription;
     protected Boolean propogate = false;
-    //statActionAdd
+    protected StatAction[] statActionAdd;//statActionAdd
     protected int numUses;
     protected int imageID;
     //put conversation topic variable here if needed
-    //craftingRequirements
+    protected ItemCntPair[] craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
     protected Item dismantleItem;
 
     protected int tickCount;
@@ -29,16 +29,16 @@ public class Item {
 	    multiDroppedDescription = "";
 		inventoryDescription = "";
         value = 0;
-        //empty effects array
-        //empty changeEffects array
+        effects = null;//empty effects array
+        changeEffects = null;//empty changeEffects array
         useDescription = "";
         identDifficulty = 5;
         weight = 1;
-        //empty statActionAdd array
+        statActionAdd = null;//empty statActionAdd array
         numUses = 1;
         imageID=-1;
         //topic
-        //craftingRequirements
+        craftingRequirements = null;//craftingRequirements
         tickCount = 0;
         destroyTick = -1;
         spawnChar = null;
@@ -95,11 +95,25 @@ public class Item {
     public void setMultiDroppedDescription(String newMultiDropDesc){
         multiDroppedDescription = newMultiDropDesc;
     }
-    //addCraftingRequirement
-    //addChangeEffect
-    //addConsequence (which adds a change effect)
-    //addAction (which adds a change effect)
-    //NewStatAction (Which adds to statActionAdd)
+    public void add_crafting_requirement(Item craftRequirementItem,int num){
+        craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
+    }
+    public void add_change_effect(Object o){
+        Consequence consequence = new Consequence();
+        consequence.addConsequence(0, 0.0, "", 0);
+        //consequence.addChangeEffect(o);
+        
+        changeEffects[changeEffects.length] = consequence;
+    }
+    public void add_consequence(Consequence c){
+        changeEffects[changeEffects.length] = c;
+    }
+    public void add_action(CharAction a){
+        changeEffects[changeEffects.length] = a;
+    }
+    public void new_stat_action(int statID, CharAction a){
+        statActionAdd[statActionAdd.length] = new StatAction(statID, a);//replaces above? see accessors
+    }
     public String getName(){
         return name;
     }
@@ -116,19 +130,26 @@ public class Item {
     public int getIdentifyDifficulty(){
         return identDifficulty;
     }
-    //addEffect
+
+    public void add_effect(int type, double multiplier){//was number
+        if(effects[type]==null){
+            effects[type] = multiplier;
+        }else{
+            effects[type] += multiplier;
+        }			
+    }
+    
     public Boolean getPropogate(){
         return propogate;
     }
     public String useItem(Character user, int possessionID, int forceTags){
         int i = 0;
-        String useDesc= ""; //= getUseDescription();
+        String useDesc= getUseDescription();
         //all changes to stats, body parts, and other effects
         return useDesc;
     }
-    public String getDescription(Character owner, Integer[] identEfficacy, Boolean keepTags){
-        String desc = getName() + "\n";
-        int identChance = 0;//ported over...no use seemingly
+    public int findWeight(Integer[] identEfficacy, int identChance){
+        
         double weightDeviation = 1;
         if(identEfficacy != null){
             identChance = 2*identEfficacy[0]/(identDifficulty);
@@ -140,20 +161,142 @@ public class Item {
                 weightDeviation = weightDeviation * Math.random();
             }
         }
-        if(weight > 0) desc += "You guess it weighs about " + Math.ceil(weight + (weight*weightDeviation)) + "lbs.\n";
+        int ret = (int)Math.ceil(weight + (weight*weightDeviation));
+        if (ret>0){
+            return ret;
+        }else{
+            return 0;
+        }
+    }
+    public String describeEffects(Integer[] identEfficacy,Boolean keepTags, int identChance, String desc){
+        int count;
         Boolean showing = false;
+        if(effects.length > 0){
+            for(count = 0;count<effects.length;count++){
+                if(effects[count] != null && Math.random() <= identChance){
+                    if(!showing){
+                        desc += "Looks like it might have an impact on the following stats:\n";
+                        showing = true;
+                    }
+                    if(keepTags){
+                        if(effects[count] >= 0){
+                            desc += "<s"+count+">";
+                        }else{
+                            desc += "<s-"+count+">";
+                        }
+                    }else{
+                        //String l_string = FPalace_helper.get_stat_name_by_id(count);
+                        if(identEfficacy[0]>20){
+                            /*
+                            if(l_string != "?"){
+                                if(effects[count] >= 0){
+                                    desc += "Increase " + l_string + " by "	+effects[count]+".\n";
+                                }else{
+                                    desc += "Increase " + l_string + " by "	+ (-effects[count]) +".\n";
+                                }
+                            }
+                            */
+                        }else if(identEfficacy[0]>10){
+                            /*
+                            if(l_string != "?"){
+                                if(effects[count] >= 0){
+                                    ret += "Increase ";
+                                }else{
+                                    ret += "Decrease ";
+                                }
+                                ret += l_string + "\n";
+                            }
+                            */
+                        }else{
+                            //if(l_string != "?")ret += l_string + "\n";
+                        }
+                    }
+                }
+            }
+        }
+        return desc;
+    }
+    public String getDescription(Character owner, Integer[] identEfficacy, Boolean keepTags){
+        int identChance = 0;//ported over...no use seemingly
+        String desc = getName() + "\n";
+        desc += "You guess it weighs about " + findWeight(identEfficacy, identChance) + "lbs.\n";
+
         int count = 0; //for effects and such
-        //effects desc
-        //changeEffects desc
-        //statActionAdd desc
+        desc = describeEffects(identEfficacy,keepTags, identChance, desc);
+        if(changeEffects.length > 0){
+            desc += "\n";
+            count = 0;
+            for(count=0;count<changeEffects.length;count++){
+                if(Math.random() <= identChance){
+                    /*
+                    if(changeEffects[count] is Consequence && changeEffects[count].changeEffects[0] != null){
+                        int change_count = 0;
+                        for(change_count = 0;change_count<changeEffects[count].changeEffects.length;change_count++){
+                            if (changeEffects[count].changeEffects[changeCount] is Sex){
+                                desc += "You think it might change your sex.\n";
+                            }else if(change_effects[count].change_effects[change_count] is Character_class){
+                                desc += "You think it might change your class.\n";
+                            }else if(change_effects[count].change_effects[change_count] is Body_part){
+                                desc += "You think it might change your body.\n";
+                            }else if(change_effects[count].change_effects[change_count] is Race){
+                                desc += "You think it might change your race.\n";
+                            }else if(change_effects[count].change_effects[change_count] is Room){
+                                desc += "You think it might change where you are.\n";
+                            }else{
+                                desc += "There's something off about it....\n";
+                            }
+                        }
+                    }else{
+                        desc += "There's something off about it....\n";
+                    }
+                    */
+                }
+            }
+        }
+        if(statActionAdd.length > 0){
+            desc += "\n";
+            count = 0;
+            //for(count=0;count<Math.ceil(statActionAdd.length/2);count++){
+            for(count=0;count<statActionAdd.length;count++){
+                if(Math.random() <= identChance){
+                    desc += "It seems to be magical.\n";
+                    break;
+                }
+            }//TODO do we never find out how magical with good enough identification? where is the else?!
+        }
         
         return desc;
     }
+    public int getValue(){
+        return value;
+    }
+    public int getValue(Character checker){
+        int valToReturn = value;
+        int roll = 0;
+        Challenge valueChallenge = new Challenge();
+        //set attack stat for valueChallenge
+        //set defense stat for valueChallenge
+        valueChallenge.setVariability(10);
+        roll = valueChallenge.roll(checker);
+            double variance = 1;
+            if(roll<0){
+                //within 50%
+                variance+=(Math.random()-Math.random())*0.5;
+            }else if (roll>0){
+                //within 20%
+                variance+=(Math.random()-Math.random())*0.2;
+            }else if(roll>10){
+                //within 10%
+                variance+=(Math.random()-Math.random())*0.1;
+            }else if(roll>20){
+                //within 1%
+                variance+=(Math.random()-Math.random())*0.01;
+            }
+            valToReturn = (int)Math.round(valToReturn*variance);
+        return valToReturn;
+    }
     public int getValue(Character buyer, Character seller){
-        if(buyer == null && seller == null){
-            return value;
-        }else{
-            int valToReturn = value;
+        int valToReturn = value;
             int roll = 0;
             Challenge valueChallenge = new Challenge();
             //set attack stat for valueChallenge
@@ -162,34 +305,18 @@ public class Item {
             if(buyer != seller){
                 roll = valueChallenge.roll(buyer); //roll buyer only method
                 double variance = 1;
-                if(roll < 0){
+                if(roll<0){
                     //within 50%
-                    if(Math.random() > 0.5){
-                        variance += Math.random()*0.5;
-                    }else{
-                        variance -= Math.random()*0.5;
-                    }
-                }else if(roll > 20){
-                    //within 1%
-                    if(Math.random() > 0.5){
-                        variance += Math.random()*0.01;
-                    }else{
-                        variance -= Math.random()*0.01;
-                    }
-                }else if(roll > 10){
-                    //within 10%
-                    if(Math.random() > 0.5){
-                        variance += Math.random()*0.1;
-                    }else{
-                        variance -= Math.random()*0.1;
-                    }
-                }else if(roll >= 0){
+                    variance+=(Math.random()-Math.random())*0.5;
+                }else if (roll>0){
                     //within 20%
-                    if(Math.random() > 0.5){
-                        variance += Math.random()*0.2;
-                    }else{
-                        variance -= Math.random()*0.2;
-                    }
+                    variance+=(Math.random()-Math.random())*0.2;
+                }else if(roll>10){
+                    //within 10%
+                    variance+=(Math.random()-Math.random())*0.1;
+                }else if(roll>20){
+                    //within 1%
+                    variance+=(Math.random()-Math.random())*0.01;
                 }
                 int buyerValue = (int)Math.floor(value*variance);
                 //need relationship stuff for this
@@ -227,34 +354,18 @@ public class Item {
                 }
                 roll = valueChallenge.roll(seller);
                 variance = 1;
-				if(roll < 0){
-					//within 50%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.5;
-					}else{
-						variance -= Math.random()*0.5;
-					}
-				}else if(roll > 20){
-					//within 1%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.01;
-					}else{
-						variance -= Math.random()*0.01;
-					}
-				}else if(roll > 10){
-					//within 10%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.1;
-					}else{
-						variance -= Math.random()*0.1;
-					}
-				}else if(roll >= 0){
-					//within 20%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.2;
-					}else{
-						variance -= Math.random()*0.2;
-					}
+                if(roll<0){
+                    //within 50%
+                    variance+=(Math.random()-Math.random())*0.5;
+                }else if (roll>0){
+                    //within 20%
+                    variance+=(Math.random()-Math.random())*0.2;
+                }else if(roll>10){
+                    //within 10%
+                    variance+=(Math.random()-Math.random())*0.1;
+                }else if(roll>20){
+                    //within 1%
+                    variance+=(Math.random()-Math.random())*0.01;
                 }
                 int sellerValue = (int)Math.ceil(value*variance);
                 //need relationship stuff for this
@@ -287,6 +398,60 @@ public class Item {
                 //set defense
                 barterChallenge.setVariability(20);
                 roll = barterChallenge.roll(buyer,seller);
+                if(roll > 20){
+                    if(buyerValue < sellerValue){
+                        valToReturn = buyerValue;
+                    }else{
+                        valToReturn = sellerValue;
+                    }
+                }else if(roll > 10){
+                    if(buyerValue < sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 - 2*(buyerValue - (buyerValue*buyerValue/sellerValue)));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 - 2*(sellerValue - (sellerValue*sellerValue/buyerValue)));
+                    }
+                }else if(roll < -20){
+                    if(buyerValue > sellerValue){
+                        valToReturn = buyerValue;
+                    }else{
+                        valToReturn = sellerValue;
+                    }
+                }else if(roll < -10){
+                    if(buyerValue > sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 + 2 * (sellerValue - (sellerValue*sellerValue/buyerValue)));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 + 2 * (buyerValue - (buyerValue*buyerValue/sellerValue)));
+                    }
+                }else if(10 >= roll && roll >= 0){
+                    if(buyerValue < sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 - (buyerValue - (buyerValue*buyerValue/sellerValue)));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 - (sellerValue - (sellerValue*sellerValue/buyerValue)));
+                    }
+                }
+                else{
+                    if(buyerValue > sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 + sellerValue - (sellerValue*sellerValue/buyerValue));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 + buyerValue - (buyerValue*buyerValue/sellerValue));
+                    }
+                }
+                    /*
+                    //0 to 10
+                    if(buyerValue < sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 - (buyerValue - (buyerValue*buyerValue/sellerValue)));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 - (sellerValue - (sellerValue*sellerValue/buyerValue)));
+                    }
+                    //-10 to <0
+                    if(buyerValue > sellerValue){
+                        valToReturn = ((buyerValue + sellerValue)/2 + sellerValue - (sellerValue*sellerValue/buyerValue));
+                    }else{
+                        valToReturn = ((buyerValue + sellerValue)/2 + buyerValue - (buyerValue*buyerValue/sellerValue));
+                    }
+                    */
+                
+                /*
                 if(roll >= 0){//buyer has the advantage
 					if(roll > 20){
 						if(buyerValue < sellerValue){
@@ -327,45 +492,11 @@ public class Item {
 							valToReturn = ((buyerValue + sellerValue)/2 + buyerValue - (buyerValue*buyerValue/sellerValue));
 						}
 					}
-				}
-            }else{
-				roll = valueChallenge.roll(buyer);
-				double variance = 1;
-				if(roll < 0){
-					//within 50%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.5;
-					}else{
-						variance -= Math.random()*0.5;
-					}
-				}else if(roll > 20){
-					//within 1%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.01;
-					}else{
-						variance -= Math.random()*0.01;
-					}
-				}else if(roll > 10){
-					//within 10%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.1;
-					}else{
-						variance -= Math.random()*0.1;
-					}
-				}else if(roll > 0){
-					//within 20%
-					if(Math.random() > 0.5){
-						variance += Math.random()*0.2;
-					}else{
-						variance -= Math.random()*0.2;
-					}
-				}
-				valToReturn = (int)Math.round(valToReturn*variance);
-			
+                }
+                */
             }
             return valToReturn;
         }
-    }
     public String getUseDescription(){
         return useDescription;
     }
@@ -375,32 +506,24 @@ public class Item {
     public String tick(Room currentRoom, Character character){
         String desc = "";
         tickCount++;
-        if(tickCount%FPGameGithub.T1_MONTH==0){
-            if(getPropogate()){
-                //pick an exit to spread to...
-                int spread = (int)Math.round(Math.random());
-                if(spread == 1){
-                    spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
-                    Room tempRoom = currentRoom.exits[spread];
-                    if(tempRoom != null){
-                        if(tempRoom.area != null){
-                            if(tempRoom.area == currentRoom.area){
-                                Item tempItem= itemCopy(this);
-                                tempRoom.newContent(tempItem);
-                            }
-                        }
-                    }						
-                }
-            }
+        int spread = (int)Math.round(Math.random());
+        if(tickCount%FPGameGithub.T1_MONTH==0 && getPropogate()&&spread==1){
+            //pick an exit to spread to...
+            spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
+            Room tempRoom = currentRoom.exits[spread];
+            if(tempRoom != null&&tempRoom.area != null&&tempRoom.area == currentRoom.area){
+                Item tempItem= itemCopy(this);
+                tempRoom.newContent(tempItem);
+            }						
+            
         }
         if(destroyTick <= tickCount && destroyTick > 0){
             if(spawnChar != null){
-                desc += "the " + getName() + "breaks open. ";
+                desc += "the " + getDroppedDescription() + "breaks open. ";
                 spawnChar.newLocation(currentRoom);
             }
             if(character != null){
-                
-                for(int i=0;i<character.possessions.size();i++){
+                for(int i=0;i<character.possessions.size()-1;i++){
                     if(character.possessions.get(i) == this){
                         character.drop(i);
                         break;
