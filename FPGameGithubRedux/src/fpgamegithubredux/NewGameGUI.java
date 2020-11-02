@@ -147,7 +147,7 @@ public class NewGameGUI implements ActionListener {
         Room tempRoom = new Room();
 
         Item tempItem = new Item();
-        tempItem.name = "something";
+        tempItem.setDroppedDescription("something");
 
         tempRoom.newContent(tempItem);
 

@@ -6,6 +6,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,6 +14,7 @@ import java.util.ArrayList;
  */
 public class Character {
     protected String name;
+    private static final Logger LOGGER = Logger.getLogger(Character.class.getName());
     protected Character mother;
     protected Character father;
     protected String[] sexChoices = {"Male","Female","Futa"};
@@ -181,7 +183,7 @@ public class Character {
         }else{
             returnString = "</n> Inventory contains: ";
             for(Item o : possessions){
-                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.name + "</a>,";
+                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getDroppedDescription()+ "</a>,";
             }
         }
 
@@ -194,8 +196,9 @@ public class Character {
         String ret = "";
         Item newItem = location.itemLoss(contentID);
         if(newItem != null){
+            LOGGER.info("Item picked up is:" + newItem.getDroppedDescription());
             addToPossessions(newItem);
-            ret += sanitize("</n> got " + newItem.name + ".<br>") + look();
+            ret += sanitize("</n> got " + newItem.getDroppedDescription() + ".<br>") + look();
         }
 
         return ret;
@@ -238,13 +241,16 @@ public class Character {
 
     public void addToPossessions(Item newItem){
         if(newItem != null){
-            if(newItem.name.equalsIgnoreCase("gold")){
+            LOGGER.info("valid item passed is:" + newItem.getDroppedDescription());
+            if(newItem.getDroppedDescription().equalsIgnoreCase("gold")){
                 gold += newItem.value;
                 if(gold < 0)gold = 0;
             }else{
                 possessions.add(newItem);
             }
         }
+        String msg = possessions.get(possessions.size()-1).getDroppedDescription();
+        LOGGER.info(msg);
     }
 
     public String getStatus(){return getStatus(null);}
