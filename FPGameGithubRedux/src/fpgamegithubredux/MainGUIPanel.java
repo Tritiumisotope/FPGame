@@ -76,7 +76,10 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     }
     private void parseEvent(String result){
          //Parse out our command and its arguments
+         LOGGER.info("Hyperlink pressed,");
+         
          String[] splitResult = result.split(",");
+         LOGGER.info(result);
          if(result.contains("event:look")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
              textField.setText(player.look(contentID));                     

@@ -1,9 +1,10 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Room{
-
+    private static final Logger LOGGER = Logger.getLogger(Room.class.getName());
     protected String description;
     protected ArrayList<Object> contents;
     protected ArrayList<CharAction> actions;
@@ -93,17 +94,19 @@ public class Room{
         contents.add(o);
     }
     public void removeContent(Object o){
-			//var found:Boolean;
-			//found = false;
+			Boolean found = false;
 			for (int i=0;i<contents.size();i++){
 				if(contents.get(i)==o){
                     //contents[i] = null;
-                    contents.set(i,null);
-					//if(i == contents.length - 1)found = true;
+                    //contents.set(i,null);
+                    //if(i == contents.length - 1)found = true;
+                    //if(i == contents.size()- 1)found = true;
+                    contents.remove(i);
 					break;
 				}
 			}
-			//if(found) contents = contents.slice(0,contents.length-1);
+            //if(found) contents = contents.slice(0,contents.length-1);\
+            //if(found) contents.remove(i);
     }
 
     public int getContentID(Object o){
@@ -116,7 +119,9 @@ public class Room{
 
     public Item itemLoss(int contentID){
         if(contentID >= 0 && contentID < contents.size() && contents.get(contentID) instanceof Item){
+            LOGGER.info("valid ID");
             Item tempItem = (Item)contents.get(contentID);
+            LOGGER.info("Item lost is:" + tempItem.getDroppedDescription());
             contents.remove(contentID);
             return tempItem;
         }
