@@ -42,23 +42,23 @@ public class Area{
             
     public Area() {//String d
         //set_description(d);
-        rooms = null;//new Array()
+        rooms = new Room[0][0][0];//new Array()
         map = "";
-        room_list = null;
-        templateRooms = null;//template_rooms = null;//new Array()
-        templateFloorRange = null;//template_floor_range = null;//new Array()
-        legend = null;//new Array()
+        room_list = new Room[0];
+        templateRooms = new Room[0];//template_rooms = null;//new Array()
+        templateFloorRange = new int[0];//template_floor_range = null;//new Array()
+        legend = new String[0];//new Array()
         legendFloor = null;//legend_floor = null;//new Array()
         connectRooms = null;//new Array()
         //world = null;
         playerDiscovered = false;
         mapColor = new Color(255,255,255);
-        tempOffset = null;//temp_offset = null;//new Array()
+        tempOffset = new int[0];//temp_offset = null;//new Array()
         //filler_template = null;//new Array()
         //filler_type = null;//new Array()
         //dynamic_build_template = null;//new Array()
         dynamicBuildUp = true;
-        dynamicBuildFloorRange=null;//dynamic_build_floor_range = null;//new Array()
+        dynamicBuildFloorRange=new int[0];//dynamic_build_floor_range = null;//new Array()
         fillerFloorRange= null;//filler_floor_range = null;//new Array()
         
         //spawn_creatures = null;//new Array()
@@ -95,7 +95,8 @@ public class Area{
     public void new_conversation_topic(Conversation_topic ct){
         conversations[conversations.length] = ct;
     }
-    
+    */
+    /*
     public function get_topics():Array{
         return conversations;
     }
@@ -251,7 +252,7 @@ public class Area{
                 return 1;
             }
             
-            int[] temp_room_list = null;
+            int[] temp_room_list = new int[0];
             
             int i = 0;
             for(i=0;i<room_list.length;i++){
@@ -1352,8 +1353,8 @@ public class Area{
     public void check_connections(int floor_to_check,Room[] connected_rooms,Room[] unconnected_rooms){
         //floor_to_check was -2, connected_rooms was null, unconnected rooms was null
         if(connected_rooms == null){
-            connected_rooms = null;//new Array()
-            unconnected_rooms = null;//new Array()
+            connected_rooms = new Room[0];//new Array()
+            unconnected_rooms = new Room[0];//new Array()
             if(floor_to_check < 0){
                 //unconnected_rooms = unconnected_rooms.concat(room_list);
             }else{
@@ -1989,7 +1990,8 @@ public class Area{
             }
         }
         
-        if(list[0] == null){
+        if(list == null){//was [0]
+            list = new Room[0];
             if(indent>0){
                 if(indent>1){
                     LOGGER.info("Area being naughty in get_edge_rooms...");

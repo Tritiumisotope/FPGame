@@ -38,6 +38,27 @@ public class Room{
 
         addAction(tempAction);
     }
+    public Room(String d){
+        contents = new ArrayList<>();
+        actions = new ArrayList<>();
+        description = d;
+
+        CharAction tempAction = new CharAction();
+        tempAction.name = "strange";
+        tempAction.dialogue = "You </c0> around.";
+
+        Challenge tempChal = new Challenge();
+        tempChal.setText("look");
+
+        Consequence tempConseq = new Consequence();
+        tempConseq.addConsequence(0, 0.0, "It looks like someone has completely disinfected everything in this room. The smell is horrible. ", 0);
+        tempConseq.addConsequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
+        tempConseq.addConsequence(0, 0.0, "You decide the ground looks nice. ", -1);
+
+        tempAction.addChallenge(tempChal, tempConseq);
+
+        addAction(tempAction);
+    }
     public String getLastTick(){
         return lastTick;
     }
@@ -106,9 +127,9 @@ public class Room{
 
     public void newContent(Object o){newContent(o, null);}
     public void newContent(Object o, Room prevRoom){
-        //contents.add(o)
+        contents.add(o);
         int i = 0;
-        for(i=0;i<=contents.size();i++){//.length
+        for(i=0;i<=contents.size()-1;i++){//.length
             if(contents.get(i) == null){//[i]
                 contents.set(i, o);//[i]
                 break;

@@ -12,27 +12,68 @@ import java.util.logging.Logger;
  *
  * @author Ailer and Tritium
  */
-public class Character {
-    protected String name;
+public class Character extends DynamicObject {
+    //protected String name;
+    
+    public static int relations_affect_id = -99999;
+    public static int gold_id = -99998;
+    public static int attraction_id = -99997;
+    public static int introduced_id = -99996;
+    
     private static final Logger LOGGER = Logger.getLogger(Character.class.getName());
+    protected ArrayList<Item> possessions;
     protected Character mother;
     protected Character father;
-    protected String[] sexChoices = {"Male","Female","Futa"};
-    protected String sex;
-    protected int gold;
-    protected int busy;
-    protected int waitTime;
-    public int fitness;
 
-    protected ArrayList<Item> possessions;
-    protected ArrayList<Integer> statID;
-    protected ArrayList<Stat> stats;
+    protected String surname;
+
+    protected Room location;
+    protected String status;
 
     protected ArrayList<CharAction> actions;
 
+    public Body body;
+    //public var sex:Sex;
+    //public var cclass:Array;
+
+    public Skill_set skills;
+
+    public int equip_state = 0;
+		
+    //public var personality:Personality;
+    
+    public int ai_move = 0;
+    public int busy;
+    protected int waitTime;
+    //ONLY USED BY AREA
+    public Boolean ai_already_moved = false;
+    //ONLY USED BY AREA
+    public int total_actions_taken;
+    public String previous_action_output;
+    //to DIE>
+    protected String[] sexChoices = {"Male","Female","Futa"};
+    protected String sex;
+    //to DIE^
+    protected int gold;
+    public int xp;//:uint;
+    public int nxt_lvl_xp;//:uint;
+	public int lvl;//:uint;
+	public int stat_points;//:uint;
+    public int fitness;//this must die
+
+
+    
+    protected ArrayList<Integer> statID;
+    protected ArrayList<Stat> stats;
+
+    
+    
+
+    
+
     protected ArrayList<Object> currentTickEffects;
 
-    protected Room location;
+    
             
     public Character(){
         this("Jeff", 0, 0.0);
@@ -70,6 +111,7 @@ public class Character {
     public void setName(String theName){
         name = theName;
     }
+    @Override
     public String getName(){
         return name;
     }
@@ -77,6 +119,14 @@ public class Character {
         sex = sexChoices[theSex];
     }
 
+    public void apply_tick_effect(TickEffect tf){
+        /*
+        if(!get_primary_race().check_immunity(tf.status_id)){
+            personality.advance_objectives(Quest.status_add_action, tf, this);
+            current_tick_effects[current_tick_effects.length] = tf;
+        }
+        */
+    }
     public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
     public void newStat(int newStatID, Stat newStat, Double statVal){
         if(!statID.contains(newStatID)){
@@ -86,14 +136,68 @@ public class Character {
         }
     }
 
-    public Double getStat(int statID){
-        Double ret = -1.0;
+    public double getStat(int statID){
+        double ret = -1.0;
         for(Stat tempStat : stats){
             if(tempStat.statID == statID){
-                ret = tempStat.statValue;
+                ret = tempStat.statValue.doubleValue();
             }
         }
 
+        return ret;
+    }
+    public Number get_stat(int i){
+        return get_stat(i,1,0,-1,true);
+    }
+    public Number get_stat(int i,int get_hard_value, 
+    int multi_part_process/*Body.get_stat_total*/, 
+    int part_id/*Body.target_all_parts*/, Boolean add_equip){
+        //default get_hard = 1, multi_part =0, part_id = -1, add_eqip = true
+        if(i == 0) return 0;
+        Number ret = -1;
+        
+        if(part_id < 0){
+            int k = 0;
+            for(k=0;k<statID.size();k++){//.length
+                if(i == statID.get(k)){//[]
+                    //ret += stat[k].get_stat_value(this, get_hard_value,add_equip) + 1;
+                }
+            }
+            /*
+            Number body_stat = -1;
+            if(body != null){
+                body_stat = body.get_stat_by_id(this, i,get_hard_value,multi_part_process,part_id,add_equip);
+            }
+            */
+            /*
+            if(body_stat > -1 && ret > -1){
+                ret += body_stat; 
+            }else if(body_stat > - 1){
+                ret += body_stat + 1; 
+            }
+            */
+        }else{
+            /*
+            Number part_stat =body.get_stat_by_id(this, i, get_hard_value, multi_part_process, part_id,add_equip);
+            if(part_stat > - 1){
+                ret += part_stat + 1; 
+            }
+            */
+        }
+                    
+        if(ret.intValue() < 0){
+            ret = -1;//stat not found
+        }
+        /*
+        if(i == Character.relations_affect_id){
+            //only one thing should ever do this, and it's just to see if the "stat" exists over in Challenge
+            return 1;
+        }
+        
+        if(i == Character.gold_id){
+            return gold;
+        }
+        */           
         return ret;
     }
 
@@ -102,7 +206,8 @@ public class Character {
         int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Stat temp = ((Stat)stats.get(index));
-            temp.statValue += changeBy;
+            //temp.statValue += changeBy;
+            temp.statValue = temp.statValue.doubleValue()+ changeBy;
         }
 
         return ret;
@@ -152,7 +257,13 @@ public class Character {
 
         return ret;
     }
-
+    public int get_skill_by_id(int skill_id){
+        return skills.get_skill_value(this, skill_id);
+    }
+    
+    public int get_skill_rank_by_id(int skill_id){
+        return skills.get_skill_ranks(skill_id);
+    }
     public String fireAction(int contendID, int actionID){
         String ret = "";
         if(location != null){
@@ -173,7 +284,7 @@ public class Character {
     public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
         String ret = "";
             if(contentID<0){
-                ret = location.fireChallenge(actionID, challengeID, this);
+                ret = location.fireChallenge(actionID, challengeID, this);//TODO THIS?!
             }
         return ret;
     }

@@ -17,7 +17,7 @@ public class Item {
     protected StatAction[] statActionAdd;//statActionAdd
     protected int numUses;
     protected int imageID;
-    //put conversation topic variable here if needed
+    protected Conversation_topic topic;
     protected ItemCntPair[] craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
     protected Item dismantleItem;
 
@@ -66,7 +66,9 @@ public class Item {
         inventoryDescription = newInvDesc;
     }
 
-    //put set topic here if needed
+    public void set_topic(Conversation_topic ct){
+        topic = ct;
+    }
 
     public void setNumUses(int initNumUses){
         numUses = initNumUses;
@@ -109,7 +111,7 @@ public class Item {
         
         changeEffects[changeEffects.length] = consequence;
     }
-    public void add_consequence(Consequence c){
+    public void addConsequence(Consequence c){
         changeEffects[changeEffects.length] = c;
     }
     public void add_action(CharAction a){
@@ -146,7 +148,10 @@ public class Item {
     public Boolean getPropogate(){
         return propogate;
     }
-    public String useItem(Character user, int possessionID, int forceTags){
+    public String useItem(Character user, int possessionID){
+        return useItem(user, possessionID, 0);
+    }
+    public String useItem(Character user, int possessionID, int forceTags){//default tags 0
         int i = 0;
         String useDesc= getUseDescription();
         for (i=0;i<effects.length;i++){
@@ -537,7 +542,7 @@ public class Item {
             spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
             Room tempRoom = currentRoom.exits[spread];
             if(tempRoom != null&&tempRoom.area != null&&tempRoom.area == currentRoom.area){
-                Item tempItem= itemCopy();
+                Item tempItem= copyItem();
                 tempRoom.newContent(tempItem);
             }						
             
@@ -563,7 +568,7 @@ public class Item {
     public void setImageID(int newImageID){
         imageID = newImageID;
     }
-    public Item itemCopy(){
+    public Item copyItem(){
         Item retItem = new Item();
         retItem.name = name;
         retItem.inventoryDescription = inventoryDescription;
@@ -572,23 +577,23 @@ public class Item {
         retItem.value = value;
         int count = 0;
 
-        //for(count=0;count<effects.length;count++){        //effects copy, maybe toClone.effects.length?
-            //retItem.effects[count] = effects[count];
-        //}
+        for(count=0;count<effects.length;count++){        //effects copy, maybe toClone.effects.length?
+            retItem.effects[count] = effects[count];
+        }
         retItem.effects = Arrays.copyOf(effects, effects.length);//this might be enough?
         //Collections.addAll(this.list, source);
 
         retItem.useDescription = useDescription;
-        //for(count=0;count<changeEffects.length;count++){
-            //retItem.changeEffects[count] = changeEffects[count];
-        //}//change effects copy
+        for(count=0;count<changeEffects.length;count++){
+            retItem.changeEffects[count] = changeEffects[count];
+        }//change effects copy
         retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.length);//this might be enough?
         retItem.propogate = propogate;
         retItem.identDifficulty = identDifficulty;
         retItem.weight = weight;
-        //for(count=0;count < statActionAdd.length;count++){
-            //retItem.statActionAdd[count] = statActionAdd[count];
-        //}//stat action add copy
+        for(count=0;count < statActionAdd.length;count++){
+            retItem.statActionAdd[count] = statActionAdd[count];
+        }//stat action add copy
         retItem.statActionAdd = Arrays.copyOf(statActionAdd, statActionAdd.length);//this might be enough?
         retItem.numUses = numUses;
         retItem.imageID = imageID;

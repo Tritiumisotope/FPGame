@@ -1,0 +1,85 @@
+package fpgamegithubredux;
+
+import java.util.ArrayList;
+
+public class Upgrade_Item extends Item {
+        public static int upgrade_grip = 0;
+		public static int upgrade_tip = 1;
+		public static int upgrade_blade = 2;
+		public static int upgrade_lining = 3;
+		public static int upgrade_plates = 4;
+		
+		public int upgrade_type_id;		
+		public ArrayList<Integer> skill_id;//public var skill_id:Array;
+		public ArrayList<Integer> skill_bonus;//public var skill_bonus:Array;
+        public Upgrade_Item(){
+            new Upgrade_Item("");
+        }
+		public Upgrade_Item(String n) {
+			// constructor code
+			setName(n);
+			upgrade_type_id = -1;
+			skill_id = new ArrayList<>();
+			skill_bonus = new ArrayList<>();
+		}
+		
+		public void set_upgrade_type(int id){
+			upgrade_type_id = id;
+		}
+		
+		public void set_skill_bonus(int id,int bonus){
+			//skill_id[skill_id.length] = id;
+            //skill_bonus[skill_bonus.length] = bonus;
+            skill_id.set(skill_id.size(),id);
+			skill_bonus.set(skill_bonus.size(),bonus);
+        } 
+        @Override
+        public Item copyItem(){
+			Upgrade_Item i = new Upgrade_Item();
+			i.name = this.name;
+			i.inventoryDescription = inventoryDescription;
+			i.droppedDescription = this.droppedDescription;
+			i.multiDroppedDescription = this.multiDroppedDescription;
+			i.value = this.value;
+			int count = 0;
+			for(count=0;count<effects.length;count++){
+				i.effects[count] = this.effects[count];
+			}
+			i.useDescription = this.useDescription;
+			count = 0;
+			for(count=0;count<changeEffects.length;count++){
+				i.changeEffects[count] = this.changeEffects[count];
+			}
+			i.propogate = this.propogate;
+			i.identDifficulty = this.identDifficulty;
+			i.weight = this.weight;
+			count = 0;
+			for(count=0;count < statActionAdd.length;count++){
+				i.statActionAdd[count] = this.statActionAdd[count];
+			}
+			i.numUses = this.numUses;
+			i.imageID = this.imageID;
+            //i.topic = this.topic;
+            //TODO topic re-add
+			i.craftingRequirements = this.craftingRequirements;
+			
+			i.tickCount = 0;
+			i.destroyTick = this.destroyTick;
+			i.spawnChar = this.spawnChar;
+			
+			i.upgrade_type_id = this.upgrade_type_id;
+			count = 0;
+			for(count=0;count<skill_id.size();count++){//.length
+                //i.skill_id[count] = this.skill_id[count];
+                i.skill_id.set(count, this.skill_id.get(count));
+			}
+			count = 0;
+			for(count=0;count<skill_bonus.size();count++){//.length
+                //i.skill_bonus[count] = this.skill_bonus[count];
+                i.skill_bonus.set(count,this.skill_bonus.get(count));
+			}
+			
+			return i;
+        }
+        
+}
