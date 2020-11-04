@@ -17,7 +17,7 @@ public class NumStack {
     }
         
     private void ensureCapacity(int newSize) {
-        Number newBiggerArray[];
+        Number[] newBiggerArray;
         if (elements.length < newSize) {
             newBiggerArray = new Number[elements.length * 2];
             System.arraycopy(elements, 0, newBiggerArray, 0, size);
@@ -37,4 +37,7 @@ public class NumStack {
         }
         return elements[--size];
     }
+    public Boolean isEmpty(){
+		return emptyStack;
+	}
 }

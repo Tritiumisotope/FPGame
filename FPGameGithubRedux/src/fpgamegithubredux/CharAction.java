@@ -19,9 +19,9 @@ public class CharAction {
     public DynamicObject originator;
     protected int charID;
     protected ArrayList<Consequence> consequences;
-    public ArrayList<Integer>  requirement;
-    public ArrayList<Integer>  requirement_amount;
-    public ArrayList<Boolean>  requirement_remove;
+    protected ArrayList<Integer>  requirement;
+    protected ArrayList<Integer>  requirement_amount;
+    protected ArrayList<Boolean>  requirement_remove;
     public int blowback;
     public int blowback_amount;
     protected Item item_req;
@@ -214,13 +214,13 @@ public class CharAction {
         set_requirement(stat_id, req, true);
     }
     public void set_requirement(int stat_id,int req,Boolean req_rmv){//default true
-        requirement.set(requirement.size(), stat_id);
-        requirement_amount.set(requirement_amount.size(),req);
-        requirement_remove.set(requirement_remove.size(),req_rmv);
-        //requirement[requirement.length] = stat_id;
-        //requirement_amount[requirement_amount.length] = req;
-        //requirement_remove[requirement_remove.length] = req_rmv;
-    }
+        //requirement[requirement.length] = stat_id
+        requirement.add(stat_id);
+        //requirement_amount[requirement_amount.length] = req
+        requirement_amount.add(req);
+        //requirement_remove[requirement_remove.length] = req_rmv
+        requirement_remove.add(req_rmv);
+    }//TODO verify
     
     public void set_blowback(int stat_id,int req){
         blowback = stat_id;

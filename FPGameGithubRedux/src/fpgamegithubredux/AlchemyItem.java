@@ -1,18 +1,22 @@
 package fpgamegithubredux;
 
-public class AlchemyItem extends Item{
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class AlchemyItem extends Item {
 		
     //need some way to show what the items types are
     
-    //public var types:Array;
+    protected ArrayList<Integer> types;//public var types:Array
     
     public AlchemyItem(String n){
         // = ""
         setName(n);
-        //types = new Array;
+        types = new ArrayList<>();
     }
     
-    public Item combine(Character c, AlchemyItem item2){//, type_array:Array
+    public Item combine(Character c, AlchemyItem item2, ArrayList<Integer> type_array){//was type_array of type Array
         int skill = -1;
         int k = 0;
         for (k=0;k<c.actions.size();k++){//.length
@@ -20,10 +24,11 @@ public class AlchemyItem extends Item{
                 skill++;
             }
         }
-            
-        //var t:Array = new Array();
-        //t = get_types().concat(item2.get_types());
-        //t.sort();
+        
+        ArrayList<Integer> t = new ArrayList<>();//var t:Array = new Array()
+        t.addAll(get_types());//t = get_types().concat(item2.get_types());replaced with these two?
+        t.addAll(item2.get_types());
+        Collections.sort(t);//t.sort()
         /*to do: create the item based on the number of matching types
             2 match: effect based on type number
                 type 1 could be hp gain
@@ -41,12 +46,15 @@ public class AlchemyItem extends Item{
         AlchemyItem item= new AlchemyItem("Alchemical draught");
         item.setUseDescription("You drink down the alchemical draught, unsure what to expect.");
         item.setDroppedDescription("A bottle sits lazily on the ground here.");
-        //var changes:Array;
+        //var changes:Array
         /*
         if(type_array != null){
-            var initial_array:Array = this.types.concat(item2.types);
-            initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd);
-            
+            ArrayList<Integer> initial_array = new ArrayList<>();//var initial_array:Array = this.types.concat(item2.types);
+            initial_array.addAll(types);
+            initial_array.addAll(item2.types);
+            //initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd);
+            initial_array.addAll(changeEffects);
+
             var effect_amounts:Array = new Array();
             int x = 0;
             for(x=0;x<type_array.length;x++){
@@ -231,7 +239,7 @@ public class AlchemyItem extends Item{
             for(i;i<effect_amounts.length;i++){
                 if(effect_amounts[i] != null){
                     //need to divide the effect by 100 if it's for a stat with a static max of 1
-                    if(FPalace_helper.get_stat_by_id(i)!= null && FPalace_helper.get_stat_by_id(i).alchemy_hundreds){
+                    if(FPalaceHelper.get_stat_by_id(i)!= null && FPalaceHelper.get_stat_by_id(i).alchemy_hundreds){
                         effect_amounts[i] = effect_amounts[i]/100;
                     }
                     
@@ -246,13 +254,13 @@ public class AlchemyItem extends Item{
                 if(t[i] != t[i-1] && i - start_pos > 1){
                     temp = (i-start_pos);
                     if(t[i-1] >= 0){
-                        if(FPalace_helper.get_stat_by_id(t[i-1]) != null && FPalace_helper.get_stat_by_id(t[i-1]).alchemy_hundreds){
+                        if(FPalaceHelper.get_stat_by_id(t[i-1]) != null && FPalaceHelper.get_stat_by_id(t[i-1]).alchemy_hundreds){
                             item.add_effect(t[i-1],  Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0)/100);
                         }else{
                             item.add_effect(t[i-1],  Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0));
                         }
                     }else{
-                        if(FPalace_helper.get_stat_by_id(t[i-1]) != null && FPalace_helper.get_stat_by_id(t[i-1]).alchemy_hundreds){
+                        if(FPalaceHelper.get_stat_by_id(t[i-1]) != null && FPalaceHelper.get_stat_by_id(t[i-1]).alchemy_hundreds){
                             item.add_effect(-t[i-1],  -Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0)/100);
                         }else{
                             item.add_effect(-t[i-1],  -Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0));
@@ -269,7 +277,7 @@ public class AlchemyItem extends Item{
             if(i - start_pos > 1){
                 temp = (i-start_pos);
                 //need to divide the effect by 100 if it's for a stat with a static max of 1
-                if(FPalace_helper.get_stat_by_id(t[i-1]) != null && FPalace_helper.get_stat_by_id(t[i-1]).alchemy_hundreds){
+                if(FPalaceHelper.get_stat_by_id(t[i-1]) != null && FPalaceHelper.get_stat_by_id(t[i-1]).alchemy_hundreds){
                     item.add_effect(t[i-1],  Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0)/100);
                 }else{
                     item.add_effect(t[i-1],  Math.ceil(Math.pow(50.0,(0.5 + (temp/4.0)))/50.0));
@@ -311,7 +319,7 @@ public class AlchemyItem extends Item{
         }
         if(max_effect_id >= 0){
             if(FPalaceHelper.get_stat_by_id(max_effect_id) != null){
-                //item.name = Main.capitalize(FPalace_helper.get_stat_by_id(max_effect_id).get_name() + " Potion");
+                //item.name = Main.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).get_name() + " Potion")
             }
         }
         
@@ -322,14 +330,15 @@ public class AlchemyItem extends Item{
             }else if(skill > 1){
                 num_to_get = 6;
             }
-            /*
-            if(t.length > num_to_get){
-                i = Math.round(Math.random()*(t.length - num_to_get));
-                item.types = t.slice(i,i+num_to_get);
+            
+            if(t.size() > num_to_get){
+                i = (int)Math.round(Math.random()*(t.size() - num_to_get));
+                //item.types = t.slice(i,i+num_to_get)
+                item.types = (ArrayList<Integer>)t.subList(i,i+num_to_get);//TODO VERIFY!
             }else{
                 item.types = t;
             }
-            */
+            
             return item;
         }
         
@@ -345,60 +354,62 @@ public class AlchemyItem extends Item{
     }
     
     public void add_type(int i){
-        //types[types.length] = i;
+        //types[types.length] = i
+        types.add(i);//TODO verify!
     }
-    /*
-    public function get_types():Array{
+    
+    public ArrayList<Integer> get_types(){
         return types;			
     }
-    */
+    
     @Override 
     public String getDescription(Character c, Integer[] ident_effectiveness, Boolean keep_tags){
         //c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false
         String ret = "";
         
         double ident_chance = 0;
-        int ident_roll;
+        int ident_roll = 0;//TODO check if right to initialize instead of leave blank like original!
         if(ident_effectiveness != null){
-            //ident_chance = 2*ident_effectiveness[ident_effectiveness.length - 1]/(identDifficulty);
+            ident_chance = 2*ident_effectiveness[ident_effectiveness.length - 1]/(identDifficulty);
             ident_roll = ident_effectiveness[ident_effectiveness.length - 1];
-            //ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1);
+            //ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1)
+            ident_effectiveness = Arrays.copyOfRange(ident_effectiveness,0, ident_effectiveness.length-1);//TODO verify
         }
         
         ret += super.getDescription(c,ident_effectiveness, keep_tags) + "\n";
         
         Boolean showing= false;
         int count = 0;
-        /*
-        if(types.length > 0){
-            for(count = 0;count < types.length;count ++){
-                if(ret.indexOf(FPalace_helper.get_stat_name_by_id(types[count])) < 0 && Math.random() <= ident_chance){
+        
+        if(types.size() > 0){
+            for(count = 0;count < types.size();count ++){
+                if(ret.indexOf(FPalaceHelper.get_stat_name_by_id(types.get(count))) < 0 && Math.random() <= ident_chance){
                     if(!showing){
                         showing = true;
                         ret += "Has the following Alchemical effects:\n";
                     }
                     
                     if(keep_tags){
-                        ret += "<s" + types[count] + ">";
+                        ret += "<s" + types.get(count) + ">";
                     }else{
-                        if(ident_roll > 10){
-                            if(types[count] < 0){
-                                ret += "Decrease "+FPalace_helper.get_stat_name_by_id(-types[count]) + "\n";
+                        if(ident_roll > 10){//TODO prove earlier initialization was correct!
+                            if(types.get(count) < 0){
+                                ret += "Decrease "+FPalaceHelper.get_stat_name_by_id(-types.get(count)) + "\n";
                             }else{
-                                ret += "Increase "+FPalace_helper.get_stat_name_by_id(types[count]) + "\n";
+                                ret += "Increase "+FPalaceHelper.get_stat_name_by_id(types.get(count)) + "\n";
                             }
                         }else{
-                            if(types[count] < 0){
-                                ret += FPalace_helper.get_stat_name_by_id(-types[count]) + "\n";
+                            if(types.get(count) < 0){
+                                ret += FPalaceHelper.get_stat_name_by_id(-types.get(count)) + "\n";
                             }else{
-                                ret += FPalace_helper.get_stat_name_by_id(types[count]) + "\n";
+                                ret += FPalaceHelper.get_stat_name_by_id(types.get(count)) + "\n";
                             }
                         }
                     }
                 }
             }
         }
-        */
+        
         return ret;
     }
     
@@ -407,14 +418,14 @@ public class AlchemyItem extends Item{
         Boolean ret = super.sameItem(i);
         
         if(ret && i instanceof AlchemyItem){//was is
-            /*
-            AlchemyItem temp = i as AlchemyItem;//was as
-            if(temp.types.toString() == types.toString()){
+            
+            AlchemyItem temp =  (AlchemyItem) i ;//was as
+            if(temp.types.toString().equals(types.toString())){
                 ret = true;
             }else{
                 ret = false;
             }
-            */
+            
         }else{
             ret = false;
         }
@@ -426,11 +437,12 @@ public class AlchemyItem extends Item{
     public Item copyItem(){
         AlchemyItem temp = new AlchemyItem(this.name);
         int count= 0;
-        /*
-        for(count = 0;count<types.length;count++){
-            temp.types[count] = this.types[count];
+        
+        for(count = 0;count<types.size();count++){
+            //temp.types[count] = this.types[count]
+            temp.types.set(count,this.types.get(count));
         }
-        */
+        
         
         temp.name = this.name;
         temp.inventoryDescription = inventoryDescription;
@@ -444,21 +456,19 @@ public class AlchemyItem extends Item{
         temp.useDescription = this.useDescription;
         temp.numUses = this.numUses;
         
-        count = 0;
         for(count=0;count<changeEffects.length;count++){
             temp.changeEffects[count] = this.changeEffects[count];
         }
         temp.propogate = this.propogate;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
-        count = 0;
         for(count=0;count < statActionAdd.length;count++){
             temp.statActionAdd[count] = this.statActionAdd[count];
         }
         
         temp.imageID = this.imageID;
         
-        //temp.topic = this.topic;
+        temp.topic = this.topic;
         temp.craftingRequirements = this.craftingRequirements;
         
         temp.tickCount = 0;

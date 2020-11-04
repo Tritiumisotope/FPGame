@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * @author Ailer and Tritium
  */
 public class Character extends DynamicObject {
-    //protected String name;
+    //protected String name
     
     public static int relations_affect_id = -99999;
     public static int gold_id = -99998;
@@ -24,7 +24,7 @@ public class Character extends DynamicObject {
     protected ArrayList<Item> possessions;
     protected Character mother;
     protected Character father;
-
+    
     protected String surname;
 
     protected Room location;
@@ -33,14 +33,14 @@ public class Character extends DynamicObject {
     protected ArrayList<CharAction> actions;
 
     public Body body;
-    //public var sex:Sex;
-    //public var cclass:Array;
+    //protected Sex sex;//public var sex:Sex
+    //public var cclass:Array
 
     public Skill_set skills;
 
     public int equip_state = 0;
 		
-    //public var personality:Personality;
+    //public var personality:Personality
     
     public int ai_move = 0;
     public int busy;
@@ -55,11 +55,12 @@ public class Character extends DynamicObject {
     protected String sex;
     //to DIE^
     protected int gold;
-    public int xp;//:uint;
-    public int nxt_lvl_xp;//:uint;
-	public int lvl;//:uint;
-	public int stat_points;//:uint;
+    public int xp;//:uint
+    public int nxt_lvl_xp;//:uint
+	public int lvl;//:uint
+	public int stat_points;//:uint
     public int fitness;//this must die
+    public int ageDemo;//this must ide
 
 
     
@@ -76,12 +77,12 @@ public class Character extends DynamicObject {
     
             
     public Character(){
-        this("Jeff", 0, 0.0);
+        this("Jeff");
     }
-    public Character(String newName,int newSex, double newFitness){
+    public Character(String newName){
         setName(newName);
-        setSex(newSex);
-
+        //setSex(newSex)
+        //sex = new Sex()
         possessions = new ArrayList<>();
         statID = new ArrayList<>();
         stats = new ArrayList<>();
@@ -97,7 +98,7 @@ public class Character extends DynamicObject {
         Stat tempStat = new Stat();
         tempStat.setName("Fitness");
         tempStat.statID = 0;
-        tempStat.statValue = newFitness;
+        tempStat.statValue = 0;
         
         newStat(tempStat.statID, tempStat);
         
@@ -115,10 +116,28 @@ public class Character extends DynamicObject {
     public String getName(){
         return name;
     }
+    /*
+    public String set_sex(Sex s){
+        String ret = "";
+        if(sex != null && location != null){
+            sex.reverse_bonuses(this, true);
+            sex = s;
+            s.apply_bonuses(this, true);
+            //personality.determine_orient(sex);
+        }else{
+            //if(sex != null)sex.reverse_bonuses(this);
+            sex = s;
+            //s.apply_bonuses(this);
+        }
+        //personality.advance_objectives(Quest.sex_action, [s], this);
+        return ret;
+    }
+    */
+    //test version
     public void setSex(int theSex){
         sex = sexChoices[theSex];
     }
-
+    
     public void apply_tick_effect(TickEffect tf){
         /*
         if(!get_primary_race().check_immunity(tf.status_id)){
@@ -200,19 +219,116 @@ public class Character extends DynamicObject {
         */           
         return ret;
     }
-
-    public String applyAffectByID(int statIDForChange, double changeBy){
+    public String apply_affect_by_id(int i,Number k){
+        return apply_affect_by_id(i,k, 0, null, 0, false, -1,-1);
+    }
+    public String apply_affect_by_id(int i,Number k,int temp, Character c,int body_app_method /*Body.change_stats_individual*/,Boolean char_only,int part_id /*Body.target_all_parts*/,int effect_type){
+        //def temp = 0, c = null, body_app_method = 0 /*Body.change_stats_individual*/, char_only = false, part_id:int = -1 /*Body.target_all_parts*/, effect_type:int = -1
+        String s = "";
+        Boolean found = false;
+        int count = 0;
+        if (k.intValue() == 0) i = -1;
+        if(effect_type > -1){
+            //k *= sex.get_damage_mod(effect_type);
+            //k = k.doubleValue()* sex.get_damage_mod(effect_type);
+            //k *= personality.get_damage_mod(effect_type);
+        }
+        int j = 0;
+        if(part_id == Body.target_all_parts){
+            for(j=0;j<statID.size();j++){//.length
+                //if(i == stat_id[j]){
+                if(i == statID.get(j)){
+                    count++;
+                    if(stats.get(j).age){
+                        //k = Math.ceil(k/get_primary_race().get_aging_mod());
+                        //sex.age(this,k);
+                        //s += stat[j].get_change_magnitude(k,this,temp);
+                    }//TODO so much
+                    
+                    if(body_app_method == Body.change_stats_individual){
+                        //s += stats[j].get_change_magnitude(k,this,temp);				
+                    }else if(body_app_method == Body.change_first_stat && !found){
+                        //s += stats[j].get_change_magnitude(k,this,temp);
+                        found = true;
+                    }
+                }
+            }
+            
+            /*if(body_app_method == Body.change_stats_total && !char_only && count > 0){
+                if(temp == 0){
+                    if(k > 0){
+                        count += body.part_count_by_stat(this, i, 1);
+                    }else{
+                        count += body.part_count_by_stat(this, i, 0);
+                    }
+                }else{
+                    count += body.part_count_by_stat(this, i);
+                }
+                
+                var start_amt:Number = get_stat(i,temp);
+                var change_by:Number = k/count;
+                s += apply_affect_by_id(i,change_by,temp,c,Body.change_stats_individual,true,-1,effect_type);
+                var end_amt:Number = get_stat(i,temp);
+                change_by = k - (end_amt - start_amt);
+                if((change_by >= 0.05 || change_by <= -0.05) && temp == 0 && change_by.toFixed(2) != k.toFixed(2) && change_by.toFixed(2) != (-k).toFixed(2)){
+                    //We've run into mins or maxes... need to do... something
+                    apply_affect_by_id(i,change_by,temp,c,Body.change_stats_total,false, -1, effect_type);
+                }
+            }else{		*/			
+                //s += body.get_effects(i,k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
+            /*}*/
+        }else if(part_id == Body.target_parts_one_by_one){
+            //trace("(Character) Should be eroding stat from part by part, instead of all at once.. doing nothing");
+            //not sure what to do here yet...
+        }else if(part_id >= 0){
+            //we have a specific part id to apply this affect to...
+            //if(!char_only)s += body.get_effects(i,k,this, temp,body_app_method,0, part_id,effect_type);
+        }else{
+            //trace("(Character) got passed a part id of "+ part_id + " and I have no idea what to do with it");
+        }
+        
+        //deal with the relationship garbage - this should really happen when an action is attempted, not when it's successful....
+        if(c != null){
+            //personality.new_relationship(c, this, Relationship.stat_change, character_reaction(c, i, k));
+            //c.personality.determine_reaction_to_other(c, this, c, i, k);
+            if(location == null){
+                 if(c.location != null){
+                    //c.location.spread_reaction(this, c, i, k);
+                }else{
+                    //character died from previous action...
+                }
+            }else{
+                //location.spread_reaction(this, c, i, k);
+            }
+        }
+        
+        if(equip_state == 0){
+            //get_combat_status();//will remove dead parts, if there are any
+            //if(!body.alive(this) && location != null && !char_only)s += die();
+            //s += re_equip(equip_state);
+            //s += body.check_state(this);
+        }
+        
+        if(!s.equals("") && !char_only){
+            //set_challenge_output("<sid"+i+","+k+",0,\""+s+"\">");
+            
+        }
+        
+        return s;
+    }
+    //test version
+    public String applyAffectByID(int statIDForChange, Number changeBy){
         String ret = "";
         int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Stat temp = ((Stat)stats.get(index));
             //temp.statValue += changeBy;
-            temp.statValue = temp.statValue.doubleValue()+ changeBy;
+            temp.statValue = temp.statValue.doubleValue()+ changeBy.doubleValue();
         }
 
         return ret;
     }
-
+    
     public String appearance(int lookID, Character c){
         String ret = "";
         if(c == this || c == null){
@@ -292,9 +408,9 @@ public class Character extends DynamicObject {
     public String inventory(){
         String returnString = "";
         if(possessions.isEmpty()){
-            returnString = "</n> Inventory contains nothing.";
+            returnString = "</n>\'s Inventory contains nothing.";
         }else{
-            returnString = "</n> Inventory contains: ";
+            returnString = "</n>\'s Inventory contains: ";
             for(Item o : possessions){
                 returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getDroppedDescription()+ "</a>,";
             }

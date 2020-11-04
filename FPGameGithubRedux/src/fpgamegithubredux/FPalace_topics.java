@@ -17,15 +17,15 @@ package fpgamegithubredux;
 		public static Conversation_topic grasslands_info(){
 			Conversation_topic  ct= new Conversation_topic();
             ct.set_topic_name("area");
-            /*TODO
+            
 			ct.set_no_mention();
 			
-			ct.add_dialog("You ask </n2> about the area you're in.",[Character.relations_affect_id], [5],false, Conversation_topic.ask_topic);
+			ct.add_dialog("You ask </n2> about the area you're in.", new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.ask_topic);
 			
-			ct.add_dialog("You ask </n2> about the area you're in",[Character.relations_affect_id], [5],false, Conversation_topic.telling_topic);
+			ct.add_dialog("You ask </n2> about the area you're in",new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.telling_topic);
 			
-			ct.add_dialog("</n2> begins telling you about the grasslands.",[Character.relations_affect_id], [5],false, Conversation_topic.being_told_topic);
-			*/
+			ct.add_dialog("</n2> begins telling you about the grasslands.",new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.being_told_topic);
+			
 			return ct;
 		}
 			

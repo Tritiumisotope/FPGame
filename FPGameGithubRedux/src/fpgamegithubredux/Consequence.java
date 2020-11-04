@@ -2,7 +2,7 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 
-public class Consequence {
+public class Consequence {//TODO get count of all below
     protected ArrayList<Integer> statEffected;
     protected double[] conseq;
     protected String[] consequenceDescription;

@@ -12,7 +12,8 @@ public class BodyPartState {
         public String[] outputs;//public var outputs:Array
         public Boolean[] rat_stat_id;//public var rat_stat_id:Array
         public Boolean[] mod_stat_id;//public var mod_stat_id:Array
-        public int[] ratio_stat;//public var ratio_stat:Array
+		public int[] ratio_stat;//public var ratio_stat:Array
+		//TODO double check ratio_stat only ever has two elements!
 		public Boolean[] static_ratio_stat;//public var static_ratio_stat:Array
         protected String[] operations;//public var operations:Array
         protected ArrayList<Integer> stat_effected;//public var stat_effected:Array
@@ -21,7 +22,7 @@ public class BodyPartState {
 			// constructor code
             mod = 1.0;
             
-
+			ratio_stat = new int[2];
             stat_effected = new ArrayList<>();
             
 		}
@@ -37,7 +38,7 @@ public class BodyPartState {
 			}
 			
 			//if we didn't set a stat to effect, should effect all of them
-			if (stat_effected == null) return mod;//[]]
+			if (stat_effected.get(0) == null) return mod;//[]]
 			
 			return 1;
 		}
@@ -47,7 +48,7 @@ public class BodyPartState {
 		public void new_ratio_stat(int i,Boolean static_val){
 			ratio_stat[ratio_stat.length] = i;
 			static_ratio_stat[static_ratio_stat.length] = static_val;
-		}
+		}//TODO figure out why there is an add
 		public void new_comparison(String op, Number rat, Number mo,
          String out){
 			new_comparison(op,rat,mo,out,"",false,false);
@@ -72,9 +73,7 @@ public class BodyPartState {
 		}
 		
 		public void set_stat_effected(int i){
-			
-			stat_effected.set(stat_effected.size(), i);//[] = i
-			
+			stat_effected.add(i);//stat_effected[stat_effected.length] = i
 		}
 		
 		public String get_current_state_description(Character c,BodyPart bp){
@@ -169,8 +168,7 @@ public class BodyPartState {
 				}else{
 					denominator = (double)bp.get_stat(c, ratio_stat[1]);
 					if(denominator <= 0)denominator = c.getStat(ratio_stat[1]); 
-                }
-                */
+                }*/
 				int i = 0;
 				String s = "";
 				for(i=0;i<operations.length;i++){

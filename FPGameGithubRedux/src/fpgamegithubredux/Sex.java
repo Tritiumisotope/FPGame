@@ -1,6 +1,8 @@
 package fpgamegithubredux;
 
-public class Sex extends DynamicObject{
+import java.util.ArrayList;
+
+public class Sex extends DynamicObject {
 
     public String pronoun;
     public String noun;
@@ -8,7 +10,7 @@ public class Sex extends DynamicObject{
     public Number[] bonus;
     public int[] age_stat;
     public double[][] age_stat_change;
-    public Conversation_topic[] social_topics;//public var social_topics:Array;
+    public ArrayList<Conversation_topic> social_topics;//public var social_topics:Array
     public AgeNamePair[] age_name;
     
     public int[] default_orient;
@@ -16,19 +18,19 @@ public class Sex extends DynamicObject{
     public int[] damage_type_strengths;
     public int[] damage_type_weaknesses;
 
-    public void Sex() {
+    public Sex() {
         name = "";
-        bonus = null;
-        age_stat = null;
-        age_stat_change = null;
-        //social_topics = new Array;
+        bonus = new Number[0];
+        age_stat = new int[0];
+        age_stat_change = new double[0][0];
+        social_topics = new ArrayList<>();
         pronoun = "";
         noun = "";
         obpronoun = "";
-        age_name = null;
-        damage_type_strengths =null;
-        damage_type_weaknesses = null;
-        default_orient = null;
+        age_name = new AgeNamePair[0];
+        damage_type_strengths =new int[0];
+        damage_type_weaknesses = new int[0];
+        default_orient = new int[0];
     }
     
     public void add_damage_resistance(int id){
@@ -55,27 +57,28 @@ public class Sex extends DynamicObject{
     public void new_age_name(int age, String desc){
         age_name[age_name.length] = new AgeNamePair(age,name);
     }
-    /*
+    
     public String get_age_name(Character c){
         String ret = "";
-        int age = c.getStat(FPalaceHelper.age_id);
+        int age = (int)c.getStat(FPalaceHelper.age_id);
         int i = 0;
         for(i=0;i<Math.ceil(age_name.length/2);i++){
-            if(age >= age_name[i*2])ret = age_name[i*2+1];
+            //if(age >= age_name[i*2])ret = age_name[i*2+1]
+            if(age >= age_name[i].age())ret = age_name[i].name();//TODO verify
         }
         
         return ret;
     }
-    */
+    
     public void new_topic(Conversation_topic ct){
-        //social_topics[social_topics.length] = ct;
-        social_topics[social_topics.length] = ct;
+        //social_topics[social_topics.length] = ct
+        social_topics.add(ct);
     }
-    /*
-    public Array get_topics(){
+    
+    public ArrayList<Conversation_topic> get_topics(){
         return social_topics;
     }
-    */
+    
     /*
     public void age(Character c, int age_change){
         int orig_equip_state = c.equip_state;
@@ -236,7 +239,7 @@ public class Sex extends DynamicObject{
         s.noun = noun;
         s.bonus = bonus;
         s.name = name;
-        //s.social_topics = social_topics;
+        s.social_topics = social_topics;
         
         s.age_stat = age_stat;
         int i = 0;

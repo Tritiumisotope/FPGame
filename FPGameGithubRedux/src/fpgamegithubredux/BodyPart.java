@@ -24,11 +24,11 @@ public class BodyPart extends DynamicObject {
     public String pair_name;
     public String pair_description;
     
-    //public  stat_id:Array;
+    //public  stat_id:Array
     protected int[] stat_id;
-    //public  stat_description:Array;
+    //public  stat_description:Array
     protected Stat[] stat_description;
-    //public  equip:Array;
+    //public  equip:Array
     protected Equipment[] equip;
     
     public Weapon hold;
@@ -36,9 +36,9 @@ public class BodyPart extends DynamicObject {
     public Boolean get_pregnant;
     public Boolean critical_part;
     /*
-    public  actions:Array;
-    public  attacks:Array;
-    public  covered_by:Array;
+    public  actions:Array
+    public  attacks:Array
+    public  covered_by:Array
     */
     protected CharAction[] attacks;
     protected CharAction[] actions;
@@ -46,7 +46,7 @@ public class BodyPart extends DynamicObject {
     protected BodyPartState part_state;
     
     public String current_part_state;
-    //public  part_upkeep:Array;
+    //public  part_upkeep:Array
     public TickEffect[] part_upkeep;
     public int part_count;
     
@@ -71,22 +71,22 @@ public class BodyPart extends DynamicObject {
         description = "";
         pair_description = "";
         current_part_state = "";
-        //stat_id = new Array();
-        //stat_description = new Array();
+        //stat_id = new Array()
+        //stat_description = new Array()
         race = null;
         hold = null;
         hold_slots = 0;
-        //actions = new Array();
-        //attacks = new Array();
-        //equip = new Array();
-        //covered_by = new Array();
+        //actions = new Array()
+        //attacks = new Array()
+        //equip = new Array()
+        //covered_by = new Array()
         get_pregnant = false;
         critical_part = false;
-        //part_upkeep;// = new Array();
+        //part_upkeep;// = new Array()
         part_count = 0;
         
-        can_connect_to =null;// new Array();
-        connected_to = null;//new Array();
+        can_connect_to =null;// new Array()
+        connected_to = null;//new Array()
         
         connect_direction = 0;
         display_length_stat_id = -1;
@@ -108,7 +108,7 @@ public class BodyPart extends DynamicObject {
         JLabel ret = null;
                     
         if(race.get_part_image(part_id) >= 0){
-            //ret = new Array();
+            //ret = new Array()
             ret= FPalaceHelper.get_image_by_id(race.get_part_image(part_id),"body" );//was ret[ret.length]
         }
                     
@@ -117,12 +117,12 @@ public class BodyPart extends DynamicObject {
             int image_id = covered_by[i].get_part_image(part_id);
             if(image_id >=0){
                 //JLabel temp_bmp = FPalaceHelper.get_image_by_id(image_id, "Equipment");//was BitMap
-                //if(ret == null)ret = new JLabel();//= new Array();
+                //if(ret == null)ret = new JLabel();//= new Array()
                                     
                 //ret = temp_bmp;//was ret[ret.length]
                 ret = new JLabel();//TODO add equipment imgs
             }else if(image_id == Equipment.hide_part){
-                //return new Array();
+                //return new Array()
                 return new JLabel();
             }
         }
@@ -165,9 +165,7 @@ public class BodyPart extends DynamicObject {
     public Boolean connect_to_part(BodyPart bp, Boolean good_on_my_end,Boolean force_connect){//default false, false
         Boolean ret = false;
         if(bp == this)return ret;
-        int i = 0;
-        for(i=0;i<can_connect_to.length;i++){
-            
+        for(int i=0;i<can_connect_to.length;i++){
             if(bp.get_part_id() == can_connect_to[i] && (connected_to.get(i) == null || force_connect)){//[]
                 if(good_on_my_end){
                     ret = true;
@@ -176,14 +174,13 @@ public class BodyPart extends DynamicObject {
                 }
                 if(ret){
                     if(connected_to.get(i) == null)connected_to.set(i, new ArrayList<BodyPart>());// = new Array;//[] to .get() and .set()
-                    //connected_to[i][connected_to[i].length] = bp;
+                    //connected_to[i][connected_to[i].length] = bp
                     connected_to.get(i).add(bp);
                     break;
                 }
             }
             
         }
-        
         return ret;
     }
     
@@ -197,8 +194,8 @@ public class BodyPart extends DynamicObject {
                     for(j=0;j<connected_to.get(0).size();j++){//[].length
                         if(connected_to.get(i).get(j) == bp){//[][]
                             /*TODO slice
-                            connected_to[i] = connected_to[i].slice(0,j).concat(connected_to[i].slice(j+1,connected_to[i].length));
-                            if(connected_to[i].length == 0)connected_to[i] = null;
+                            connected_to[i] = connected_to[i].slice(0,j).concat(connected_to[i].slice(j+1,connected_to[i].length))
+                            if(connected_to[i].length == 0)connected_to[i] = null
                             break;
                             */
                         }
@@ -259,32 +256,28 @@ public String getName(){
     public void set_crit_part(){
         critical_part = !critical_part;
     }
-    /*TODO
-    public Array get_incap_stat_ids(Character c){
-         Array ret = new Array();
+    public ArrayList<Integer> get_incap_stat_ids(Character c){
+         ArrayList<Integer> ret = new ArrayList<>();
          int i = 0;
         for(i=0;i<stat_description.length;i++){
              int ps = stat_description[i].check_combat_status(c, this);
             if(ps <= Stat.STATUSCONFIRMEDINCAPACITATED){
-                ret[ret.length] = stat_description[i].get_id();
+                //ret[ret.length] = stat_description[i].get_id();
+                ret.add(stat_description[i].get_id());
             }
         }
         return ret;
-    }
-
-    */
+    }//TODO Verify!
     
     public int check_combat_status(Character c){
          int ret = 1;//everything is a-ok
         //0 can't move, but still alive
         //-1 somebody killed me
-         int i = 0;
-         /*TODO
-        for(i=0;i<stat_description.length;i++){
+        for(int i=0;i<stat_description.length;i++){
              int ps = stat_description[i].check_combat_status(c, this);
             if(ret > ps)ret = ps;
         }
-        */
+        
         return ret;
     }
     
@@ -339,8 +332,8 @@ public String getName(){
     public String state_check(Character c){
         if (part_state != null){
             String new_part_state = part_state.get_state_description(c, this);
-            if(current_part_state == new_part_state)return "";
-            if(new_part_state != "")current_part_state = new_part_state;
+            if(current_part_state.equals(new_part_state))return "";
+            if(!new_part_state.equals(""))current_part_state = new_part_state;
             return new_part_state;
         }
         
@@ -397,14 +390,14 @@ public String getName(){
     
     public String pair_appearance(BodyPart other_bp, Character c){
          String ret = "";
-        if(pair_description != ""){
+        if(!pair_description.equals("")){
             ret = pair_description;
         }
         
          String cover = get_covered_desc(c);
          String other_cover = other_bp.get_covered_desc(c);
         if(cover != null){
-            if(other_cover != cover){
+            if(!other_cover.equals(cover)){
                 while(cover.indexOf("</bpn>") >= 0)cover = cover.replace("</bpn>", getName());
                 if(other_cover != null){
                     while(other_cover.indexOf("</bpn>") >= 0)other_cover = other_cover.replace("</bpn>", other_bp.getName());
@@ -420,10 +413,10 @@ public String getName(){
             //trace("(Body_part.pair_appearance)Should be outputing the other parts cover I think... it actually has some. Ignoring cover instead.");
         }
         
-        if(other_bp.stat_descriptions(c) == stat_descriptions(c)){
+        if(other_bp.stat_descriptions(c).equals(stat_descriptions(c))){
             ret += stat_descriptions(c);
             while(ret.indexOf("</bpn>") >= 0)ret = ret.replace("</bpn>", get_pair_name());
-        }else if(other_bp.stat_descriptions(c) != "" || stat_descriptions(c) != ""){
+        }else if(!other_bp.stat_descriptions(c).equals("") || !stat_descriptions(c).equals("")){
             ret += stat_descriptions(c);
             while(ret.indexOf("</bpn>") >= 0)ret = ret.replace("</bpn>", getName());
             ret += other_bp.stat_descriptions(c);
@@ -455,13 +448,13 @@ public String getName(){
             //trace("(Body_part.pair_appearance)Should be outputing some sort of paired part state. Doing nothing.");
         }else{
             if(part_state != null && covered_by[covered_by.length -1] == null){
-                if(part_state.get_current_state_description(c, this) != ""){
+                if(!part_state.get_current_state_description(c, this).equals("")){
                     ret += part_state.get_current_state_description(c, this);
                     while(ret.indexOf("</bpn>") >= 0)ret = ret.replace("</bpn>", getName());
                 }
             }
             if(other_bp.part_state != null && other_bp.covered_by[covered_by.length -1] == null){
-                if(other_bp.part_state.get_current_state_description(c, this) != ""){
+                if(!other_bp.part_state.get_current_state_description(c, this).equals("")){
                     ret += other_bp.part_state.get_current_state_description(c, this);
                     while(ret.indexOf("</bpn>") >= 0)ret = ret.replace("</bpn>", other_bp.getName());
                 }
@@ -479,7 +472,7 @@ public String getName(){
     @Override
 public String appearance(int i, Character c){//default 0, null
          String s = "";
-        if(description != ""){
+        if(!description.equals("")){
             s = description + stat_descriptions(c);
         }else{
             s += stat_descriptions(c);
@@ -487,7 +480,7 @@ public String appearance(int i, Character c){//default 0, null
         String cover = get_covered_desc(c);
         if(cover != null) s = cover;
         if(part_state != null && covered_by[covered_by.length -1] == null){
-            if(part_state.get_current_state_description(c, this) != "")s += part_state.get_current_state_description(c, this);
+            if(!part_state.get_current_state_description(c, this).equals(""))s += part_state.get_current_state_description(c, this);
         }
         if(hold != null) s += "</pronoun> is holding a " + hold.getName() + " in </noun> </bpn>. ";
         if(race != null){
@@ -720,8 +713,8 @@ public String appearance(int i, Character c){//default 0, null
             }
         }
         
-         int j = 0;
-         String s = "";
+        int j = 0;
+        String s = "";
         for (j=0;j<stat_id.length;j++){
             if(i == stat_id[j]){
                 if(race != null && temp == 0){

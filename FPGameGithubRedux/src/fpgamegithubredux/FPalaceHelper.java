@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FPalaceHelper{
         
-        //protected BufferedImage[] img;
+        //protected BufferedImage[] img
         protected JLabel loader;
         protected String[] imgPaths = {"imgs/unknown.gif", "imgs/Button_disabledSkin.png"
 		, "imgs/Button_downSkin.png", "imgs/Button_emphasizedSkin.png", "imgs/Button_overSkin.png"
@@ -400,7 +400,7 @@ public class FPalaceHelper{
 			// item images
 			public static final int futa_cola_1_img = 184;
 
-			// public static int relations_affect_id = -999;
+			public static int relations_affect_id = -999;
 			// Default stat id's - ordering of these can be important, as is the case with
 			// items applying effects
 			public static final int str_id = 1;
@@ -506,8 +506,8 @@ public class FPalaceHelper{
 			private static DamageType[] damage_types;
 			private static int[] images;
 
-			protected static ArrayList<JLabel> humanBodyImgs = new ArrayList<JLabel>();
-			protected static ArrayList<JLabel> otherImgs = new ArrayList<JLabel>();
+			protected static ArrayList<JLabel> humanBodyImgs = new ArrayList<>();
+			protected static ArrayList<JLabel> otherImgs = new ArrayList<>();
 
 			public FPalaceHelper() {
 				// finalructor code
@@ -560,8 +560,8 @@ public class FPalaceHelper{
 		public static String get_type_name_by_id(int type_id){
 			String ret = "?";
 			if(damage_types == null){
-				//damage_types = new Array();
-				damage_types = new DamageType[0];
+				
+				damage_types = new DamageType[0];//damage_types = new Array()
 				damage_types[0] = lust_damage_type();
 				damage_types[1] = bludg_damage_type();
 				damage_types[2] = pierce_damage_type();
@@ -792,7 +792,7 @@ public class FPalaceHelper{
 		public static String get_stat_name_by_id(int stat_id){
 			String ret = "?";
 			if(stat_names == null){
-				stat_names =new Stat[0]; // new Array();
+				stat_names =new Stat[0]; // new Array()
 				stat_names[str_id] = stat_strength();
 				stat_names[dex_id] = stat_dexterity();
 				stat_names[con_id] = stat_finalitution();
@@ -4924,9 +4924,9 @@ public class FPalaceHelper{
 			return cont;
         }*/
         public JLabel loadIMG(String i) {
-            //String listingFolder = MainGUIPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            System.out.println(i);
-            URL url = FPalaceHelper.class.getResource(i);//imageURL[unknown_img]);
+            //String listingFolder = MainGUIPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath()
+            //System.out.println(i)
+            URL url = FPalaceHelper.class.getResource(i);//imageURL[unknown_img])
             ImageIcon ii = new ImageIcon(url); 
             return new JLabel(ii);
         }

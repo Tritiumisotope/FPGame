@@ -1,11 +1,4 @@
 package fpgamegithubredux;
-
-/*
-import flash.display.Sprite;
-import flash.display.Graphics;
-import flash.display.Bitmap;
-import flash.geom.*;
-*/
     
 public class Body {
 
@@ -21,37 +14,38 @@ public class Body {
     public static final int target_all_parts = -1;
     public static final int target_parts_one_by_one = -2;
     
-    public BodyPart[] parts;//Array
+    public BodyPart[] parts;//Array, number of parts vary?
+    //TODO verify if other parts NULL!!!!
     
     public Body(){
-        //parts = new Array();
-        //FPalace_helper.34view_test_img
+        //parts = new Array()
+        //FPalaceHelper.34view_test_img
     }
-    /*
-    public function get_sex(c:Character = null, c_self:Character = null):Sex{
-        var no_contest:Boolean = true;
-        var ret:Sex;
-        var has_breasts:Boolean = false;
-        var has_cock:Boolean = false;
-        var has_balls:Boolean = false;
-        var has_vag:Boolean = false;
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    
+    public Sex get_sex(Character c, Character c_self){//default null, null
+        Boolean no_contest = true;
+        Sex ret;
+        Boolean has_breasts = false;
+        Boolean has_cock = false;
+        Boolean has_balls = false;
+        Boolean has_vag = false;
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(c == null){
-                if(parts[i].get_part_id() == FPalace_helper.breasts_slot)has_breasts = true;
-                if(parts[i].get_part_id() == FPalace_helper.cock_slot)has_cock = true;
-                if(parts[i].get_part_id() == FPalace_helper.balls_slot)has_balls = true;
-                if(parts[i].get_part_id() == FPalace_helper.vag_slot)has_vag = true;
+                if(parts[i].get_part_id() == FPalaceHelper.breasts_slot)has_breasts = true;
+                if(parts[i].get_part_id() == FPalaceHelper.cock_slot)has_cock = true;
+                if(parts[i].get_part_id() == FPalaceHelper.balls_slot)has_balls = true;
+                if(parts[i].get_part_id() == FPalaceHelper.vag_slot)has_vag = true;
             }else{
-                var percept_chal:Challenge = new Challenge(true);
-                var result:int = -1;
-                var difficulty:int = 0;
-                if(parts[i].get_part_id() == FPalace_helper.breasts_slot){
+                Challenge percept_chal = new Challenge(true);
+                int result = -1;
+                int difficulty = 0;
+                if(parts[i].get_part_id() == FPalaceHelper.breasts_slot){
                     difficulty = parts[i].get_perception_difficulty(c_self);
                     if(difficulty > 0){
                         percept_chal.set_attack_stat(FPalace_skills.perception_id);
                         percept_chal.set_defense_stat(-1,difficulty);
-                        percept_chal.set_variability(10);
+                        percept_chal.setVariability(10);
                         
                         result = percept_chal.roll(c);
             
@@ -63,12 +57,12 @@ public class Body {
                         has_breasts = true;
                     }
                 }
-                if(parts[i].get_part_id() == FPalace_helper.cock_slot){
+                if(parts[i].get_part_id() == FPalaceHelper.cock_slot){
                     difficulty = parts[i].get_perception_difficulty(c_self);
                     if(difficulty > 0){
                         percept_chal.set_attack_stat(FPalace_skills.perception_id);
                         percept_chal.set_defense_stat(-1,difficulty);
-                        percept_chal.set_variability(10);
+                        percept_chal.setVariability(10);
                         
                         result = percept_chal.roll(c);
             
@@ -80,12 +74,12 @@ public class Body {
                         has_cock = true;
                     }
                 }
-                if(parts[i].get_part_id() == FPalace_helper.balls_slot){
+                if(parts[i].get_part_id() == FPalaceHelper.balls_slot){
                     difficulty = parts[i].get_perception_difficulty(c_self);
                     if(difficulty > 0){
                         percept_chal.set_attack_stat(FPalace_skills.perception_id);
                         percept_chal.set_defense_stat(-1,difficulty);
-                        percept_chal.set_variability(10);
+                        percept_chal.setVariability(10);
                         
                         result = percept_chal.roll(c);
             
@@ -97,12 +91,12 @@ public class Body {
                         has_balls = true;
                     }
                 }
-                if(parts[i].get_part_id() == FPalace_helper.vag_slot){
+                if(parts[i].get_part_id() == FPalaceHelper.vag_slot){
                     difficulty = parts[i].get_perception_difficulty(c_self);
                     if(difficulty > 0){
                         percept_chal.set_attack_stat(FPalace_skills.perception_id);
                         percept_chal.set_defense_stat(-1,difficulty);
-                        percept_chal.set_variability(10);
+                        percept_chal.setVariability(10);
                         
                         result = percept_chal.roll(c);
             
@@ -118,37 +112,38 @@ public class Body {
         }
         
         if(has_breasts && has_cock && has_balls && has_vag){
-            ret = FPalace_helper.sex_herm();
+            ret = FPalaceHelper.sex_herm();
         }else if(has_breasts && has_cock && has_vag){
-            ret = FPalace_helper.sex_futa();
+            ret = FPalaceHelper.sex_futa();
         }else if(has_breasts && has_cock){
-            ret = FPalace_helper.sex_shemale();
+            ret = FPalaceHelper.sex_shemale();
         }else if(has_breasts && has_vag){
-            ret = FPalace_helper.sex_female();
+            ret = FPalaceHelper.sex_female();
         }else if(has_cock && has_balls){
-            ret = FPalace_helper.sex_male();
+            ret = FPalaceHelper.sex_male();
         }else if(has_breasts){
-            ret = FPalace_helper.sex_female_eunuch();
+            ret = FPalaceHelper.sex_female_eunuch();
         }else if(has_cock){
-            ret = FPalace_helper.sex_male_eunuch();
+            ret = FPalaceHelper.sex_male_eunuch();
         }else{
-            ret = FPalace_helper.sex_androgynous();
+            ret = FPalaceHelper.sex_androgynous();
         }
         
         return ret;
     }
     
-    public function alive(c:Character):Boolean{
-        var ret:Boolean = true;
+    
+    public Boolean alive(Character c){
+        Boolean ret = true;
         
         if(parts.length <= 0 && c.location != null){
-            trace("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
+            //trace("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
             ret = false;
         }
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i].crit_part()){
-                if(parts[i].check_combat_status(c) == Stat.status_confired_dead){
+                if(parts[i].check_combat_status(c) == Stat.STATUSCONFIRMEDDEAD){
                     ret = false;
                     break;
                 }
@@ -156,7 +151,7 @@ public class Body {
         }
         return ret;
     }
-    
+    /*
     public function get_incap_stat_ids(c:Character):Array{
         var ret_array:Array = new Array();
         
@@ -1286,7 +1281,7 @@ public class Body {
         var return_sprite:Sprite = new Sprite();
         var normal_sprite:Sprite = draw_self(center_x, center_y, c);
         if(c.char_34sprite_id >= 0){
-            var temp_sprite:Bitmap = FPalace_helper.get_image_by_id(c.char_34sprite_id);
+            var temp_sprite:Bitmap = FPalaceHelper.get_image_by_id(c.char_34sprite_id);
             if(temp_sprite != null){
                 var orig_ratio:Number = temp_sprite.width/temp_sprite.height;
                 temp_sprite.scaleY = normal_sprite.height/temp_sprite.height;
@@ -1322,7 +1317,7 @@ public class Body {
         
         //Should be going char specific image
         if(c.char_sprite_id >= 0){
-            var temp_sprite:Bitmap = FPalace_helper.get_image_by_id(c.char_sprite_id);
+            var temp_sprite:Bitmap = FPalaceHelper.get_image_by_id(c.char_sprite_id);
             var orig_ratio:Number = temp_sprite.width/temp_sprite.height;
             temp_sprite.scaleY = drawn_sprite.height/temp_sprite.height;
             temp_sprite.width = temp_sprite.height*orig_ratio;

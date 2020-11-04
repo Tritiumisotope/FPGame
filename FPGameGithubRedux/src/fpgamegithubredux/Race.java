@@ -86,7 +86,7 @@ public class Race extends DynamicObject {
 
     public Boolean anthropomorphic;
 
-    public void Race(){
+    public Race(){
         name = "";
         /*
         bonus_stat = new Array();

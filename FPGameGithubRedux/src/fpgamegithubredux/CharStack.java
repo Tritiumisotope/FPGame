@@ -37,4 +37,7 @@ public class CharStack{
 	    }
 	    return elements[--size];
 	}
+	public Boolean isEmpty(){
+		return emptyStack;
+	}
 }

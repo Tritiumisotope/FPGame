@@ -539,8 +539,8 @@ public class Item {
         int spread = (int)Math.round(Math.random());
         if(Boolean.TRUE.equals(tickCount%FPGameGithub.T1_MONTH==0 && getPropogate()&&spread==1)){
             //pick an exit to spread to...
-            spread = (int)Math.round(Math.random() * (currentRoom.exits.length - 1));
-            Room tempRoom = currentRoom.exits[spread];
+            spread = (int)Math.round(Math.random() * (currentRoom.exits.size() - 1));
+            Room tempRoom = currentRoom.exits.get(spread);
             if(tempRoom != null&&tempRoom.area != null&&tempRoom.area == currentRoom.area){
                 Item tempItem= copyItem();
                 tempRoom.newContent(tempItem);

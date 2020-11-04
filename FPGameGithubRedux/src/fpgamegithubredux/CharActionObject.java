@@ -24,7 +24,7 @@ public class CharActionObject extends StaticObject {
             max_action_times.set(max_action_times.size(),max_times);
             //curr_action_times[curr_action_times.length] = 0;
             curr_action_times.set(curr_action_times.size(), 0);
-		}
+		}//TODO overwrite last or add?!
 		
 		public CharAction get_action(int action_id,Room location){
             //curr_action_times[action_id]++;
@@ -35,37 +35,34 @@ public class CharActionObject extends StaticObject {
 			}
 			return room_actions.get(action_id);//[]
 		}
-		/*
-		override public function get_description():String{
-			var ret:String = super.get_description();
+		
+		@Override
+		public String get_description(){
+			String ret = super.get_description();
 			
-			var count:int = 0;
-			for(count;count<room_actions.length;count++){
-				ret = ret.replace("<a"+count+">","<a href=\"event:action,"+(-2-id)+"," + String(count) +"\"><i>"+ room_actions[count].get_name() +"</i></a>"); 
+			for(int count=0;count<room_actions.size();count++){
+				ret = ret.replace("<a"+count+">","<a href=\"event:action,"+(-2-id)+"," + Integer.toString(count) +"\"><i>"+ room_actions.get(count).getName() +"</i></a>"); 
 			}
-			
 			return ret;
 		}
 		
-		override public function get_sub_description(i:int, my_room_id:int):String{
-			var s:String = "";
-			if (i < descriptions.length && i >= 0) s += descriptions[i]+ "\n";
+		@Override 
+		public String get_sub_description(int i,int my_room_id){
+			String s = "";
+			if (i < descriptions.size() && i >= 0) s += descriptions.get(i)+ "\n";
 			
-			var count:int = 0;
-			for(count;count<room_actions.length;count++){
-				s = s.replace("<a"+count+">","<a href=\"event:action,"+(-2-id)+"," + String(count) +"\"><i>"+ room_actions[count].get_name() +"</i></a>"); 
+			for(int count = 0;count<room_actions.size();count++){
+				s = s.replace("<a"+count+">","<a href=\"event:action,"+(-2-id)+"," + Integer.toString(count) +"\"><i>"+ room_actions.get(count).getName() +"</i></a>"); 
 			}
 			
 			return s;
 		}
 		
-		public function clone(c:Action_object):void{
+		public void clone(CharActionObject c){
 			this.description = c.description;
 			this.descriptions = c.descriptions;
 			this.room_actions = c.room_actions;
 			this.max_action_times = c.max_action_times;
 			this.curr_action_times = c.curr_action_times;
         }
-        */
-
 }

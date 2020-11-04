@@ -64,13 +64,16 @@ public class Conversation_topic {
     public Boolean get_mention(){
         return !no_mention;
     }
-    /*
-    public function add_dialog(s:String, stat_id:Array = null/*int = -1*//*, defence:Array = null/*int = 0*//*, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null):void{
-        var n_action:Action = new Action();
+    public void add_dialog(String s, int[] stat_id/*int = -1*/, int[] defence/*int = 0*/,Boolean same_party,int ask_or_tell){
+        add_dialog(s, stat_id, defence, same_party, ask_or_tell, null);
+    }
+    public void add_dialog(String s, int[] stat_id/*int = -1*/, int[] defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
+        //stat_id:Array = null/*int = -1*//*, defence:Array = null/*int = 0*//*, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
+        CharAction n_action = new CharAction();
         n_action.set_dialogue(s);
         add_action(n_action, stat_id, defence, same_party, ask_or_tell,mob);
     }
-    */
+    
     public void add_action(CharAction a, int[] stat_id/*int = -1*/, int[] defence/*int = 0*/,Boolean same_party,int ask_or_tell){
         add_action(a,stat_id,defence,same_party,ask_or_tell,null);
     }

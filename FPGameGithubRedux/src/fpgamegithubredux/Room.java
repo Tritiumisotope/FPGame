@@ -3,14 +3,15 @@ package fpgamegithubredux;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-public class Room{
+public class Room extends StaticObject{
     private static final Logger LOGGER = Logger.getLogger(Room.class.getName());
-    protected String description;
+    //protected String description
     protected ArrayList<Object> contents;
     protected ArrayList<CharAction> actions;
-    protected Room[] exits;
+    protected ArrayList<Room> exits;
     protected Area area;
     protected String[] exitNames;
+    protected static final String[] REUSED = new String[]{"somewhere", " arrives from "};
 
     protected String lastTick;
     protected String nextTick;
@@ -138,30 +139,30 @@ public class Room{
         
         if(o instanceof Character){//was is
             Character tempChar = (Character)(o);
-            String fromName = "somewhere";
+            String fromName = REUSED[0];
             
             if(prevRoom != null){
                 
                 fromName = getExitName(prevRoom);
-                if(!fromName.equals("somewhere"))fromName = "the "+ fromName;
+                if(!fromName.equals(REUSED[0]))fromName = "the "+ fromName;
                 
                 if(prevRoom.lastAreaTick > lastAreaTick){
-                    nextTick += tempChar.getName() + " arrives from "+fromName+".\n";
+                    nextTick += tempChar.getName() + REUSED[1]+fromName+".\n";
                 }else{
-                    setLastTick(getLastTick() + tempChar.getName() + " arrives from "+fromName+".\n");
+                    setLastTick(getLastTick() + tempChar.getName() + REUSED[1]+fromName+".\n");
                 }
             }else{
-                setLastTick(getLastTick() + tempChar.getName() + " arrives from "+fromName+".\n");
+                setLastTick(getLastTick() + tempChar.getName() + REUSED[1]+fromName+".\n");
             }
         }
     }
     public String getExitName(Room r){
         int i;
-        for(i=0;i<exits.length;i++){
-            if(exits[i] == r) return exitNames[i];
+        for(i=0;i<exits.size();i++){
+            if(exits.get(i) == r) return exitNames[i];
         }
         
-        return "somewhere";
+        return REUSED[0];
     }
     public void removeContent(Object o){
         for (int i=0;i<contents.size();i++){
