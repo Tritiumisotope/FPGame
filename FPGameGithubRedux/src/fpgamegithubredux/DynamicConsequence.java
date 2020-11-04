@@ -155,7 +155,7 @@ public class DynamicConsequence extends Consequence {
     public String trigger_dynamic(int[] choice,int roll, Character c, Character c2){//was array for choice, default c null, c2 null
         String ret = "";
         
-        if(consequence_list_text != "") ret += consequence_list_text;
+        if(!consequence_list_text.equals("")) ret += consequence_list_text;
         
         ArrayList<Integer> choiceList = new ArrayList<>();
         for(int i:choice){

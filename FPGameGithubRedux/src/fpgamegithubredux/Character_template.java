@@ -57,7 +57,7 @@ public class Character_template {
                 */
 			}
 			
-			if(ret.name == ""){
+			if(ret.name.equals("")){
                 String char_name = "";
                 /*
 				if(ret.get_primary_race() != null){

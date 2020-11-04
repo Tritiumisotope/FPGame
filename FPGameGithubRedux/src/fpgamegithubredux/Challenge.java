@@ -43,7 +43,7 @@ public class Challenge {
     }
     public Challenge(Boolean bool){
         tag = "";
-        variability = 20;
+        this.variability = 20;
         static_defense = false;
         static_attack = false;
         defense_increment = 0;
