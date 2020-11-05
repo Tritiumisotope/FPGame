@@ -160,8 +160,13 @@ public class Consequence {//TODO get count of all below
         //action_for_stat[action_for_stat.length] = stat_id;
         action_for_stat.set(action_for_stat.size(),stat_id);
     }
-
-    public String trigger(int roll, Character attacker, Character defender){
+    public String trigger(int roll){
+        return trigger(roll,null,null);
+    }
+    public String trigger(int roll, Character attacker){
+        return trigger(roll,attacker,null);
+    }
+    public String trigger(int roll, Character attacker, Character defender){//default null, null
         //String ret = ""
         StringBuilder bld = new StringBuilder();
         for(String desc : conseqDescr){

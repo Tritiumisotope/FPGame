@@ -1,5 +1,6 @@
 package fpgamegithubredux;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Item {
@@ -11,7 +12,7 @@ public class Item {
     protected int identDifficulty;
     protected int weight;
     protected Double[] effects;//effects
-    protected Object[] changeEffects;//changeEffects
+    protected ArrayList<Object> changeEffects;//changeEffects
     protected String useDescription;
     protected Boolean propogate = false;
     protected StatAction[] statActionAdd;//statActionAdd
@@ -104,18 +105,22 @@ public class Item {
     public void add_crafting_requirement(Item craftRequirementItem,int num){
         craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
     }
-    public void add_change_effect(Object o){
+    public void add_change_effect(DynamicObject o){
         Consequence consequence = new Consequence();
         consequence.addConsequence(0, 0.0, "", 0);
-        //consequence.addChangeEffect(o);
+        consequence.add_change_effect(o);
+        //TODO consequence addChangeEffect
         
-        changeEffects[changeEffects.length] = consequence;
+        //changeEffects[changeEffects.length] = consequence;
+        changeEffects.add(consequence);
     }
     public void addConsequence(Consequence c){
-        changeEffects[changeEffects.length] = c;
+        //changeEffects[changeEffects.length] = c;
+        changeEffects.add(c);
     }
     public void add_action(CharAction a){
-        changeEffects[changeEffects.length] = a;
+        //changeEffects[changeEffects.length] = a;
+        changeEffects.add(a);
     }
     public void new_stat_action(int statID, CharAction a){
         statActionAdd[statActionAdd.length] = new StatAction(statID, a);//replaces above? see accessors
@@ -157,12 +162,18 @@ public class Item {
         for (i=0;i<effects.length;i++){
             //if (effects[i] != null) useDesc+= "\n" + user.apply_affect_by_id(i,effects[i], 0, null, Body.change_stats_total);
         }
-        for (i=0;i<changeEffects.length;i++){
-            if (changeEffects[i] != null){
-                if(changeEffects[i] instanceof Consequence){//was is
-                    //useDesc += changeEffects[i].trigger(0, user);
-                }else{
-                    //changeEffects[i].set_originator(user);
+        for (i=0;i<changeEffects.size();i++){//.length
+            if (changeEffects.get(i) != null){//[]
+                if(changeEffects.get(i) instanceof Consequence){//[] and was is
+                    //useDesc += changeEffects[i].trigger(0, user);//[]
+                    Consequence temp = (Consequence)changeEffects.get(i);
+                    useDesc += temp.trigger(0,user);
+                }else{//It's a CharAction
+                    CharAction temp = (CharAction)changeEffects.get(i);
+                    temp.set_originator(user);
+                    //changeEffects[i].set_originator(user);//[]
+                    //temp.set_id(user.get_all_overworld_actions().length+possessionID);
+                    //TODO character get_all_overworld_actions
                     //changeEffects[i].set_id(user.get_all_overworld_actions().length+possessionID);
                     //useDesc += changeEffects[i].trigger(user, forceTags);
                     if((useDesc.indexOf("</a>") >=0 || useDesc.indexOf("</dc0>") >=0) && numUses > 0)numUses++;
@@ -215,9 +226,9 @@ public class Item {
                             desc += "<s-"+count+">";
                         }
                     }else{
-                        //String l_string = FPalace_helper.get_stat_name_by_id(count);
+                        String l_string = FPalaceHelper.get_stat_name_by_id(count);
                         if(identEfficacy[0]>20){
-                            /*
+                            
                             if(l_string != "?"){
                                 if(effects[count] >= 0){
                                     desc += "Increase " + l_string + " by "	+effects[count]+".\n";
@@ -225,20 +236,18 @@ public class Item {
                                     desc += "Increase " + l_string + " by "	+ (-effects[count]) +".\n";
                                 }
                             }
-                            */
+                            
                         }else if(identEfficacy[0]>10){
-                            /*
                             if(l_string != "?"){
                                 if(effects[count] >= 0){
-                                    ret += "Increase ";
+                                    desc += "Increase ";
                                 }else{
-                                    ret += "Decrease ";
+                                    desc += "Decrease ";
                                 }
-                                ret += l_string + "\n";
+                                desc += l_string + "\n";
                             }
-                            */
                         }else{
-                            //if(l_string != "?")ret += l_string + "\n";
+                            if(!l_string.equals("?"))desc += l_string + "\n";
                         }
                     }
                 }
@@ -253,10 +262,10 @@ public class Item {
 
         int count = 0; //for effects and such
         desc = describeEffects(identEfficacy,keepTags, identChance, desc);
-        if(changeEffects.length > 0){
+        if(changeEffects.size() > 0){//.length
             desc += "\n";
             count = 0;
-            for(count=0;count<changeEffects.length;count++){
+            for(count=0;count<changeEffects.size();count++){//.length
                 if(Math.random() <= identChance){
                     /*
                     if(changeEffects[count] is Consequence && changeEffects[count].changeEffects[0] != null){
@@ -351,8 +360,8 @@ public class Item {
                 int buyerValue = (int)Math.floor(value*variance);
                 //need relationship stuff for this
                 /*
-                var rel_stat:int = buyer.personality.check_relationship(seller,buyer);
-                var rel_ajust_value:int = buyer_value;
+                int rel_stat = buyer.personality.check_relationship(seller,buyer);
+                int rel_ajust_value = buyerValue;
                 if(rel_stat < -50){
                     rel_ajust_value = Math.round(rel_ajust_value*0.03125);
                 }else if(rel_stat < -25){
@@ -372,7 +381,7 @@ public class Item {
                 }else if(rel_stat < Personality.true_love){
                     rel_ajust_value = Math.round(rel_ajust_value*0.9);
                 }
-                buyer_value = rel_ajust_value;
+                buyerValue = rel_ajust_value;
                 */
                 //need to go through inventory and adjust value down based on how many the buyer already has
                 if (buyer != null && buyer.possessions.isEmpty()){
@@ -466,7 +475,7 @@ public class Item {
                         valToReturn = ((buyerValue + sellerValue)/2 + buyerValue - (buyerValue*buyerValue/sellerValue));
                     }
                 }
-                    /*
+                    /*TODO verify above works alone, below Leftover from improvements
                     //0 to 10
                     if(buyerValue < sellerValue){
                         valToReturn = ((buyerValue + sellerValue)/2 - (buyerValue - (buyerValue*buyerValue/sellerValue)));
@@ -584,10 +593,11 @@ public class Item {
         //Collections.addAll(this.list, source);
 
         retItem.useDescription = useDescription;
-        for(count=0;count<changeEffects.length;count++){
-            retItem.changeEffects[count] = changeEffects[count];
+        for(count=0;count<changeEffects.size();count++){
+            //retItem.changeEffects[count] = changeEffects[count];
+            retItem.changeEffects.set(count,changeEffects.get(count));
         }//change effects copy
-        retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.length);//this might be enough?
+        //retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.size());//this might be enough?
         retItem.propogate = propogate;
         retItem.identDifficulty = identDifficulty;
         retItem.weight = weight;

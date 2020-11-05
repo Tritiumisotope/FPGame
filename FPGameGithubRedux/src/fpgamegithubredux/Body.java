@@ -1,5 +1,7 @@
 package fpgamegithubredux;
-    
+
+import java.util.ArrayList;
+
 public class Body {
 
     public static final int change_stats_individual = 0;
@@ -151,45 +153,48 @@ public class Body {
         }
         return ret;
     }
-    /*
-    public function get_incap_stat_ids(c:Character):Array{
-        var ret_array:Array = new Array();
+    
+    public ArrayList<Integer> get_incap_stat_ids(Character c){
+        ArrayList<Integer>  ret_array= new ArrayList<>();
         
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var part_status:int = parts[i].check_combat_status(c);
-            if(part_status <= Stat.status_confired_incapacitated){//part is currently incapacitated
-                var found_id:int = parts[i].get_incap_stat_ids(c);
-                var found:Boolean = false;
-                var j:int = 0;
-                for(j;j<ret_array.length;j++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int part_status = parts[i].check_combat_status(c);
+            if(part_status <= Stat.STATUSCONFIRMEDINCAPACITATED){//part is currently incapacitated
+                /*TODO get_incap for parts returns array, even in AS
+                int found_id = parts[i].get_incap_stat_ids(c);
+                Boolean found = false;
+                int j = 0;
+                for(j=0;j<ret_array.length;j++){
                     if(ret_array[j] == found_id){
                         found = true;
                         break;
                     }
                 }					
                 if(!found)ret_array = ret_array.concat(found_id);
+                */
             }
         }
         
         return ret_array;
     }
     
-    public function check_combat_status(ret:Boolean, c:Character):Boolean{
-        var body_ret:Boolean = true;
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var part_status:int = parts[i].check_combat_status(c);
-            if(part_status == Stat.status_confired_dead){//part death!
+    public Boolean check_combat_status(Boolean ret, Character c){
+        Boolean body_ret = true;
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int part_status = parts[i].check_combat_status(c);
+            if(part_status == Stat.STATUSCONFIRMEDDEAD){//part death!
                 if(parts[i].crit_part()){
                     body_ret = false;
                     break;
                 }else{
-                    c.set_challenge_output("<b></n> has broken </noun> " + parts[i].get_name()+". </b>");
-                    remove_part_by_count(i, c);
+                    //c.set_challenge_output("<b></n> has broken </noun> " + parts[i].getName()+". </b>");
+                    //remove_part_by_count(i, c);
+                    //TODO remove part, set_challenge_output
                     i--;
                 }
-            }else if(part_status == Stat.status_confired_incapacitated){//part is currently incapacitated
+            }else if(part_status == Stat.STATUSCONFIRMEDINCAPACITATED){//part is currently incapacitated
                 body_ret = false;
                 break;
             }
@@ -200,12 +205,12 @@ public class Body {
         return body_ret;
     }
     
-    public function check_overworld_status(ret:Boolean, c:Character):Boolean{
-        var body_ret:Boolean = true;
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var part_status:int = parts[i].check_overworld_status(c);
-            if(part_status == Stat.status_confired_incapacitated){//part is currently incapacitated
+    public Boolean check_overworld_status(Boolean ret, Character c){
+        Boolean body_ret = true;
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int part_status = parts[i].check_overworld_status(c);
+            if(part_status == Stat.STATUSCONFIRMEDINCAPACITATED){//part is currently incapacitated
                 body_ret = false;
                 break;
             }
@@ -216,43 +221,45 @@ public class Body {
         return body_ret;
     }
     
-    public function get_combat_status(c:Character):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var part_status:int = parts[i].check_combat_status(c);
-            if(part_status == Stat.status_confired_incapacitated){//part is currently incapacitated
-                var temp_string:String = parts[i].get_combat_status(c);
+    public String get_combat_status(Character c){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int part_status= parts[i].check_combat_status(c);
+            if(part_status == Stat.STATUSCONFIRMEDINCAPACITATED){//part is currently incapacitated
+                String temp_string = parts[i].get_combat_status(c);
                 if(ret.indexOf(temp_string) < 0)ret += temp_string;
             }
         }
         return ret;
     }
     
-    public function get_overworld_status(c:Character):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var part_status:int = parts[i].check_overworld_status(c);
-            if(part_status == Stat.status_confired_incapacitated){//part is currently incapacitated
-                var temp_string:String = parts[i].get_overworld_status(c);
+    public String get_overworld_status(Character c){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int part_status = parts[i].check_overworld_status(c);
+            if(part_status == Stat.STATUSCONFIRMEDINCAPACITATED){//part is currently incapacitated
+                String temp_string = parts[i].get_overworld_status(c);
                 if(ret.indexOf(temp_string) < 0)ret += temp_string;
             }
         }
         return ret;
     }
     
-    public function remove_part_by_count(i:int, c:Character):void{
+    public void remove_part_by_count(int i, Character c){
         if(parts[i] != null){
             if(parts[i].equip != null){
                 while(parts[i].equip.length > 0){
-                    unequip(parts[i].equip[0], c);
+                    //unequip(parts[i].equip[0], c);
+                    //TODO unequip
                 }
             }
+            /*
             parts[i].covered_by = new Array();
             if(parts[i].get_hold() != null)unhold(parts[i].get_hold(), c);
             
-            var count:int = 0;
+            int count = 0;
             
             if(c.location != null && c.equip_state == 0){
                 var temp_e:Equipment;
@@ -328,45 +335,47 @@ public class Body {
                 }
                 c.equip_state = 0;
             }
-            
+            */
         }
         
-        c.determine_sex();
+        //c.determine_sex();
+        
     }
     
-    public function add_stat_action(stat_id:int, a:Action):void{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    public void add_stat_action(int stat_id, CharAction a){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             parts[i].add_stat_action(stat_id, a);
         }
     }
     
-    public function remove_stat_action(stat_id:int, a:Action):void{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    public void remove_stat_action(int stat_id, CharAction a){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             parts[i].remove_stat_action(stat_id, a);
         }
     }
-    
-    public function get_stat_actions(stat_id:int):Array{
-        var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    /*TODO get_stat_actions
+    public ArrayList<BodyPart> get_stat_actions(int stat_id){//was Array
+        ArrayList<BodyPart> ret = new ArrayList<>();
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             ret = ret.concat(parts[i].get_stat_actions(stat_id));
         }
         return ret;
     }
-    
-    public function get_equip_array(include_weapons:Boolean = false):Array{
-        var equip_array:Array = new Array();
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    */
+    /*TODO make parts have equipment in ArrayList
+    public ArrayList<Equipment> get_equip_array(Boolean include_weapons){//default false, was array
+        ArrayList<Equipment> equip_array = new ArrayList<>();
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i].equip != null){
-                var j:int = 0;
-                for(j;j<parts[i].equip.length;j++){
-                    var k:int = 0;
-                    var already_found:Boolean = false;
-                    for(k;k<equip_array.length;k++){
+                int j = 0;
+                for(j=0;j<parts[i].equip.length;j++){
+                    int k = 0;
+                    Boolean already_found = false;
+                    for(k=0;k<equip_array.length;k++){
                         if(equip_array[k] == parts[i].equip[j]){
                             already_found = true;
                             break;
@@ -385,11 +394,12 @@ public class Body {
         }
         return equip_array;
     }
-    
+    */
+    /*TODO Array method sussing
     public function get_avail_connect_part():Array{
         var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             var temp_part:Body_part = parts[i];
             var k:int = 0;
             for(k;k<temp_part.can_connect_to.length;k++){
@@ -409,18 +419,19 @@ public class Body {
         
         return ret;
     }
-    
-    public function add_part(p:Body_part,c:Character):void{
-        var i:int = 0;
-        var j:int = 0;
-        var temp_array:Array = new Array();
-        var name_in_use:int = 0;
-        var added:Boolean = false;
-        var temp_e:Equipment;
+    */
+    /*TODO get_equip_array
+    public void add_part(BodyPart p,Character c){
+        int i = 0;
+        int j = 0;
+        ArrayList<BodyPart> temp_array = new ArrayList<>();
+        int name_in_use = 0;
+        Boolean added= false;
+        Equipment temp_e;
         var equip_array:Array = get_equip_array();
         if(c.location != null && c.equip_state == 0){//make sure we aren't in world gen
             c.equip_state = 1;
-            for(i;i<equip_array.length;i++){
+            for(i=0;i<equip_array.length;i++){
                 temp_e = equip_array[i];
                 temp_e.remove_effects(c,true);
             }
@@ -428,7 +439,7 @@ public class Body {
         }
         temp_array[0] = p;
         i = 0;
-        for(i;i<parts.length;i++){
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 if(parts[i].name.indexOf(p.name) >= 0){
                     if(name_in_use == 0)parts[i].set_part_count(1);
@@ -458,7 +469,7 @@ public class Body {
                 i = 0;
                 var lowest:int = 100;
                 var lowest_id:int = -1;
-                for(i;i<p.can_connect_to.length;i++){
+                for(i=0;i<p.can_connect_to.length;i++){
                     var temp_connect_part:Array = get_part_by_id(p.can_connect_to[i]);
                     if(temp_connect_part.length > 0){
                         var already_connected_count:int = 0;
@@ -494,7 +505,7 @@ public class Body {
         //go through the equipment and see if any of it should be covering/equiped on the new part
         if(!(p.covered_by[0] != null || p.equip[0] != null)){
             i = 0;
-            for(i;i<equip_array.length;i++){
+            for(i=0;i<equip_array.length;i++){
                 temp_e = equip_array[i];
                 j = 0;
                 temp_array = temp_e.get_cover_slots();
@@ -518,21 +529,21 @@ public class Body {
         if(c.location != null && c.equip_state == 0){//make sure we aren't in world gen
             c.equip_state = 1;
             i = 0;
-            for(i;i<equip_array.length;i++){
+            for(i=0;i<equip_array.length;i++){
                 temp_e = equip_array[i];
                 temp_e.equip_effects(c,true);
             }
             c.equip_state = 0;
         }
     }
-    
-    public function get_parts_appearance(c:Character):String{
-        var i:int = 0;
-        var s:String = "";
-        for (i;i<parts.length;i++){
-            var p:Body_part = parts[i] as Body_part;
+    */
+    public String get_parts_appearance(Character c){
+        int i = 0;
+        String s = "";
+        for (i=0;i<parts.length;i++){
+            BodyPart p= (BodyPart)parts[i];//parts[i] as Body_part;
             if(p != null){
-                var same_id:Boolean = false;
+                Boolean same_id = false;
                 if(parts[i+1] != null){
                     if(parts[i+1].get_part_id() == p.get_part_id() && parts[i+1].race.name == p.race.name && p.pair_description != "" && p.name != parts[i+1].name){
                         same_id = true;
@@ -541,7 +552,7 @@ public class Body {
                 if(s.indexOf(p.appearance(0, c)) <= -1 && !(same_id && s.indexOf(p.pair_appearance(parts[i+1], c)) >= 0)){
                     if(same_id){
                         s += p.pair_appearance(parts[i+1], c);
-                        i++
+                        i++;
                     }else{
                         s += p.appearance(0, c);
                     }
@@ -550,12 +561,12 @@ public class Body {
         }
         return s;
     }
-    
-    public function get_equip_effects(id:int, change_amt:Number, c:Character):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var bp:Body_part = parts[i] as Body_part;
+    /*TODO BodyPart get_stat
+    public String get_equip_effects(int id,Number change_amt, Character c){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            BodyPart bp = (BodyPart)parts[i]; //as Body_part;
             if(bp.get_stat(c, id, 0) > -1){
                 ret = bp.apply_equip_effect(id, change_amt, c);
             }
@@ -563,9 +574,10 @@ public class Body {
         
         return ret;
     }
-    
+    */
+    /*
     public function get_effects(stat_id:int, k:Number, c:Character, temp:int = 0, body_app_method:int = change_stats_individual, char_stat_count:int = 0, part_id:int = target_all_parts, effect_type:int = -1):String{
-        var s:String = "";
+        String s = "";
         var j:int = 0;
         var current_value:Number = 0;
         
@@ -577,7 +589,7 @@ public class Body {
             if(p.get_stat(c, stat_id,0) > -1 && (part_id == target_all_parts || part_id == p.get_part_id())){
                 parts_count++;
                 //sometimes only want the last of these to return...
-                var temp_string:String = "";
+                String temp_string = "";
                 
                 if(body_app_method == change_stats_individual){
                     temp_string = p.apply_effect(stat_id,k,c, temp,effect_type);		
@@ -623,13 +635,14 @@ public class Body {
         /*
         return s;
     }
+    */
     
-    public function part_count_by_stat(c:Character, stat_id:int, min_max_chk:int = -1):int{
-        var j:int = 0;
-        var parts_count:int = 0;
-        for (j;j<parts.length;j++){
-            var p:Body_part = parts[j] as Body_part;
-            if(p.get_stat(c, stat_id) > -1){
+    public int part_count_by_stat(Character c,int stat_id,int min_max_chk){//default min_max_chk -1
+        int j = 0;
+        int parts_count = 0;
+        for (j=0;j<parts.length;j++){
+            BodyPart p = parts[j];//as Body_part;
+            if(p.get_stat(c, stat_id).intValue() > -1){
                 if(min_max_chk == -1){
                     parts_count++;
                 }else if(min_max_chk == 0){
@@ -648,9 +661,10 @@ public class Body {
         return parts_count;
     }
     
-    public function has_part(part_id:int):Boolean{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    
+    public Boolean has_part(int part_id){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i].get_part_id() == part_id){
                 return true;
             }
@@ -658,9 +672,9 @@ public class Body {
         return false;
     }
     
-    public function holding_weapon_or_shield():Boolean{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+    public Boolean holding_weapon_or_shield(){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i].hold != null){
                 return true;
             }
@@ -668,60 +682,61 @@ public class Body {
         return false;
     }
     
-    public function part_count_by_name(n:String):int{
-        var j:int = 0;
-        var parts_count:int = 0;
-        for (j;j<parts.length;j++){
-            var p:Body_part = parts[j] as Body_part;
-            if(parts[j].name == n){
+    public int part_count_by_name(String n){
+        int j = 0;
+        int parts_count = 0;
+        for (j=0;j<parts.length;j++){
+            BodyPart p = (BodyPart)parts[j] ;//as Body_part;
+            if(parts[j].name.equals(n)){
                 parts_count++;
             }				
         }
         return parts_count;
     }
     
-    public function part_count_by_id(part_id:int):int{
-        var j:int = 0;
-        var parts_count:int = 0;
-        for (j;j<parts.length;j++){
-            var p:Body_part = parts[j] as Body_part;
+    public int part_count_by_id(int part_id){
+        int j = 0;
+        int parts_count = 0;
+        for (j=0;j<parts.length;j++){
+            BodyPart p = (BodyPart)parts[j];
             if(parts[j].get_part_id() == part_id){
                 parts_count++;
             }				
         }
         return parts_count;
     }
-    
-    public function get_part_by_id(part_id:int):Array{
-        var i:int = 0;
+    /*Array Sussing
+    public function get_part_by_id(int part_id):Array{
+        int i = 0;
         var ret_part:Array = new Array();
-        for(i;i<parts.length;i++){
+        for(i=0;i<parts.length;i++){
             if(parts[i].get_part_id() == part_id){
                 ret_part[ret_part.length] = parts[i];					
             }
         }
         return ret_part;
     }
+    */
     
-    public function get_part_by_stat(stat_id:int):Body_part{
-        var i:int = 0;
-        var ret_part:Body_part = null;
-        for(i;i<parts.length;i++){
-            if(parts[i].get_stat(null, stat_id) >= 0){
+    public BodyPart get_part_by_stat(int stat_id){
+        int i = 0;
+        BodyPart ret_part = null;
+        for(i=0;i<parts.length;i++){
+            if(parts[i].get_stat(null, stat_id).intValue() >= 0){
                 if(ret_part == null){
                     ret_part = parts[i];
                 }else{
-                    trace("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
+                    //trace("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
                     break;
                 }
             }
         }
         return ret_part;
     }
-    
-    public function equip(e:Equipment,c:Character):String{
+    /*Array Sussing
+    public String equip(Equipment e,Character c){
         c.equip_state = 1;
-        var ret:String = e.equip_effects(c);
+        String ret = e.equip_effects(c);
         c.equip_state = 0;
         
         var temp:Array = e.get_equip_slots();
@@ -729,8 +744,8 @@ public class Body {
         for(j;j<temp.length;j++){
             var max_slot:int = e.get_max_equip_slot(j);
             var curr_count:int = 0;
-            var i:int = 0;
-            for(i;i<parts.length;i++){
+            int i = 0;
+            for(i=0;i<parts.length;i++){
                 if(parts[i].get_part_id() == temp[j] && (curr_count < max_slot || max_slot == 0)){
                     parts[i].set_equip(e);
                     curr_count++;
@@ -744,7 +759,7 @@ public class Body {
             max_slot = e.get_max_cover_slot(j);
             curr_count = 0;
             i = 0;
-            for(i;i<parts.length;i++){
+            for(i=0;i<parts.length;i++){
                 if(parts[i].get_part_id() == temp[j] && (curr_count < max_slot || max_slot == 0)){
                     parts[i].set_cover(e);
                     curr_count++;
@@ -756,49 +771,56 @@ public class Body {
         
         return ret;
     }
-    
-    public function unequip(e:Equipment, c:Character):String{
-        var ret:String = "";
+    */
+
+    public String unequip(Equipment e, Character c){
+        String ret = "";
         if(e != null){
-            "</n> removes the " + e.get_name() + ".";
-            var i:int = 0;
-            for (i;i<parts.length;i++){
-                var j:int = 0;
-                for(j;j<parts[i].equip.length;j++){
+            //"</n> removes the " + e.get_name() + ".";
+            //TODO WTF
+            int i = 0;
+            for (i=0;i<parts.length;i++){
+                int j = 0;
+                for(j=0;j<parts[i].equip.length;j++){
                     if(parts[i].equip[j] == e){
-                        parts[i].equip = parts[i].equip.slice(0,j).concat(parts[i].equip.slice(j+1,parts[i].equip.length));
+                        //parts[i].equip = parts[i].equip.slice(0,j).concat(parts[i].equip.slice(j+1,parts[i].equip.length));
+                        //TODO
                         j--;
                     }
                 }
                 
                 j = 0;
-                for(j;j<parts[i].covered_by.length;j++){
+                for(j=0;j<parts[i].covered_by.length;j++){
                     if(parts[i].covered_by[j] == e){
-                        parts[i].covered_by = parts[i].covered_by.slice(0,j).concat(parts[i].covered_by.slice(j+1,parts[i].covered_by.length));
+                        //parts[i].covered_by = parts[i].covered_by.slice(0,j).concat(parts[i].covered_by.slice(j+1,parts[i].covered_by.length));
+                        //TODO
                         j--;
                     }
                 }
-                if(parts[i] == null) trace("wha?" + i);
+                if(parts[i] == null); //trace("wha?" + i);
             }
             c.equip_state = 1;
-            ret += e.remove_effects(c);
+            //ret += e.remove_effects(c);
+            //TODO
             c.equip_state = 0;
-            c.add_to_possessions(e);
+            //c.add_to_possessions(e);
+            //TODO
             
             check_combat_status(true,c);
         }
         return ret;
     }
     
-    public function hold(w:Weapon,c:Character):int{
-        var i:int = 0;
-        for(i;i<w.stat_req.length;i++){
+    /*
+    public int hold(Weapon w,Character c){
+        int i = 0;
+        for(i=0;i<w.stat_req.length;i++){
             if(c.get_stat(w.stat_req[i]) < w.stat_min[i]) return -1;
         }			
         
         i = 0;
         var slots_req:int = w.get_num_hold();
-        for(i;i<parts.length;i++){
+        for(i=0;i<parts.length;i++){
             if(parts[i].hold == null && parts[i].get_num_hold_slots() > 0){
                 slots_req -= parts[i].get_num_hold_slots();
             }
@@ -810,7 +832,7 @@ public class Body {
         }else{
             i = 0
             slots_req = w.get_num_hold();
-            for(i;i<parts.length;i++){
+            for(i=0;i<parts.length;i++){
                 if(parts[i].hold == null && parts[i].get_num_hold_slots() > 0){
                     parts[i].set_hold(w,c);
                     slots_req -= parts[i].get_num_hold_slots();
@@ -828,7 +850,7 @@ public class Body {
     }
     
     public function unhold(w:Weapon,c:Character):String{
-        var i:int = 0;
+        int i = 0;
         for (i;i<parts.length;i++){
             if(parts[i].hold == w){
                 parts[i].hold = null;
@@ -845,7 +867,7 @@ public class Body {
     
     
     public function drop_equipment(c:Character):void{
-        var i:int = 0;
+        int i = 0;
         for (i;i<parts.length;i++){
             if(parts[i].get_equip() != null){
                 while(parts[i].equip.length > 0){
@@ -900,7 +922,7 @@ public class Body {
     }
     
     public function check_state(c:Character):String{
-        var s:String = "";
+        String s = "";
         var k:int = 0;
         for (k;k<parts.length;k++){
             if(parts[k] != null) s += parts[k].state_check(c);
@@ -919,9 +941,9 @@ public class Body {
     
     public function get_max_stat(stat_id:int):Number{
         var ret:int = 0;
-        var i:int = 0;
-        for(i;i<parts.length;i++){
-            var count:int = 0;
+        int i = 0;
+        for(i=0;i<parts.length;i++){
+            int count = 0;
             for(count;count<parts[i].race.max_part.length;count++){
                 if(parts[i].race.max_part[count] == parts[i].part_id && parts[i].race.stat_max_id[count] == stat_id && parts[i].get_stat(null, stat_id,0) > -1){
                     ret += parts[i].race.stat_max[count];
@@ -933,8 +955,8 @@ public class Body {
     
     public function get_actions_array(c:Character):Array{
         var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 ret = ret.concat(parts[i].get_actions());
             }
@@ -943,9 +965,9 @@ public class Body {
     }
     
     public function get_parts_actions(c:Character, start_id:int, strangers_personal_party_ind:int = 0):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 var k:int = 0;
                 var temp_array:Array = parts[i].get_actions();
@@ -977,8 +999,8 @@ public class Body {
     }
     
     public function get_action(action_num:int):Action{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 var k:int = 0;
                 var temp_array:Array = parts[i].get_actions();
@@ -994,9 +1016,9 @@ public class Body {
     }
     
     public function get_part_attacks(c:Character, target:Character, start_id:int):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 var k:int = 0;
                 var temp_array:Array = parts[i].get_attack_actions();
@@ -1015,8 +1037,8 @@ public class Body {
     }
     
     public function get_part_attack_action(attack_num:int):Action{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 var k:int = 0;
                 var temp_array:Array = parts[i].get_attack_actions();
@@ -1032,8 +1054,8 @@ public class Body {
     
     public function get_part_attack_actions():Array{
         var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i] != null){
                 var k:int = 0;
                 var temp_array:Array = parts[i].get_attack_actions();
@@ -1047,8 +1069,8 @@ public class Body {
     }
     
     public function get_pregnant_race():Race{
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             if(parts[i].gets_pregnant()) break;
         }
         
@@ -1064,8 +1086,8 @@ public class Body {
                 var lowest_curr_tick:int = preg_tick.current_tick;
                 while(lowest_curr_tick < preg_to_tick && preg_tick != null){
                     lowest_curr_tick = preg_tick.end_tick;
-                    var i:int = 0;
-                    for(i;i<preg_tick.tick_count.length;i++){
+                    int i = 0;
+                    for(i=0;i<preg_tick.tick_count.length;i++){
                         if(preg_tick.tick_count[i] < lowest_curr_tick && preg_tick.tick_count[i] > preg_tick.current_tick){
                             lowest_curr_tick = preg_tick.tick_count[i];
                         }
@@ -1080,9 +1102,9 @@ public class Body {
     }
     
     public function tick(c:Character):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             ret += parts[i].tick(c);
         }
         return ret;
@@ -1095,8 +1117,8 @@ public class Body {
         if(bp == null){
             bp = parts[0];//should be the top most part...
         }
-        var i:int = 0;
-        for(i;i<drawn_parts.length;i++){
+        int i = 0;
+        for(i=0;i<drawn_parts.length;i++){
             if(drawn_parts[i] == bp){
                 already_drawn = true;
             }
@@ -1167,7 +1189,7 @@ public class Body {
                 g.endFill();
             }else{
                 i = 0;
-                for(i;i<temp_part_image_array.length;i++){
+                for(i=0;i<temp_part_image_array.length;i++){
                     var temp_bmp:Bitmap = temp_part_image_array[i];
                     
                     //thinking this is how we do second widths/heights... 
@@ -1194,7 +1216,7 @@ public class Body {
             
             drawn_parts[drawn_parts.length] = bp;
             i = 0;
-            for(i;i<bp.can_connect_to.length;i++){
+            for(i=0;i<bp.can_connect_to.length;i++){
                 if(bp.connected_to[i] != null){
                     var j:int = 0;
                     for(j;j<bp.connected_to[i].length;j++){
@@ -1331,9 +1353,9 @@ public class Body {
     }
     
     public function sanitize(s:String, c:Character, c_self:Character):String{
-        var ret:String = s;
-        var i:int = 0;
-        for(i;i<parts.length;i++){
+        String ret = s;
+        int i = 0;
+        for(i=0;i<parts.length;i++){
             var part_count:int = part_count_by_id(parts[i].get_part_id());
             
             while(ret.indexOf("</pd"+parts[i].get_part_id()+">") >= 0){
@@ -1378,7 +1400,7 @@ public class Body {
     }
     
     public function clone(b:Body, c:Character):void{
-        var i:int = 0;
+        int i = 0;
         for (i;i<b.parts.length;i++){
             var p:Body_part = new Body_part();
             p.clone(b.parts[i]);
@@ -1434,7 +1456,7 @@ public class Body {
         }
         //This is where we jiggle stats...
         /*i = 0;
-        for(i;i<parts.length;i++){
+        for(i=0;i<parts.length;i++){
             if(parts[i-1] != null && parts[i-1].get_part_id() == parts[i].get_part_id() && parts[i-1].race.name == parts[i].race.name && parts[i].pair_description != "" && parts[i].name != parts[i-1].name){
                 parts[i].jiggle_stats(this, parts[i-1].get_stat(null, parts[i].display_length_stat_id));
             }else{
@@ -1445,7 +1467,7 @@ public class Body {
         //Make sure the equipment/weapons are still usable after the stat jiggle
         /*
         i = 0;
-        for(i;i<temp_equip_array.length;i++){
+        for(i=0;i<temp_equip_array.length;i++){
             new_e = temp_equip_array[i];
             j = 0;
             for(j;j<new_e.stat_req.length;j++){

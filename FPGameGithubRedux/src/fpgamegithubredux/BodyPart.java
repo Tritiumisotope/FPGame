@@ -209,13 +209,11 @@ public class BodyPart extends DynamicObject {
     @Override
 public String getName(){
          String ret = name;
-        if(part_count == 0){
-            
-        }else if(part_count == 1){
+        if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + name;
-        }else if(part_count == 2){
+        }else if(part_count%10 == 2&&part_count!=12){
             ret = (part_count) + "nd " + name;
-        }else if(part_count == 3){
+        }else if(part_count%10 == 3&&part_count!=13){
             ret = (part_count) + "rd " + name;
         }else{
             ret = (part_count) + "th " + name;
@@ -226,13 +224,11 @@ public String getName(){
     
     public String get_pair_name(){
          String ret = pair_name;
-        if(part_count == 0){
-            
-        }else if(part_count == 1){
+         if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + pair_name;
-        }else if(part_count == 2){
+        }else if(part_count%10 == 2&&part_count!=12){
             ret = (part_count) + "nd " + pair_name;
-        }else if(part_count == 3){
+        }else if(part_count%10 == 3&&part_count!=13){
             ret = (part_count) + "rd " + pair_name;
         }else{
             ret = (part_count) + "th " + pair_name;
@@ -760,7 +756,9 @@ public String appearance(int i, Character c){//default 0, null
         }
         return ret;
     }
-    
+    public Boolean get_stat_min_max(int s_id, Character c){
+        get_stat_min_max(s_id,c,false);
+    }
     public Boolean get_stat_min_max(int s_id, Character c,Boolean min_max){//default false
         Boolean ret = false;
          int i = 0;
@@ -886,7 +884,7 @@ public String appearance(int i, Character c){//default 0, null
             set_pair_name(b.pair_name);
             
             part_id = b.part_id;
-             int i = 0;
+            int i = 0;
             if(b.equip != null){
                 for(i=0;i<b.equip.length;i++){
                     equip[i] = b.equip[i];
@@ -894,7 +892,6 @@ public String appearance(int i, Character c){//default 0, null
             }
                             
             if(b.covered_by != null){
-                i = 0;
                 for(i=0;i<b.covered_by.length;i++){
                     covered_by[i] = b.covered_by[i];
                 }
