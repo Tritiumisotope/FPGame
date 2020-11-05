@@ -581,7 +581,9 @@ public class Body {
         return ret;
     }
     */
-    
+    public String get_effects(int stat_id,Number k, Character c, int temp,int body_app_method){
+        return get_effects(stat_id, k, c, temp, body_app_method,0,target_all_parts,-1);
+    }
     public String get_effects(int stat_id,Number k, Character c, int temp,int body_app_method,int char_stat_count,int part_id,int effect_type){
         //default temp=0, body_app_method=change_stats_individual, char_stat_count = 0, part_id = target_all_parts, effect_type = -1
         String s = "";
@@ -887,7 +889,9 @@ public class Body {
             if(parts[i].get_hold() != null)unhold(parts[i].get_hold(), c);
         }
     }
-    
+    public Number get_stat_by_id(Character c,int i){
+        return get_stat_by_id(c, i,1,get_stat_total,target_all_parts,true);
+    }
     public Number get_stat_by_id(Character c,int i,int get_hard_value,int multi_part_process
     ,int part_id,Boolean add_equip){
         //default get_hard_value = 1, multi_part_process= get_stat_total, part_id= target_all_parts, add_equip = true

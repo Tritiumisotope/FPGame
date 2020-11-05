@@ -23,8 +23,8 @@ public class Character_template {
 		
 		public void set_stat_jiggle(int stat_id,Number stat_min,Number stat_max){
             stats.add(stat_id);//stats[stats.length] = stat_id
-			//mins[mins.length] = stat_min;
-			//maxs[maxs.length] = stat_max;
+			mins.add(stat_min);//mins[mins.length] = stat_min
+			maxs.add(stat_max);//maxs[maxs.length] = stat_max
 		}
 		public Character gen_char(){
                 return gen_char(0,null);
@@ -34,30 +34,37 @@ public class Character_template {
         }
 		public Character gen_char(int level_adjust, Room r){//def 0, null
 			Character ret = new Character();
-            //ret.clone(char_to_clone);
+            //ret.clone(char_to_clone)
             //TODO clone method in Character
 			int i = 0;
 			if(r != null){
-                /*
-				for(i=0;i<ret.personality.objectives.length;i++){
+                
+				for(i=0;i<ret.personality.objectives.size();i++){
 					int j = 0;
-					for(j=0;j<ret.personality.objectives[i].objectives.length;j++){
-                        
-						if(ret.personality.objectives[i].objective_actions[j] == Quest.area_action && ret.personality.objectives[i].objective_targets[j] == null){
-							//ret.personality.objectives[i].objective_targets[j] = [r.area];
-						}else if(ret.personality.objectives[i].objective_actions[j] == Quest.room_action && ret.personality.objectives[i].objective_targets[j] == null){
-							//ret.personality.objectives[i].objective_targets[j] = [r];
-						}else if(ret.personality.objectives[i].objective_actions[j] == Quest.wait_action && ret.personality.objectives[i].objective_targets[j] == null){
-							//ret.personality.objectives[i].objective_targets[j] = [r];
+					for(j=0;j<ret.personality.objectives.get(i).objectives.size();j++){
+						ArrayList<Object> temp1 = new ArrayList<>();
+						//ArrayList<Room> temp2 = new ArrayList<>();
+						if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.area_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
+							//ret.personality.objectives.get(i).objective_targets[j] = [r.area];
+							temp1.add(r.area);
+							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
+						}else if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.room_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
+							//ret.personality.objectives.get(i).objective_targets[j] = [r];
+							temp1.add(r);
+							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
+						}else if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.wait_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
+							//ret.personality.objectives.get(i).objective_targets[j] = [r];
+							temp1.add(r);
+							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
                         }
                         
 					}
                 }
-                */
+                
 			}
-			
+			String char_name = "";
 			if(ret.name.equals("")){
-                String char_name = "";
+                
                 /*
 				if(ret.get_primary_race() != null){
 					if(ret.sex.get_noun() == "his"){
@@ -76,10 +83,10 @@ public class Character_template {
 			
             i = 0;
             
-			for(i=0;i<stats.length;i++){
+			for(i=0;i<stats.size();i++){
 				Number curr_stat_value = ret.get_stat(stats.get(i),0,0,-1,false);
-				if(curr_stat_value < 0){
-					trace("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats.get(i) + ". Character name: " + char_name);
+				if(curr_stat_value.doubleValue() < 0){
+					//trace("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats.get(i) + ". Character name: " + char_name);
 				}else{
 					Number rand = curr_stat_value;
 					if(curr_stat_value.doubleValue() > maxs.get(i).doubleValue() || curr_stat_value.doubleValue() < mins.get(i).doubleValue()){
@@ -97,11 +104,11 @@ public class Character_template {
 					if(curr_stat_value.doubleValue() > 0){
 						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - curr_stat_value.doubleValue(),0,null, Body.prorate_change_total);
 					}else{
-						ret.apply_affect_by_id(stats.get(i),rand - curr_stat_value,0,null, Body.change_stats_total);
+						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - curr_stat_value.doubleValue(),0,null, Body.change_stats_total);
 					}
 				}				
             }
-            */
+            
 			
 			if(level_adjust > 0){
                 //var skill_list= new Array();

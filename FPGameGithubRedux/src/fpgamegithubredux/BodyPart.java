@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
-import jdk.nashorn.api.tree.ForInLoopTree;
 
 public class BodyPart extends DynamicObject {
     public static final int display_front = 0;
@@ -675,7 +674,7 @@ public String appearance(int i, Character c){//default 0, null
                             p = (BodyPart)c.body.parts[j];//was as
                             if(p.get_stat(c, stat_id[i]).doubleValue() > -1){
                                 if(parts_count == 0 && p == this){
-                                    s += stat_description[i].get_description(c, c.get_stat(stat_id[i]).doubleValue();
+                                    s += stat_description[i].get_description(c, c.get_stat(stat_id[i]).doubleValue());
                                     break;
                                 }else if(parts_count > 0){
                                     break;
@@ -877,14 +876,14 @@ public String appearance(int i, Character c){//default 0, null
                 stat_description[i].setStatValue(new_val);
             }else{
                 if(body.get_part_by_stat(stat_description[i].get_id()) == this){
-                    Number new_val =  Math.random()*body.get_stat_by_id(null, stat_description[i].get_id())/4 - body.get_stat_by_id(null,stat_description[i].get_id())/8;
+                    Number new_val =  Math.random()*body.get_stat_by_id(null, stat_description[i].get_id()).doubleValue()/4 - body.get_stat_by_id(null,stat_description[i].get_id()).doubleValue()/8;
                     body.get_effects(stat_description[i].get_id(), new_val, null, 0, Body.change_stats_total);
                 
                 }
             }
         }
     }
-    */
+    
     
     public void bodyPartCopy(BodyPart b){
         if (b != null){
