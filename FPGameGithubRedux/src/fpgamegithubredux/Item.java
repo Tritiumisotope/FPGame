@@ -11,15 +11,15 @@ public class Item {
     protected int value;
     protected int identDifficulty;
     protected int weight;
-    protected Double[] effects;//effects
+    protected ArrayList<Double> effects;//effects
     protected ArrayList<Object> changeEffects;//changeEffects
     protected String useDescription;
     protected Boolean propogate = false;
-    protected StatAction[] statActionAdd;//statActionAdd
+    protected ArrayList<StatAction> statActionAdd;//statActionAdd
     protected int numUses;
     protected int imageID;
     protected Conversation_topic topic;
-    protected ItemCntPair[] craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
+    protected ArrayList<ItemCntPair> craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
     protected Item dismantleItem;
 
     protected int tickCount;
@@ -34,16 +34,16 @@ public class Item {
 	    multiDroppedDescription = "";
 		inventoryDescription = "";
         value = 0;
-        effects = null;//empty effects array
-        changeEffects = null;//empty changeEffects array
+        effects = new ArrayList<>();//empty effects array
+        changeEffects = new ArrayList<>();//empty changeEffects array
         useDescription = "";
         identDifficulty = 5;
         weight = 1;
-        statActionAdd = null;//empty statActionAdd array
+        statActionAdd = new ArrayList<>();//empty statActionAdd array
         numUses = 1;
         imageID=-1;
-        //topic
-        craftingRequirements = null;//craftingRequirements
+        topic = null;
+        craftingRequirements = new ArrayList<>();//craftingRequirements
         tickCount = 0;
         destroyTick = -1;
         spawnChar = null;
@@ -103,7 +103,8 @@ public class Item {
         multiDroppedDescription = newMultiDropDesc;
     }
     public void add_crafting_requirement(Item craftRequirementItem,int num){
-        craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
+        //craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
+        craftingRequirements.add(new ItemCntPair(craftRequirementItem, num));
     }
     public void add_change_effect(DynamicObject o){
         Consequence consequence = new Consequence();
@@ -123,7 +124,8 @@ public class Item {
         changeEffects.add(a);
     }
     public void new_stat_action(int statID, CharAction a){
-        statActionAdd[statActionAdd.length] = new StatAction(statID, a);//replaces above? see accessors
+        //statActionAdd[statActionAdd.length] = new StatAction(statID, a);//replaces above? see accessors
+        statActionAdd.add(new StatAction(statID, a));
     }
     public String getName(){
         return name;
@@ -143,11 +145,18 @@ public class Item {
     }
 
     public void add_effect(int type, double multiplier){//was number
+        /*
         if(effects[type]==null){
             effects[type] = multiplier;
         }else{
             effects[type] += multiplier;
         }			
+        */
+        if(effects.get(type)==null){
+            effects.set(type, multiplier);
+        }else{
+            effects.set(type,effects.get(type) + multiplier);
+        }	
     }
     
     public Boolean getPropogate(){
@@ -159,7 +168,7 @@ public class Item {
     public String useItem(Character user, int possessionID, int forceTags){//default tags 0
         int i = 0;
         String useDesc= getUseDescription();
-        for (i=0;i<effects.length;i++){
+        for (i=0;i<effects.size();i++){//.length
             //if (effects[i] != null) useDesc+= "\n" + user.apply_affect_by_id(i,effects[i], 0, null, Body.change_stats_total);
         }
         for (i=0;i<changeEffects.size();i++){//.length
@@ -181,9 +190,11 @@ public class Item {
             }
         }
         
-        if(statActionAdd.length > 0){
-            for(i=0;i<Math.ceil(statActionAdd.length/2);i++){
+        if(statActionAdd.size() > 0){//.length
+            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){//.length
                 //user.addStatAction(statActionAdd[i*2], statActionAdd[i*2+1]);
+                //user.addStatAction(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
+                //Character TODO
             }
         }
         if(numUses > 0)numUses--;
@@ -212,15 +223,15 @@ public class Item {
     public String describeEffects(Integer[] identEfficacy,Boolean keepTags, int identChance, String desc){
         int count;
         Boolean showing = false;
-        if(effects.length > 0){
-            for(count = 0;count<effects.length;count++){
-                if(effects[count] != null && Math.random() <= identChance){
+        if(effects.size() > 0){//.length
+            for(count = 0;count<effects.size();count++){
+                if(effects.get(count) != null && Math.random() <= identChance){
                     if(!showing){
                         desc += "Looks like it might have an impact on the following stats:\n";
                         showing = true;
                     }
                     if(keepTags){
-                        if(effects[count] >= 0){
+                        if(effects.get(count) >= 0){
                             desc += "<s"+count+">";
                         }else{
                             desc += "<s-"+count+">";
@@ -230,16 +241,16 @@ public class Item {
                         if(identEfficacy[0]>20){
                             
                             if(l_string != "?"){
-                                if(effects[count] >= 0){
-                                    desc += "Increase " + l_string + " by "	+effects[count]+".\n";
+                                if(effects.get(count) >= 0){
+                                    desc += "Increase " + l_string + " by "	+effects.get(count)+".\n";
                                 }else{
-                                    desc += "Increase " + l_string + " by "	+ (-effects[count]) +".\n";
+                                    desc += "Increase " + l_string + " by "	+ (-effects.get(count)) +".\n";
                                 }
                             }
                             
                         }else if(identEfficacy[0]>10){
                             if(l_string != "?"){
-                                if(effects[count] >= 0){
+                                if(effects.get(count) >= 0){
                                     desc += "Increase ";
                                 }else{
                                     desc += "Decrease ";
@@ -292,11 +303,11 @@ public class Item {
                 }
             }
         }
-        if(statActionAdd.length > 0){
+        if(statActionAdd.size() > 0){
             desc += "\n";
             count = 0;
             //for(count=0;count<Math.ceil(statActionAdd.length/2);count++){
-            for(count=0;count<statActionAdd.length;count++){
+            for(count=0;count<statActionAdd.size();count++){
                 if(Math.random() <= identChance){
                     desc += "It seems to be magical.\n";
                     break;
@@ -586,10 +597,10 @@ public class Item {
         retItem.value = value;
         int count = 0;
 
-        for(count=0;count<effects.length;count++){        //effects copy, maybe toClone.effects.length?
-            retItem.effects[count] = effects[count];
+        for(count=0;count<effects.size();count++){        //effects copy, maybe toClone.effects.length?
+            retItem.effects.set(count,effects.get(count));
         }
-        retItem.effects = Arrays.copyOf(effects, effects.length);//this might be enough?
+        //retItem.effects = Arrays.copyOf(effects, effects.size());//this might be enough? not with ArrayList
         //Collections.addAll(this.list, source);
 
         retItem.useDescription = useDescription;
@@ -597,18 +608,21 @@ public class Item {
             //retItem.changeEffects[count] = changeEffects[count];
             retItem.changeEffects.set(count,changeEffects.get(count));
         }//change effects copy
-        //retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.size());//this might be enough?
+        //retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.size());//this might be enough? not with ArrayList
         retItem.propogate = propogate;
         retItem.identDifficulty = identDifficulty;
         retItem.weight = weight;
-        for(count=0;count < statActionAdd.length;count++){
-            retItem.statActionAdd[count] = statActionAdd[count];
+        for(count=0;count < statActionAdd.size();count++){
+            retItem.statActionAdd.set(count, statActionAdd.get(count));
         }//stat action add copy
-        retItem.statActionAdd = Arrays.copyOf(statActionAdd, statActionAdd.length);//this might be enough?
+        //retItem.statActionAdd = Arrays.copyOf(statActionAdd, statActionAdd.size());//this might be enough? not with ArrayList
         retItem.numUses = numUses;
         retItem.imageID = imageID;
         //topic
-        retItem.craftingRequirements = Arrays.copyOf(craftingRequirements, craftingRequirements.length);//crafting requirements
+        for(count=0;count < statActionAdd.size();count++){
+            retItem.craftingRequirements.set(count, craftingRequirements.get(count));
+        }
+        //retItem.craftingRequirements = Arrays.copyOf(craftingRequirements, craftingRequirements.size());//crafting requirements
 
         retItem.tickCount = 0;
         retItem.destroyTick = destroyTick;

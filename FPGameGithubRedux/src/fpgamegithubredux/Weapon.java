@@ -103,48 +103,57 @@ public class Weapon extends Item{
     public int get_num_hold(){
         return num_hold_slots_req;
     }
-    /*
+    
     public void equip_effects(Character c){
-        var i:int = 0;
-        for (i;i<change_effects.length;i++){
-            if (change_effects[i] != null){
-                if(change_effects[i] is Consequence){
-                    change_effects[i].trigger(0, c);
+        int i = 0;
+        for (i=0;i<changeEffects.size();i++){
+            if (changeEffects.get(i) != null){
+                if(changeEffects.get(i) instanceof Consequence){//was is
+                    Consequence temp = (Consequence)changeEffects.get(i);
+                    temp.trigger(0, c);
+                    //changeEffects.get(i).trigger(0, c);
+                    //TODO verify both!!
                 }else{
-                    change_effects[i].challenge(0,c);
+                    CharAction temp = (CharAction)changeEffects.get(i);
+                    //changeEffects.get(i).challenge(0,c);
+                    temp.challenge(0,c);
                 }
             }
         }
         
-        if(stat_action_add.length > 0){
+        if(statActionAdd.size() > 0){
             i = 0;
-            for(i;i<Math.ceil(stat_action_add.length/2);i++){
-                c.add_stat_action(stat_action_add[i*2], stat_action_add[i*2+1]);
+            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+                //c.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
+                //TODO add_stat_action in Character
             }
         }
         
         i = 0;
-        for(i;i<effects.length;i++){
-            if(effects[i] != null)c.apply_equip_affect_by_id(i, effects[i]);
+        for(i=0;i<effects.size();i++){
+            //if(effects.get(i) != null)c.apply_equip_affect_by_id(i, effects.get(i));
+            //TODO apply_equip_affect_by_id in Character
         }
         
         i = 0;
-        for(i;i<skill_id.length;i++){
-            if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], skill_bonus[i]);
+        for(i=0;i<skill_id.length;i++){
+            //if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], skill_bonus[i]);
+            //TODO set_skill_bonus in Character
         }
         
     }
     
-    public function remove_effects(c:Character):void{
-        var i:int = 0;
-        for(i;i<effects.length;i++){
-            if(effects[i] != null)c.apply_equip_affect_by_id(i, -effects[i]);
+    public void remove_effects(Character c){
+        int i = 0;
+        for(i=0;i<effects.size();i++){
+            //if(effects.get(i) != null)c.apply_equip_affect_by_id(i, -effects.get(i));
+            //TODO in Character
         }
         
-        if(stat_action_add.length > 0){
+        if(statActionAdd.size() > 0){
             i = 0;
-            for(i;i<Math.ceil(stat_action_add.length/2);i++){
-                c.remove_stat_action(stat_action_add[i*2], stat_action_add[i*2+1]);
+            for(i;i<Math.ceil(statActionAdd.size()/2);i++){
+                c.remove_stat_action(statActionAdd[i*2], statActionAdd[i*2+1]);
             }
         }
         
@@ -154,15 +163,16 @@ public class Weapon extends Item{
         }
     }
     
-    override public function get_description(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
+    @Override 
+    public function get_description(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
         var ret:String = super.get_description(c, ident_effectiveness, keep_tags);
         var ident_chance:Number = 0;
         if(ident_effectiveness != null){
             ident_chance = ident_effectiveness[0]/ident_difficulty;
         }
         
-        var showing:Boolean = false;
-        var count:int = 0;
+        Boolean showing = false;
+        int count = 0;
         if(stat_req.length > 0){
             for(count;count < stat_req.length;count ++){
                 if(Math.random() <= ident_chance){
@@ -178,28 +188,28 @@ public class Weapon extends Item{
         showing = false;
         count = 0;
         if(skill_id.length > 0){
-            for(count;count < skill_id.length;count ++){
+            for(count=0;count < skill_id.length;count ++){
                 if(Math.random() <= ident_chance){
                     if(!showing){
                         showing = true;
                         ret += "\nImpacts skills:\n";
                     }
-                    ret += FPalace_skills.get_skill_name(skill_id[count]) + "\n"
+                    ret += FPalace_skills.get_skill_name(skill_id[count]) + "\n";
                 }
             }
         }
         
         if(attack_action != null){
-            var damage_types:Array = new Array();
+            //var damage_types:Array = new Array();
             count = 0;
-            for(count;count<attack_action.consequences.length;count++){
+            for(count=0;count<attack_action.consequences.length;count++){
                 if(attack_action.consequences[count].damage_type_id > -1){
-                    var already_exists:Boolean = false;
-                    var count2:int = 0;
-                    for(count2;count2<damage_types.length;count2++){
-                        if(damage_types[count2] == attack_action.consequences[count].damage_type_id){
+                    Boolean already_exists = false;
+                    int count2 = 0;
+                    for(count2=0;count2<damage_types.length;count2++){
+                        if(damage_types[count2] == attack_action.consequences.get(count).damage_type_id){
                             already_exists = true;
-                            break
+                            break;
                         }
                     }
                     if(!already_exists)damage_types[damage_types.length] = attack_action.consequences[count].damage_type_id;
@@ -209,7 +219,7 @@ public class Weapon extends Item{
             showing = false;
             count = 0;
             if(damage_types.length > 0){
-                for(count;count < damage_types.length;count ++){
+                for(count=0;count < damage_types.length;count ++){
                     if(Math.random() <= ident_chance){
                         if(!showing){
                             showing = true;
@@ -223,12 +233,13 @@ public class Weapon extends Item{
         
         return ret;
     }
-    
-    override public function same_item(i:Item):Boolean{
-        var ret:Boolean = super.same_item(i);
+    /*
+    @Override 
+    public Boolean same_item(Item i){
+        Boolean ret= super.same_item(i);
         
-        if(ret && i is Weapon){
-            var temp:Weapon = i as Weapon;
+        if(ret && i instanceof Weapon){//was is
+            Weapon temp = (Weapon)i;
             if(temp.skill_bonus.toString() == skill_bonus.toString() && temp.skill_id.toString() == skill_id.toString() && temp.enchantment_level == enchantment_level
                 && temp.stat_min.toString() == stat_min.toString() && temp.stat_req.toString() == stat_req.toString() && temp.num_hold_slots_req == num_hold_slots_req){
                     ret = true;
@@ -257,16 +268,16 @@ public class Weapon extends Item{
         }
         temp.use_description = this.use_description;
         count = 0;
-        for(count;count<change_effects.length;count++){
-            temp.change_effects[count] = this.change_effects[count];
+        for(count;count<changeEffects.length;count++){
+            temp.changeEffects[count] = this.changeEffects[count];
         }
         temp.propogate = this.propogate;
         temp.inventory_description = inventory_description;
         temp.ident_difficulty = this.ident_difficulty;
         temp.weight = this.weight;
         count = 0;
-        for(count;count < stat_action_add.length;count++){
-            temp.stat_action_add[count] = this.stat_action_add[count];
+        for(count;count < statActionAdd.size();count++){
+            temp.statActionAdd[count] = this.statActionAdd[count];
         }
         temp.num_uses = this.num_uses;
         

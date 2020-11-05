@@ -29,7 +29,7 @@ public class BodyPart extends DynamicObject {
     //public  stat_description:Array
     protected Stat[] stat_description;
     //public  equip:Array
-    protected Equipment[] equip;
+    protected ArrayList<Equipment> equip;
     
     public Weapon hold;
     public int hold_slots;
@@ -569,14 +569,15 @@ public String appearance(int i, Character c){//default 0, null
     }
     
     public void set_equip(Equipment e){
-        equip[equip.length] = e;
+        //equip[equip.length] = e;
+        equip.add(e);
     }
     
     public void set_cover(Equipment e){
         covered_by[covered_by.length] = e;
     }
     
-    public Equipment[] get_equip(){
+    public ArrayList<Equipment> get_equip(){
         return equip;
     }
     
@@ -757,7 +758,7 @@ public String appearance(int i, Character c){//default 0, null
         return ret;
     }
     public Boolean get_stat_min_max(int s_id, Character c){
-        get_stat_min_max(s_id,c,false);
+        return get_stat_min_max(s_id,c,false);
     }
     public Boolean get_stat_min_max(int s_id, Character c,Boolean min_max){//default false
         Boolean ret = false;
@@ -886,8 +887,9 @@ public String appearance(int i, Character c){//default 0, null
             part_id = b.part_id;
             int i = 0;
             if(b.equip != null){
-                for(i=0;i<b.equip.length;i++){
-                    equip[i] = b.equip[i];
+                for(i=0;i<b.equip.size();i++){
+                    //equip[i] = b.equip[i];
+                    equip.set(i,b.equip.get(i));
                 }
             }
                             

@@ -250,7 +250,7 @@ public class Body {
     public void remove_part_by_count(int i, Character c){
         if(parts[i] != null){
             if(parts[i].equip != null){
-                while(parts[i].equip.length > 0){
+                while(parts[i].equip.size() > 0){
                     //unequip(parts[i].equip[0], c);
                     //TODO unequip
                 }
@@ -365,36 +365,38 @@ public class Body {
         return ret;
     }
     */
-    /*TODO make parts have equipment in ArrayList
-    public ArrayList<Equipment> get_equip_array(Boolean include_weapons){//default false, was array
-        ArrayList<Equipment> equip_array = new ArrayList<>();
+    //TODO make parts have equipment in ArrayList
+    public ArrayList<Object> get_equip_array(Boolean include_weapons){//default false, was array
+        ArrayList<Object> equip_array = new ArrayList<>();
         int i = 0;
         for(i=0;i<parts.length;i++){
             if(parts[i].equip != null){
                 int j = 0;
-                for(j=0;j<parts[i].equip.length;j++){
+                for(j=0;j<parts[i].equip.size();j++){
                     int k = 0;
                     Boolean already_found = false;
-                    for(k=0;k<equip_array.length;k++){
-                        if(equip_array[k] == parts[i].equip[j]){
+                    for(k=0;k<equip_array.size();k++){
+                        if(equip_array.get(k) == parts[i].equip.get(j)){
                             already_found = true;
                             break;
                         }
                     }
                     
                     if(!already_found) {
-                        equip_array[equip_array.length] = parts[i].equip[j];
+                        //equip_array[equip_array.length] = parts[i].equip[j];
+                        equip_array.add(parts[i].equip.get(j));
                     }
                 }
             }
             
             if(include_weapons && parts[i].get_hold() != null){
-                equip_array[equip_array.length] = parts[i].get_hold();
+                //equip_array[equip_array.length] = parts[i].get_hold();
+                equip_array.add(parts[i].get_hold());
             }
         }
         return equip_array;
     }
-    */
+    
     /*TODO Array method sussing
     public function get_avail_connect_part():Array{
         var ret:Array = new Array();
@@ -781,9 +783,17 @@ public class Body {
             int i = 0;
             for (i=0;i<parts.length;i++){
                 int j = 0;
-                for(j=0;j<parts[i].equip.length;j++){
-                    if(parts[i].equip[j] == e){
+                for(j=0;j<parts[i].equip.size();j++){
+                    if(parts[i].equip.get(j) == e){
                         //parts[i].equip = parts[i].equip.slice(0,j).concat(parts[i].equip.slice(j+1,parts[i].equip.length));
+                        /*
+                        ArrayList<Equipment> temp = new ArrayList<>();
+                        temp.addAll(parts[i].equip.subList(0,j));
+                        temp.addAll(parts[i].equip.subList(j+1,parts[i].equip.size()));
+                        parts[i].equip =temp;
+                        */
+                        //TODO above or below?!
+                        parts[i].equip.remove(j);
                         //TODO
                         j--;
                     }
@@ -811,15 +821,15 @@ public class Body {
         return ret;
     }
     
-    /*
+    
     public int hold(Weapon w,Character c){
         int i = 0;
         for(i=0;i<w.stat_req.length;i++){
-            if(c.get_stat(w.stat_req[i]) < w.stat_min[i]) return -1;
+            if(c.get_stat(w.stat_req[i]).intValue() < w.stat_min[i]) return -1;
         }			
         
         i = 0;
-        var slots_req:int = w.get_num_hold();
+        int slots_req = w.get_num_hold();
         for(i=0;i<parts.length;i++){
             if(parts[i].hold == null && parts[i].get_num_hold_slots() > 0){
                 slots_req -= parts[i].get_num_hold_slots();
@@ -848,7 +858,7 @@ public class Body {
         
         return 1;
     }
-    
+    /*
     public function unhold(w:Weapon,c:Character):String{
         int i = 0;
         for (i;i<parts.length;i++){

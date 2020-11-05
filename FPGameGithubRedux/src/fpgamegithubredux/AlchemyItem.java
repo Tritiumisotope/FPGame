@@ -313,9 +313,9 @@ public class AlchemyItem extends Item {
         //change name based on primary known effect
         int max_effect_id = -1;
         int i = 0;
-        for(i=0;i<item.effects.length;i++){
-            if(item.effects[max_effect_id] < item.effects[i])max_effect_id = i;
-            if(item.effects[max_effect_id] == null && item.effects[i] != null)max_effect_id = i;
+        for(i=0;i<item.effects.size();i++){
+            if(item.effects.get(max_effect_id) < item.effects.get(i))max_effect_id = i;
+            if(item.effects.get(max_effect_id) == null && item.effects.get(i) != null)max_effect_id = i;
         }
         if(max_effect_id >= 0){
             if(FPalaceHelper.get_stat_by_id(max_effect_id) != null){
@@ -449,21 +449,24 @@ public class AlchemyItem extends Item {
         temp.droppedDescription = this.droppedDescription;
         temp.value = this.value;
         
-        for(count=0;count<effects.length;count++){
-            temp.effects[count] = this.effects[count];
+        for(count=0;count<effects.size();count++){
+            //temp.effects[count] = this.effects[count];
+            temp.effects.set(count, this.effects.get(count));
         }
         
         temp.useDescription = this.useDescription;
         temp.numUses = this.numUses;
         
-        for(count=0;count<changeEffects.length;count++){
-            temp.changeEffects[count] = this.changeEffects[count];
+        for(count=0;count<changeEffects.size();count++){
+            //temp.changeEffects[count] = this.changeEffects[count];
+            temp.changeEffects.set(count, this.changeEffects.get(count));
         }
         temp.propogate = this.propogate;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
-        for(count=0;count < statActionAdd.length;count++){
-            temp.statActionAdd[count] = this.statActionAdd[count];
+        for(count=0;count < statActionAdd.size();count++){
+            //temp.statActionAdd[count] = this.statActionAdd[count];
+            temp.statActionAdd.set(count, this.statActionAdd.get(count));
         }
         
         temp.imageID = this.imageID;
