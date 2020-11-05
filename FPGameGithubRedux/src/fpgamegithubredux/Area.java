@@ -2055,7 +2055,7 @@ public class Area extends StaticObject{
         LOGGER.info("(Area.get_edge_room)If you thought you were getting an edge room, you're probably wrong");
         return get_random_room();
     }
-    /*
+    /*TODO template
     public void add_room_template(tr:Template_Room, min_max_floor:Array = null){
         //min_max_floor was null
         template_rooms[template_rooms.length] = tr;

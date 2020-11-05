@@ -7,61 +7,39 @@ public class Equipment extends Item {
         public static final int hide_part = -2;
         
 		
-		public ArrayList<Integer> equips_on;//public var equips_on:Array;
-		public ArrayList<Integer> equips_on_num;//public var equips_on_num:Array;
-		public ArrayList<Integer> stat_req;
-		public ArrayList<Integer> stat_min;
-		public ArrayList<Integer> stat_max;
-		public ArrayList<Integer> covers;
-		public ArrayList<String> covers_desc;
-		public ArrayList<Integer> cover_stat;
-		public ArrayList<Integer> cover_min;
+		public ArrayList<Integer> equips_on;//public var equips_on:Array
+		public ArrayList<Integer> equips_on_num;//public var equips_on_num:Array
 
+		public ArrayList<Integer> covers;//public var covers:Array
+		public ArrayList<String> covers_desc;//public var covers_desc:Array
+		public ArrayList<Integer> cover_stat;//public var cover_stat:Array
+		public ArrayList<Integer> cover_min;//public var cover_min:Array
+		public ArrayList<Integer> stat_req;//public var stat_req:Array
+		public ArrayList<Integer> stat_min;//public var stat_min:Array
+		public ArrayList<Integer> stat_max;//public var stat_max:Array
+		public ArrayList<Integer> cover_num;//public var cover_num:Array
+		public ArrayList<Integer> covered_perception_difficulty;//public var covered_perception_difficulty:Array
 
-		public ArrayList<Integer> cover_num;//public var equips_on_num:Array;
-		public ArrayList<Integer> covered_perception_difficulty;
-		/*
-		public var covers:Array;
-		public var covers_desc:Array;
-		public var cover_stat:Array;
-		public var cover_min:Array;
-		public var stat_req:Array;
-		public var stat_min:Array;
-		public var stat_max:Array;
-		public var cover_num:Array;
-        public var covered_perception_difficulty:Array;
-        */
 		public Boolean _show_other_cover;
 
-		public ArrayList<Integer> skill_id;//public var skill_id:Array;
-		public ArrayList<Integer> skill_bonus;//public var skill_bonus:Array;
-        /*
+		public ArrayList<Integer> skill_id;//public var skill_id:Array
+		public ArrayList<Integer> skill_bonus;//public var skill_bonus:Array
 
-		
-		public var cover_parts:Array;
-		public var cover_parts_images:Array;
-		*/
-		protected int[] cover_parts;
-		protected int[] cover_parts_images;
+		protected int[] cover_parts;//public var cover_parts:Array
+		protected int[] cover_parts_images;//public var cover_parts_images:Array
         
 		public int enchantment_level;
 		
-		public ArrayList<Integer> damage_type_strengths;
-		public ArrayList<Integer> damage_type_weaknesses;
+		public ArrayList<Integer> damage_type_strengths;//public var damage_type_strengths:Array
+		public ArrayList<Integer> damage_type_weaknesses;//public var damage_type_weaknesses:Array
 
-		public ArrayList<Integer> upgrade_slot_ids;
+		public ArrayList<Integer> upgrade_slot_ids;//public var upgrade_slot_ids:Array
 
 
-		public ArrayList<Object> remove_consequence;
-        /*
-		public var damage_type_strengths:Array;
-		public var damage_type_weaknesses:Array;
-		
-		public var upgrade_slot_ids:Array;
-		public var upgrade_items:Array;
-		
-		public var remove_consequence:Array;
-        */
+		public ArrayList<Object> remove_consequence;//public var remove_consequence:Array
+
+		public ArrayList<Upgrade_Item> upgrade_items;//public var upgrade_items:Array
+        
         public Equipment(){
             new Equipment(null);
         }
@@ -72,99 +50,99 @@ public class Equipment extends Item {
             
 			equips_on = new ArrayList<>();
 			equips_on_num = new ArrayList<>();
-			/*
-			covers = new Array();
-			covers_desc = new Array();
-			stat_req = new Array();
-			stat_min = new Array();
-			stat_max = new Array();
-			cover_min = new Array();
-			cover_stat = new Array();
-			cover_num = new Array();
-            covered_perception_difficulty = new Array();
-            */
+			
+			covers = new ArrayList<>();
+			covers_desc = new ArrayList<>();
+			stat_req = new ArrayList<>();
+			stat_min = new ArrayList<>();
+			stat_max = new ArrayList<>();
+			cover_min = new ArrayList<>();
+			cover_stat = new ArrayList<>();
+			cover_num = new ArrayList<>();
+            covered_perception_difficulty = new ArrayList<>();
+            
 			_show_other_cover = false;
             
-            /*
-			skill_id = new Array();
-			skill_bonus = new Array();
+            
+			skill_id = new ArrayList<>();
+			skill_bonus = new ArrayList<>();
 			
-			cover_parts = new Array();
-			cover_parts_images = new Array();
-            */
+			//cover_parts = new ArrayList<>()
+			//cover_parts_images = new ArrayList<>()
+            
             
 			enchantment_level = 0;
             
-            /*
-			damage_type_strengths = new Array();
-			damage_type_weaknesses = new Array();
+            
+			damage_type_strengths = new ArrayList<>();
+			damage_type_weaknesses = new ArrayList<>();
 			
-			upgrade_slot_ids = new Array();
-			upgrade_items = new Array();
+			upgrade_slot_ids = new ArrayList<>();
+			upgrade_items = new ArrayList<>();
 			
-            remove_consequence = new Array();
-            */
+            remove_consequence = new ArrayList<>();
+            
 		}
-		/*
-		public function attach_upgrade_item(ui:Upgrade_Item, c:Character):String{
-			var ret:String = "";
-			var i:int = 0;
-			for(i;i<upgrade_slot_ids.length;i++){
-				if(upgrade_slot_ids[i] == ui.upgrade_type_id && upgrade_items[i] == null){
-					ret += "</n> attaches the " + ui.get_name() + " to the " + get_name()+". \n";
-					upgrade_items[i] = ui;
-					c.drop_item(ui);
-					var effect_count:int = 0;
-					for(effect_count;effect_count<ui.effects.length;effect_count++){
-						if(ui.effects[effect_count] != null){
-							add_effect(effect_count, ui.effects[effect_count]);
+		
+		public String attach_upgrade_item(Upgrade_Item ui, Character c){
+			String ret = "";
+			int i = 0;
+			for(i=0;i<upgrade_slot_ids.size();i++){
+				if(upgrade_slot_ids.get(i) == ui.upgrade_type_id && upgrade_items.get(i)== null){
+					ret += "</n> attaches the " + ui.getName() + " to the " + getName()+". \n";
+					upgrade_items.set(i,ui);
+					//c.drop_item(ui);
+					//TODO
+					int effect_count = 0;
+					for(effect_count=0;effect_count<ui.effects.size();effect_count++){
+						if(ui.effects.get(effect_count) != null){
+							add_effect(effect_count, ui.effects.get(effect_count));
 						}
 					}
 					effect_count = 0;
-					for(effect_count;effect_count<ui.skill_id.length;effect_count++){
-						set_skill_bonus(ui.skill_id[effect_count],ui.skill_bonus[effect_count]);
+					for(effect_count=0;effect_count<ui.skill_id.size();effect_count++){
+						set_skill_bonus(ui.skill_id.get(effect_count),ui.skill_bonus.get(effect_count));
 					}
 				}
 			}
-			if(ret == "") ret = "You can't attach the " + ui.get_name() + " to that. \n";
+			if(ret.equals("")) ret = "You can't attach the " + ui.getName() + " to that. \n";
 			return ret;
 		}
-		*/
 		public void add_upgrade_slot(int id){
-			//upgrade_slot_ids[upgrade_slot_ids.length] = id;
+			//upgrade_slot_ids[upgrade_slot_ids.length] = id
 			upgrade_slot_ids.set(upgrade_slot_ids.size(), id);
 		}
 		
 		public void add_damage_resistance(int id){
-			//damage_type_strengths[damage_type_strengths.length] = id;
+			//damage_type_strengths[damage_type_strengths.length] = id
 			damage_type_strengths.set(damage_type_strengths.size(), id);
 		}
 		
 		public void add_damage_weakness(int id){
-			//damage_type_weaknesses[damage_type_weaknesses.length] = id;
+			//damage_type_weaknesses[damage_type_weaknesses.length] = id
 			damage_type_weaknesses.set(damage_type_weaknesses.size(), id);
 		}
-		/*
-		public function get_damage_mod(id:int):Number{
-			var ret:Number = 1;
-			var i:int = 0;
-			for(i;i<damage_type_strengths.length;i++){
-				if(damage_type_strengths[i] == id) ret = ret/2;
+		
+		public Number get_damage_mod(int id){
+			Number ret = 1;
+			int i = 0;
+			for(i=0;i<damage_type_strengths.size();i++){
+				if(damage_type_strengths.get(i) == id) ret = ret.doubleValue()/2;
 			}
-			for(i;i<damage_type_weaknesses.length;i++){
-				if(damage_type_weaknesses[i] == id) ret = ret*2;
+			for(i=0;i<damage_type_weaknesses.size();i++){
+				if(damage_type_weaknesses.get(i) == id) ret = ret.doubleValue()*2;
 			}
 			return ret;
 		}
 		
-		public function get_enchantment_level():int{
+		public int get_enchantment_level(){
 			return enchantment_level;
 		}
 		
-		public function set_enchantment_level(i:int):void{
+		public void set_enchantment_level(int i){
 			enchantment_level = i;
 		}
-		*/
+		
 		public void new_cover_image(int part_id, int image_id){
 			cover_parts[cover_parts.length] = part_id;
 			cover_parts_images[cover_parts_images.length] = image_id;
@@ -185,9 +163,9 @@ public class Equipment extends Item {
 		}
 		
 		public void set_skill_bonus(int id,int bonus){
-			//skill_id[skill_id.length] = id;
+			//skill_id[skill_id.length] = id
 			skill_id.set(skill_id.size(), id);
-			//skill_bonus[skill_bonus.length] = bonus;
+			//skill_bonus[skill_bonus.length] = bonus
 			skill_bonus.set(skill_bonus.size(), bonus);
 		}
 		
@@ -203,9 +181,9 @@ public class Equipment extends Item {
 			new_equip_slot(i, 0);
 		}
 		public void new_equip_slot(int i,int num_slots){//default num_slots 0
-			//equips_on[equips_on.length] = i;
+			//equips_on[equips_on.length] = i
 			equips_on.set(equips_on.size(), i);
-			//equips_on_num[equips_on_num.length] = num_slots;
+			//equips_on_num[equips_on_num.length] = num_slots
 			equips_on_num.set(equips_on_num.size(), num_slots);
 		}
 		
@@ -214,7 +192,7 @@ public class Equipment extends Item {
 		}
 		
 		public int get_max_cover_slot(int covers_part_id){
-			//return cover_num[covers_part_id];
+			//return cover_num[covers_part_id]
 			return cover_num.get(covers_part_id);
 		}
 		public void new_cover_slot(int i){
@@ -234,47 +212,39 @@ public class Equipment extends Item {
 		}
 		public void new_cover_slot(int i,String s,int c,int min, int cover_nm,int perception_difficulty){
 			//default s="", -1, 0, 0, 0, 0
-			/*
-			covers[covers.length] = i;
-			covers_desc[covers_desc.length] = s;
-			cover_min[cover_min.length] = min;
-			cover_stat[cover_stat.length] = c;
-			cover_num[cover_num.length] = cover_nm;
-			covered_perception_difficulty[covered_perception_difficulty.length] = perception_difficulty;
-			*/
-			covers.set(covers.size(), i);
-			covers_desc.set(covers_desc.size(), s);
-			cover_min.set(cover_min.size(), min);
-			cover_stat.set(cover_stat.size(), c);
-			cover_num.set(cover_num.size(),cover_nm);
-			covered_perception_difficulty.set(covered_perception_difficulty.size(), perception_difficulty);
+			covers.set(covers.size(), i);//covers[covers.length] = i
+			covers_desc.set(covers_desc.size(), s);//covers_desc[covers_desc.length] = s
+			cover_min.set(cover_min.size(), min);//cover_min[cover_min.length] = min
+			cover_stat.set(cover_stat.size(), c);//cover_stat[cover_stat.length] = c
+			cover_num.set(cover_num.size(),cover_nm);//cover_num[cover_num.length] = cover_nm
+			covered_perception_difficulty.set(covered_perception_difficulty.size(), perception_difficulty);//covered_perception_difficulty[covered_perception_difficulty.length] = perception_difficulty
 		}
-		/*
-		public function get_equip_slots():Array{
+		
+		public ArrayList<Integer> get_equip_slots(){
 			return equips_on;
 		}
 		
-		public function get_cover_slots():Array{
+		public ArrayList<Integer> get_cover_slots(){
 			//need to return the slots covered as distinct....
-			var temp:Array = covers;
-			var i:int = 0;
-			for(i;i<temp.length;i++){
-				var j:int = i + 1;
-				for(j;j<temp.length;j++){
-					if(temp[j] == temp[i]) temp = temp.slice(0,j).concat(temp.slice(j+1,temp.length));
+			ArrayList<Integer> temp = covers;
+			int i = 0;
+			for(i=0;i<temp.size();i++){
+				for(int j=i+1;j<temp.size();j++){
+					//if(temp.get(j) == temp.get(i)) temp = temp.slice(0,j).concat(temp.slice(j+1,temp.length))
+					if(temp.get(j).equals(temp.get(i))) temp.remove(j);
 				}
 			}
 			
 			return temp;
 		}
-		*/
+		
 		public void set_equip_condition(int stat_id,int max){
 			set_equip_condition(stat_id, max, -1);
 		}
 		public void set_equip_condition(int stat_id,int max,int min){//dedault min -1
-			//stat_req[stat_req.length] = stat_id;
-			//stat_min[stat_min.length] = min;
-			//stat_max[stat_max.length] = max;
+			//stat_req[stat_req.length] = stat_id
+			//stat_min[stat_min.length] = min
+			//stat_max[stat_max.length] = max
 			stat_req.set(stat_req.size(), stat_id);
 			stat_min.set(stat_min.size(), min);
 			stat_max.set(stat_max.size(), max);
@@ -282,43 +252,48 @@ public class Equipment extends Item {
 		}
 		
 		public void add_remove_consequence(Consequence c){
-			//remove_consequence[remove_consequence.length] = c;
+			//remove_consequence[remove_consequence.length] = c
 			remove_consequence.set(remove_consequence.size(), c);
 		}
 		
 		public void add_remove_action(CharAction a){
-			//remove_consequence[remove_consequence.length] = a;
+			//remove_consequence[remove_consequence.length] = a
 			remove_consequence.set(remove_consequence.size(), a);
 			//TODO explain why consequence
 		}
-		/*
-		public function remove_effects(c:Character, effects_only:Boolean = false):String{
-			var s:String = "";
-			var i:int = 0;
-			for(i;i<effects.length;i++){
-				if(effects[i] != null)s += c.apply_equip_affect_by_id(i, -effects[i]);//c.apply_affect_by_id(i,-effects[i],0,null, Body.change_stats_total);
+		
+		public String remove_effects(Character c,Boolean effects_only){//default false
+			String s = "";
+			int i = 0;
+			/*
+			for(i=0;i<effects.size();i++){
+				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, -effects.get(i));//c.apply_affect_by_id(i,-effects[i],0,null, Body.change_stats_total);
 			}
-			
-			i = 0;
-			for(i;i<skill_id.length;i++){
-				if(skill_bonus[i] != 0)s += c.set_skill_bonus(skill_id[i], -skill_bonus[i]);
+			*/
+			/*
+			for(i=0;i<skill_id.size();i++){
+				if(skill_bonus.get(i) != 0)s += c.set_skill_bonus(skill_id.get(i), -skill_bonus.get(i));
 			}
-			
+			*/
 			if(!effects_only){
-				if(stat_action_add.length > 0){
+				/*TODO
+				if(statActionAdd.size() > 0){
 					i = 0;
-					for(i;i<Math.ceil(stat_action_add.length/2);i++){
-						c.remove_stat_action(stat_action_add[i*2], stat_action_add[i*2+1]);
+					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+						c.remove_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
 					}
 				}
-				
-				i = 0;
-				for (i;i<remove_consequence.length;i++){
-					if (remove_consequence[i] != null){
-						if(remove_consequence[i] is Consequence){
-							s += remove_consequence[i].trigger(0, c);
+				*/
+				for (i=0;i<remove_consequence.size();i++){
+					if (remove_consequence.get(i) != null){
+						if(remove_consequence.get(i) instanceof Consequence){
+							Consequence temp = (Consequence)remove_consequence.get(i);
+							//s += remove_consequence.get(i).trigger(0, c)
+							s += temp.trigger(0, c);
 						}else{
-							s += remove_consequence[i].challenge(0,c);
+							//s += remove_consequence.get(i).challenge(0,c)
+							CharAction temp = (CharAction)remove_consequence.get(i);
+							s += temp.challenge(0,c);
 						}
 					}
 				}
@@ -326,52 +301,59 @@ public class Equipment extends Item {
 			return s;
 		}
 		
-		public function equip_effects(c:Character, effects_only:Boolean = false):String{
-			var s:String = "";
-			var i:int = 0;
+		public String equip_effects(Character c){
+			return equip_effects(c,false);
+		}
+
+		public String equip_effects(Character c,Boolean effects_only){//default false
+			String s = "";
+			int i = 0;
 			if(!effects_only){
-				for (i;i<change_effects.length;i++){
-					if (change_effects[i] != null){
-						if(change_effects[i] is Consequence){
-							s += change_effects[i].trigger(0, c);
+				for (i=0;i<changeEffects.size();i++){
+					if (changeEffects.get(i) != null){
+						if(changeEffects.get(i) instanceof Consequence){
+							Consequence temp = (Consequence)changeEffects.get(i);
+							//s += changeEffects.get(i).trigger(0, c)
+							s += temp.trigger(0, c);
 						}else{
-							s += change_effects[i].challenge(0,c);
+							CharAction temp = (CharAction)changeEffects.get(i);
+							//s += changeEffects.get(i).challenge(0,c)
+							s += temp.challenge(0,c);
 						}
 					}
 				}
-				
-				if(stat_action_add.length > 0){
+				/*TODO add_stat_action Character
+				if(statActionAdd.size() > 0){
 					i = 0;
-					for(i;i<Math.ceil(stat_action_add.length/2);i++){
-						c.add_stat_action(stat_action_add[i*2], stat_action_add[i*2+1]);
+					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+						c.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
 					}
 				}
+				*/
 			}
-			
-			i = 0;
-			for(i;i<effects.length;i++){
-				if(effects[i] != null)s += c.apply_equip_affect_by_id(i, effects[i]);
+			/*TODO
+			for(i=0;i<effects.size();i++){
+				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, effects.get(i));
 			}
-			
-			i = 0;
-			for(i;i<skill_id.length;i++){
-				if(skill_bonus[i] != 0)s += c.set_skill_bonus(skill_id[i], skill_bonus[i]);
+			*//*TODO
+			for(i=0;i<skill_id.size();i++){
+				if(skill_bonus.get(i) != 0)s += c.set_skill_bonus(skill_id.get(i), skill_bonus.get(i));
 			}
-			
+			*/
 			return s;
 		}
 		
-		public function covered_difficulty(c:Character, id:int, bp:Body_part):int{
-			var ret:int = 1;
-			var i:int = 0;
-			for (i;i<covers.length;i++){
-				if(covers[i] == id && (cover_stat[i] == -1 || bp.get_stat(c, cover_stat[i]) >= cover_min[i])){
-					ret += covered_perception_difficulty[i];
+		public int covered_difficulty(Character c,int id, BodyPart bp){
+			int ret = 1;
+			int i = 0;
+			for (i=0;i<covers.size();i++){
+				if(covers.get(i) == id && (cover_stat.get(i) == -1 || bp.get_stat(c, cover_stat.get(i)).intValue() >= cover_min.get(i))){
+					ret += covered_perception_difficulty.get(i);
 				}
 			}
 			return ret;
 		}
-		
+		/*
 		public function covered_description(c:Character, id:int,bp:Body_part):String{
 			var s:String = "";
 			var i:int = 0;
@@ -392,7 +374,8 @@ public class Equipment extends Item {
 			return s;					
 		}
 		
-		override public function get_description(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
+		@Override 
+		public function getDescription(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
 			var ret:String = super.get_description(c, ident_effectiveness, keep_tags);
 			var ident_chance:Number = 0;
 			if(ident_effectiveness != null){
@@ -492,7 +475,8 @@ public class Equipment extends Item {
 			return ret;			
 		}
 		
-		override public function clone():Item{
+		@Override 
+		public Item copyItem(){
 			var temp:Equipment = new Equipment();
 			temp.name = this.name;
 			temp.dropped_description = this.dropped_description;
@@ -503,8 +487,8 @@ public class Equipment extends Item {
 			}
 			temp.use_description = this.use_description;
 			count = 0;
-			for(count;count<change_effects.length;count++){
-				temp.change_effects[count] = this.change_effects[count];
+			for(count;count<changeEffects.length;count++){
+				temp.changeEffects[count] = this.changeEffects[count];
 			}
 			temp.equips_on = this.equips_on;
 			temp.equips_on_num = this.equips_on_num;
@@ -514,8 +498,8 @@ public class Equipment extends Item {
 			temp.weight = this.weight;
 			temp.num_uses = this.num_uses;
 			count = 0;
-			for(count;count < stat_action_add.length;count++){
-				temp.stat_action_add[count] = this.stat_action_add[count];
+			for(count;count < statActionAdd.size();count++){
+				temp.statActionAdd[count] = this.statActionAdd[count];
 			}
 			
 			temp.covers = this.covers

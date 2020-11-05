@@ -1,6 +1,8 @@
 package fpgamegithubredux;
 
-public class Weapon extends Item{
+import java.util.ArrayList;
+
+public class Weapon extends Item {
 		
     public int num_hold_slots_req;
     public CharAction attack_action;
@@ -121,21 +123,19 @@ public class Weapon extends Item{
             }
         }
         
-        if(statActionAdd.size() > 0){
-            i = 0;
-            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+        //if(statActionAdd.size() > 0){
+        if(!statActionAdd.isEmpty()){//TODO verify are the same!
+            for(i=0;i<Math.ceil(statActionAdd.size()/(double)2);i++){
                 //c.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
                 //TODO add_stat_action in Character
             }
         }
         
-        i = 0;
         for(i=0;i<effects.size();i++){
             //if(effects.get(i) != null)c.apply_equip_affect_by_id(i, effects.get(i));
             //TODO apply_equip_affect_by_id in Character
         }
         
-        i = 0;
         for(i=0;i<skill_id.length;i++){
             //if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], skill_bonus[i]);
             //TODO set_skill_bonus in Character
@@ -151,45 +151,50 @@ public class Weapon extends Item{
         }
         
         if(statActionAdd.size() > 0){
-            i = 0;
-            for(i;i<Math.ceil(statActionAdd.size()/2);i++){
-                c.remove_stat_action(statActionAdd[i*2], statActionAdd[i*2+1]);
+            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+                //c.remove_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
+                //TODO Character remove_stat_action
             }
         }
         
-        i = 0;
-        for(i;i<skill_id.length;i++){
-            if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], -skill_bonus[i]);
+        for(i=0;i<skill_id.length;i++){
+            //if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], -skill_bonus[i]);
+            //TODO Character skill_bonus
         }
     }
-    
-    @Override 
-    public function get_description(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
-        var ret:String = super.get_description(c, ident_effectiveness, keep_tags);
-        var ident_chance:Number = 0;
+ 
+    public String get_description(Character c){
+        return get_description(c,null,null);
+    }
+
+    public String get_description(Character c, ArrayList<Integer> ident_effectiveness){
+        return get_description(c,ident_effectiveness,null);
+    }
+    public String get_description(Character c, ArrayList<Integer> ident_effectiveness, Boolean keep_tags){//default ident=null, keep=false
+        String ret = super.getDescription(c, ident_effectiveness, keep_tags);
+        Number ident_chance = 0;
         if(ident_effectiveness != null){
-            ident_chance = ident_effectiveness[0]/ident_difficulty;
+            ident_chance = ident_effectiveness.get(0)/identDifficulty;
         }
         
         Boolean showing = false;
         int count = 0;
         if(stat_req.length > 0){
-            for(count;count < stat_req.length;count ++){
-                if(Math.random() <= ident_chance){
+            for(count=0;count < stat_req.length;count ++){
+                if(Math.random() <= ident_chance.doubleValue()){
                     if(!showing){
                         showing = true;
                         ret += "\nRequires the following stats:\n";
                     }
-                    ret += stat_min[count] + " " + FPalace_helper.get_stat_name_by_id(stat_req[count]) + "\n"
+                    ret += stat_min[count] + " " + FPalaceHelper.get_stat_name_by_id(stat_req[count]) + "\n";
                 }
             }
         }
         
         showing = false;
-        count = 0;
         if(skill_id.length > 0){
             for(count=0;count < skill_id.length;count ++){
-                if(Math.random() <= ident_chance){
+                if(Math.random() <= ident_chance.doubleValue()){
                     if(!showing){
                         showing = true;
                         ret += "\nImpacts skills:\n";
@@ -201,31 +206,31 @@ public class Weapon extends Item{
         
         if(attack_action != null){
             //var damage_types:Array = new Array();
-            count = 0;
-            for(count=0;count<attack_action.consequences.length;count++){
-                if(attack_action.consequences[count].damage_type_id > -1){
+            ArrayList<Integer> damage_types = new ArrayList<>();
+            for(count=0;count<attack_action.consequences.size();count++){
+                if(attack_action.consequences.get(count).damage_type_id > -1){
                     Boolean already_exists = false;
                     int count2 = 0;
-                    for(count2=0;count2<damage_types.length;count2++){
-                        if(damage_types[count2] == attack_action.consequences.get(count).damage_type_id){
+                    for(count2=0;count2<damage_types.size();count2++){
+                        if(damage_types.get(count2) == attack_action.consequences.get(count).damage_type_id){
                             already_exists = true;
                             break;
                         }
                     }
-                    if(!already_exists)damage_types[damage_types.length] = attack_action.consequences[count].damage_type_id;
+                    //if(!already_exists)damage_types[damage_types.length] = attack_action.consequences[count].damage_type_id;
+                    if(!already_exists)damage_types.add(attack_action.consequences.get(count).damage_type_id);
                 }
             }
         
             showing = false;
-            count = 0;
-            if(damage_types.length > 0){
-                for(count=0;count < damage_types.length;count ++){
-                    if(Math.random() <= ident_chance){
+            if(damage_types.size() > 0){
+                for(count=0;count < damage_types.size();count ++){
+                    if(Math.random() <= ident_chance.doubleValue()){
                         if(!showing){
                             showing = true;
                             ret += "\nDoes damage of type:\n";
                         }
-                        ret += FPalace_helper.get_type_name_by_id(damage_types[count]) + "\n"
+                        ret += FPalaceHelper.get_type_name_by_id(damage_types.get(count)) + "\n";
                     }
                 }
             }
@@ -273,7 +278,7 @@ public class Weapon extends Item{
         }
         temp.propogate = this.propogate;
         temp.inventory_description = inventory_description;
-        temp.ident_difficulty = this.ident_difficulty;
+        temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
         count = 0;
         for(count;count < statActionAdd.size();count++){

@@ -165,13 +165,14 @@ public class Body {
                 int found_id = parts[i].get_incap_stat_ids(c);
                 Boolean found = false;
                 int j = 0;
-                for(j=0;j<ret_array.length;j++){
-                    if(ret_array[j] == found_id){
+                for(j=0;j<ret_array.size();j++){
+                    if(ret_array.get(j) == found_id){
                         found = true;
                         break;
                     }
                 }					
-                if(!found)ret_array = ret_array.concat(found_id);
+                //if(!found)ret_array = ret_array.concat(found_id);
+                if(!found)ret_array.add(found_id);
                 */
             }
         }
@@ -366,6 +367,9 @@ public class Body {
     }
     */
     //TODO make parts have equipment in ArrayList
+    public ArrayList<Object> get_equip_array(){
+        return get_equip_array(false);
+    }
     public ArrayList<Object> get_equip_array(Boolean include_weapons){//default false, was array
         ArrayList<Object> equip_array = new ArrayList<>();
         int i = 0;
@@ -577,18 +581,19 @@ public class Body {
         return ret;
     }
     */
-    /*
-    public function get_effects(stat_id:int, k:Number, c:Character, temp:int = 0, body_app_method:int = change_stats_individual, char_stat_count:int = 0, part_id:int = target_all_parts, effect_type:int = -1):String{
+    
+    public String get_effects(int stat_id,Number k, Character c, int temp,int body_app_method,int char_stat_count,int part_id,int effect_type){
+        //default temp=0, body_app_method=change_stats_individual, char_stat_count = 0, part_id = target_all_parts, effect_type = -1
         String s = "";
-        var j:int = 0;
-        var current_value:Number = 0;
+        int j = 0;
+        Number current_value = 0;
         
         if(body_app_method == prorate_change_total)current_value = c.get_stat(stat_id,temp);
-        var found:Boolean = false;
-        var parts_count:int = 0;
-        for (j;j<parts.length;j++){
-            var p:Body_part = parts[j] as Body_part;
-            if(p.get_stat(c, stat_id,0) > -1 && (part_id == target_all_parts || part_id == p.get_part_id())){
+        Boolean found = false;
+        int parts_count = 0;
+        for (j=0;j<parts.length;j++){
+            BodyPart p = (BodyPart)parts[j] ;
+            if(p.get_stat(c, stat_id,0).doubleValue() > -1 && (part_id == target_all_parts || part_id == p.get_part_id())){
                 parts_count++;
                 //sometimes only want the last of these to return...
                 String temp_string = "";
@@ -599,18 +604,18 @@ public class Body {
                     temp_string = p.apply_effect(stat_id,k,c, temp,effect_type);
                     found = true;
                 }else if(body_app_method == prorate_change_total){
-                    temp_string = p.apply_effect(stat_id,k*(p.get_stat(c,stat_id,temp)/current_value),c,temp,effect_type);
+                    temp_string = p.apply_effect(stat_id,k.doubleValue()*(p.get_stat(c,stat_id,temp).doubleValue()/current_value.doubleValue()),c,temp,effect_type);
                 }
                 
-                if(temp_string != "") s = temp_string;
+                if(!temp_string.equals("")) s = temp_string;
                 
             }else if(part_id == target_parts_one_by_one){
-                trace("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
+                //trace("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
             }
         }
         
         if(body_app_method == change_stats_total){
-            var new_change:Number = k / (parts_count + char_stat_count);
+            Number new_change= k.doubleValue() / (parts_count + char_stat_count);
             s += get_effects(stat_id, new_change, c, temp, change_stats_individual, 0, part_id,effect_type);
         }/*else if(body_app_method == prorate_change_total){
             if(temp == 0 && (current_value + k).toFixed(2) != new_val.toFixed(2)){
@@ -634,10 +639,10 @@ public class Body {
                 }
             }
         }*/
-        /*
+        
         return s;
     }
-    */
+    
     
     public int part_count_by_stat(Character c,int stat_id,int min_max_chk){//default min_max_chk -1
         int j = 0;
@@ -689,7 +694,7 @@ public class Body {
         int parts_count = 0;
         for (j=0;j<parts.length;j++){
             BodyPart p = (BodyPart)parts[j] ;//as Body_part;
-            if(parts[j].name.equals(n)){
+            if(parts[j].name.equals(n)){//TODO why not use p?!
                 parts_count++;
             }				
         }
@@ -700,7 +705,7 @@ public class Body {
         int j = 0;
         int parts_count = 0;
         for (j=0;j<parts.length;j++){
-            BodyPart p = (BodyPart)parts[j];
+            BodyPart p = (BodyPart)parts[j];//TODO why not use p?!
             if(parts[j].get_part_id() == part_id){
                 parts_count++;
             }				
@@ -735,20 +740,20 @@ public class Body {
         }
         return ret_part;
     }
-    /*Array Sussing
+
     public String equip(Equipment e,Character c){
         c.equip_state = 1;
         String ret = e.equip_effects(c);
         c.equip_state = 0;
         
-        var temp:Array = e.get_equip_slots();
-        var j:int = 0;
-        for(j;j<temp.length;j++){
-            var max_slot:int = e.get_max_equip_slot(j);
-            var curr_count:int = 0;
+        ArrayList<Integer> temp = e.get_equip_slots();
+        int j = 0;
+        for(j=0;j<temp.size();j++){
+            int max_slot = e.get_max_equip_slot(j);
+            int curr_count = 0;
             int i = 0;
             for(i=0;i<parts.length;i++){
-                if(parts[i].get_part_id() == temp[j] && (curr_count < max_slot || max_slot == 0)){
+                if(parts[i].get_part_id() == temp.get(j) && (curr_count < max_slot || max_slot == 0)){
                     parts[i].set_equip(e);
                     curr_count++;
                 }
@@ -756,13 +761,12 @@ public class Body {
         }
         
         temp = e.get_cover_slots();
-        j = 0;
-        for(j;j<temp.length;j++){
-            max_slot = e.get_max_cover_slot(j);
-            curr_count = 0;
-            i = 0;
+        for(j=0;j<temp.size();j++){
+            int max_slot = e.get_max_cover_slot(j);
+            int curr_count = 0;
+            int i = 0;
             for(i=0;i<parts.length;i++){
-                if(parts[i].get_part_id() == temp[j] && (curr_count < max_slot || max_slot == 0)){
+                if(parts[i].get_part_id() == temp.get(j) && (curr_count < max_slot || max_slot == 0)){
                     parts[i].set_cover(e);
                     curr_count++;
                 }
@@ -773,7 +777,7 @@ public class Body {
         
         return ret;
     }
-    */
+    
 
     public String unequip(Equipment e, Character c){
         String ret = "";
@@ -798,8 +802,6 @@ public class Body {
                         j--;
                     }
                 }
-                
-                j = 0;
                 for(j=0;j<parts[i].covered_by.length;j++){
                     if(parts[i].covered_by[j] == e){
                         //parts[i].covered_by = parts[i].covered_by.slice(0,j).concat(parts[i].covered_by.slice(j+1,parts[i].covered_by.length));
@@ -828,7 +830,6 @@ public class Body {
             if(c.get_stat(w.stat_req[i]).intValue() < w.stat_min[i]) return -1;
         }			
         
-        i = 0;
         int slots_req = w.get_num_hold();
         for(i=0;i<parts.length;i++){
             if(parts[i].hold == null && parts[i].get_num_hold_slots() > 0){
@@ -840,7 +841,6 @@ public class Body {
         if(slots_req > 0){
             return -1;
         }else{
-            i = 0
             slots_req = w.get_num_hold();
             for(i=0;i<parts.length;i++){
                 if(parts[i].hold == null && parts[i].get_num_hold_slots() > 0){
@@ -858,10 +858,10 @@ public class Body {
         
         return 1;
     }
-    /*
-    public function unhold(w:Weapon,c:Character):String{
+    
+    public String unhold(Weapon w,Character c){
         int i = 0;
-        for (i;i<parts.length;i++){
+        for (i=0;i<parts.length;i++){
             if(parts[i].hold == w){
                 parts[i].hold = null;
             }
@@ -869,50 +869,56 @@ public class Body {
         c.equip_state = 1;
         w.remove_effects(c);
         c.equip_state = 0;
-        c.add_to_possessions(w);
+        c.addToPossessions(w);
         
-        return "</n> stops holding the " + w.get_name() + ".";
+        return "</n> stops holding the " + w.getName() + ".";
     }
     
     
     
-    public function drop_equipment(c:Character):void{
+    public void drop_equipment(Character c){
         int i = 0;
-        for (i;i<parts.length;i++){
+        for (i=0;i<parts.length;i++){
             if(parts[i].get_equip() != null){
-                while(parts[i].equip.length > 0){
-                    unequip(parts[i].equip[0], c);
+                while(parts[i].equip.size() > 0){
+                    unequip(parts[i].equip.get(0), c);
                 }
             }
             if(parts[i].get_hold() != null)unhold(parts[i].get_hold(), c);
         }
     }
     
-    public function get_stat_by_id(c:Character, i:int, get_hard_value:int = 1, multi_part_process:int = get_stat_total, part_id:int = target_all_parts, add_equip:Boolean = true):Number{
-        var ret:Number = -1;
-        var skip_calc:Boolean = false;
-        var found_flag:Boolean = false;
-        var k:int = 0;
-        for (k;k<parts.length;k++){
+    public Number get_stat_by_id(Character c,int i,int get_hard_value,int multi_part_process
+    ,int part_id,Boolean add_equip){
+        //default get_hard_value = 1, multi_part_process= get_stat_total, part_id= target_all_parts, add_equip = true
+        Number ret = -1;
+        Boolean skip_calc = false;
+        Boolean found_flag = false;
+        int k = 0;
+        Number temp=null;
+        for (k=0;k<parts.length;k++){
             if(parts[k] != null){
-                var temp:Number = parts[k].get_stat(c, i, get_hard_value,add_equip,skip_calc);
-                if(temp > -1 && (part_id == target_all_parts ||  part_id == parts[k].get_part_id())){
+                temp = parts[k].get_stat(c, i, get_hard_value,add_equip,skip_calc);
+                if(temp.doubleValue() > -1 && (part_id == target_all_parts ||  part_id == parts[k].get_part_id())){
                     if(multi_part_process == get_stat_total){
                         skip_calc = true;
-                        ret += temp;
+                        //ret += temp;
+                        ret = ret.doubleValue() + temp.doubleValue();
                     }else if(multi_part_process == get_stat_min){
                         if(!found_flag){
-                            ret += temp;
+                            //ret += temp;
+                            ret = ret.doubleValue() + temp.doubleValue();
                         }else{
-                            if(temp < ret){
+                            if(temp.doubleValue() < ret.doubleValue()){
                                 ret = temp;
                             }
                         }
                     }else if(multi_part_process == get_stat_max){
                         if(!found_flag){
-                            ret += temp;
+                            //ret += temp;
+                            ret = ret.doubleValue() + temp.doubleValue();
                         }else{
-                            if(temp > ret){
+                            if(temp.doubleValue() > ret.doubleValue()){
                                 ret = temp;
                             }
                         }
@@ -920,17 +926,17 @@ public class Body {
                     
                     if(!found_flag){
                         //need to deal with the -1 applied by unfound
-                        ret ++;
+                        ret =ret.doubleValue()+1;
                         found_flag = true;
                     }
                 }
-            }else if(temp > -1 && part_id == target_parts_one_by_one){
-                trace("(Body)No clue what I'm doing here");
+            }else if(temp.doubleValue() > -1 && part_id == target_parts_one_by_one){
+                //trace("(Body)No clue what I'm doing here");
             }
         }
         return ret;
     }
-    
+    /*
     public function check_state(c:Character):String{
         String s = "";
         var k:int = 0;
@@ -1110,8 +1116,8 @@ public class Body {
             if(preg_tick != null)mom.apply_tick_effect(preg_tick);
         }
     }
-    
-    public function tick(c:Character):String{
+    */
+    public String tick(Character c){
         String ret = "";
         int i = 0;
         for(i=0;i<parts.length;i++){
@@ -1119,7 +1125,7 @@ public class Body {
         }
         return ret;
     }
-    
+    /*
     private function draw_part(center_x:int, center_y:int, c:Character, bp:Body_part = null, drawn_parts:Array = null, calling_part:Body_part = null):Sprite{
         var already_drawn:Boolean = false;
         var draw_size_multiplier:Number = 2;

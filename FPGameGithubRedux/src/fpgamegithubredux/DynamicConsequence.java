@@ -53,7 +53,9 @@ public class DynamicConsequence extends Consequence {
         ret += dynamic_choices(c, c2);
         return ret;
     }
-    
+    public String dynamic_choices(Character c){
+        return dynamic_choices(c, null);
+    }
     public String dynamic_choices(Character c, Character c2){//default c2 null
         String s = "";
         if(c2 == null) c2 = c;

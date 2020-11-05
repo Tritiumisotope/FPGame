@@ -2,6 +2,8 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 
+import javax.swing.MenuSelectionManager;
+
 public class Personality {
     
 
@@ -37,9 +39,9 @@ public class Personality {
 		//public var memory_action_vals:Array;
 		
         public ArrayList<Conversation_topic> topics;//things known about
-        /*
-        public var relationships:Array;//people known
-        */
+
+        public ArrayList<Relationship> relationships;//public var relationships:Array;//people known
+
 		public ArrayList<Mob> mob_allegiances;//mobs known
 		
 		public ArrayList<Item> known_recipes;
@@ -48,9 +50,8 @@ public class Personality {
         //TODO Character_job
 		
 		public void Personality(){
-            /*
+
             relationships = new ArrayList<>();
-            */
             topics = new ArrayList<>();
             mob_allegiances = new ArrayList<>();
 			likes = new ArrayList<>();
@@ -215,40 +216,54 @@ public class Personality {
 			if(c_self != null){
 				int i = 0;
 				for(i=0;i<c_self.possessions.size();i++){
-					if(c_self.possessions[.get(i).topic != null){
+					if(c_self.possessions.get(i).topic != null){
                         //ret_array = ret_array.concat(c_self.possessions.get(i).topic);
                         ret_array.add(c_self.possessions.get(i).topic);
 					}
 				}
-				//var temp_array:Array = c_self.body.get_equip_array();
-				i = 0;
-				for(i;i<temp_array.length;i++){
-					if(temp_array[i].topic != null){
+				ArrayList<Object> temp_array = c_self.body.get_equip_array();
+				for(i=0;i<temp_array.size();i++){
+                    if(temp_array.get(i) instanceof Weapon){
+                        Weapon temp = (Weapon)temp_array.get(i);
+                        ret_array.add(temp.topic);
+                    }else{//standard equipment
+                        Equipment temp = (Equipment)temp_array.get(i);
+                        ret_array.add(temp.topic);
+                    }
+                    /*
+					if(temp_array.get(i).topic != null){
 						ret_array = ret_array.concat(temp_array[i].topic);
-					}
+                    }
+                    */
 				}
 				
-				ret_array = ret_array.concat(c_self.sex.get_topics());
-				if(c_self.location != null && c_self.location.area != null)ret_array = ret_array.concat(c_self.location.area.get_topics());
-				if(job != null) ret_array = ret_array.concat(job.get_topics());
+                //ret_array = ret_array.concat(c_self.sex.get_topics());
+                //TODO add true sex to Character
+                //if(c_self.location != null && c_self.location.area != null)ret_array = ret_array.concat(c_self.location.area.get_topics()); old
+                if(c_self.location != null && c_self.location.area != null)ret_array.addAll(c_self.location.area.get_topics());
+                //if(job != null) ret_array = ret_array.concat(job.get_topics());
+                //TODO JOb
 			}
-			i = 0;
-			for(i;i<objectives.length;i++){
+            int i = 0;
+            /*TODO objectives
+			for(i=0;i<objectives.length;i++){
 				ret_array = ret_array.concat(objectives[i].get_conversation_topics(curr_obj_step[i][curr_obj_step[i].length-1]));
 			}
-			
-			i = 0;
-			for(i;i<mob_allegiances.length;i++){
-				ret_array = ret_array.concat(mob_allegiances[i].get_topics(c_self));
+			*/
+			for(i=0;i<mob_allegiances.size();i++){
+                //ret_array = ret_array.concat(mob_allegiances.get(i).get_topics(c_self));
+                ret_array.addAll(mob_allegiances.get(i).get_topics(c_self));
 			}
 			
 			//need to remove duplicate topics...
-			i = 0;
-			for(i;i<ret_array.length;i++){
-				var k:int = i + 1;
-				for(k;k<ret_array.length;k++){
-					if(ret_array[i].get_topic_name() == ret_array[k].get_topic_name()){
-						ret_array = ret_array.slice(0, k).concat(ret_array.slice(k+1, ret_array.length));
+
+			for(i=0;i<ret_array.size();i++){
+				
+				for(int k=i + 1;k<ret_array.size();k++){
+					if(ret_array.get(i).get_topic_name() == ret_array.get(k).get_topic_name()){
+                        //ret_array = ret_array.slice(0, k).concat(ret_array.slice(k+1, ret_array.length));
+                        ret_array.remove(k);
+                        //TODO verify!!!
 						k--;
 					}
 				}
@@ -256,16 +271,17 @@ public class Personality {
 			
 			return ret_array;
 		}
-		/*
-		public function get_name(c:Character, c_self:Character):String{
-			var ret:String = "";
-			
+
+		public String get_name(Character c, Character c_self){
+			String ret = "";
+
 			if(c.personality.relationship_exists(c_self)){
 				//see if we've been introduced, and if we have, change ret to be our name
-				var i:int = 0;
-				for(i;i<relationships.length;i++){
-					if(relationships[i].relationship_with == c){
-						var temp_rel:Relationship = relationships[i];
+				int i = 0;
+				for(i=0;i<relationships.size();i++){
+					if(relationships.get(i).relationship_with == c){
+						Relationship temp_rel = relationships.get(i);
+						/*TODO get_surname
 						if(temp_rel.get_introduced()){
 							if(c_self.get_surname() == "" || check_relationship(c, c_self) > Personality.friends){
 								ret = c_self.get_name();
@@ -275,51 +291,53 @@ public class Personality {
 						}else{
 							ret = c_self.get_short_description(c);				
 						}
+						*/
 						return ret;
 					}
-				}				
+				}
+							
 			}
 			
 			ret = c_self.get_short_description(c);		
 			return ret;
 		}
-		
-		public function get_introduced(c:Character, c_self:Character):Boolean{
-			var ret:Boolean = false;
-			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
-					var temp_rel:Relationship = relationships[i];
+		public Boolean get_introduced(Character c, Character c_self){
+			Boolean ret = false;
+			int i = 0;
+			for(i=0;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
+					Relationship temp_rel = relationships.get(i);
 					if(temp_rel.get_introduced()){
-						ret = true
+						ret = true;
 					}
 					break;
 				}
 			}
 			return ret;
-		}
+        }
+        
 		
-		public function start_conversation(c:Character, c_self:Character):String{
-			var s:String = "";
+		public String start_conversation(Character c, Character c_self){
+			String s = "";
 			
-			var relationship:Relationship = null;
-			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
-					relationship = relationships[i];
+			Relationship relationship = null;
+			int i = 0;
+			for(i=0;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
+					relationship = relationships.get(i);
 					break;
 				}
 			}
 			if(relationship == null){
-				new_relationship(c,c_self,Relationship.initial_reaction_change)
+				new_relationship(c,c_self,Relationship.initial_reaction_change);
 				c.personality.new_relationship(c_self,c,Relationship.initial_reaction_change);
 				return start_conversation(c, c_self);
 			}
-			var other_rel:Relationship = null;
+			Relationship other_rel = null;
 			i = 0;
-			for(i;i<c.personality.relationships.length;i++){
-				if(c.personality.relationships[i].relationship_with == c_self){
-					other_rel = c.personality.relationships[i];
+			for(i=0;i<c.personality.relationships.size();i++){
+				if(c.personality.relationships.get(i).relationship_with == c_self){
+					other_rel = c.personality.relationships.get(i);
 				}
 			}
 			if(other_rel == null){
@@ -328,41 +346,48 @@ public class Personality {
 			}			
 			
 			i = 0;
-			var mention_topics:Array = new Array();
-			var topic_values:Array = new Array();
-			var char_topics:Array = get_topics(c_self);
-			var init_topics:Array = c.personality.get_topics(c);
-			var know_something_you_dont:Boolean = false;
-			for(i;i<char_topics.length;i++){
-				if(char_topics[i] != null){
-					var ct:Conversation_topic = char_topics[i] as Conversation_topic;
-					var step:int = ct.get_start_step(c_self,c,true);
-					var untalk_topic:Boolean = true;
+			ArrayList<String> mention_topics = new ArrayList<>();
+			ArrayList<Integer> topic_values = new ArrayList<>();
+			ArrayList<Conversation_topic> char_topics = get_topics(c_self);
+			ArrayList<Conversation_topic> init_topics = c.personality.get_topics(c);
+			Boolean know_something_you_dont = false;
+			for(i=0;i<char_topics.size();i++){
+				if(char_topics.get(i) != null){
+					Conversation_topic  ct= (Conversation_topic)char_topics.get(i) ;//was as
+					int step = ct.get_start_step(c_self,c,true);
+					Boolean untalk_topic = true;
 					if(step > -1 && ct.get_mention()){
-						var j:int = 0;
-						for(j;j<init_topics.length;j++){
-							if(init_topics[j].get_topic_name() == ct.get_topic_name()){
-								mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+","+i+","+step+",-1\">Listen</a></font>\n";
-								topic_values[topic_values.length] = determine_action_consequence(ct.actions[step], c_self, c);
+						int j = 0;
+						for(j=0;j<init_topics.size();j++){
+							if(init_topics.get(j).get_topic_name() == ct.get_topic_name()){
+								//mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n";
+								mention_topics.add("<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n");
+								//topic_values[topic_values.size()] = determine_action_consequence(ct.actions.get(step), c_self, c);
+								topic_values.add(determine_action_consequence(ct.actions.get(step), c_self, c));
 								untalk_topic = false;
 								break;
 							}
 						}
 						if(untalk_topic){
 							know_something_you_dont = true;
-							mention_topics = new Array("<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+","+i+","+step+",-1\">Listen</a></font>\n").concat(mention_topics);
-							topic_values = new Array([determine_action_consequence(ct.actions[step], c_self, c)]).concat(topic_values);
+							//mention_topics = new Array("<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n").concat(mention_topics);
+							//TODO if this means add to front (unshift) then:
+							mention_topics.add(0, "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n");
+							//topic_values = new Array([determine_action_consequence(ct.actions[step], c_self, c)]).concat(topic_values);
+							//same with unshift here
+							topic_values.add(0, determine_action_consequence(ct.actions.get(step), c_self, c));
 						}
 					}
 				}
 			}
-			if(c_self.get_stat(FPalaceHelper.int_id) >= 5){
-				mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+",-2,-2\">Listen</a></font>\n";
+			if(c_self.get_stat(FPalaceHelper.int_id).intValue() >= 5){
+				//mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-2,-2\">Listen</a></font>\n";
+				mention_topics.add("<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-2,-2\">Listen</a></font>\n");
 			}
 			
-			var temp_string:String = "";
-			var temp_val:int;
-			if(mention_topics.length > 0){
+			String temp_string = "";
+			int temp_val;
+			if(mention_topics.size() > 0){
 				//Mention priority should probably be based on something like where the topics come from... 
 					//topics from a quest should come highest, while bodily functions should be less so.
 						//Topics currently come from their sex(5), the area(4), their items(3), their objectives(1), as well as from personality(2) itself
@@ -371,32 +396,36 @@ public class Personality {
 					//higher rel_status should make them assume the character already knows things more often
 				if(!know_something_you_dont){
 					i = 0;
-					for(i;i<mention_topics.length;i++){
-						if(topic_values[i] > topic_values[0]){
-							temp_val = topic_values[i];
-							temp_string = mention_topics[i];
-							topic_values[i] = topic_values[0];
-							topic_values[0] = temp_val;
-							mention_topics[i] = mention_topics[0];
-							mention_topics[0] = temp_string;
+					for(i=0;i<mention_topics.size();i++){
+						if(topic_values.get(i) > topic_values.get(0)){
+							temp_val = topic_values.get(i);
+							temp_string = mention_topics.get(i);
+							//topic_values[i] = topic_values[0];
+							topic_values.set(i, topic_values.get(0));
+							//topic_values[0] = temp_val;
+							topic_values.set(0, temp_val);
+							//mention_topics[i] = mention_topics[0];
+							mention_topics.set(i, mention_topics.get(0));
+							//mention_topics[0] = temp_string;
+							mention_topics.set(0, temp_string);
 						}
 					}
-					temp_string = mention_topics[0] + "\n";
+					temp_string = mention_topics.get(0) + "\n";
 					i = 1;
-					for(i;i<mention_topics.length;i++){
+					for(i=1;i<mention_topics.size();i++){
 						if(Math.random() < 0.5){
-							temp_string = mention_topics[i] + "\n";
+							temp_string = mention_topics.get(i) + "\n";
 							break;
 						}
 					}
 				}else{
-					temp_string = mention_topics[0] + "\n";
+					temp_string = mention_topics.get(i) + "\n";
 				}
 			}
 			
 			//only need to do introduction the first time this is called by this particular character
 			
-			var rel_status:int = relationship.relationship_status();
+			int rel_status = relationship.relationship_status().intValue();
 			
 			if(rel_status <= Personality.hate){
 				s = "</n2> looks ready to attack at any moment!\n";
@@ -448,39 +477,40 @@ public class Personality {
 						
 			s += temp_string;			
 			
-			j = 0;
-			for(j;j<init_topics.length;j++){
-				var exist_count:int = 0;
-				var place_holder:int = (char_topics.length+j);
-				ct = init_topics[j];
-				
-				if(char_topics[exist_count] != null){
-					for(exist_count;exist_count<char_topics.length;exist_count++){
-						if(char_topics[exist_count].get_topic_name() == init_topics[j].get_topic_name()){
+			int j = 0;
+			for(j=0;j<init_topics.size();j++){
+				int exist_count = 0;
+				int place_holder = (char_topics.size()+j);
+				Conversation_topic  ct = init_topics.get(j);//TODO find if this should be in other loop
+				int step;//Ditto
+				if(char_topics.get(exist_count) != null){
+					for(exist_count=0;exist_count<char_topics.size();exist_count++){
+						if(char_topics.get(exist_count).get_topic_name() == init_topics.get(j).get_topic_name()){
 							place_holder = exist_count;
-							ct = char_topics[exist_count];
+							ct = char_topics.get(exist_count);
 							break;
 						}
 					}
 				}
 				step = ct.get_start_step(c_self,c);
 				if(step > -1 && ct.get_mention()){
-					s += "<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+","+place_holder+","+step+",-1\">" + ct.get_topic_name() + "</a></font>\n";
+					s += "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+place_holder+","+step+",-1\">" + ct.get_topic_name() + "</a></font>\n";
 				}
 				
 			}
-			if(c.get_stat(FPalaceHelper.int_id) >= 5){
-				s += "<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+",-2,-1\">Gossip</a></font>\n";
+			if(c.get_stat(FPalaceHelper.int_id).intValue() >= 5){
+				s += "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-2,-1\">Gossip</a></font>\n";
 			}			
-			s += "\n<font color='#0000FF'><a href=\"event:look," + c.location.get_content_id(c_self) +"\">Back</a></font>";
+			s += "\n<font color='#0000FF'><a href=\"event:look," + c.location.getContentID(c_self) +"\">Back</a></font>";
 			
-			c_self.set_busy();
+			c_self.setBusy();
 			c_self.status = " is talking here";
-			c.set_busy();
+			c.setBusy();
 			c.status = " is talking here";
 			
 			return s;
 		}
+		/*
 		
 		public function gossip(c:Character, c_self:Character, gossip_step:int):String{
 			var ret:String = "";
@@ -488,7 +518,7 @@ public class Personality {
 			var gossip_mod:Number = 0;
 			var i:int = 0;
 			if(gossip_step == -2){//c_self is the one gossiping... 
-				temp_r = relationships[Math.round(Math.random()*(relationships.length-1))];
+				temp_r = relationships[Math.round(Math.random()*(relationships.size()-1))];
 				gossip_mod = temp_r.relationship_status();
 				if(temp_r.relationship_with == c_self){
 					//hmmm should we talk about ourselves...?
@@ -550,7 +580,7 @@ public class Personality {
 				c.personality.new_relationship(temp_r.relationship_with,c, Relationship.initial_reaction_change,gossip_mod);
 			}else if(gossip_step == -1){//c is the one gossiping... 
 				//Should be giving the option about who you gossip about, instead of choosing at random, but meh for now...
-				temp_r = c.personality.relationships[Math.round(Math.random()*(c.personality.relationships.length-1))];
+				temp_r = c.personality.relationships[Math.round(Math.random()*(c.personality.relationships.size()-1))];
 				gossip_mod = temp_r.relationship_status();
 				if(temp_r.relationship_with == c){
 					ret += "You tell </n2> a little bit about yourself. ";
@@ -566,7 +596,7 @@ public class Personality {
 			c.apply_affect_by_id(Character.relations_affect_id,c.personality.check_relationship(c_self,c)/100,0,c_self);
 			c_self.apply_affect_by_id(Character.relations_affect_id,check_relationship(c, c_self)/100,0,c);
 			
-			if(c.location == c_self.location)ret += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>\n";
+			if(c.location == c_self.location)ret += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>\n";
 			
 			return ret;
 		}
@@ -625,13 +655,13 @@ public class Personality {
 					i = 0;
 					for(i;i<a.challenges.length;i++){
 						var temp:Challenge = a.challenges[i];
-						while(s.indexOf("</c"+ String(i) +">") > -1)s = s.replace("</c"+ String(i) +">", "<a href=\"event:talk,"+c.location.get_content_id(c_self)+","+topic_num+","+topic_step+","+i+"\"><i>" + temp.get_text() + "</i></a>");
+						while(s.indexOf("</c"+ String(i) +">") > -1)s = s.replace("</c"+ String(i) +">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+topic_step+","+i+"\"><i>" + temp.get_text() + "</i></a>");
 					}
 					
 					var dynamic_challenge:int = 0;
 					while(s.indexOf("</dc") > -1){
 						while(s.indexOf("</dc" + dynamic_challenge + ">") > -1){
-							s = s.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:talk,"+c.location.get_content_id(c_self)+","+topic_num+","+ topic_step +","+challenge_num+((dynamic_choice!=null&&dynamic_choice[0]!=null)?","+ dynamic_choice:"") +","+dynamic_challenge+"\">");
+							s = s.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+ topic_step +","+challenge_num+((dynamic_choice!=null&&dynamic_choice[0]!=null)?","+ dynamic_choice:"") +","+dynamic_challenge+"\">");
 							s = s.replace("</dc" + dynamic_challenge + ">", "</a>");
 						}
 						dynamic_challenge++;
@@ -657,7 +687,7 @@ public class Personality {
 						
 						if(new_topic_step >= 0){
 							while(s.indexOf("<ctref" + i + ">") > -1){
-								s = s.replace("<ctref" + i + ">", "<a href=\"event:talk,"+c.location.get_content_id(c_self)+","+new_topic_num+","+ new_topic_step +"\"><i>"+char_topics[topic_num].ct_ref_names[i]+"</i></a>");
+								s = s.replace("<ctref" + i + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+new_topic_num+","+ new_topic_step +"\"><i>"+char_topics[topic_num].ct_ref_names[i]+"</i></a>");
 							}
 						}else{
 							while(s.indexOf("<ctref" + i + ">") > -1){
@@ -672,7 +702,7 @@ public class Personality {
 				}
 			}
 			
-			if(c.location == c_self.location)s += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.get_content_id(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>";
+			if(c.location == c_self.location)s += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>";
 			
 			var c_chall_out:String = c.get_challenge_output();
 			if(c_chall_out!="")c_chall_out+="\n";
@@ -772,17 +802,20 @@ public class Personality {
 			rand = top_three[Math.round(Math.random()*(top_three.length-1))];
 			return rand;
 		}
-		
-		public function determine_action_consequence(act:Action, self:Character, target:Character = null):int{
-			var ret:int = 0;
-			var mem_found:Boolean = false;
+		*/
+		public int determine_action_consequence(CharAction act, Character self){
+			return determine_action_consequence(act,self,null);
+		}
+		public int determine_action_consequence(CharAction act, Character self, Character target){//def null
+			int ret = 0;
+			Boolean mem_found = false;
 			
 			if(act != null){
-				var req_met:Boolean = true;
-				var i:int = 0;
-				for(i;i<act.requirement.length;i++){
-					ret += determine_reaction(self, act.requirement[i], -act.requirement_amount[i], self);
-					if(self.get_stat(act.requirement[i]) < act.requirement_amount[i] && act.requirement_remove[i]){
+				Boolean req_met = true;
+				int i = 0;
+				for(i=0;i<act.requirement.size();i++){
+					ret += determine_reaction(self, act.requirement.get(i), -act.requirement_amount.get(i), self).intValue();
+					if(self.get_stat(act.requirement.get(i)).intValue() < act.requirement_amount.get(i) && act.requirement_remove.get(i)){
 						req_met = false;
 						break;
 					}
@@ -798,53 +831,53 @@ public class Personality {
 				//memory_action_names[memory_action_names.length] = act;
 				
 				if(req_met){
-					var my_reaction:int = 0;
-					var others_reaction:int = 0;
+					int my_reaction = 0;
+					int others_reaction = 0;
 					i = 0;
-					for(i;i<act.consequences.length;i++){
-						var temp_con:Consequence = act.consequences[i];
-						var j:int = 0;
-						for(j;j<temp_con.consequence.length;j++){
-							var temp_target:Character = target;
-							if(temp_con.consequence_target[i] || target == null){
+					for(i=0;i<act.consequences.size();i++){
+						Consequence temp_con = act.consequences.get(i);
+						int j = 0;
+						for(j=0;j<temp_con.conseq.length;j++){
+							Character  temp_target= target;
+							if(temp_con.consequenceTarget[i] || target == null){
 								temp_target = self;
 							}
-							var rel_status:Number = check_relationship(temp_target, self);
-							var other_count:int = 0;
-							var stat_id:int = temp_con.stat_effected[j];
-							var own_reaction:int = 0;
-							if(temp_con.consequence[j] == Consequence.amt_from_roll_const){
-								var temp_max:int = -temp_con.max_damage/2;
+							Number rel_status = check_relationship(temp_target, self);
+							int other_count = 0;
+							int stat_id = temp_con.statEffected.get(j);
+							int own_reaction = 0;
+							if(temp_con.conseq[j] == Consequence.amt_from_roll_const){
+								int temp_max = (int)-temp_con.max_damage.doubleValue()/2;
 								if(temp_max == 0) temp_max = -5;//not sure what this number should actually be
 								if((stat_id < 0 && stat_id != Character.relations_affect_id) || stat_id == -Character.relations_affect_id){
 									temp_max = -temp_max;
 									stat_id = -stat_id;
 								}		
-								my_reaction += determine_reaction(temp_target, stat_id, temp_max, self) * rel_status/100;		
+								my_reaction += determine_reaction(temp_target, stat_id, temp_max, self).doubleValue() * rel_status.doubleValue()/100;		
 								
-								for(other_count;other_count<self.location.contents.length;other_count++){
-									if(self.location.contents[other_count] is Character && self.location.contents[other_count] != self && self.location.contents[other_count] != temp_target){
-										if(own_reaction == 0)own_reaction = determine_reaction(self, stat_id, temp_max, temp_target);
-										others_reaction += own_reaction * (check_relationship(self.location.contents[other_count],self)/100);
+								for(other_count=0;other_count<self.location.contents.size();other_count++){
+									if(self.location.contents.get(other_count) instanceof Character && self.location.contents.get(other_count) != self && self.location.contents.get(other_count) != temp_target){
+										if(own_reaction == 0)own_reaction = determine_reaction(self, stat_id, temp_max, temp_target).intValue();
+										others_reaction += own_reaction * (check_relationship((Character)self.location.contents.get(other_count),self)/100);
 									}
 								}
 								
 							}else{
-								my_reaction += determine_reaction(temp_target, stat_id, temp_con.consequence[j], self) * rel_status/100;
+								my_reaction += determine_reaction(temp_target, stat_id, temp_con.conseq[j], self).doubleValue() * rel_status.doubleValue()/100;
 								
-								for(other_count;other_count<self.location.contents.length;other_count++){
-									if(self.location.contents[other_count] is Character && self.location.contents[other_count] != self && self.location.contents[other_count] != temp_target){
-										if(own_reaction == 0)own_reaction = determine_reaction(self, stat_id, temp_con.consequence[j], temp_target);
-										others_reaction += own_reaction * (check_relationship(self.location.contents[other_count],self)/100);
+								for(other_count=0;other_count<self.location.contents.size();other_count++){
+									if(self.location.contents.get(other_count) instanceof Character && self.location.contents.get(other_count) != self && self.location.contents.get(other_count) != temp_target){
+										if(own_reaction == 0)own_reaction = determine_reaction(self, stat_id, temp_con.conseq[j], temp_target).intValue();
+										others_reaction += own_reaction * (check_relationship((Character)self.location.contents.get(other_count),self)/100);
 									}
 								}
 							}						
 						}
 						
-						if(temp_con is Dynamic_Consequence){
-							var dynamic_con:Dynamic_Consequence = temp_con as Dynamic_Consequence;					
-							if(dynamic_con.consequence_list_type == Dynamic_Consequence.list_inventory
-							|| dynamic_con.consequence_list_type == Dynamic_Consequence.list_inventory_alchemy){
+						if(temp_con instanceof DynamicConsequence){
+							DynamicConsequence dynamic_con = (DynamicConsequence)temp_con ;					
+							if(dynamic_con.consequence_list_type == DynamicConsequence.list_inventory
+							|| dynamic_con.consequence_list_type == DynamicConsequence.list_inventory_alchemy){
 								if(dynamic_con.dynamic_choices(target).indexOf("<dc") < 0){
 									my_reaction = -1;
 									break;
@@ -853,7 +886,7 @@ public class Personality {
 						}
 					}
 					
-					var wis:int = self.get_stat(FPalaceHelper.wis_id);
+					int wis = self.get_stat(FPalaceHelper.wis_id).intValue();
 					if(others_reaction < 0 && wis > 10){
 						others_reaction = others_reaction * 16/wis;
 					}else if(wis < 10){
@@ -863,9 +896,9 @@ public class Personality {
 					ret += my_reaction + others_reaction;
 					
 					if(act.rest_flag){
-						ret += determine_reaction(self, FPalaceHelper.curr_hp_id, self.get_stat(FPalaceHelper.max_hp_id), self);
-						ret += determine_reaction(self, FPalaceHelper.curr_mp_id, self.get_stat(FPalaceHelper.max_mp_id), self);
-						ret += determine_reaction(self, FPalaceHelper.curr_fatigue_id, self.get_stat(FPalaceHelper.max_fatigue_id), self);
+						ret += determine_reaction(self, FPalaceHelper.curr_hp_id, self.get_stat(FPalaceHelper.max_hp_id), self).intValue();
+						ret += determine_reaction(self, FPalaceHelper.curr_mp_id, self.get_stat(FPalaceHelper.max_mp_id), self).intValue();
+						ret += determine_reaction(self, FPalaceHelper.curr_fatigue_id, self.get_stat(FPalaceHelper.max_fatigue_id), self).intValue();
 					}
 					
 					
@@ -878,10 +911,10 @@ public class Personality {
 			if(target != null && target != self && check_relationship(target,self) < 0){
 				ret = -ret;
 			}
-			*//*
+			*/
 			return ret;
 		}
-		
+		/*
 		public function determine_item_consequences(item:Item, self:Character):int{
 			var ret:int = 0;
 			var temp_str:String = self.get_item_description(item, true);
@@ -1241,45 +1274,49 @@ public class Personality {
 			}
 			return ret;
 		}
-		
-		public function determine_reaction(c:Character, stat_id:int, quant:Number, c_self:Character):Number{
-			if(c_self.get_stat(stat_id) < 0){
+		*/
+		public Number determine_reaction(Character c,int stat_id,Number quant, Character c_self){
+			if(c_self.get_stat(stat_id).intValue() < 0){
 				quant = 0;
 			}else{
 				if(stat_id == Character.relations_affect_id){
-					quant *= 2;
+					//quant *= 2;
+					quant =quant.doubleValue() * 2;
 				}else{
-					var like_amt:Number = 0;					
-					var i:int = 0
-					for(i;i<mob_allegiances.length;i++){
-						var j:int = 0;
-						for(j;j<mob_allegiances[i].ideals.length;j++){
-							if(stat_id == mob_allegiances[i].ideals[j].stat_trait){
-								like_amt += mob_allegiances[i].ideals[j].reaction_mod(c, quant, c_self);
+					Number like_amt = 0;					
+					int i = 0;
+					for(i=0;i<mob_allegiances.size();i++){
+						int j = 0;
+						for(j=0;j<mob_allegiances.get(i).ideals.size();j++){
+							if(stat_id == mob_allegiances.get(i).ideals.get(j).stat_trait){
+								//like_amt += mob_allegiances.get(i).ideals.get(j).reaction_mod(c, quant.intValue(), c_self);
+								like_amt = like_amt.doubleValue() +  mob_allegiances.get(i).ideals.get(j).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 							}
 						}
 					}
 					i = 0;
-					for(i;i<likes.length;i++){
-						if(stat_id == likes[i].stat_trait){
-							like_amt += likes[i].reaction_mod(c, quant, c_self);
+					for(i=0;i<likes.size();i++){
+						if(stat_id == likes.get(i).stat_trait){
+							//like_amt += likes.get(i).reaction_mod(c, quant.intValue(), c_self);
+							like_amt = like_amt.doubleValue() + likes.get(i).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 						}
 					}
 					
-					var dislike_amt:Number = 0;
+					Number dislike_amt = 0;
 					i = 0;
-					for(i;i<dislikes.length;i++){
-						if(stat_id == dislikes[i].stat_trait){
-							dislike_amt += dislikes[i].reaction_mod(c, quant, c_self);
+					for(i=0;i<dislikes.size();i++){
+						if(stat_id == dislikes.get(i).stat_trait){
+							//dislike_amt += dislikes.get(i).reaction_mod(c, quant.intValue(), c_self);
+							dislike_amt =dislike_amt.doubleValue() + dislikes.get(i).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 						}
 					}
 					
-					quant = like_amt - dislike_amt;
+					quant = like_amt.doubleValue() - dislike_amt.doubleValue();
 				}
 			}
 			return quant;
 		}
-		
+		/*
 		public function determine_reaction_to_other(c_self:Character, c_effected:Character, c_acted:Character, i:int, k:Number):void{
 			if(c_self == c_effected || c_self == c_acted) return;
 			var my_reaction:Number = determine_reaction(c_acted, i, k, c_self);			
@@ -1299,11 +1336,18 @@ public class Personality {
 				}
 			}
 		}
-		
-		public function new_relationship(c:Character, c_self:Character, change_id:int, k:Number = 0, rel_type:int = 0):void{
+		*/
+		public void new_relationship(Character c, Character c_self,int change_id){
+			new_relationship(c,c_self,change_id,0,0);
+		}
+		public void new_relationship(Character c, Character c_self,int change_id,Number k){
+			new_relationship(c,c_self,change_id,k,0);
+		}
+		public void new_relationship(Character c, Character c_self,int change_id,Number k,int rel_type){//default k=0, rel_type=0
 			if(!relationship_exists(c)){
-				var r:Relationship = new Relationship(c);
-				relationships[relationships.length] = r;
+				Relationship r = new Relationship(c);
+				//relationships[relationships.size()] = r;
+				relationships.add(r);
 				r.change_type(rel_type);
 				change_relationship(c, determine_initial(c, c_self), Relationship.initial_reaction_change);
 			}
@@ -1311,45 +1355,42 @@ public class Personality {
 			change_relationship(c, k, change_id);
 		}
 		
-		private function determine_initial(c:Character, c_self:Character):int{
-			var ret:int = 0;
+		private int determine_initial(Character c, Character c_self){
+			int ret = 0;
 			
-			var i:int = 0;
-			for(i;i<likes.length;i++){
-				if(likes[i].has_trait(c, c_self)){
-					ret += likes[i].trait_strength;
+			int i = 0;
+			for(i=0;i<likes.size();i++){
+				if(likes.get(i).has_trait(c, c_self)){
+					ret += likes.get(i).trait_strength;
 				}
 			}
 			
-			i = 0;
-			for(i;i<dislikes.length;i++){
-				if(dislikes[i].has_trait(c, c_self)){
-					ret -= dislikes[i].trait_strength;
+			for(i=0;i<dislikes.size();i++){
+				if(dislikes.get(i).has_trait(c, c_self)){
+					ret -= dislikes.get(i).trait_strength;
 				}
 			}
 			
-			ret += determine_attraction(c, c_self);
-			ret += determine_similarity(c, c_self);
+			//ret += determine_attraction(c, c_self);
+            //ret += determine_similarity(c, c_self);
+            //TODO so much CHaracter
 			
-			i=0;
-			for(i;i<mob_allegiances.length;i++){
-				var j:int = 0;
-				for(j;j<mob_allegiances[i].ideals.length;j++){
-					if(mob_allegiances[i].ideals[j].has_trait(c, c_self))ret += mob_allegiances[i].ideals[j].trait_strength;
+			for(i=0;i<mob_allegiances.size();i++){
+				int j = 0;
+				for(j=0;j<mob_allegiances.get(i).ideals.size();j++){
+					if(mob_allegiances.get(i).ideals.get(j).has_trait(c, c_self))ret += mob_allegiances.get(i).ideals.get(j).trait_strength;
 				}
 				if(c != null){
-					var k:int = 0;
-					for(k;k<c.personality.mob_allegiances.length;k++){
-						if(c.personality.mob_allegiances[k] == mob_allegiances[i]){
+					int k= 0;
+					for(k=0;k<c.personality.mob_allegiances.size();k++){
+						if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(k)){
 						   ret +=2;
 						}else{
-							j = 0;
-							for(j;j<mob_allegiances[i].allied_mobs.length;j++){
-								if(c.personality.mob_allegiances[k] == mob_allegiances[i].allied_mobs[j])ret +=1;
+							for(j=0;j<mob_allegiances.get(i).allied_mobs.size();j++){
+								if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(i).allied_mobs.get(j))ret +=1;
 							}
-							j = 0; 
-							for(j;j<mob_allegiances[i].enemy_mobs.length;j++){
-								if(c.personality.mob_allegiances[k] == mob_allegiances[i].enemy_mobs[j])ret -=5;
+							for(j=0;j<mob_allegiances.get(i).enemy_mobs.size();j++){
+								if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(i).enemy_mobs.get(j))ret -=5;
 							}
 						}
 					}
@@ -1358,7 +1399,7 @@ public class Personality {
 			
 			return ret;
 		}
-		
+		/*
 		private function determine_similarity(c:Character, c_self:Character):int{
 			var ret:int = -1;
 			if(c == c_self){
@@ -1394,31 +1435,31 @@ public class Personality {
 			}			
 			return ret;
 		}
-		
-		public function determine_attraction(c:Character, c_self:Character):int{
-			var ret:int = 0;
+		*/
+		public int determine_attraction(Character c, Character c_self){
+			int ret = 0;
 			
-			var i:int = 0;
-			for(i;i<attraction_traits.length;i++){
-				if(attraction_traits[i].has_trait(c, c_self)){
-					ret += attraction_traits[i].trait_strength;
+			int i = 0;
+			for(i=0;i<attraction_traits.size();i++){
+				if(attraction_traits.get(i).has_trait(c, c_self)){
+					ret += attraction_traits.get(i).trait_strength;
 				}
 			}
 			
-			i = 0;
-			for(i;i<disgust_traits.length;i++){
-				if(disgust_traits[i].has_trait(c, c_self)){
-					ret -= disgust_traits[i].trait_strength;
+			for(i=0;i<disgust_traits.size();i++){
+				if(disgust_traits.get(i).has_trait(c, c_self)){
+					ret -= disgust_traits.get(i).trait_strength;
 				}
 			}
 			
-			if(c != null)ret += (c.get_stat(FPalaceHelper.sex_appeal_id) - 10);
+			if(c != null)ret += (c.getStat(FPalaceHelper.sex_appeal_id) - 10);
 			
 			return ret;
 		}
-		
-		public function determine_attraction_challenge(c:Character, c_self:Character):int{
-			var ret:int = 1 + determine_attraction(c, c_self);
+        
+        
+		public int determine_attraction_challenge(Character c, Character c_self){
+			int ret = 1 + determine_attraction(c, c_self);
 			//0 = perfect attraction, 100 = disgust
 			if(ret > 1){
 				ret = Math.round(100/ret);
@@ -1428,7 +1469,7 @@ public class Personality {
 			
 			return ret;
 		}
-		
+		/*
 		public function determine_orient(new_sex:Sex):void{
 			if(new_sex != null){
 				var temp:Array = new_sex.get_default_orient_attract();
@@ -1447,52 +1488,56 @@ public class Personality {
 				}
 			}			
 		}
-		
-		public function relationship_exists(c:Character):Boolean{
-			var i:int = 0;
-			var found:Boolean = false;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
+        */
+        
+		public Boolean relationship_exists(Character c){
+			int i= 0;
+			Boolean found = false;
+			for(i=0;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
 					found = true;
 					break;
 				}
 			}
 			
 			return found;			
-		}
-		
+        }
+        
+		/*
 		public function change_relationship_type(c:Character, rel_type:int):void{
 			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
-					relationships[i].change_type(rel_type);
+			for(i;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
+					relationships.get(i).change_type(rel_type);
 				}
 			}
 		}
-		
-		public function check_relationship(c:Character, c_self:Character):int{
-			var ret:int = 0;
-			var rel_found:Boolean = false;
-			if(relationship_exists(c)){
-				var i:int = 0;
-				for(i;i<relationships.length;i++){
-					if(relationships[i].relationship_with == c){
+		*/
+		public int check_relationship(Character c, Character c_self){
+			int ret = 0;
+		    Boolean rel_found = false;
+			//if(relationship_exists(c)){
+                int i = 0;
+                /*TODO Relationships class and arraylist
+				for(i=0;i<relationships.size();i++){
+					if(relationships.get(i).relationship_with == c){
 						rel_found = true;
-						ret = relationships[i].relationship_status();
+						ret = relationships.get(i).relationship_status();
 						break;						
 					}
-				}
-			}
+                }
+                */
+			//}
 			
 			if(rel_found)return ret;
 			return determine_initial(c, c_self);
 		}
 		
-		public function change_relationship(c:Character, k:Number, change_id:int):void{
-			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
-					relationships[i].apply_change(k, change_id);
+		public void change_relationship(Character c, Number k,int change_id){
+			int i = 0;
+			for(i=0;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
+					relationships.get(i).apply_change(k, change_id);
 					break;
 				}
 			}
@@ -1500,22 +1545,22 @@ public class Personality {
 			return;
 		}
 		
-		public function make_aggressive(c:Character):void{
-			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with == c){
-					relationships[i].change_to_aggressive();
+		public void make_aggressive(Character c){
+			int i = 0;
+			for(i=0;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with == c){
+					relationships.get(i).change_to_aggressive();
 					break;
 				}
 			}
 		}
-		
+		/*
 		public function get_all_relationships(c:Character):String{
 			var s:String = "";
 			var i:int = 0;
-			for(i;i<relationships.length;i++){
-				if(relationships[i].relationship_with.location == null) s+= "(Dead)";
-				s += relationships[i].relationship_with.get_name() + " : " + (relationships[i].positive - relationships[i].negative) + " : " + relationships[i].relationship_with.personality.check_relationship(c) + "\n";
+			for(i;i<relationships.size();i++){
+				if(relationships.get(i).relationship_with.location == null) s+= "(Dead)";
+				s += relationships.get(i).relationship_with.get_name() + " : " + (relationships.get(i).positive - relationships.get(i).negative) + " : " + relationships.get(i).relationship_with.personality.check_relationship(c) + "\n";
 			}
 			return s;
 		}

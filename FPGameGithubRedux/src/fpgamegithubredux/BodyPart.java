@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
+import jdk.nashorn.api.tree.ForInLoopTree;
+
 public class BodyPart extends DynamicObject {
     public static final int display_front = 0;
     public static final int display_bottom = 1;
@@ -208,7 +210,7 @@ public class BodyPart extends DynamicObject {
     
     @Override
 public String getName(){
-         String ret = name;
+        String ret;//=name
         if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + name;
         }else if(part_count%10 == 2&&part_count!=12){
@@ -218,12 +220,12 @@ public String getName(){
         }else{
             ret = (part_count) + "th " + name;
         }
-        
+
         return ret;
     }
     
     public String get_pair_name(){
-         String ret = pair_name;
+         String ret;// = pair_name
          if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + pair_name;
         }else if(part_count%10 == 2&&part_count!=12){
@@ -254,8 +256,7 @@ public String getName(){
     }
     public ArrayList<Integer> get_incap_stat_ids(Character c){
          ArrayList<Integer> ret = new ArrayList<>();
-         int i = 0;
-        for(i=0;i<stat_description.length;i++){
+        for(int i=0;i<stat_description.length;i++){
              int ps = stat_description[i].check_combat_status(c, this);
             if(ps <= Stat.STATUSCONFIRMEDINCAPACITATED){
                 //ret[ret.length] = stat_description[i].get_id();
@@ -619,9 +620,10 @@ public String appearance(int i, Character c){//default 0, null
                     if(c == null)continue;
                      BodyPart p = null;
                      //found_array:Array = new Array();
+                     ArrayList<Integer> found_array= new ArrayList<>();
                      int j = 0;
                      int parts_count = 0;
-                     /*
+                     
                     if(stat_description[i].stat_desc_ttl_part_limit.length > 0){
                          Boolean show_desc = false;
                          Number stat_total = 0;
@@ -632,28 +634,33 @@ public String appearance(int i, Character c){//default 0, null
                                 int k = 0;
                                 if(parts_count == 0 && p == this){
                                     show_desc = true;
-                                    stat_total += part_check;
+                                    //stat_total += part_check;
+                                    stat_total = stat_total.doubleValue() + part_check;
                                     for(k=0;k<stat_description[i].stat_desc_ttl_part_limit.length;k++){
                                         if(stat_description[i].stat_desc_ttl_part_limit[k] == part_id){
-                                            found_array[k] = part_check;
+                                            //found_array[k] = part_check;
+                                            found_array.set(k,part_check);
                                             break;
                                         }
                                     }
                                 }else if(show_desc){
                                     for(k=0;k<stat_description[i].stat_desc_ttl_part_limit.length;k++){
                                         if(stat_description[i].stat_desc_ttl_part_limit[k] == p.part_id){
-                                            if(found_array[k] != null && found_array[k] < part_check){
-                                                stat_total -= found_array[k];
-                                                found_array[k] = part_check;
-                                            }else if(found_array[k] == null){
-                                                found_array[k] = part_check;
+                                            if(found_array.get(k) != null && found_array.get(k) < part_check){
+                                                //stat_total -= found_array.get(k);
+                                                stat_total = stat_total.doubleValue() - found_array.get(k);
+                                                //found_array[k] = part_check;
+                                                found_array.set(k,part_check);
+                                            }else if(found_array.get(k) == null){
+                                                //found_array[k] = part_check;
+                                                found_array.set(k,part_check);
                                             }else{
                                                 part_check = 0;
                                             }
                                             break;
                                         }
                                     }
-                                    if(k<stat_description[i].stat_desc_ttl_part_limit.length)stat_total += part_check;
+                                    if(k<stat_description[i].stat_desc_ttl_part_limit.length)stat_total = stat_total.doubleValue() + part_check;
                                 }else if(parts_count > 0){
                                     break;
                                 }
@@ -661,14 +668,14 @@ public String appearance(int i, Character c){//default 0, null
                             }				
                         }
                         if(show_desc){
-                            s += stat_description[i].get_description(c, stat_total);
+                            s += stat_description[i].get_description(c, stat_total.doubleValue());
                         }
                     }else{
                         for (j=0;j<c.body.parts.length;j++){
-                            p = c.body.parts[j] as Body_part;
-                            if(p.get_stat(c, stat_id[i]) > -1){
+                            p = (BodyPart)c.body.parts[j];//was as
+                            if(p.get_stat(c, stat_id[i]).doubleValue() > -1){
                                 if(parts_count == 0 && p == this){
-                                    s += stat_description[i].get_description(c, c.get_stat(stat_id[i]));
+                                    s += stat_description[i].get_description(c, c.get_stat(stat_id[i]).doubleValue();
                                     break;
                                 }else if(parts_count > 0){
                                     break;
@@ -677,8 +684,7 @@ public String appearance(int i, Character c){//default 0, null
                             }				
                         }
                     }
-                    */
-                    //TODO body class
+                    
                 }
             }
         }
@@ -739,6 +745,9 @@ public String appearance(int i, Character c){//default 0, null
     }
     public Number get_stat(Character c, int i){
         return get_stat(c,i,1,true,false);
+    }
+    public Number get_stat(Character c, int i,int get_hard_value){
+        return get_stat(c,i,get_hard_value,true,false);
     }
     public Number get_stat(Character c, int i,int get_hard_value,Boolean add_equip,Boolean skip_calc){
         //default get_hard_value:int = 1,add_equip:Boolean = true, skip_calc:Boolean = false
@@ -845,14 +854,15 @@ public String appearance(int i, Character c){//default 0, null
     
     //Shouldn't be used, except by Body.clone
         //and maybe Character.impregnate
-        /*TODO body
+
     public void jiggle_stats(Body body,Number set_display){//default set_display = -1
          int i = 0;
         for(i=0;i<stat_description.length;i++){
             if(stat_description[i].get_id() == display_length_stat_id && set_display.intValue() > -1){
                 stat_description[i].setStatValue(set_display);
             }else if(!stat_description[i].stat_desc_ttl_or_indiv){
-                Number new_val =  Math.random()*stat_description[i].stat_value + stat_description[i].stat_value/2;
+                Number new_val =  Math.random()*stat_description[i].statValue.doubleValue() + 
+                stat_description[i].statValue.doubleValue()/2;
                 if(race != null){
                     int count = 0;
                     for(count=0;count<race.max_part.length;count++){
@@ -918,20 +928,17 @@ public String appearance(int i, Character c){//default 0, null
             Race temp_race= b.race;
             b.set_race(null);
             
-            i = 0;
             for (i=0;i<b.stat_description.length;i++){
                 stat_description[i] = new Stat(b.stat_description[i].statID);
                 stat_description[i].statCopy(b.stat_description[i]);
             }
             
-            i = 0;
             for(i=0;i<b.stat_id.length;i++){
                 stat_id[i] = b.stat_id[i];
             }
             b.set_race(temp_race);
             set_race(temp_race);
             
-            i = 0;
             for(i=0;i<part_upkeep.length;i++){
                 TickEffect temp = part_upkeep[i].copyTE();
                 part_upkeep[i] = temp;

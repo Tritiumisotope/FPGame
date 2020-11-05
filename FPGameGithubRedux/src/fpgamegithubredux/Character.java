@@ -34,13 +34,13 @@ public class Character extends DynamicObject {
 
     public Body body;
     //protected Sex sex;//public var sex:Sex
-    //public var cclass:Array
+    //public ArrayList<Character_class cclass;//public var cclass:Array
 
     public Skill_set skills;
 
     public int equip_state = 0;
 		
-    //public var personality:Personality
+    public Personality personality;
     
     public int ai_move = 0;
     public int busy;
@@ -58,7 +58,8 @@ public class Character extends DynamicObject {
     public int xp;//:uint
     public int nxt_lvl_xp;//:uint
 	public int lvl;//:uint
-	public int stat_points;//:uint
+    public int stat_points;//:uint
+    
     public int fitness;//this must die
     public int ageDemo;//this must ide
 
@@ -66,13 +67,15 @@ public class Character extends DynamicObject {
     
     protected ArrayList<Integer> statID;
     protected ArrayList<Stat> stats;
-
-    
-    
-
-    
+    protected Party party;
 
     protected ArrayList<Object> currentTickEffects;
+
+    public String challenge_output;
+    public String next_attack;
+    
+    public int char_sprite_id;
+    public int char_34sprite_id;
 
     
             
@@ -87,8 +90,12 @@ public class Character extends DynamicObject {
         statID = new ArrayList<>();
         stats = new ArrayList<>();
         actions = new ArrayList<>();
+        currentTickEffects = new ArrayList<>();
 
-        location = null;
+        personality = new Personality();
+        personality.new_relationship(this, this, Relationship.initial_reaction_change);
+        personality.relationships.get(0).set_introduced();
+        location = null;//non_standard
 
         gold = 0;
 
@@ -108,7 +115,28 @@ public class Character extends DynamicObject {
         
         actions.add(tempAction);
     }
-
+    public String set_surname(String s){
+        return set_surname(s, false);
+    }
+    public String set_surname(String s,Boolean full_name){//default false
+        String ret = s;
+        if(full_name){
+            if(s.indexOf(" ") > 0){
+                //TODO
+                //ret = s.substr(0,s.indexOf(" "));
+                //surname = s.substr(s.indexOf(" ")+1,s.length);
+            }else{
+                surname = "";
+            }
+        }else{
+            surname = s;
+        }
+        return ret;
+    }
+    
+    public String get_surname(){
+        return surname;
+    }
     public void setName(String theName){
         name = theName;
     }
@@ -167,6 +195,15 @@ public class Character extends DynamicObject {
     }
     public Number get_stat(int i){
         return get_stat(i,1,0,-1,true);
+    }
+    public Number get_stat(int i,int get_hard_value){
+        return get_stat(i,get_hard_value,0,-1,true);
+    }
+    public Number get_stat(int i,int get_hard_value, int multi_part_process){
+        return get_stat(i,get_hard_value,multi_part_process,-1,true);
+    }
+    public Number get_stat(int i,int get_hard_value, int multi_part_process, int part_id){
+        return get_stat(i,get_hard_value,multi_part_process,part_id,true);
     }
     public Number get_stat(int i,int get_hard_value, 
     int multi_part_process/*Body.get_stat_total*/, 
@@ -454,6 +491,54 @@ public class Character extends DynamicObject {
     public void setBusy(int numTicks){
         busy += numTicks;
         waitTime = 0;
+    }
+    public Boolean get_move(){
+        if (ai_move > 0)return true;
+        return false;
+    }
+    
+    public void set_move(int i){//default 1
+        ai_move+=i;
+    }
+    
+    public String get_short_description(Character c){
+        String ret = "";
+        /*TODO determine_sex, get_primary_race
+        Sex determined_sex = c.determine_sex(this);
+        String temp_string = "";
+        if(get_primary_race().get_name() != c.get_primary_race().get_name()){
+            if(personality.job == null){
+                temp_string = determined_sex.get_age_name(this);
+                if(temp_string == ""){
+                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
+                }else{
+                    if(get_primary_race().get_anthro()){
+                        temp_string = get_primary_race().get_name() + " " + temp_string;
+                    }else{
+                        temp_string = get_primary_race().get_name();
+                    }
+                }
+            }else{
+                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
+            }
+        }else{
+            if(personality.job == null){
+                temp_string = determined_sex.get_age_name(this);
+                if(temp_string == ""){
+                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
+                }
+            }else{
+                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
+            }
+        }
+        
+        if(temp_string.charAt(0) == "a" || temp_string.charAt(0) == "e" || temp_string.charAt(0) == "i" || temp_string.charAt(0) == "o" || temp_string.charAt(0) == "u"){
+            ret = "an " + temp_string;
+        }else if(temp_string != ""){
+            ret = "a " + temp_string;
+        }
+        */  
+        return ret;
     }
 
     public String getPersonalActions(){

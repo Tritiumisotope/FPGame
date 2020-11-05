@@ -1,6 +1,8 @@
 package fpgamegithubredux;
 
-	public class FPalace_topics {
+import java.util.ArrayList;
+
+public class FPalace_topics {
 
 		public FPalace_topics() {
 			// constructor code
@@ -19,12 +21,16 @@ package fpgamegithubredux;
             ct.set_topic_name("area");
             
 			ct.set_no_mention();
+			/*
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			dia1.add(Character.relations_affect_id);
+			dia2.add(5);*///TODO holy fuck this is hacky
+			ct.add_dialog("You ask </n2> about the area you're in.", Character.relations_affect_id, 5,false, Conversation_topic.ask_topic);
 			
-			ct.add_dialog("You ask </n2> about the area you're in.", new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.ask_topic);
+			ct.add_dialog("You ask </n2> about the area you're in",Character.relations_affect_id, 5,false, Conversation_topic.telling_topic);
 			
-			ct.add_dialog("You ask </n2> about the area you're in",new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.telling_topic);
-			
-			ct.add_dialog("</n2> begins telling you about the grasslands.",new int[]{Character.relations_affect_id}, new int[]{5},false, Conversation_topic.being_told_topic);
+			ct.add_dialog("</n2> begins telling you about the grasslands.",Character.relations_affect_id, 5,false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -68,8 +74,18 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "it's hard not to listen to </n2>, every word interesting. ",-1);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.attraction_id}, new int[]{5, 5},false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.attraction_id}, new int[]{5, 5},false, Conversation_topic.telling_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.attraction_id};
+			for(int i : first){
+				dia1.add(first[i]);
+			}
+			int[] second = {5, 5};
+			for(int i : second){
+				dia2.add(second[i]);
+			}//TODO unhack this shit
+			ct.add_action(a, dia1, dia2,false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1, dia2,false, Conversation_topic.telling_topic);
 			
 			a = new CharAction();
 			a.setName("Flirt");
@@ -104,8 +120,13 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> eats up your every word. ",0,0,0,-1,true);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a,new int[]{FPalaceHelper.int_id, Character.attraction_id}, new int[]{5, 5},Boolean.FALSE, Conversation_topic.being_told_topic);
-			
+			ArrayList<Integer> dia3 = new ArrayList<>();
+			int[] third = {FPalaceHelper.int_id, Character.attraction_id};
+			for(int i: third){
+				dia3.add(third[i]);
+			}
+			ct.add_action(a,dia3, dia2,Boolean.FALSE, Conversation_topic.being_told_topic);
+			//TODO make sure this will always be the same as the earlier two add_actions
 			return ct;
 		}
 		
@@ -371,9 +392,18 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "",0,0,0,2);//ok, you can have a blow job
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> turns the situation around, forcing you down to </noun2> groin! ",-1,0,0,6);//HA! I want one and you ain't stoping me!
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 20, 20}, false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 20, 20}, false, Conversation_topic.telling_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {5,20,20};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a,  dia1, dia2, false, Conversation_topic.ask_topic);
+			ct.add_action(a,  dia1, dia2, false, Conversation_topic.telling_topic);
 			
 			
 			
@@ -639,8 +669,8 @@ package fpgamegithubredux;
 			consequence.addConsequence(0,0, "",0,0,0,6);//give blow job to player
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 20, 20}, false, Conversation_topic.being_told_topic);
-			
+			ct.add_action(a,  dia1, dia2, false, Conversation_topic.being_told_topic);
+			//TODO make sure always same as previous two!
 			return ct;
 		}
 		
@@ -793,9 +823,18 @@ package fpgamegithubredux;
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "\n\n</c6>\n</c10>\n",0,0,0,-1,true);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 25, 20}, false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 25, 20}, false, Conversation_topic.telling_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {5, 25, 20};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a,  dia1, dia2, false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1, dia2, false, Conversation_topic.telling_topic);
 			
 			a = new CharAction();
 			a.setName("Bountiful Bosom");
@@ -936,7 +975,7 @@ package fpgamegithubredux;
 			
 			
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 25, 20}, false, Conversation_topic.being_told_topic);
+			ct.add_action(a,  dia1, dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -1190,9 +1229,18 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "You can't help but orgasm quickly. ",-1,0,0,-1);
 			consequence.addConsequence(FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "",-1,0,0,-1);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 30, 40}, false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 30, 40}, false, Conversation_topic.telling_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {5, 30,40};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			
 			a = new CharAction();
 			a.setName("Cunnalingus");
@@ -1454,7 +1502,7 @@ package fpgamegithubredux;
 			consequence.addConsequence(0,0, "",0,0,0,6);//give blow job to player
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 30, 40}, false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -1684,10 +1732,19 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "You find yourself climaxing quickly as your grind your lips against </n2>s. </n2> looks disappointed. ",-1,0,0,-1,true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "",0);
 			a.addChallenge(challenge,consequence);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {5, 50, 50};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
 			
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 50, 50}, false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 50, 50}, false, Conversation_topic.telling_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			
 			a = new CharAction();
 			a.setName("Sex");
@@ -1908,7 +1965,7 @@ package fpgamegithubredux;
 			consequence.addConsequence(Character.relations_affect_id,-5, "",0);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id}, new int[]{5, 50, 50}, false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -1932,9 +1989,19 @@ package fpgamegithubredux;
 			consequence.addConsequence(0,0, "",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0}, false, Conversation_topic.telling_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0}, false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0}, false, Conversation_topic.being_told_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -2108,8 +2175,17 @@ package fpgamegithubredux;
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,0, "All of our previous excursions to the mainland have ended poorly. I can only hope they find the ring.",0);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id,Character.relations_affect_id}, new int[]{5,0}, false, Conversation_topic.being_told_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a,dia1, dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -2149,8 +2225,17 @@ package fpgamegithubredux;
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,0, "\"Why are we here? That's a secret.\" </pronoun2> says with a smile.",0);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id,Character.relations_affect_id}, new int[]{5,0}, false, Conversation_topic.being_told_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1, dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -2307,7 +2392,7 @@ package fpgamegithubredux;
 			a.addChallenge(challenge,consequence);
 			
 			
-			ct.add_action(a, new int[]{Character.relations_affect_id}, new int[]{0}, false, Conversation_topic.being_told_topic);
+			ct.add_action(a, Character.relations_affect_id, 0, false, Conversation_topic.being_told_topic);
 			
 			a = new CharAction();
 			a.setName("Talk");
@@ -2382,9 +2467,18 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "</n2> sends a tendril to your chest, and you can feel the goop flex throughout. It isn't long before you find yourself coming to a climax. ",0);
 			consequence.set_consume(-FPalaceHelper.milk_volume_id);
 			a.addChallenge(challenge,consequence);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
 			
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id,Character.relations_affect_id}, new int[]{5,0}, false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -2407,8 +2501,17 @@ package fpgamegithubredux;
 			consequence.addConsequence(Character.relations_affect_id,10, "</n2> tells you about the strange protestors outside the goo empress' palace. It's a very strange but intriguing story. ",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "It's almost impossible to believes </n2>s tale of protestors hacking people to pieces. ",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id,Character.relations_affect_id}, new int[]{5,5}, false, Conversation_topic.being_told_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 5};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
 			
 			a = new CharAction();
 			a.setName("Protest");
@@ -2439,8 +2542,12 @@ package fpgamegithubredux;
 			consequence = new Consequence();
 			consequence.addConsequence(Character.relations_affect_id,10, "It's simple! They just have to go under <ctref0>.",0,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id,Character.relations_affect_id}, new int[]{5,0}, false, Conversation_topic.being_told_topic,FPalaceHelper.get_chastity_mob());//want to set a mob alignment here...
+			dia2 = new ArrayList<>();
+			second = new int[]{5, 5};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1, dia2, false, Conversation_topic.being_told_topic,FPalaceHelper.get_chastity_mob());//want to set a mob alignment here...
 			
 			ct.add_topic_reference_by_name("The Blade");
 			
@@ -2458,7 +2565,7 @@ package fpgamegithubredux;
 			consequence.addConsequence(Character.relations_affect_id,-5, "</n2> looks incredulous as you do your best to tell </objnoun2> about the Bloody Protest.",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0}, false, Conversation_topic.telling_topic);
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			
 			return ct;
 		}
@@ -2500,9 +2607,18 @@ package fpgamegithubredux;
 			iconsequence.addConsequence(Character.relations_affect_id, 1, "You greedily grab the gold, and both of you share a smile.",0,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(5),0);
 			a.addChallenge(challenge,iconsequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 15},false, Conversation_topic.being_told_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 15},false, Conversation_topic.ask_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 15};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.ask_topic);
 			
 			return ct;
 		}
@@ -2639,10 +2755,19 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,5, "</n2> smiles as you ask, and you see </objnoun2> reach into </noun2> inventory. ",0,0,0,4,true);
 			consequence.addConsequence(0,0, "</n2> looks at you for a moment before shaking <noun2> head. \"I don't know anything about that.\" </pronoun2> says explicitly. ",-1);
 			a.addChallenge(challenge,consequence);
-			
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
 						
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.ask_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.telling_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.ask_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.telling_topic);
 			
 			
 			a = new CharAction();
@@ -2772,7 +2897,7 @@ package fpgamegithubredux;
 			consequence.addConsequence(0,0, "</n2> looks at you for a moment before shaking </noun2> head, removing </noun2> hands from </noun2> possessions. ",-1);
 			a.addChallenge(challenge,consequence);
 			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
 			
 			return ct;
 		}
@@ -3435,8 +3560,17 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "</n2>s smile becomes a grin as </pronoun2> motions to </noun2> groin. ",0);
 	
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 10},false, Conversation_topic.being_told_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 10};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
 			
 			return ct;			
 		}
@@ -3516,8 +3650,17 @@ package fpgamegithubredux;
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> begins to massage your ass with </noun2> groin as </pronoun2> mounts you. ",-1);
 	
 			a.addChallenge(challenge,consequence);			
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.introduced_id}, new int[]{5,-1},false, Conversation_topic.being_told_topic,FPalaceHelper.get_amazon_mob());
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, -1};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic,FPalaceHelper.get_amazon_mob());
 			
 			a = new CharAction();
 			a.setName("Amazonian Greeting");
@@ -3532,8 +3675,12 @@ package fpgamegithubredux;
 			consequence.addConsequence(Character.relations_affect_id,10, "You tell </n2> about the strange sexual greeting that amazonians offer. </pronoun2> seems intrigued by your story. ",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "</n2> looks incredulous as you do your best to tell </objnoun2> about the horrible rape an amazon is likely to greet them with. ",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0}, false, Conversation_topic.telling_topic);
+			dia2 = new ArrayList<>();
+			 second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 						
 			return ct;
 		}
@@ -3566,9 +3713,18 @@ package fpgamegithubredux;
 			iconsequence.addConsequence(Character.relations_affect_id, -1, "</n2> appologizes as </pronoun2> points out you don't have enough. ",-1,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(-5),0);			
 			a.addChallenge(challenge,iconsequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.being_told_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.ask_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.ask_topic);
 			
 			return ct;
 		}
@@ -3646,9 +3802,18 @@ package fpgamegithubredux;
 			iconsequence.addConsequence(Character.relations_affect_id, -1, "</n2> appologizes as </pronoun2> points out you don't have enough. ",-1,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(-5),0);			
 			a.addChallenge(challenge,iconsequence);
-			
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.being_told_topic);
-			ct.add_action(a, new int[]{FPalaceHelper.int_id, Character.relations_affect_id}, new int[]{5, 0},false, Conversation_topic.ask_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = new int[]{5, 0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
+			ct.add_action(a, dia1,dia2,false, Conversation_topic.ask_topic);
 			
 			return ct;
         }

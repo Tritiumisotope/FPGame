@@ -42,20 +42,21 @@ public class Upgrade_Item extends Item {
 			i.multiDroppedDescription = this.multiDroppedDescription;
 			i.value = this.value;
 			int count = 0;
-			for(count=0;count<effects.length;count++){
-				i.effects[count] = this.effects[count];
+			for(count=0;count<effects.size();count++){
+				//i.effects[count] = this.effects[count];
+				i.effects.set(count, this.effects.get(count));
 			}
 			i.useDescription = this.useDescription;
-			count = 0;
-			for(count=0;count<changeEffects.length;count++){
-				i.changeEffects[count] = this.changeEffects[count];
+			for(count=0;count<changeEffects.size();count++){
+				//i.changeEffects[count] = this.changeEffects[count];
+				i.changeEffects.set(count, this.changeEffects.get(count));
 			}
 			i.propogate = this.propogate;
 			i.identDifficulty = this.identDifficulty;
 			i.weight = this.weight;
-			count = 0;
-			for(count=0;count < statActionAdd.length;count++){
-				i.statActionAdd[count] = this.statActionAdd[count];
+			for(count=0;count < statActionAdd.size();count++){
+				//i.statActionAdd[count] = this.statActionAdd[count];
+				i.statActionAdd.set(count, this.statActionAdd.get(count));
 			}
 			i.numUses = this.numUses;
 			i.imageID = this.imageID;
@@ -68,12 +69,10 @@ public class Upgrade_Item extends Item {
 			i.spawnChar = this.spawnChar;
 			
 			i.upgrade_type_id = this.upgrade_type_id;
-			count = 0;
 			for(count=0;count<skill_id.size();count++){//.length
                 //i.skill_id[count] = this.skill_id[count];
                 i.skill_id.set(count, this.skill_id.get(count));
 			}
-			count = 0;
 			for(count=0;count<skill_bonus.size();count++){//.length
                 //i.skill_bonus[count] = this.skill_bonus[count];
                 i.skill_bonus.set(count,this.skill_bonus.get(count));

@@ -60,7 +60,7 @@ public class Trait {
 		public void set_racial_trait(Race r){
 			racial_trait = r;
 		}
-		/*
+		
 		public Boolean has_trait(Character c,Character c_self){
 			Boolean ret= false;
 			
@@ -69,10 +69,11 @@ public class Trait {
 					if(c.body.has_part(part_trait))ret = true;
 				}
 				if(racial_trait != null){
-					if(c.get_primary_race().get_name() == racial_trait.get_name())ret = true;
+					//if(c.get_primary_race().get_name() == racial_trait.getName())ret = true;
+					//TODO get_primary_race in character
 				}
 				if(stat_trait > -1){
-					if(stat_amt.intValue() != 0 && (c.getStat(stat_trait) >= stat_amt && abv_or_blw) || (c.getStat(stat_trait) <= stat_amt && !abv_or_blw))ret = true;
+					if(stat_amt.intValue() != 0 && (c.getStat(stat_trait) >= stat_amt.doubleValue() && abv_or_blw) || (c.getStat(stat_trait) <= stat_amt.doubleValue() && !abv_or_blw))ret = true;
 				}else if(stat_amt.intValue() == -1 &&(c.getStat(stat_trait) >= c_self.getStat(stat_trait) && abv_or_blw) || (c.getStat(stat_trait) <= c_self.getStat(stat_trait) && !abv_or_blw)){
 					ret = true;
 				}
@@ -80,7 +81,7 @@ public class Trait {
 			
 			return ret;
 		}
-		*/
+		
 		public Number reaction_mod(Character c, int quant, Character c_self){//was number
 			int ret = 0;//was number
 			if(abv_or_blw){
@@ -92,7 +93,7 @@ public class Trait {
 					ret += (stat_amt.intValue() - quant) * trait_strength;
 				}
 			}
-			/*
+			
 			if(attraction_check == attracted){
 				if(c != c_self && !(c_self.personality.determine_attraction(c, c_self) > 5 || c_self.personality.check_relationship(c,c_self) > Personality.friends)){
 					ret = 0;
@@ -102,7 +103,7 @@ public class Trait {
 					ret = 0;
 				}
 			}
-			*/
+			
 			return ret;
 		}
 		

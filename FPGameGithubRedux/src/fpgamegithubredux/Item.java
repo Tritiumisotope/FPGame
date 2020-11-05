@@ -200,13 +200,13 @@ public class Item {
         if(numUses > 0)numUses--;
         return useDesc;
     }
-    public int findWeight(Integer[] identEfficacy, int identChance){
+    public int findWeight(ArrayList<Integer>  identEfficacy, int identChance){
         
         double weightDeviation = 1;
         if(identEfficacy != null){
-            identChance = 2*identEfficacy[0]/(identDifficulty);
-            if(identEfficacy[1]!=null){
-                weightDeviation -= (double)identEfficacy[1]/identDifficulty;
+            identChance = 2*identEfficacy.get(0)/(identDifficulty);//WHAT?!
+            if(identEfficacy.get(1)!=null){
+                weightDeviation -= (double)identEfficacy.get(1)/identDifficulty;
                 if(weightDeviation <= 0)weightDeviation = 0.01;
                 if(weightDeviation >= 1)weightDeviation = 0.99;
                 if(Math.random() <= 0.5) weightDeviation = -weightDeviation;
@@ -220,7 +220,7 @@ public class Item {
             return 0;
         }
     }
-    public String describeEffects(Integer[] identEfficacy,Boolean keepTags, int identChance, String desc){
+    public String describeEffects(ArrayList<Integer> identEfficacy,Boolean keepTags, int identChance, String desc){
         int count;
         Boolean showing = false;
         if(effects.size() > 0){//.length
@@ -238,7 +238,7 @@ public class Item {
                         }
                     }else{
                         String l_string = FPalaceHelper.get_stat_name_by_id(count);
-                        if(identEfficacy[0]>20){
+                        if(identEfficacy.get(0)>20){
                             
                             if(l_string != "?"){
                                 if(effects.get(count) >= 0){
@@ -248,7 +248,7 @@ public class Item {
                                 }
                             }
                             
-                        }else if(identEfficacy[0]>10){
+                        }else if(identEfficacy.get(0)>10){
                             if(l_string != "?"){
                                 if(effects.get(count) >= 0){
                                     desc += "Increase ";
@@ -266,7 +266,7 @@ public class Item {
         }
         return desc;
     }
-    public String getDescription(Character owner, Integer[] identEfficacy, Boolean keepTags){
+    public String getDescription(Character owner, ArrayList<Integer>  identEfficacy, Boolean keepTags){
         int identChance = 0;
         String desc = getName() + "\n";
         desc += "You guess it weighs about " + findWeight(identEfficacy, identChance) + "lbs.\n";
@@ -275,7 +275,6 @@ public class Item {
         desc = describeEffects(identEfficacy,keepTags, identChance, desc);
         if(changeEffects.size() > 0){//.length
             desc += "\n";
-            count = 0;
             for(count=0;count<changeEffects.size();count++){//.length
                 if(Math.random() <= identChance){
                     /*
@@ -305,7 +304,6 @@ public class Item {
         }
         if(statActionAdd.size() > 0){
             desc += "\n";
-            count = 0;
             //for(count=0;count<Math.ceil(statActionAdd.length/2);count++){
             for(count=0;count<statActionAdd.size();count++){
                 if(Math.random() <= identChance){
