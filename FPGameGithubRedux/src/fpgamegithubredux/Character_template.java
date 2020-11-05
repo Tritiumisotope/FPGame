@@ -6,15 +6,15 @@ public class Character_template {
     
 		public Character char_to_clone;
 		public ArrayList<Integer> stats;
-		//public var mins:Array;
-		//public var maxs:Array;
+		public ArrayList<Number> mins;//public var mins:Array
+		public ArrayList<Number> maxs;//public var maxs:Array
 
 		public Character_template(){
 			// constructor code
 			char_to_clone = null;
 			stats = new ArrayList<>();
-			//mins = new Array();
-			//maxs = new Array();
+			mins = new ArrayList<>();
+			maxs = new ArrayList<>();
 		}
 		
 		public void set_char_to_clone(Character c){
@@ -22,8 +22,7 @@ public class Character_template {
 		}
 		
 		public void set_stat_jiggle(int stat_id,Number stat_min,Number stat_max){
-            //stats[stats.length] = stat_id;
-            stats.add(stat_id);
+            stats.add(stat_id);//stats[stats.length] = stat_id
 			//mins[mins.length] = stat_min;
 			//maxs[maxs.length] = stat_max;
 		}
@@ -76,29 +75,29 @@ public class Character_template {
 			}
 			
             i = 0;
-            /*
+            
 			for(i=0;i<stats.length;i++){
-				Number curr_stat_value = ret.get_stat(stats[i],0,0,-1,false);
+				Number curr_stat_value = ret.get_stat(stats.get(i),0,0,-1,false);
 				if(curr_stat_value < 0){
-					trace("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats[i] + ". Character name: " + char_name);
+					trace("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats.get(i) + ". Character name: " + char_name);
 				}else{
 					Number rand = curr_stat_value;
-					if(curr_stat_value > maxs[i] || curr_stat_value < mins[i]){
+					if(curr_stat_value.doubleValue() > maxs.get(i).doubleValue() || curr_stat_value.doubleValue() < mins.get(i).doubleValue()){
 						//mid shoulb be between min and max is average...
-						rand = Math.random()*(maxs[i] - mins[i]) + mins[i];
+						rand = Math.random()*(maxs.get(i).doubleValue() - mins.get(i).doubleValue()) + mins.get(i).doubleValue();
 					}else{
 						//current value is average...
 						rand = Math.random();
-						if(rand > 0.5){
-							rand = ((rand-0.5)*2)*(maxs[i] - curr_stat_value) + curr_stat_value;
+						if(rand.doubleValue() > 0.5){
+							rand = ((rand.doubleValue()-0.5)*2)*(maxs.get(i).doubleValue() - curr_stat_value.doubleValue()) + curr_stat_value.doubleValue();
 						}else{
-							rand = (rand*2)*(curr_stat_value - mins[i]) + mins[i];
+							rand = (rand.doubleValue()*2)*(curr_stat_value.doubleValue() - mins.get(i).doubleValue()) + mins.get(i).doubleValue();
 						}
 					}
-					if(curr_stat_value > 0){
-						ret.apply_affect_by_id(stats[i],rand - curr_stat_value,0,null, Body.prorate_change_total);
+					if(curr_stat_value.doubleValue() > 0){
+						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - curr_stat_value.doubleValue(),0,null, Body.prorate_change_total);
 					}else{
-						ret.apply_affect_by_id(stats[i],rand - curr_stat_value,0,null, Body.change_stats_total);
+						ret.apply_affect_by_id(stats.get(i),rand - curr_stat_value,0,null, Body.change_stats_total);
 					}
 				}				
             }
@@ -137,7 +136,7 @@ public class Character_template {
 			if(ret.stat_points > 0){
             /*
 				xp_to_spend = true;
-				skill_list = new Array(FPalace_helper.str_id,FPalace_helper.dex_id,FPalace_helper.con_id,FPalace_helper.sex_appeal_id,FPalace_helper.will_id,FPalace_helper.wis_id,FPalace_helper.int_id,FPalace_helper.cha_id);
+				skill_list = new Array(FPalaceHelper.str_id,FPalaceHelper.dex_id,FPalaceHelper.con_id,FPalaceHelper.sex_appeal_id,FPalaceHelper.will_id,FPalaceHelper.wis_id,FPalaceHelper.int_id,FPalaceHelper.cha_id);
 				skill_costs = new Array();					
 				while(xp_to_spend){
 					xp_to_spend = false;
@@ -166,9 +165,9 @@ public class Character_template {
 			//temp_char.clone(this.char_to_clone);
 			ret.set_char_to_clone(temp_char);
 			int i = 0;
-			//for(i=0;i<stats.length;i++){
-				//ret.set_stat_jiggle(stats[i],mins[i],maxs[i]);			
-			//}
+			for(i=0;i<stats.size();i++){
+				//ret.set_stat_jiggle(stats.get(i),mins.get(i),maxs.get(i));			
+			}
 			
 			return ret;
 		}

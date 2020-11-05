@@ -2,8 +2,6 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 
-import javax.swing.MenuSelectionManager;
-
 public class Personality {
     
 

@@ -259,8 +259,12 @@ public class Character extends DynamicObject {
     public String apply_affect_by_id(int i,Number k){
         return apply_affect_by_id(i,k, 0, null, 0, false, -1,-1);
     }
-    public String apply_affect_by_id(int i,Number k,int temp, Character c,int body_app_method /*Body.change_stats_individual*/,Boolean char_only,int part_id /*Body.target_all_parts*/,int effect_type){
-        //def temp = 0, c = null, body_app_method = 0 /*Body.change_stats_individual*/, char_only = false, part_id:int = -1 /*Body.target_all_parts*/, effect_type:int = -1
+    public String apply_affect_by_id(Number i,Number k,int temp, Character c,int body_app_method){
+        return apply_affect_by_id(i,k, temp, c, body_app_method, false, -1,-1);
+    }
+    public String apply_affect_by_id(Number i,Number k,int temp, Character c,int body_app_method /*Body.change_stats_individual*/,Boolean char_only,int part_id /*Body.target_all_parts*/,int effect_type){
+        //def temp = 0, c = null, body_app_method = 0 /*Body.change_stats_individual*/, 
+        //char_only = false, part_id:int = -1 /*Body.target_all_parts*/, effect_type:int = -1
         String s = "";
         Boolean found = false;
         int count = 0;
