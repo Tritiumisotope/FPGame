@@ -26,28 +26,28 @@ public class Quest {
     public static final int wait_action = 19;
     
     public String name;
-    //public var objectives:Array;
-    public ArrayList<Integer> objective_actions;//public var objective_actions:Array;
-    public ArrayList<ArrayList<Object>> objective_targets;//public var objective_targets:Array;
-    public ArrayList<Conversation_topic> topics;//public var topics:Array;
-    public ArrayList<Integer> topics_objective;//public var topics_objective:Array;
+    public ArrayList<String> objectives;//public var objectives:Array
+    public ArrayList<Integer> objective_actions;//public var objective_actions:Array
+    public ArrayList<ArrayList<Object>> objective_targets;//public var objective_targets:Array
+    public ArrayList<Conversation_topic> topics;//public var topics:Array
+    public ArrayList<Integer> topics_objective;//public var topics_objective:Array
     public int end_step;
-    //public var end_rewards:Array;
-    //public var next_objective:Array;
-    //public var objective_timer:Array;
+    public ArrayList<Object> end_rewards;//public var end_rewards:Array
+    public ArrayList<Integer> next_objective;//public var next_objective:Array
+    public ArrayList<Integer> objective_timer;//public var objective_timer:Array
 
     public Quest() {
         // constructor code
         name = "Quest";			
-        //objectives = new ArrayList<>();
+        objectives = new ArrayList<>();
         objective_actions = new ArrayList<>();
         objective_targets = new ArrayList<>();
         topics = new ArrayList<>(); 
         topics_objective = new ArrayList<>();
         end_step = -1;
-        //end_rewards = new ArrayList<>();
-        //next_objective = new ArrayList<>();
-        //objective_timer = new ArrayList<>();
+        end_rewards = new ArrayList<>();
+        next_objective = new ArrayList<>();
+        objective_timer = new ArrayList<>();
     }
     
     public void set_name(String s){
@@ -57,56 +57,64 @@ public class Quest {
     public void set_end_step(int step_num){
         end_step = step_num;
     }
-    /*TODO sussing array
-    public void add_end_reward(Array reward){
-        end_rewards = end_rewards.concat(reward);
+
+    public void add_end_reward(ArrayList<Object> reward){
+        //end_rewards = end_rewards.concat(reward);
+        end_rewards.add(reward);
     }
-    */
-    /*
+    
+    
     public String end_quest(Character c){
         String ret = "";
         int i= 0;
-        for(i;i<end_rewards.length;i++){
-            if(end_rewards[i] is int){
-                ret += c.set_xp(end_rewards[i]);
-            }else if(end_rewards[i] is Item){
-                c.add_to_possessions(end_rewards[i]);
+        for(i=0;i<end_rewards.size();i++){
+            if(end_rewards.get(i) instanceof Integer){
+                Integer temp = (Integer)end_rewards.get(i);
+                //ret += c.set_xp(temp);//ret += c.set_xp(end_rewards.get(i))
+            }else if(end_rewards.get(i) instanceof Item){
+                //c.add_to_possessions(end_rewards.get(i));
+                //TODO
             }else{
                 //trace("(Quest.end_quest)Should be rewarding character for ending the quest, but got " + end_rewards[i] + " and don't know what to do with it");
             }
         }
         return ret;
     }
-    */
-    /*
-    public void new_objective(String s,int action_type, action_target:Array, go_to_objective:int = -1, ticks_to_complete:int = -1):void{
-        objectives[objectives.length] = s;
-        objective_actions[objective_actions.length] = action_type;
-        objective_targets[objective_targets.length] = action_target;
-        next_objective[next_objective.length] = go_to_objective;
-        objective_timer[objective_timer.length] = ticks_to_complete;
+    
+    
+    public void new_objective(String s,int action_type,ArrayList<ArrayList<Object>> action_target){
+        new_objective(s,action_type,action_target,-1,-1);
     }
-    */
-    /*
+    public void new_objective(String s,int action_type,ArrayList<ArrayList<Object>> action_target,int go_to_objective,int ticks_to_complete){
+        //default -1,-1
+        objectives.add(s);//objectives[objectives.length] = s
+        objective_actions.add(action_type);//objective_actions[objective_actions.length] = action_type
+        ArrayList<Object> temp = new ArrayList<>();//objective_targets[objective_targets.length] = action_target
+        temp.add(action_target);
+        objective_targets.add(temp);
+        next_objective.add(go_to_objective);//next_objective[next_objective.length] = go_to_objective
+        objective_timer.add(ticks_to_complete);  //objective_timer[objective_timer.length] = ticks_to_complete
+    }
+    
     public String get_objectives(Character c){
         String ret = name+":\n";
         
-        var temp:Array = c.personality.get_obj_steps(this);
+        ArrayList<Integer> temp = c.personality.get_obj_steps(this);
         if(temp != null){
-            var i:int = 0;
-            for(i;i<temp.length;i++){
-                if(i >= temp.length -1){
-                    ret += "\t" + objectives[temp[i]] + "\n";
+            int i = 0;
+            for(i=0;i<temp.size();i++){
+                if(i >= temp.size() -1){
+                    ret += "\t" + objectives.get(temp.get(i)) + "\n";
                 }else{
-                    ret += "✔\t" + objectives[temp[i]] + "\n";
+                    ret += "✔\t" + objectives.get(temp.get(i)) + "\n";
                 }
             }
         }else{
-            ret += "\t" + objectives[c.personality.get_obj_step(this)] + "\n";
+            ret += "\t" + objectives.get(c.personality.get_obj_step(this)) + "\n";
         }
         return ret;
     }
-    */
+    
     public void add_conversation_topic(Conversation_topic ct,int obj_num){
         //topics[topics.length] = ct;
         topics.add(ct);

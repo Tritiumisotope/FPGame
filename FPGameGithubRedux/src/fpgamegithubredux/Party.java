@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Party {
 
-    public ArrayList<Character> members;//public var members:Array;
+    public ArrayList<Character> members;//public var members:Array
 
     public Party() {
         // constructor code
@@ -59,42 +59,44 @@ public class Party {
         
         return ret;
     }
-    /*
+    
     public String get_status(Character c){
         String ret = "";
-        var members_to_display = new Array();
+        ArrayList<Character> members_to_display = new ArrayList<>();
             
-        var char_init:int = -1;
+        int char_init = -1;
         
         int i = 0;
-        for(i;i<members.length;i++){
+        for(i=0;i<members.size();i++){
             if(c.location == members.get(i).location){
+                /*TODO CombatManager
                 if(members.get(i).location.cm == null || members.get(i).location.cm.get_init(members.get(i)) < 0){
                     members_to_display[members_to_display.length] = members.get(i);
                 }else{
                     if(members.get(i).location.cm.get_init(members.get(i)) > char_init)char_init = members.get(i).location.cm.get_init(members.get(i));
                 }
+                */
             }
         }
-        if(members_to_display.length > 0){
-            i = 0;
-            for(i;i<members_to_display.length;i++){
-                if(members_to_display[i] != null){
-                    ret += "<a href=\"event:look," + c.location.get_content_id(members_to_display[i]) +"\">" + members_to_display[i].personality.get_name(c, members_to_display[i]) + "</a>";
-                    if(i < members_to_display.length - 2){
+        if(members_to_display.size() > 0){
+            for(i=0;i<members_to_display.size();i++){
+                if(members_to_display.get(i) != null){
+                    //ret += "<a href=\"event:look," + c.location.get_content_id(members_to_display.get(i)) +"\">" + members_to_display.get(i).personality.get_name(c, members_to_display.get(i)) + "</a>";
+                    //TODO Room
+                    if(i < members_to_display.size() - 2){
                         ret += ", ";
-                    }else if(i < members_to_display.length - 1){
+                    }else if(i < members_to_display.size() - 1){
                         ret += ", and ";
                     }
                 }
             }
             
             String verb = "are";
-            if(members_to_display.length == 1) verb = "is";
+            if(members_to_display.size() == 1) verb = "is";
             
             if(char_init > -1){
                 ret += " "+verb+" watching the fight";
-            }else if(get_leader().get_stat(FPalace_helper.lust_id) >= get_leader().get_stat(FPalace_helper.max_lust_id)){
+            }else if(get_leader().get_stat(FPalaceHelper.lust_id).doubleValue() >= get_leader().get_stat(FPalaceHelper.max_lust_id).doubleValue()){
                 ret += " "+verb+" lying in a pool of their own juices on the ground";
             }else if(get_leader().busy > 0){
                 ret += " "+verb+" doing something here";
@@ -105,7 +107,7 @@ public class Party {
         
         return ret;
     }
-    */
+    
     public void add_member(Character c){
         //check to make sure not already a member
         int i = 0;
@@ -128,7 +130,7 @@ public class Party {
             if(found && i < members.size() -1) members.set(i, members.get(i+1));
         }
         
-        //if(found) members = members.slice(0,members.size() - 1);
+        //if(found) members = members.slice(0,members.size() - 1)
         if(found) members.remove(members.size() - 1);
         //TODO check
     }

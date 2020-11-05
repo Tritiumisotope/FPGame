@@ -2005,7 +2005,7 @@ public class FPalace_topics {
 			
 			return ct;
 		}
-		/*TODO Quest
+		
 		public static Conversation_topic topic_help(Quest q){
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_topic_name("Help");
@@ -2051,15 +2051,24 @@ public class FPalace_topics {
 			challenge.set_defense_stat(FPalaceHelper.int_id);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence  qconsequence= new Quest_Consequence();
 			qconsequence.addConsequence(Character.relations_affect_id,0, "Unfortunately it doesn't seem familiar to </objnoun2>. </n2> suggests finding someone smarter. ",0,0,0,-1, true);
 			qconsequence.addConsequence(Character.relations_affect_id,0, "</n2> suggests looking for Century City. ",-1,0,0,-1, true);
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(q,1);
 			a.addChallenge(challenge,qconsequence);
-			
-			ct.add_action(a, [Character.relations_affect_id,FPalaceHelper.int_id], [0,5], false, Conversation_topic.telling_topic);
-			ct.add_action(a, [Character.relations_affect_id,FPalaceHelper.int_id], [0,5], false, Conversation_topic.ask_topic);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {Character.relations_affect_id,FPalaceHelper.int_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {0,5};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1, dia2, false, Conversation_topic.telling_topic);
+			ct.add_action(a, dia1, dia2, false, Conversation_topic.ask_topic);
 									
 			a = new CharAction();
 			a.setName("Party join");
@@ -2070,7 +2079,8 @@ public class FPalace_topics {
 			challenge.setVariability(20);
 			challenge.setText("Will you join my quest?");
 			consequence = new Consequence();
-			consequence.join_party();
+			//consequence.join_party();
+			//TODO
 			consequence.addConsequence(0,0, "</n2> moves closer and touches your arm as </pronoun2> wanders by, smiling in agreement to your proposition. </pronoun2> takes up position following you.",0);
 			consequence.addConsequence(0,0, "</n2> has somehow taken affront to your request and turns away.",-1);
 			a.addChallenge(challenge,consequence);
@@ -2106,8 +2116,12 @@ public class FPalace_topics {
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(q,1);
 			a.addChallenge(challenge,qconsequence);
-			
-			ct.add_action(a, [Character.relations_affect_id,FPalaceHelper.int_id], [25,0], false, Conversation_topic.ask_topic);
+			dia2 = new ArrayList<>();
+			second = new int[]{25,0};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a,dia1, dia2, false, Conversation_topic.ask_topic);
 			
 			//need a 'party leave' action
 			a = new CharAction();
@@ -2120,7 +2134,8 @@ public class FPalace_topics {
 			challenge.setVariability(0);
 			challenge.setText("Will you leave my party?");
 			consequence = new Consequence();
-			consequence.leave_party();
+			//consequence.leave_party();
+			//TODO
 			consequence.addConsequence(0,0, "</n2> moves closer and touches your arm as </pronoun2> agrees. </pronoun2> stops following you.",0);
 			a.addChallenge(challenge,consequence);
 			
@@ -2133,13 +2148,23 @@ public class FPalace_topics {
 			consequence.addConsequence(Character.relations_affect_id,3, "</n2> appologizes profusely, explaining </pronoun2> doesn't entirely know either.",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-1, "</n2> laughs at you for not knowing.",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			
-			ct.add_action(a, [Character.relations_affect_id], [-10], true, Conversation_topic.ask_topic);
+			dia1 = new ArrayList<>();
+			first = new int[] {Character.relations_affect_id};
+			for(int i : first){
+				dia1.add(first[i]);
+			}
+
+			dia2 = new ArrayList<>();
+			second = new int[] {-10};
+			for(int i : second){
+			dia2.add(second[i]);
+			}
+			ct.add_action(a, dia1, dia2, true, Conversation_topic.ask_topic);
 			
 			
 			return ct;
 		}
-		*/
+		
 		public static Conversation_topic topic_amazon_excursion(){
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_topic_name("The Excursion");
@@ -2908,23 +2933,23 @@ public class FPalace_topics {
 			ct.set_topic_name("Becoming like Heidi");
 			
 			Item cola_item = FPalace_items.futa_cola();
-            //Quest get_futa_cola_quest= new Quest();
-            /*TODO Quest
+            Quest get_futa_cola_quest= new Quest();
 			get_futa_cola_quest.set_name("Helping out Lucy");
-			get_futa_cola_quest.new_objective("Find something to help Lucy become more like her big sister Heidi. ",Quest.pick_up_action,[cola_item]);
-			get_futa_cola_quest.new_objective("Get the cola back to Lucy. ",Quest.talk_action,null);
-			get_futa_cola_quest.add_end_reward([50]);
+			//get_futa_cola_quest.new_objective("Find something to help Lucy become more like her big sister Heidi. ",Quest.pick_up_action,{cola_item});
+			//get_futa_cola_quest.new_objective("Get the cola back to Lucy. ",Quest.talk_action,null);
+			//get_futa_cola_quest.add_end_reward([50]);
+			//TODO
 			get_futa_cola_quest.set_end_step(2);
 			
 			CharAction a = new CharAction();
 			a.set_dialogue("",0);
 			Challenge challenge = new Challenge();
 			challenge.set_attack_stat(-1,0);
-			challenge.set_attack_quest(get_futa_cola_quest,1);
+			//challenge.set_attack_quest(get_futa_cola_quest,1);
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(get_futa_cola_quest);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "Lucy looks greedily at your inventory. ",0,0,0,1);
@@ -2959,14 +2984,23 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var iconsequence:ItemConsequence = new ItemConsequence();
+			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.addConsequence(Character.relations_affect_id,40, "You watch as Lucys body changes before your eyes. As her body finally settles down, you see her staring at your body hungrily. ",0,0,0,-1,true);
 			iconsequence.add_item_use(cola_item,0,false);
 			//iconsequence.add_item_use(cola_item,0,false);
 			a.addChallenge(challenge,iconsequence);
+			ArrayList<Integer> dia1 = new ArrayList<>();
+			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
+			for(int i : first){
+			dia1.add(first[i]);
+			}
+			ArrayList<Integer> dia2 = new ArrayList<>();
+			int[] second = {5,0};
+			for(int i : second){
+			dia1.add(second[i]);
+			}
+			ct.add_action(a, dia1, dia2,false, Conversation_topic.being_told_topic);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-			*/
 			return ct;
 			
 		}
@@ -2997,7 +3031,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(murder_slime_quest);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "John smiles at you and shakes your hand. ",0,0,0,1);
@@ -3044,7 +3078,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_quest(nunnery_quest,2);
 			qconsequence.set_quest(farm_quest,0);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "John smiles at you and shakes your hand. ",0);
@@ -3081,7 +3115,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,0);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var iconsequence:ItemConsequence = new ItemConsequence();
+			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.add_item_reward(FPalace_items.milk_jug(),0);
 			iconsequence.add_item_reward(FPalace_items.milk_jug(),0);
 			iconsequence.add_item_reward(FPalace_items.milk_jug(),0);
@@ -3124,7 +3158,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "The nun mentions a delivery, and you're reminded of the farm. ",0,0,0,2);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "The nun says she's waiting for a delivery. ",-1);
 	
@@ -3151,7 +3185,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,12);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var iconsequence:ItemConsequence = new ItemConsequence();
+			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.add_item_reward(temp_item,0,false,true,true);
 			iconsequence.add_item_reward(temp_item,0,false,true,true);
 			iconsequence.add_item_reward(temp_item,0,false,true,true);
@@ -3204,7 +3238,7 @@ public class FPalace_topics {
 			ct.set_no_spread();
 			ct.set_topic_name("Filling the quota for cum");
 			Item temp_item = FPalace_items.cum_jug();
-            //Quest cum_quota_quest = new Quest();
+            Quest cum_quota_quest = new Quest();
             /*TODO Quest
 			cum_quota_quest.set_name("Filling the quota for cum");
 			cum_quota_quest.new_objective("Get a jug of cum for Heidi. ",Quest.pick_up_action,[temp_item]);
@@ -3220,7 +3254,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(cum_quota_quest);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "Heidi looks greedily at your inventory. ",0,0,0,1);
@@ -3255,7 +3289,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var iconsequence:ItemConsequence = new ItemConsequence();
+			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.addConsequence(Character.relations_affect_id,5, "",0,0,0,-1,true);
 			iconsequence.add_item_reward(temp_item,0,false,true,true);
 			iconsequence.add_item_reward(temp_item,0,false,false);
@@ -3288,7 +3322,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(sleeping_with_amazons_quest);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "Vivian smiles at you and shakes your hand. ",0,0,0,1);
@@ -3367,7 +3401,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var qconsequence:Quest_Consequence = new Quest_Consequence();
+			Quest_Consequence qconsequence = new Quest_Consequence();
 			qconsequence.set_quest(gathering_quest,2);
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "You take a moment to get the cucumber out. The Hermit grabs it and quickly throws it into the cauldron. </pronoun2> mentions needing some Dickweed next. ",0,0,0,3);
 			a.addChallenge(challenge,qconsequence);
@@ -3377,7 +3411,7 @@ public class FPalace_topics {
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
-			var iconsequence:ItemConsequence = new ItemConsequence();
+			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.addConsequence(Character.relations_affect_id,5, "",0,0,0,-1,true);
 			iconsequence.add_item_reward(temp_item,0,false,true,true);
 			iconsequence.add_item_reward(temp_item,0,false,false);

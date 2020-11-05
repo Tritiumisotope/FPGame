@@ -160,13 +160,13 @@ public class Consequence {//TODO get count of all below
         //action_for_stat[action_for_stat.length] = stat_id;
         action_for_stat.set(action_for_stat.size(),stat_id);
     }
-    public String trigger(int roll){
+    public String trigger(Number roll){
         return trigger(roll,null,null);
     }
-    public String trigger(int roll, Character attacker){
+    public String trigger(Number roll, Character attacker){
         return trigger(roll,attacker,null);
     }
-    public String trigger(int roll, Character attacker, Character defender){//default null, null
+    public String trigger(Number roll, Character attacker, Character defender){//default null, null
         //String ret = ""
         StringBuilder bld = new StringBuilder();
         for(String desc : conseqDescr){
@@ -174,10 +174,10 @@ public class Consequence {//TODO get count of all below
             int statID = statEffected.get(index);
             int neededRoll = rollRequired.get(index);
 
-            if(neededRoll >= 0 && roll >= neededRoll && defender.getStat(statID) > -1){
+            if(neededRoll >= 0 && roll.intValue() >= neededRoll && defender.getStat(statID) > -1){
                 bld.append(desc);//ret += desc
             }
-            if(neededRoll < 0 && roll <= neededRoll && defender.getStat(statID) > -1){
+            if(neededRoll < 0 && roll.intValue() <= neededRoll && defender.getStat(statID) > -1){
                 bld.append(desc);//ret += desc
             }
         }

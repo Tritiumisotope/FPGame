@@ -1,7 +1,6 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Item {
     protected String droppedDescription;
@@ -110,7 +109,6 @@ public class Item {
         Consequence consequence = new Consequence();
         consequence.addConsequence(0, 0.0, "", 0);
         consequence.add_change_effect(o);
-        //TODO consequence addChangeEffect
         
         //changeEffects[changeEffects.length] = consequence;
         changeEffects.add(consequence);
