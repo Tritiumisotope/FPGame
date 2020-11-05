@@ -261,7 +261,9 @@ public class Equipment extends Item {
 			remove_consequence.set(remove_consequence.size(), a);
 			//TODO explain why consequence
 		}
-		
+		public String remove_effects(Character c){
+			return remove_effects(c,false);
+		}
 		public String remove_effects(Character c,Boolean effects_only){//default false
 			String s = "";
 			int i = 0;

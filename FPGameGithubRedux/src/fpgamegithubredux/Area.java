@@ -14,11 +14,11 @@ public class Area extends StaticObject{
     public String map;
     public ArrayList<String> legend; //was array
     public ArrayList<String> legendFloor; //was array	
-    public ArrayList<String> fillerTemplate;// was var filler_template:Array //Template_Room
+    public ArrayList<Template_Room> fillerTemplate;// was var filler_template:Array //Template_Room
     public ArrayList<Integer> fillerType;//var filler_type:Array//int
-    public ArrayList<Integer> fillerFloorRange;//var filler_floor_range:Array
-    public ArrayList<Integer> dynamicBuildTemplate;//var dynamic_build_template:Array;//Template_Room
-    public ArrayList<Integer> dynamicBuildFloorRange;//var dynamic_build_floor_range:Array
+    public ArrayList<ArrayList<Integer>> fillerFloorRange;//var filler_floor_range:Array
+    public ArrayList<Template_Room> dynamicBuildTemplate;//var dynamicBuildTemplate:Array;//Template_Room
+    public ArrayList<ArrayList<Integer>> dynamicBuildFloorRange;//var dynamicBuildFloorRange:Array
     public Boolean dynamicBuildUp;//var dynamic_build_up:Boolean
     public ArrayList<Room> templateRooms;//var template_rooms:Array
     public ArrayList<Integer> templateFloorRange;//var template_floor_range:Array		
@@ -28,7 +28,7 @@ public class Area extends StaticObject{
     //protected World world;//public var world:World
     public Boolean playerDiscovered;//var player_discovered:Boolean
     public Color mapColor;//var map_colour:uint
-    public ArrayList<Character> spawnCreatures;//var spawn_creatures:Array
+    public ArrayList<Character_template> spawnCreatures;//var spawn_creatures:Array
     public int npcSpawnThreshold;//var npcSpawnThreshold:int	
     protected ArrayList<Area_weather> weathers;//protected AreaWeather[]; weathers//public var weathers:Array
     protected int current_weather; //public var current_weather:int
@@ -57,15 +57,19 @@ public class Area extends StaticObject{
         playerDiscovered = false;
         mapColor = new Color(255,255,255);
         tempOffset = new int[3];//temp_offset = null;//new Array()
-        fillerTemplate = new ArrayList<String>();//new Array()
+        fillerTemplate = new ArrayList<Template_Room>();//new Array()
         fillerType = new ArrayList<Integer>();//new Array()
-        fillerFloorRange = new ArrayList<Integer>();
-        dynamicBuildTemplate = new ArrayList<Integer>();//new Array()
+        ArrayList<Integer> fillerInner = new ArrayList<>();
+        fillerFloorRange = new ArrayList<>();
+        fillerFloorRange.add(fillerInner);//filler_floor_range = null;//new Array()
+        dynamicBuildTemplate = new ArrayList<Template_Room>();//new Array()
         dynamicBuildUp = true;
-        dynamicBuildFloorRange=new ArrayList<Integer>();//dynamic_build_floor_range = null;//new Array()
-        fillerFloorRange= null;//filler_floor_range = null;//new Array()
+        ArrayList<Integer> dynInner = new ArrayList<>();
+        dynamicBuildFloorRange=new ArrayList<>();//dynamicBuildFloorRange = null;//new Array()
+        dynamicBuildFloorRange.add(dynInner);
+
         
-        //spawn_creatures = null;//new Array()
+        spawnCreatures = new ArrayList<>();//new Array()
         npcSpawnThreshold = -1;
         
         //weathers = null;//new Array()
@@ -120,11 +124,11 @@ public class Area extends StaticObject{
         
         return ret;
     }
-    /*
+    
     public void add_creature_spawn(Character_template c){
-        spawn_creatures[spawn_creatures.length] = c;
+        spawnCreatures.add(c); //spawn_creatures[spawn_creatures.length] = c
     }
-    */
+    
     public void set_spawn_threshold(int i){
         npcSpawnThreshold = i;
     }
@@ -148,8 +152,7 @@ public class Area extends StaticObject{
     public void add_connect_room(Room r){
         //make sure the room is actually part of this area
         r.area = this;
-        //connectRooms[connectRooms.size()] = r;
-        connectRooms.add(r);
+        connectRooms.add(r);        //connectRooms[connectRooms.size()] = r
     }
     
     public Room get_connect_room(){
@@ -393,7 +396,7 @@ public class Area extends StaticObject{
                 for(x=0;x<rooms.size();x++){//.length
                     if(rooms.get(x) != null){ //[]
                         for(int y=0;y<rooms.get(x).size();y++){
-                            //if(rooms.get(x).get(y) != null)rooms.get(x][y].unshift(null)//TODO learn unshift
+                            if(rooms.get(x).get(y) != null)rooms.get(x).get(y).add(0,null);//if(rooms.get(x).get(y) != null)rooms.get(x].get(y).unshift(null)//TODO learn unshift
                             //from https://stackoverflow.com/questions/8452672/java-howto-arraylist-push-pop-shift-and-unshift
                             if(rooms.get(x).get(y) != null){
                                 rooms.get(x).get(y).add(0,null);
@@ -562,8 +565,8 @@ public class Area extends StaticObject{
     }
     
     
-    private void set_already_checked(Room[] a){
-        //alreadyCheckedPlaceholder = a;
+    private void set_already_checked(ArrayList<Room> a){
+        alreadyCheckedPlaceholder = a;
     }
     
     private ArrayList<Room> get_already_checked(){
@@ -729,7 +732,7 @@ public class Area extends StaticObject{
                         if(rooms.get(x).get(new_y) != null && rooms.get(x).get(new_y).get(z) != null && rooms.get(new_x).get(y) != null && 
                         rooms.get(new_x).get(y).get(z) != null && (same_room_count < temp_max_same || temp_max_same == -1) && good_exit){
                             /*
-                            if(rooms.get(x][new_y][z].get_exit_id(rooms[new_x][y][z]) == -1){
+                            if(rooms.get(x][new_y].get(z).get_exit_id(rooms[new_x].get(y).get(z)) == -1){
                                 rooms[new_x][new_y][new_z].new_exit(lr, to_path);
                                 lr.new_exit(rooms[new_x][new_y][new_z], from_path);
                             }
@@ -809,7 +812,7 @@ public class Area extends StaticObject{
                 if(rooms.get(x).get(new_y) != null && rooms.get(new_x).get(y) != null){
                     if(rooms.get(x).get(new_y).get(z) != null && rooms.get(new_x).get(y).get(z) != null){
                         /*
-                        if(rooms.get(x][new_y][z].get_exit_id(rooms[new_x][y][z]) >= 0){
+                        if(rooms.get(x][new_y].get(z).get_exit_id(rooms[new_x].get(y).get(z)) >= 0){
                             new_x = x;
                             new_y = y;
                             new_z = z;
@@ -935,7 +938,7 @@ public class Area extends StaticObject{
         }
         return ret_array;
     }
-    /*
+    /*TODO Template room
     public void random_area(int num_rooms, Template_Room tr){
         //num+rooms = 10, tr= null
         int i;
@@ -953,22 +956,22 @@ public class Area extends StaticObject{
     }
     */
     
-    /*
+    
     public void filler_area(int floor_to_build){
         //floor_to_build = -2
         if(floor_to_build < -1)floor_to_build = baseFloorZ;
-        //var filler_template_t:Template_Room;
+        Template_Room filler_template_t = null;
         int filler_type_t = -1;
-
-        for(int x=0;x<fillerTemplate.length;x++){
-            if(fillerFloorRange[x] == null){
-                filler_template_t = fillerTemplate[x];
-                filler_type_t = fillerType[x];
+        int x;
+        for(x=0;x<fillerTemplate.size();x++){
+            if(fillerFloorRange.get(x) == null){
+                filler_template_t = fillerTemplate.get(x);
+                filler_type_t = fillerType.get(x);
             }else{
-                if(fillerFloorRange[x][0] < 0 || Math.abs(baseFloorZ - floor_to_build) >= fillerFloorRange[x][0]){
-                    if(fillerFloorFange[x][1] < 0 || Math.abs(baseFloorZ - floor_to_build) <= fillerFloorRange[x][1]){
-                        filler_template_t = fillerTemplate[x];
-                        filler_type_t = fillerType[x];
+                if(fillerFloorRange.get(x).get(0) < 0 || Math.abs(baseFloorZ - floor_to_build) >= fillerFloorRange.get(x).get(0)){
+                    if(fillerFloorRange.get(x).get(1) < 0 || Math.abs(baseFloorZ - floor_to_build) <= fillerFloorRange.get(x).get(1)){
+                        filler_template_t = fillerTemplate.get(x);
+                        filler_type_t = fillerType.get(x);
                     }
                 }
             }
@@ -979,26 +982,26 @@ public class Area extends StaticObject{
         if(filler_template_t != null){		
             
             Boolean dynamic_build = false;
-            //var dynamic_build_template_t:Template_Room = dynamic_build_template[0];
-            for(x=0;x<dynamic_build_template.length;x++){
-                if(dynamic_build_floor_range[x] == null){
-                    dynamic_build_template_t = dynamic_build_template[x];
+            Template_Room dynamicBuildTemplate_t = dynamicBuildTemplate.get(0);
+            for(x=0;x<dynamicBuildTemplate.size();x++){
+                if(dynamicBuildFloorRange.get(x) == null){
+                    dynamicBuildTemplate_t = dynamicBuildTemplate.get(x);
                 }else{
-                    if(dynamic_build_floor_range[x][0] < 0 || Math.abs(baseFloorZ - floor_to_build) >= dynamic_build_floor_range[x][0]){
-                        if(dynamic_build_floor_range[x][1] < 0 || Math.abs(baseFloorZ - floor_to_build) <= dynamic_build_floor_range[x][1]){
-                            dynamic_build_template_t = dynamic_build_template[x];
+                    if(dynamicBuildFloorRange.get(x).get(0) < 0 || Math.abs(baseFloorZ - floor_to_build) >= dynamicBuildFloorRange.get(x).get(0)){
+                        if(dynamicBuildFloorRange.get(x).get(1) < 0 || Math.abs(baseFloorZ - floor_to_build) <= dynamicBuildFloorRange.get(x).get(1)){
+                            dynamicBuildTemplate_t = dynamicBuildTemplate.get(x);
                         }
                     }
                 }
             }			
-            if(dynamic_build_template_t != null)dynamic_build = true;
+            if(dynamicBuildTemplate_t != null)dynamic_build = true;
             
             int max_y = 0;
             x = 0;
             int y = 0;
             int z = floor_to_build;
             for(x=0;x<rooms.size();x++){
-                if(rooms.get(x).size() >= max_y) max_y = rooms.get(x].length;
+                if(rooms.get(x).size() >= max_y) max_y = rooms.get(x).size();
             }
             if(z < 0){
                 z = 0;
@@ -1008,7 +1011,7 @@ public class Area extends StaticObject{
                 for(x=0;x<rooms.size();x++){
                     y = max_y - 1;
                     for(y=max_y - 1;y>=0;y--){
-                        rooms.get(x][y].unshift(null);
+                        rooms.get(x).get(y).add(0,null); //rooms.get(x].get(y).unshift(null);
                     }
                 }
             }
@@ -1017,62 +1020,66 @@ public class Area extends StaticObject{
             for(x=0;x<rooms.size();x++){
                 y = max_y - 1;					
                 for(y=max_y - 1;y>=0;y--){
-                    if(rooms.get(x).get(y) == null)	rooms.get(x).get(y) = null;//new Array()
+                    if(rooms.get(x).get(y) == null)	rooms.get(x).set(y,new ArrayList<Room>());//new Array()
                     
                     if(rooms.get(x).get(y).get(z) == null){
                         Room new_room;
                         int temp_x;
                         int temp_y;
                         int temp_z;
-                        if(dynamic_build && Math.random()*2 <= Math.pow((x*max_y + max_y - y)/(max_y*rooms.length-1),2)){//shouldn't always be the first room i place...
-                            new_room = dynamic_build_template_t.make_room(Math.abs(baseFloorZ - floor_to_build));
-                            new_room.template = filler_template_t;
-                            Room next_floor_room = dynamic_build_template_t.make_room((Math.abs(baseFloorZ - floor_to_build)));
+                        if(dynamic_build && Math.random()*2 <= Math.pow((x*max_y + max_y - y)/(max_y*rooms.size()-1),2)){//shouldn't always be the first room i place...
+                            new_room = dynamicBuildTemplate_t.make_room(Math.abs(baseFloorZ - floor_to_build));
+                            //new_room.template = filler_template_t;
+                            Room next_floor_room = dynamicBuildTemplate_t.make_room((Math.abs(baseFloorZ - floor_to_build)));
                             next_floor_room.area = this;
                             next_floor_room.set_id(room_list.size());
-                            room_list[room_list.size()] = next_floor_room;
+                            room_list.add(next_floor_room);//room_list[room_list.size()] = next_floor_room;
                             
                             CharAction a = new CharAction();
-                            a.set_name("");
+                            a.setName("");
                             a.set_dialogue("",0);
                             
                             Challenge c = new Challenge();
                             c.set_attack_stat(-1,1);
                             c.set_defense_stat(-1,0);
-                            c.set_variability(0);
-                            c.set_text("");
-                            Room_Consequence rcon = new Room_Consequence();//Room_Consequence
-                            rcon.add_consequence(FPalace_helper.curr_hp_id,0, "",0);
-                            rcon.add_room_effect(next_floor_room);
-                            if(dynamic_build_up){
-                                new_room.new_exit(next_floor_room,"Up");
-                                next_floor_room.new_exit(new_room,"Down");
+                            c.setVariability(0);
+                            c.setText("");
+                            RoomConsequence rcon = new RoomConsequence();//RoomConsequence
+                            rcon.addConsequence(FPalaceHelper.curr_hp_id,0, "",0);
+                            //rcon.add_room_effect(next_floor_room);
+                            //TODO
+                            if(dynamicBuildUp){
+                                //new_room.new_exit(next_floor_room,"Up");
+                                //next_floor_room.new_exit(new_room,"Down");
+                                //TODO
                                 rcon.generate_new_floor(z+1);
-                                rooms.get(x][y][z+1] = next_floor_room;
+                                rooms.get(x).get(y).add(z+1,next_floor_room); //rooms.get(x].get(y)[z+1] = next_floor_room
                             }else{
-                                new_room.new_exit(next_floor_room,"Down");
-                                next_floor_room.new_exit(new_room,"Up");
+                                //new_room.new_exit(next_floor_room,"Down");
+                                //next_floor_room.new_exit(new_room,"Up");
+                                //TODO
                                 if(z-1 < 0){
                                     z++;
                                     floor_to_build++;
                                     baseFloorZ++;
                                     temp_x = 0;
                                     for(temp_x=0;temp_x<rooms.size();temp_x++){
-                                        if(rooms[temp_x] != null){
+                                        if(rooms.get(temp_x) != null){
                                             temp_y = max_y -1;
                                             for(temp_y=max_y -1;temp_y>=0;temp_y--){
-                                                if(rooms[temp_x][temp_y] != null)rooms[temp_x][temp_y].unshift(null);
+                                                if(rooms.get(temp_x).get(temp_y) != null)rooms.get(temp_x).get(temp_y).add(0,null); //rooms.get(temp_x).get(temp_y).unshift(null);
                                             }
                                         }
                                     }
                                 }		
                                 rcon.generate_new_floor(z-1);
-                                rooms.get(x][y][z-1] = next_floor_room;
+                                rooms.get(x).get(y).set(z-1,next_floor_room); //rooms.get(x].get(y)[z-1] = next_floor_room;
                             }
                             
-                            a.add_challenge(c,rcon);
+                            a.addChallenge(c,rcon);
                 
-                            new_room.add_exit_action(next_floor_room, a);
+                            //new_room.add_exit_action(next_floor_room, a);
+                            //TODO
                             
                             dynamic_build = false;
                         }else{
@@ -1081,9 +1088,9 @@ public class Area extends StaticObject{
                         
                         new_room.area = this;
                         new_room.set_id(room_list.size());
-                        room_list[room_list.size()] = new_room;
-                        rooms.get(x).get(y).get(z) = new_room;
-                        //if(z < -rooms.get(x][y].length) rooms.get(x][y][-z] = null;
+                        room_list.add(new_room); //room_list[room_list.size()] = new_room;
+                        rooms.get(x).get(y).set(z, new_room); //rooms.get(x).get(y).get(z) = new_room;
+                        //if(z < -rooms.get(x].get(y).length) rooms.get(x].get(y)[-z] = null;
                         
                         temp_x = x-1;
                         temp_z = z;
@@ -1094,17 +1101,18 @@ public class Area extends StaticObject{
                         
                         //filler room does single connect to other rooms
                         if(filler_type_t == single_connected_filler){
-                            //var connect_room_array:Array = null;//new Array()
+                            ArrayList<Room> connect_room_array = new ArrayList<>();//var connect_room_array:Array = null;//new Array()
                             Boolean found = false;
                             for(temp_x=x-1;temp_x<=x+1;temp_x++){
                                 temp_y = y - 1;
-                                if(rooms[temp_x] != null){
+                                if(rooms.get(temp_x) != null){
                                     for(temp_y=y-1;temp_y<=y+1;temp_y++){
-                                        if(rooms[temp_x][temp_y] != null && rooms[temp_x][temp_y][temp_z] != null && rooms[temp_x][temp_y][temp_z] != new_room){
-                                            if(temp_x != x && temp_y != y && rooms[temp_x][y] != null && rooms[temp_x][y][z] != null && rooms.get(x][temp_y] != null && rooms.get(x][temp_y][temp_z] != null && rooms[temp_x][y][z].get_exit_id(rooms.get(x][temp_y][temp_z]) >= 0){
+                                        if(rooms.get(temp_x).get(temp_y) != null && rooms.get(temp_x).get(temp_y).get(temp_z) != null && rooms.get(temp_x).get(temp_y).get(temp_z) != new_room){
+                                            /*TODO
+                                            if(temp_x != x && temp_y != y && rooms.get(temp_x).get(y) != null && rooms.get(temp_x).get(y).get(z) != null && rooms.get(x).get(temp_y) != null && rooms.get(x).get(temp_y).get(temp_z) != null && rooms.get(temp_x).get(y).get(z).get_exit_id(rooms.get(x).get(temp_y).get(temp_z)) >= 0){
                                                 //no overpass exits!
                                             }else{
-                                                temp_room = rooms[temp_x][temp_y][temp_z];
+                                                temp_room = rooms.get(temp_x).get(temp_y).get(temp_z);
                                                 filler_connect = true;
                                                 if(temp_room.template != null){
                                                     filler_connect = temp_room.template.get_filler_connect();
@@ -1113,6 +1121,7 @@ public class Area extends StaticObject{
                                                     connect_room_array[connect_room_array.length] = temp_room;
                                                 }
                                             }
+                                            */
                                         }
                                     }
                                 }
@@ -1120,21 +1129,23 @@ public class Area extends StaticObject{
                             int rand_room = -1;
                             if(double_up){
                                 temp_x = 0;
-                                for(temp_x=0;temp_x<connect_room_array.length;temp_x++){
-                                    if(connect_room_array[temp_x].template != new_room.template){
+                                for(temp_x=0;temp_x<connect_room_array.size();temp_x++){
+                                    /*TODO
+                                    if(connect_room_array.get(temp_x).template != new_room.template){
                                         rand_room = temp_x;
                                         break;
                                     }
+                                    */
                                 }
                             }
-                            if(rand_room<0)rand_room = Math.round(Math.random()*(connect_room_array.length-1));
+                            if(rand_room<0)rand_room = (int)Math.round(Math.random()*(connect_room_array.size()-1));
                             
-                            while(connect_room_array.length > 0 && !found){
-                                Room connect_room = connect_room_array[rand_room];
-                                //var temp:Array = find_room(connect_room);
-                                to_path = get_direction(temp[0], temp[1], temp[2], x, y, z);
-                                from_path = get_direction(x, y, z, temp[0], temp[1], temp[2]);
-                                
+                            while(connect_room_array.size() > 0 && !found){
+                                Room connect_room = connect_room_array.get(rand_room);
+                                ArrayList<Integer> temp = find_room(connect_room);
+                                to_path = get_direction(temp.get(0), temp.get(1), temp.get(2), x, y, z);
+                                from_path = get_direction(x, y, z, temp.get(0), temp.get(1), temp.get(2));
+                                /*TODO
                                 if(connect_room.new_exit(new_room, to_path) != -1){
                                     new_room.new_exit(connect_room, from_path);
                                     if(double_up && new_room.template != connect_room.template){
@@ -1143,14 +1154,17 @@ public class Area extends StaticObject{
                                         found = true;
                                     }
                                 }else{
-                                    connect_room_array = connect_room_array.slice(0,rand_room).concat(connect_room_array.slice(rand_room+1,connect_room_array.length));
+                                    connect_room_array.remove(rand_room); //connect_room_array = connect_room_array.slice(0,rand_room).concat(connect_room_array.slice(rand_room+1,connect_room_array.length));
                                 }
-                                rand_room = Math.round(Math.random()*(connect_room_array.length-1));
-                                if(new_room.exits.length > 0 && !found){ 
-                                    while(connect_room_array.length > 0 && connect_room_array[rand_room].template != new_room.template){
+                                */
+                                rand_room = (int)Math.round(Math.random()*(connect_room_array.size()-1));
+                                if(new_room.exits.size() > 0 && !found){ 
+                                    /*TODO
+                                    while(connect_room_array.size() > 0 && connect_room_array[.get(rand_room).template != new_room.template){
                                         connect_room_array = connect_room_array.slice(0,rand_room).concat(connect_room_array.slice(rand_room+1,connect_room_array.length));
                                         rand_room = Math.round(Math.random()*(connect_room_array.length-1));
                                     }
+                                    */
                                 }							
                             }
                             
@@ -1163,34 +1177,39 @@ public class Area extends StaticObject{
                             Boolean all_populated = true;
                             for(temp_x=x-1;temp_x<=x+1;temp_x++){
                                 temp_y = y - 1;
-                                if(rooms[temp_x] != null){
+                                if(rooms.get(temp_x) != null){
                                     for(temp_y=y-1;temp_y<=y+1;temp_y++){
-                                        if(rooms[temp_x][temp_y] != null){
-                                            if(rooms[temp_x][temp_y][temp_z] != null){
-                                                temp_room = rooms[temp_x][temp_y][temp_z];
+                                        if(rooms.get(temp_x).get(temp_y) != null){
+                                            if(rooms.get(temp_x).get(temp_y).get(temp_z) != null){
+                                                temp_room = rooms.get(temp_x).get(temp_y).get(temp_z);
                                                 filler_connect = true;
+                                                /*TODO
                                                 if(temp_room.template != null){
                                                     filler_connect = temp_room.template.get_filler_connect();
                                                 }
+                                                */
                                                 if(temp_room != new_room && filler_connect){
                                                     to_path = get_direction(temp_x, temp_y, temp_z, x, y, z);
                                                     from_path = get_direction(x, y, z, temp_x, temp_y, temp_z);
                                                     //these exits are coming out wrong when we have multiple z levels on the edge of a map
                                                     if(filler_template_t.hidden_exit_action != null){
+                                                        /*
                                                         if(temp_room.description == filler_template_t.description || (temp_room.template != null && temp_room.template.description == filler_template_t.description)){
                                                             //check if we're making an overpass exit over a nonfiller path...
-                                                            if(temp_x != x && temp_y != y && rooms[temp_x][y] != null && rooms[temp_x][y][z] != null && rooms.get(x][temp_y] != null && rooms.get(x][temp_y][temp_z] != null && rooms[temp_x][y][z].description != filler_template_t.description && rooms.get(x][temp_y][temp_z].description != filler_template_t.description && rooms[temp_x][y][z].get_exit_id(rooms.get(x][temp_y][temp_z]) >= 0){
+                                                            if(temp_x != x && temp_y != y && rooms.get(temp_x).get(y) != null && rooms.get(temp_x).get(y).get(z) != null && rooms.get(x].get(temp_y) != null && rooms.get(x].get(temp_y).get(temp_z) != null && rooms.get(temp_x).get(y).get(z).description != filler_template_t.description && rooms.get(x].get(temp_y).get(temp_z).description != filler_template_t.description && rooms.get(temp_x).get(y).get(z).get_exit_id(rooms.get(x].get(temp_y).get(temp_z)) >= 0){
                                                                 
                                                             }else{
+                                                                /*TODO
                                                                 if(temp_room.new_exit(new_room, to_path) != -1){
                                                                     new_room.new_exit(temp_room, from_path);
                                                                     if(temp_x < 0)LOGGER.info("(Area)Failed to create a filler room at " + x + "," + y + "," + z + ":" + temp_x + "," + temp_y + "," + temp_z);
                                                                 }
+                                                                
                                                             }
                                                         }else{
                                                             //check to see if the exit is already populated
                                                             Boolean good_exit = false;
-                                                            //var avail_exits:Array = new_room.template.get_avail_exits(temp_room);
+                                                            ArrayList<Object> avail_exits = new_room.template.get_avail_exits(temp_room);
                                                             int temp_str_count = 0;
                                                             for(temp_str_count=0;temp_str_count<avail_exits.length;temp_str_count++){
                                                                 if(to_path == avail_exits[temp_str_count]){
@@ -1200,7 +1219,12 @@ public class Area extends StaticObject{
                                                             }
                                                             
                                                             if (good_exit){
-                                                                if(temp_x != x && temp_y != y && rooms[temp_x][y] != null && rooms[temp_x][y][z] != null && rooms.get(x][temp_y] != null && rooms.get(x][temp_y][temp_z] != null && rooms[temp_x][y][z].description != filler_template_t.description && rooms.get(x][temp_y][temp_z].description != filler_template_t.description && rooms[temp_x][y][z].get_exit_id(rooms.get(x][temp_y][temp_z]) >= 0){
+                                                                
+                                                                if(temp_x != x && temp_y != y && rooms.get(temp_x).get(y) != null &&
+                                                                 rooms.get(temp_x).get(y).get(z) != null && rooms.get(x).get(temp_y) != null && 
+                                                                 rooms.get(x).get(temp_y).get(temp_z) != null && rooms.get(temp_x).get(y).get(z).description != filler_template_t.description 
+                                                                 && rooms.get(x).get(temp_y).get(temp_z).description != filler_template_t.description &&
+                                                                  rooms.get(temp_x).get(y).get(z).get_exit_id(rooms.get(x).get(temp_y).get(temp_z)) >= 0){
                                                                 
                                                                 }else{
                                                                     if(temp_room.template != null && (temp_room.template.exit_actions[0] != null || temp_room.template.hidden_exit_action != null)){
@@ -1218,19 +1242,23 @@ public class Area extends StaticObject{
                                                                         }
                                                                     }
                                                                 }
-                                                            }																
-                                                        }															
+                                                            }		
+                                                            														
+                                                        }
+                                                        */															
                                                     }else{
+                                                        /*
                                                         if(temp_room.new_exit(new_room, to_path) != -1){
                                                             new_room.new_exit(temp_room, from_path);
                                                             
                                                         }
+                                                        */
                                                     }														
                                                 }													
                                             }												
                                         }											
                                     }										
-                                }else if(temp_y < max_y && temp_x<rooms.size() && temp_y >= 0 && temp_x >= 0 && rooms[temp_x][temp_y] == null){
+                                }else if(temp_y < max_y && temp_x<rooms.size() && temp_y >= 0 && temp_x >= 0 && rooms.get(temp_x).get(temp_y) == null){
                                     all_populated = false;
                                 }									
                             }								
@@ -1239,12 +1267,12 @@ public class Area extends StaticObject{
                     if(rooms.get(x).get(y).get(z) == null)LOGGER.info("(Area.filler_area)Ok, I've messed up trying to place a room at " + x + "," + y + "," + z);
                 }					
             }				
-            check_connections(floor_to_build);
+            //check_connections(floor_to_build);
         }else{
             LOGGER.info("(Area.filler_area)Huh... just tried to make a filler area for " + this.get_description() + " but couldn't find a template.");
         }
     }
-    */
+    
     public static CharAction generate_filler_exit_action(Room r,Room move_room,String path,CharAction exit_action,Challenge exit_challenge,Consequence exit_consequence){//was Action
         //exit_action was Action
         CharAction act= new CharAction();
@@ -1256,8 +1284,8 @@ public class Area extends StaticObject{
             for(count=0;count<r.actions.size();count++){//was .length
                 if(act.name.indexOf(pathPlaceHldr) > -1){
                     /*may not want to do this if the exits are meant to be unique....
-                    if(rooms[temp_x][temp_y].actions[count].name.indexOf(act.name.slice(0,act.name.indexOf(pathPlaceHldr))) > -1){
-                        act = rooms[temp_x][temp_y].actions[count];
+                    if(rooms.get(temp_x).get(temp_y).actions[count].name.indexOf(act.name.slice(0,act.name.indexOf(pathPlaceHldr))) > -1){
+                        act = rooms.get(temp_x).get(temp_y).actions[count];
                         break;
                     }*/
                 }else if(r.actions.get(count).name.equals(act.name)){
@@ -1274,8 +1302,8 @@ public class Area extends StaticObject{
         
         //Consequence conseq= (Consequence)exit_consequence.clone();
         /*
-        if(conseq instanceof Room_Consequence){//was is
-            //(conseq as Room_Consequence).add_room_effect(move_room);//as
+        if(conseq instanceof RoomConsequence){//was is
+            //(conseq as RoomConsequence).add_room_effect(move_room);//as
             conseq.add_room_effect(move_room);
         }
         */
@@ -1496,10 +1524,10 @@ public class Area extends StaticObject{
                                     int temp_z = 0;
                                     for(temp_y=y - r.template.get_propagating_description_distance();temp_y <= y + r.template.get_propagating_description_distance();temp_y++){
                                         if(temp_x == x && temp_y == y) continue;
-                                        if(rooms[temp_x] != null){
-                                            if(rooms[temp_x][temp_y] != null){
-                                                if(rooms[temp_x][temp_y][temp_z] != null){
-                                                    Room prop_room= rooms[temp_x][temp_y][temp_z];
+                                        if(rooms.get(temp_x) != null){
+                                            if(rooms.get(temp_x).get(temp_y) != null){
+                                                if(rooms.get(temp_x).get(temp_y).get(temp_z) != null){
+                                                    Room prop_room= rooms.get(temp_x).get(temp_y).get(temp_z);
                                                     String to_path = get_direction(temp_x, temp_y, temp_z, x, y, z);
                                                     
                                                     if(r.template.get_propagating_to_template()){
@@ -1531,7 +1559,7 @@ public class Area extends StaticObject{
                                                                         prop_room.set_description(multi_desc + r.template.get_propagating_description().replace(pathPlaceHldr, temp_string) + prop_room.description.slice(prop_room.description.indexOf(template_end,multi_desc.length)+template_end.length,prop_room.description.length));
                                                                     }
                                                                 }else{
-                                                                    prop_room.set_description(rooms[temp_x][temp_y][temp_z].description + "\n" + r.template.get_propagating_description().replace(pathPlaceHldr, to_path));
+                                                                    prop_room.set_description(rooms.get(temp_x).get(temp_y).get(temp_z).description + "\n" + r.template.get_propagating_description().replace(pathPlaceHldr, to_path));
                                                                 }
                                                                 
                                                             }
@@ -1562,7 +1590,7 @@ public class Area extends StaticObject{
                                                                     prop_room.set_description(multi_desc + r.template.get_propagating_description().replace(pathPlaceHldr, temp_string) + prop_room.description.slice(prop_room.description.indexOf(template_end,multi_desc.length)+template_end.length,prop_room.description.length));
                                                                 }
                                                             }else{
-                                                                prop_room.set_description(rooms[temp_x][temp_y][temp_z].description + "\n" + r.template.get_propagating_description().replace(pathPlaceHldr, to_path));
+                                                                prop_room.set_description(rooms.get(temp_x).get(temp_y).get(temp_z).description + "\n" + r.template.get_propagating_description().replace(pathPlaceHldr, to_path));
                                                             }
                                                         }
                                                         
@@ -1857,39 +1885,39 @@ public class Area extends StaticObject{
                 }else{
                     if(rooms.get(x) != null){
                         if(rooms.get(x).get(y) != null){
-                            //map_pieces[x][y] = null;//new Array()
+                            //map_pieces[x].get(y) = null;//new Array()
                             if(rooms.get(x).get(y).get(z) != null){
                                 //if(char_y != -1){
                                     /*
-                                    if((char_x - sight < x && x < char_x + sight && char_y - sight < y && y < char_y + sight) || (rooms.get(x][y][z].found() && !mini_map )){
+                                    if((char_x - sight < x && x < char_x + sight && char_y - sight < y && y < char_y + sight) || (rooms.get(x].get(y).get(z).found() && !mini_map )){
                                         if(gen_flag == 1 &&  show_location != 0){
-                                            //map_pieces[x][y][z] = create_map_piece(rooms.get(x][y][z],c,mini_map,z);
+                                            //map_pieces[x].get(y).get(z) = create_map_piece(rooms.get(x].get(y).get(z),c,mini_map,z);
                                         }else if(gen_flag == 1){
                                             if(show_location == 0){
-                                                //map_pieces[x][y][z] = create_map_piece(rooms.get(x][y][z],null,true,z);
+                                                //map_pieces[x].get(y).get(z) = create_map_piece(rooms.get(x].get(y).get(z),null,true,z);
                                             }else{
-                                                //map_pieces[x][y][z] = create_map_piece(rooms.get(x][y][z],null,false,z);
+                                                //map_pieces[x].get(y).get(z) = create_map_piece(rooms.get(x].get(y).get(z),null,false,z);
                                             }
                                         }else{
-                                            //map_pieces[x][y][z] = create_map_piece();
+                                            //map_pieces[x].get(y).get(z) = create_map_piece();
                                         }
                                     
                                     
                                     
                                     }else{
-                                        //map_pieces[x][y][z] = create_map_piece();											
+                                        //map_pieces[x].get(y).get(z) = create_map_piece();											
                                     }
                                     */
                                 /*}else{
-                                    map_pieces[x][y][z] = create_map_piece();
+                                    map_pieces[x].get(y).get(z) = create_map_piece();
                                 }*/
                             }else{
-                                //map_pieces[x][y][z] = create_map_piece();
+                                //map_pieces[x].get(y).get(z) = create_map_piece();
                             }
                         }
                     }
-                    //if(map_pieces[x][y] != null && map_pieces[x][y][z] != null){
-                        //map_piece_array = map_pieces[x][y][z].split("\n");
+                    //if(map_pieces[x].get(y) != null && map_pieces[x].get(y).get(z) != null){
+                        //map_piece_array = map_pieces[x].get(y).get(z).split("\n");
                     //}else{
                         //map_piece_array = create_map_piece().split("\n");
                     //}
@@ -1992,11 +2020,11 @@ public class Area extends StaticObject{
                 for(y=0;y<=max_y;y++){
                     if(rooms.get(x + temp).get(y) != null){
                         /*
-                        if(rooms.get(x + temp][y][z] != null && (!rooms.get(x + temp][y][z].attached_to_other_area() || skip_area_check)){
-                            if(rooms.get(x + temp][y][z].template != null){
-                                if(!rooms.get(x + temp][y][z].template.get_no_area_exit())list[list.length] = rooms.get(x + temp][y][z];
+                        if(rooms.get(x + temp].get(y).get(z) != null && (!rooms.get(x + temp].get(y).get(z).attached_to_other_area() || skip_area_check)){
+                            if(rooms.get(x + temp].get(y).get(z).template != null){
+                                if(!rooms.get(x + temp].get(y).get(z).template.get_no_area_exit())list[list.length] = rooms.get(x + temp].get(y).get(z);
                             }else{
-                                list[list.length] = rooms.get(x + temp][y][z];
+                                list[list.length] = rooms.get(x + temp].get(y).get(z);
                             }
                         }	
                         */						
@@ -2005,22 +2033,22 @@ public class Area extends StaticObject{
             }else{
                 if(rooms.get(x).get(0 + indent) != null){
                     /*
-                    if(rooms.get(x][0 + indent][z] != null  && (!rooms.get(x][0 + indent][z].attached_to_other_area() || skip_area_check)){
-                        if(rooms.get(x][0 + indent][z].template != null){
-                            if(!rooms.get(x][0 + indent][z].template.get_no_area_exit())list[list.length] = rooms.get(x][0 + indent][z];
+                    if(rooms.get(x][0 + indent].get(z) != null  && (!rooms.get(x][0 + indent].get(z).attached_to_other_area() || skip_area_check)){
+                        if(rooms.get(x][0 + indent].get(z).template != null){
+                            if(!rooms.get(x][0 + indent].get(z).template.get_no_area_exit())list[list.length] = rooms.get(x][0 + indent].get(z);
                         }else{
-                            list[list.length] = rooms.get(x][0 + indent][z];
+                            list[list.length] = rooms.get(x][0 + indent].get(z);
                         }  
                     }
                     */
                 }
                 if(rooms.get(x).get(max_y - indent) != null){
                     /*
-                    if(rooms.get(x][max_y - indent][z] != null && (!rooms.get(x][max_y - indent][z].attached_to_other_area() || skip_area_check)){
-                        if(rooms.get(x][max_y - indent][z].template != null){
-                            if(!rooms.get(x][max_y - indent][z].template.get_no_area_exit())list[list.length] = rooms.get(x][max_y - indent][z];
+                    if(rooms.get(x][max_y - indent].get(z) != null && (!rooms.get(x][max_y - indent].get(z).attached_to_other_area() || skip_area_check)){
+                        if(rooms.get(x][max_y - indent].get(z).template != null){
+                            if(!rooms.get(x][max_y - indent].get(z).template.get_no_area_exit())list[list.length] = rooms.get(x][max_y - indent].get(z);
                         }else{
-                            list[list.length] = rooms.get(x][max_y - indent][z];
+                            list[list.length] = rooms.get(x][max_y - indent].get(z);
                         }
                     }
                     */
@@ -2068,9 +2096,9 @@ public class Area extends StaticObject{
         filler_floor_range[filler_floor_range.length] = min_max_floor;
     }
     
-    public void set_dynamic_build_template(tr:Template_Room, min_max_floor:Array = null){
-        dynamic_build_template[dynamic_build_template.length] = tr;			
-        dynamic_build_floor_range[dynamic_build_floor_range.length] = min_max_floor;
+    public void set_dynamicBuildTemplate(tr:Template_Room, min_max_floor:Array = null){
+        dynamicBuildTemplate[dynamicBuildTemplate.length] = tr;			
+        dynamicBuildFloorRange[dynamicBuildFloorRange.length] = min_max_floor;
     }
     */
     public void set_dynamic_build_direction(){
@@ -2149,7 +2177,7 @@ public class Area extends StaticObject{
                                 //doesn't drop gold, but that makes sense... whoever took the body took the gold
                                 int z = 0;
                                 //for(z=0;z<temp_cont.contents.length;z++){
-                                    //room_list[i].new_content(temp_cont.contents[z]);
+                                    //room_list[i].new_content(temp_cont.contents.get(z));
                                 //}
                                 
                                 room_list[i].remove_static_contents(q);

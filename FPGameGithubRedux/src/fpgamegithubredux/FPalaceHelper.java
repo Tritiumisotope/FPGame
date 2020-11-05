@@ -33,7 +33,7 @@ public class FPalaceHelper{
 		public static final int unknown_img = 0;
 		
 		public static final int test_img = 99;
-		//public static final int.* = 2;
+		//public static final int.* = 2
 		
 		//Background images
 		public static final int background_test_img = 1;
@@ -504,7 +504,7 @@ public class FPalaceHelper{
 
 			private static Stat[] stat_names;
 			private static DamageType[] damage_types;
-			private static int[] images;
+			//private static int[] images
 
 			protected static ArrayList<JLabel> humanBodyImgs = new ArrayList<>();
 			protected static ArrayList<JLabel> otherImgs = new ArrayList<>();
@@ -632,9 +632,9 @@ public class FPalaceHelper{
 				amazon_mob.new_ally(get_empress_mob());
 				//Dislikes: ?
 				
-				/*TODO
+
 				amazon_mob.new_topic(FPalace_topics.fresh_meat());
-				*/				
+								
 			}
 			return amazon_mob;
 		}
@@ -917,7 +917,7 @@ public class FPalaceHelper{
 				
 				p.new_connect_slot(head_slot);
 				p.set_display_direction(BodyPart.display_back);
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				p.new_stat(hair_length_id, stat_hair_length(), s1);
 				
@@ -952,7 +952,7 @@ public class FPalaceHelper{
 				
 				p.new_connect_slot(head_slot);
 				p.set_display_direction(BodyPart.display_front);
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				p.set_display_length_stat(FPalaceHelper.height_id);
 				p.set_display_length_mod(0.15);
@@ -1430,7 +1430,7 @@ public class FPalaceHelper{
 				
 				p.set_display_direction(BodyPart.display_front);
 				
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				p.new_stat(FPalaceHelper.max_hp_id, FPalaceHelper.stat_max_hp(),1);
 				p.new_stat(FPalaceHelper.curr_hp_id, FPalaceHelper.stat_curr_hp(), 1);
@@ -1765,7 +1765,7 @@ public class FPalaceHelper{
 								
 				p.set_display_direction(BodyPart.display_back);
 				
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				p.new_stat(FPalaceHelper.max_hp_id, FPalaceHelper.stat_max_hp(),5);
 				p.new_stat(FPalaceHelper.curr_hp_id, FPalaceHelper.stat_curr_hp(), 5);
@@ -1809,7 +1809,7 @@ public class FPalaceHelper{
 				
 				//p.set_display_direction(BodyPart.display_up_back);
 				
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				Stat s = new Stat(waist_id);
 				s.set_min(-2);
@@ -1858,7 +1858,7 @@ public class FPalaceHelper{
 				
 				p.set_display_direction(BodyPart.display_bottom_back);
 				
-				//p.set_display_length_stat(FPalaceHelper.height_id);
+				p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				Stat s = new Stat(bust_id);
 				s.set_min(-2);
@@ -2212,10 +2212,10 @@ public class FPalaceHelper{
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> jumps upon </n> and pins </objnoun>. </n> moans out in pleasure as </n2> explores </noun> body. ",0,0,0,1);
 				//and now begins the madness... first choice: top half or bottom half
 				Challenge challenge1 = new Challenge();
-				challenge1.set_attack_stat(-1,1);//challenge1.set_attack_stat(-1,0);
+				challenge1.set_attack_stat(-1,1);//challenge1.set_attack_stat(-1,0)
 				challenge1.set_defense_stat(-1,0);
-				challenge1.setVariability(00);//challenge1.setVariability(20);
-				challenge1.setText("");
+				challenge1.setVariability(00);//challenge1.setVariability(20)
+				challenge1.setText("");//TODO why zero up there?!
 				Consequence consequence1 = new Consequence();
 				
 					//top half! facial... if breasts are present, try to pull off the top
@@ -2585,10 +2585,10 @@ public class FPalaceHelper{
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> jumps upon </n> and pins </objnoun>. </n> moans out in pleasure as </n2> explores </noun> body. ",0,0,0,1);
 				//and now begins the madness... first choice: top half or bottom half
 				Challenge challenge1 = new Challenge();
-				challenge1.set_attack_stat(-1,1);//challenge1.set_attack_stat(-1,0);
+				challenge1.set_attack_stat(-1,1);//challenge1.set_attack_stat(-1,0)
 				challenge1.set_defense_stat(-1,0);
-				challenge1.setVariability(0);//challenge1.setVariability(20);
-				challenge1.setText("");
+				challenge1.setVariability(0);//challenge1.setVariability(20)
+				challenge1.setText("");//TODO why zero again!?
 				Consequence consequence1 = new Consequence();				
 					//top half! facial... if breasts are present, try to pull off the top
 					consequence1.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
@@ -3213,7 +3213,7 @@ public class FPalaceHelper{
 		public static Sex sex_male(){
 			if(male_sex == null){
 				Sex sex = new Sex();
-				//sex.set_default_orient({FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()},[]);
+				sex.set_default_orient(new Trait[]{FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()}, new Trait[]{});
 				sex.add_damage_weakness(FPalaceHelper.lust_damage_type().get_id());
 				sex.set_name("male");
 				sex.new_age_name(0,"boy");
@@ -3234,13 +3234,13 @@ public class FPalaceHelper{
 				sex.set_objnoun("him");
 				
 				//most stats max out by 18. str, dex, con, sex_appeal starting to fade around 45
-				sex.new_age_stat(FPalaceHelper.str_id, 		/*All had closing/opening brackets*/new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5]);
-				sex.new_age_stat(FPalaceHelper.dex_id, 		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5]);
-				sex.new_age_stat(FPalaceHelper.con_id,			new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5]);
+				sex.new_age_stat(FPalaceHelper.str_id, 		/*All had closing/opening brackets*/new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5])
+				sex.new_age_stat(FPalaceHelper.dex_id, 		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5])
+				sex.new_age_stat(FPalaceHelper.con_id,			new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5])
 				sex.new_age_stat(FPalaceHelper.wis_id, 		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0});
 				sex.new_age_stat(FPalaceHelper.int_id, 		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0});
 				sex.new_age_stat(FPalaceHelper.cha_id, 		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0});
-				sex.new_age_stat(FPalaceHelper.sex_appeal_id, 	new double[]{0,-0.1,-0.1,-0.15,-0.05,-0.02,-0.01,-0.01,-0.02,-0.02,-0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5]);
+				sex.new_age_stat(FPalaceHelper.sex_appeal_id, 	new double[]{0,-0.1,-0.1,-0.15,-0.05,-0.02,-0.01,-0.01,-0.02,-0.02,-0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});//,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.05,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.5,-0.5,-0.5,-0.5,-0.5])
 				sex.new_age_stat(FPalaceHelper.max_hp_id,		new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});
 				sex.new_age_stat(FPalaceHelper.min_lust_id, 	new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0});
 				sex.new_age_stat(FPalaceHelper.max_lust_id, 	new double[]{0,0.1,0.1,0.15,0.05,0.02,0.01,0.01,0.02,0.02,0.02,0.05,0.05,0.1,0.1,0.05,0.02,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01});
@@ -3268,7 +3268,7 @@ public class FPalaceHelper{
 		public static Sex sex_female(){
 			if(female_sex == null){
 				Sex sex = new Sex();
-				//sex.set_default_orient({FPalaceHelper.trait_has_penis(), FPalaceHelper.trait_has_gold(), FPalaceHelper.trait_is_taller()},[]);
+				sex.set_default_orient(new Trait[]{FPalaceHelper.trait_has_penis(), FPalaceHelper.trait_has_gold(), FPalaceHelper.trait_is_taller()},new Trait[]{});
 				sex.add_damage_resistance(FPalaceHelper.lust_damage_type().get_id());
 				sex.set_name("female");
 				sex.new_age_name(0,"girl");
@@ -3320,7 +3320,7 @@ public class FPalaceHelper{
 		public static Sex sex_herm(){
 			if(herm_sex == null){
 				Sex sex = new Sex();
-				//sex.set_default_orient([FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()],[]);
+				sex.set_default_orient(new Trait[]{FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()},new Trait[]{});
 				sex.add_damage_weakness(FPalaceHelper.lust_damage_type().get_id());
 				sex.set_name("hermaphrodite");
 				sex.new_age_name(0,"youth");
@@ -3397,7 +3397,7 @@ public class FPalaceHelper{
 		public static Sex sex_futa(){
 			if(futa_sex == null){
 				Sex sex = new Sex();
-				//sex.set_default_orient([FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()],[]);
+				sex.set_default_orient(new Trait[]{FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()},new Trait[]{});
 				sex.set_name("futanari");
 				sex.new_age_name(0,"youth");
 				sex.new_age_name(13,"teenager");
@@ -3460,7 +3460,7 @@ public class FPalaceHelper{
 		public static Sex sex_shemale(){
 			if(shemale_sex == null){
 				Sex sex = new Sex();
-				//sex.set_default_orient([FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()],[]);
+				sex.set_default_orient(new Trait[]{FPalaceHelper.trait_has_penis(),FPalaceHelper.trait_has_vagina(),FPalaceHelper.trait_has_breasts(),FPalaceHelper.trait_high_fertility()},new Trait[]{});
 				sex.add_damage_weakness(FPalaceHelper.lust_damage_type().get_id());
 				sex.set_name("shemale");
 				sex.new_age_name(0,"youth");
@@ -3912,12 +3912,12 @@ public class FPalaceHelper{
 		
 		public static Stat stat_cum_volume(){
 			Stat s = new Stat(cum_volume_id);
-			//s.set_min(-2);
+			s.set_min(-2);
 				s.setName("cum volume");
 				s.new_description("");
 				s.new_increase_description("</n> somehow seems a more prodigious producer. ");
 				s.new_descrease_description("</n>s abdomen grumbles. ");
-				//s.set_stat_calculation(["s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id,"*", "s" + FPalaceHelper.balls_size_id]);
+				s.set_stat_calculation(new String[]{"s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id,"*", "s" + FPalaceHelper.balls_size_id});
 				
 				s.new_short_description("dram",0);
 				s.new_short_description("teaspoon",5);
@@ -3969,7 +3969,7 @@ public class FPalaceHelper{
 			Stat s = new Stat(balls_size_id);
 			s.set_min(-2);
 			
-			//s.set_stat_calculation(["s" + FPalaceHelper.max_mp_id, "/", 10.0]);
+			s.set_stat_calculation(new String[]{"s" + FPalaceHelper.max_mp_id, "/", Double.toString(10.0)});
 			s.setName("ball size");
 				s.new_description("They are a </sd"+balls_size_id+"> </"+balls_size_id+">-inches around. ");
 				s.new_increase_description("</n>s balls swell. ");
@@ -4004,7 +4004,7 @@ public class FPalaceHelper{
 		
 		public static Stat stat_breast_size(){
 			Stat s = new Stat(breast_size_id);
-				//s.set_stat_calculation(["s" + FPalaceHelper.max_mp_id, "/", 10.0]);
+				s.set_stat_calculation(new String[]{"s" + FPalaceHelper.max_mp_id, "/", Double.toString(10.0)});
 				s.setName("breast size");
 				s.set_min(-2);
 				//s.new_description("They stick out from </noun> chest </"+breast_size_id+"> inches ");
@@ -4272,7 +4272,7 @@ public class FPalaceHelper{
 			
 			
 			st.add_combat_status_check("<", -2, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> collapses from exhaustion. ", true);
-			//st.add_overworld_status_check("<", -2, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> is too fatigued to do that! ", true);
+			st.add_overworld_status_check("<", -2, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> is too fatigued to do that! ", true);
 			
 			return st;
 		}
@@ -4474,7 +4474,7 @@ public class FPalaceHelper{
 				"(", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "/", 248.0, ")", "+",
 				"(","(","(", "s" + FPalaceHelper.hips_id, "+","s" + FPalaceHelper.bust_id, "+", "s" + FPalaceHelper.waist_id, "/", 3.0, ")" , "*", "s" + FPalaceHelper.height_id, ")" , "/", 32.0,")",  "+",
 				"(", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "/", 8.0,")", "+",
-				"(", "s" + FPalaceHelper.biomass_consumed, "/", 1000.0, ")");*/
+				"(", "s" + FPalaceHelper.biomass_consumed, "/", 1000.0, ")")*/
 			st.set_stat_calculation(new String[]{"(", "s" + FPalaceHelper.penis_girth_id, "*", "s" + FPalaceHelper.penis_girth_id, "/", Double.toString(12.5), "*", "s" + FPalaceHelper.penis_length_id, "/", Double.toString(3.0), ")", "+", 
 				"(", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "/", Double.toString(25.0),")", "+",
 				"(", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "/", Double.toString(248.0), ")", "+",
@@ -4503,12 +4503,12 @@ public class FPalaceHelper{
 		public static Stat stat_milk_volume(){
 			//An actual breast feeding woman will produce a little over 10 times the default amount when being milked... the things you learn!
 			Stat s = new Stat(milk_volume_id);
-			//s.set_min(-2);
+			s.set_min(-2);
 			s.setName("Milk Production");
 			s.new_description("");
 			s.new_increase_description("</n> feels </noun> breasts swell with milk. ");
 			s.new_descrease_description("</n>s breasts feel empty. ");
-			//s.set_stat_calculation("s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id);
+			s.set_stat_calculation(new String[]{"s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id});
 			
 			s.new_short_description("dram",0);
 			s.new_short_description("teaspoon",5);
@@ -4852,18 +4852,18 @@ public class FPalaceHelper{
 			dt.set_type_name("Lightning");
 			return dt;
 		}
-		/*TODO weather, container
+		
 		public static Area_weather clear_skies_weather(){
 			Area_weather weather = new Area_weather();
 			
 			weather.set_minimum_length(FPGameGithub.T1_HOUR*6);
 			weather.new_daytime_status("It is night, the moon high in the sky.\n",0);
-			weather.new_daytime_status("It is the early morning, sun shinning from the east.\n",Math.round(FPGameGithub.T1_DAY*1/4));
-			weather.new_daytime_status("It is the morning, the sun shining brightly.\n",Math.round(FPGameGithub.T1_DAY*3/8));
-			weather.new_daytime_status("It is the afternoon, the sun high overhead.\n",Math.round(FPGameGithub.T1_DAY*1/2));
-			weather.new_daytime_status("It is the late afternoon, the sun shining brightly.\n",Math.round(FPGameGithub.T1_DAY*5/8));
-			weather.new_daytime_status("It is the evening, the sun retreating to the west.\n",Math.round(FPGameGithub.T1_DAY*3/4));
-			weather.new_daytime_status("It is night, the moon high in the sky.\n",Math.round(FPGameGithub.T1_DAY*7/8));
+			weather.new_daytime_status("It is the early morning, sun shinning from the east.\n",FPGameGithub.T1_DAY*1/4);
+			weather.new_daytime_status("It is the morning, the sun shining brightly.\n",FPGameGithub.T1_DAY*3/8);
+			weather.new_daytime_status("It is the afternoon, the sun high overhead.\n",FPGameGithub.T1_DAY*1/2);
+			weather.new_daytime_status("It is the late afternoon, the sun shining brightly.\n",FPGameGithub.T1_DAY*5/8);
+			weather.new_daytime_status("It is the evening, the sun retreating to the west.\n",FPGameGithub.T1_DAY*3/4);
+			weather.new_daytime_status("It is night, the moon high in the sky.\n",FPGameGithub.T1_DAY*7/8);
 			
 			return weather;			
 		}
@@ -4873,12 +4873,12 @@ public class FPalaceHelper{
 			
 			weather.set_minimum_length(FPGameGithub.T1_HOUR*6);
 			weather.new_daytime_status("It is night, and raining heavily.\n",0);
-			weather.new_daytime_status("It is the early morning, though the rain obscures the sun.\n",Math.round(FPGameGithub.T1_DAY*1/4));
-			weather.new_daytime_status("It is the morning, the rain unable to abate the light of the sun.\n",Math.round(FPGameGithub.T1_DAY*3/8));
-			weather.new_daytime_status("It is the afternoon, silver lining bright in the clouds pouring rain down.\n",Math.round(FPGameGithub.T1_DAY*1/2));
-			weather.new_daytime_status("It is the late afternoon, the rain unable to abate the light of the sun.\n",Math.round(FPGameGithub.T1_DAY*5/8));
-			weather.new_daytime_status("It is the evening, the sun visible between the horizon and the rain.\n",Math.round(FPGameGithub.T1_DAY*3/4));
-			weather.new_daytime_status("It is night, and raining heavily.\n",Math.round(FPGameGithub.T1_DAY*7/8));
+			weather.new_daytime_status("It is the early morning, though the rain obscures the sun.\n",FPGameGithub.T1_DAY*1/4);
+			weather.new_daytime_status("It is the morning, the rain unable to abate the light of the sun.\n",FPGameGithub.T1_DAY*3/8);
+			weather.new_daytime_status("It is the afternoon, silver lining bright in the clouds pouring rain down.\n",FPGameGithub.T1_DAY*1/2);
+			weather.new_daytime_status("It is the late afternoon, the rain unable to abate the light of the sun.\n",FPGameGithub.T1_DAY*5/8);
+			weather.new_daytime_status("It is the evening, the sun visible between the horizon and the rain.\n",FPGameGithub.T1_DAY*3/4);
+			weather.new_daytime_status("It is night, and raining heavily.\n",FPGameGithub.T1_DAY*7/8);
 			
 			return weather;			
 		}
@@ -4922,7 +4922,7 @@ public class FPalaceHelper{
 			cont.set_bury("clean up", "cleans up", ba);
 			
 			return cont;
-        }*/
+        }
         public JLabel loadIMG(String i) {
             //String listingFolder = MainGUIPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath()
             //System.out.println(i)

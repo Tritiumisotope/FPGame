@@ -77,11 +77,11 @@ public class NewGameGUI implements ActionListener {
                     String result = e.getDescription();
                     if ("event:new_player,1".equals(result)) {
                         LOGGER.info("Male");
-                        newPlayer.setSex(0);
+                        newPlayer.setSexDemo(0);
                         setName();
                     } else if ("event:new_player,2".equals(result)) {
                         LOGGER.info("Female");
-                        newPlayer.setSex(1);
+                        newPlayer.setSexDemo(1);
                         setName();
                     } else {
                         String msg = "(newGameGui.java) got unexpected result: " +result;

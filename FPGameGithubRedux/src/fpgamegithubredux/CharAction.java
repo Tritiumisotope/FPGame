@@ -262,4 +262,23 @@ public class CharAction {
         //nothing personal
         personal = !personal;
     }
+    public String get_cclass_origin(){
+        return cclass_origin;
+    }
+    
+    public void set_cclass_origin(String s){
+        if(cclass_origin.equals("")){
+            cclass_origin = s;
+        }
+    }
+    
+    public int get_cclass_level(){
+        return cclass_level;
+    }
+    
+    public void set_cclass_level(int i){
+        if(cclass_level < i){
+            cclass_level = i;
+        }
+    }
 }

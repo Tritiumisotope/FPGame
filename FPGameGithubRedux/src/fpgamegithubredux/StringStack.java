@@ -17,7 +17,7 @@ public class StringStack {
     }
         
     private void ensureCapacity(int newSize) {
-        String newBiggerArray[];
+        String[] newBiggerArray;
         if (elements.length < newSize) {
             newBiggerArray = new String[elements.length * 2];
             System.arraycopy(elements, 0, newBiggerArray, 0, size);
@@ -37,6 +37,8 @@ public class StringStack {
         }
         return elements[--size];
     }
-
+    public Boolean isEmpty(){
+        return emptyStack;
+    }
       
 }

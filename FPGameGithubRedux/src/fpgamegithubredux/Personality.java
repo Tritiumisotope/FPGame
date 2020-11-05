@@ -20,7 +20,7 @@ public class Personality {
 		//needs/goals
 		public ArrayList<Quest> objectives;//:Array
 		public ArrayList<ArrayList<Integer>> curr_obj_step;//public var curr_obj_step:Array
-        //public var curr_obj_start_tick:Array
+        ArrayList<Integer> curr_obj_start_tick;//public var curr_obj_start_tick:Array
         
 		//mood
 			//sadness, anger, contempt, disgust, surprise, fear, and happiness
@@ -33,8 +33,8 @@ public class Personality {
         
 		
 		//memory
-		//public var memory_action_names:Array;
-		//public var memory_action_vals:Array;
+		//public var memory_action_names:Array
+		//public var memory_action_vals:Array
 		
         public ArrayList<Conversation_topic> topics;//things known about
 
@@ -44,10 +44,9 @@ public class Personality {
 		
 		public ArrayList<Item> known_recipes;
 		
-        //public Character_job job;
-        //TODO Character_job
+        protected Character_job job;
 		
-		public void Personality(){
+		public Personality(){
 
             relationships = new ArrayList<>();
             topics = new ArrayList<>();
@@ -56,8 +55,8 @@ public class Personality {
             dislikes = new ArrayList<>();
             
 			objectives = new ArrayList<>();
-			//curr_obj_step = new Array();
-            //curr_obj_start_tick = new Array();
+			curr_obj_step = new ArrayList<>();
+            curr_obj_start_tick = new ArrayList<>();
             
 			known_recipes = new ArrayList<>();
 			attraction_traits = new ArrayList<>();
@@ -66,7 +65,7 @@ public class Personality {
 			//memory_action_names = new Array();
 			//memory_action_vals = new Array();
 			
-			//job = null;
+			job = null;
 			
 			add_like(FPalaceHelper.trait_hp_gain());
 			add_like(FPalaceHelper.trait_max_hp_gain());
@@ -82,68 +81,67 @@ public class Personality {
 			
 			add_recipe(FPalace_items.bandages());
 		}
-		/*TODO job
+		
 		public String set_job(Character_job j, Character c){
-			var ret:String = "";
+			String ret = "";
 			ret = "</n> has taken on " + j.get_name() + " as a job. ";
-			var i:int = 0;
+			int i = 0;
 			if(job != null){
-				for(i;i<job.objectives.size();i++){
+				for(i=0;i<job.objectives.size();i++){
 					job.objectives.get(i).end_quest(c);
 				}
 				//remove objectives given by the job
 			}
 			job = j;
-			i = 0;
-			for(i;i<job.objectives.size();i++){
+			for(i=0;i<job.objectives.size();i++){
 				new_objective(job.objectives.get(i),c);
 			}
 			return ret;
 		}
-		*/
+		
 		public void add_attraction(Trait t){
-            //attraction_traits[attraction_traits.length] = t;
-            attraction_traits.add(t);
+            attraction_traits.add(t);//attraction_traits[attraction_traits.length] = t
 		}
 		
 		public void add_disgust(Trait t){
-            //disgust_traits[disgust_traits.length] = t;
-            disgust_traits.add(t);
+            disgust_traits.add(t);//disgust_traits[disgust_traits.length] = t
 		}
 		
 		public void add_recipe(Item r){
 			int i = 0;
 			for(i=0;i<known_recipes.size();i++){
-				if(known_recipes.get(i).getName() == r.getName())break;
+				if(known_recipes.get(i).getName().equals(r.getName()))break;
 			}
             //if(i >= known_recipes.size())known_recipes[known_recipes.length] = r;
-            if(i >= known_recipes.size())known_recipes.add(r);
+            if(i >= known_recipes.size())known_recipes.add(r);//TODO i stays 0
 		}
 		
 		public void add_like(Trait t){
-            //if(t != null)likes[likes.length] = t;
+            //if(t != null)likes[likes.size()] = t;
             if(t != null)likes.add(t);
 		}
-		/*TODO Quest
-		public function new_objective(q:Quest, c:Character):void{
+		
+		public void new_objective(Quest q, Character c){
 			if(q != null){
-				var i:int = 0;
-				for(i;i<objectives.size();i++){
-					if(objectives.get(i).name == q.name){
+				int i = 0;
+				for(i=0;i<objectives.size();i++){
+					if(objectives.get(i).name.equals(q.name)){
 						return;
 					}
 				}
-				objectives[objectives.size()] = q;
-				curr_obj_step[curr_obj_step.length] = [0];
-				curr_obj_start_tick[curr_obj_start_tick.length] = c.get_tick();
+				objectives.add(q);//objectives[objectives.size()] = q
+				ArrayList<Integer> temp = new ArrayList<>();
+				temp.add(0);
+				curr_obj_step.add(temp);//curr_obj_step[curr_obj_step.length] = [0]
+				//curr_obj_start_tick.add(c.get_tick);//curr_obj_start_tick[curr_obj_start_tick.length] = c.get_tick()
+				//*TODO
 			}
 		
 		}
-		*/
 		public int get_obj_step(Quest q){
 			int i = 0;
 			for(i=0;i<objectives.size();i++){
-				if(objectives.get(i).name == q.name){
+				if(objectives.get(i).name.equals(q.name)){
 					return curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1);
 				}
 			}
@@ -153,7 +151,7 @@ public class Personality {
 		public ArrayList<Integer> get_obj_steps(Quest q){
 			int i = 0;
 			for(i=0;i<objectives.size();i++){
-				if(objectives.get(i).name == q.name){
+				if(objectives.get(i).name.equals(q.name)){
 					return curr_obj_step.get(i);
 				}
 			}
@@ -164,31 +162,31 @@ public class Personality {
 			String ret = "";
 			int i = 0;
 			for(i=0;i<objectives.size();i++){
-				if(objectives.get(i).name == q.name){
-					/*
+				if(objectives.get(i).name.equals(q.name)){
+					
 					if(q.end_step > -1 && new_step >= q.end_step){
 						Quest temp_quest = objectives.get(i);
 						ret += temp_quest.end_quest(c);
-						
-						objectives = objectives.slice(0, i).concat(objectives.slice(i+1, objectives.size()));
-						curr_obj_step = curr_obj_step.slice(0, i).concat(curr_obj_step.slice(i+1, curr_obj_step.length));
-						curr_obj_start_tick[i] = c.get_tick();
+						objectives.remove(i);//objectives = objectives.slice(0, i).concat(objectives.slice(i+1, objectives.size()))
+						curr_obj_step.remove(i);//curr_obj_step = curr_obj_step.slice(0, i).concat(curr_obj_step.slice(i+1, curr_obj_step.length))
+						curr_obj_start_tick.set(i,c.get_tick());//curr_obj_start_tick[i] = c.get_tick()
 					}else{
-						curr_obj_step.get(i)[curr_obj_step.get(i).length] = new_step;
-						curr_obj_start_tick[i] = c.get_tick();
-						if(q.objective_actions[new_step] == Quest.pick_up_action){
-							trace("(Personality.set_obj_step)Should go through inventory to check and see if we've already got this objective step done...");
+						//curr_obj_step.get(i).get(curr_obj_step.get(i).length) = new_step;
+						curr_obj_step.get(i).set(curr_obj_step.get(i).size(), new_step);
+						curr_obj_start_tick.set(i, c.get_tick());//curr_obj_start_tick[i] = c.get_tick()
+						if(q.objective_actions.get(new_step) == Quest.pick_up_action){
+							//trace("(Personality.set_obj_step)Should go through inventory to check and see if we've already got this objective step done...");
 						}
-					}
+					}//TODO remove the start_tick.set dupes out of if-else?
 					break;
-					*/
+					
 				}
 			}
 			return ret;
 		}
 		
 		public void add_dislike(Trait t){
-            //if(t != null)dislikes[dislikes.length] = t;
+            //if(t != null)dislikes[dislikes.size()] = t;
             if(t != null)dislikes.add(t);
 		}
 		
@@ -202,23 +200,22 @@ public class Personality {
 				}
 			}
 			m.add_member(c_self);
-            //mob_allegiances[mob_allegiances.length] = m;
-            mob_allegiances.add(m);
+            mob_allegiances.add(m);//mob_allegiances[mob_allegiances.length] = m
 		}
 		
 		public ArrayList<Conversation_topic> get_topics(Character c_self){
 			ArrayList<Conversation_topic> ret_array = new ArrayList<>();
 			
-            //ret_array = ret_array.concat(topics);
-            ret_array.addAll(topics);
+            
+            ret_array.addAll(topics);//ret_array = ret_array.concat(topics)
 			
 			//check items for topics, and add them to topics array...
 			if(c_self != null){
 				int i = 0;
 				for(i=0;i<c_self.possessions.size();i++){
 					if(c_self.possessions.get(i).topic != null){
-                        //ret_array = ret_array.concat(c_self.possessions.get(i).topic);
-                        ret_array.add(c_self.possessions.get(i).topic);
+                        
+                        ret_array.add(c_self.possessions.get(i).topic);//ret_array = ret_array.concat(c_self.possessions.get(i).topic)
 					}
 				}
 				ArrayList<Object> temp_array = c_self.body.get_equip_array();
@@ -230,9 +227,9 @@ public class Personality {
                         Equipment temp = (Equipment)temp_array.get(i);
                         ret_array.add(temp.topic);
                     }
-                    /*
+                    /*TODO check if covered by above
 					if(temp_array.get(i).topic != null){
-						ret_array = ret_array.concat(temp_array[i].topic);
+						ret_array = ret_array.concat(temp_array.get(i).topic);
                     }
                     */
 				}
@@ -241,15 +238,14 @@ public class Personality {
                 //TODO add true sex to Character
                 //if(c_self.location != null && c_self.location.area != null)ret_array = ret_array.concat(c_self.location.area.get_topics()); old
                 if(c_self.location != null && c_self.location.area != null)ret_array.addAll(c_self.location.area.get_topics());
-                //if(job != null) ret_array = ret_array.concat(job.get_topics());
-                //TODO JOb
+                if(job != null) ret_array.addAll(job.get_topics()); //if(job != null) ret_array = ret_array.concat(job.get_topics());
 			}
             int i = 0;
-            /*TODO objectives
+            
 			for(i=0;i<objectives.size();i++){
-				ret_array = ret_array.concat(objectives.get(i).get_conversation_topics(curr_obj_step.get(i)[curr_obj_step.get(i).length-1]));
+				ret_array.addAll(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));//ret_array = ret_array.concat(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));
 			}
-			*/
+			
 			for(i=0;i<mob_allegiances.size();i++){
                 //ret_array = ret_array.concat(mob_allegiances.get(i).get_topics(c_self));
                 ret_array.addAll(mob_allegiances.get(i).get_topics(c_self));
@@ -260,7 +256,7 @@ public class Personality {
 			for(i=0;i<ret_array.size();i++){
 				
 				for(int k=i + 1;k<ret_array.size();k++){
-					if(ret_array.get(i).get_topic_name() == ret_array.get(k).get_topic_name()){
+					if(ret_array.get(i).get_topic_name().equals(ret_array.get(k).get_topic_name())){
                         //ret_array = ret_array.slice(0, k).concat(ret_array.slice(k+1, ret_array.length));
                         ret_array.remove(k);
                         //TODO verify!!!
@@ -359,7 +355,7 @@ public class Personality {
 					if(step > -1 && ct.get_mention()){
 						int j = 0;
 						for(j=0;j<init_topics.size();j++){
-							if(init_topics.get(j).get_topic_name() == ct.get_topic_name()){
+							if(init_topics.get(j).get_topic_name().equals(ct.get_topic_name())){
 								//mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n";
 								mention_topics.add("<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n");
 								//topic_values[topic_values.size()] = determine_action_consequence(ct.actions.get(step), c_self, c);
@@ -485,7 +481,7 @@ public class Personality {
 				int step;//Ditto
 				if(char_topics.get(exist_count) != null){
 					for(exist_count=0;exist_count<char_topics.size();exist_count++){
-						if(char_topics.get(exist_count).get_topic_name() == init_topics.get(j).get_topic_name()){
+						if(char_topics.get(exist_count).get_topic_name().equals(init_topics.get(j).get_topic_name())){
 							place_holder = exist_count;
 							ct = char_topics.get(exist_count);
 							break;
@@ -770,7 +766,7 @@ public class Personality {
 			var i:int = 0;
 			for(i;i<actions.length;i++){
 				if(actions[i] != null){
-					if(actions[i].consequences[0] is Dynamic_Consequence && actions[i].consequences[0].consequence_list_type == Dynamic_Consequence.list_inventory){
+					if(actions[i].consequences[0] instanceof Dynamic_Consequence && actions[i].consequences[0].consequence_list_type == Dynamic_Consequence.list_inventory){
 						choice_target = self;
 					}else{
 						choice_target = c;
@@ -821,7 +817,7 @@ public class Personality {
 					}
 				}
 				
-				if (act.dialogue == "null"){//Attacking someone!? 
+				if (act.dialogue.equals("null")){//Attacking someone!? 
 					if(!(act.alchemy_flag||act.enchant_flag||act.sewing_flag||act.craft_flag||act.trade_flag||act.dismantle_flag||act.talk_flag)){
 						ret += -1;
 					}else if(act.talk_flag){
@@ -1373,7 +1369,7 @@ public class Personality {
 			
 			//ret += determine_attraction(c, c_self);
             //ret += determine_similarity(c, c_self);
-            //TODO so much CHaracter
+            //TODO so much Character
 			
 			for(i=0;i<mob_allegiances.size();i++){
 				int j = 0;
@@ -1399,16 +1395,16 @@ public class Personality {
 			
 			return ret;
 		}
-		/*
-		private function determine_similarity(c:Character, c_self:Character):int{
-			var ret:int = -1;
+		
+		private int determine_similarity(Character c, Character c_self){
+			int ret= -1;
 			if(c == c_self){
 				ret = 5;				
 			}else{
-				if(c.get_primary_race().get_name() == c_self.get_primary_race().get_name())ret += 2;
-				if(c.sex.get_name() == c_self.sex.get_name())ret++;
+				if(c.get_primary_race().getName() == c_self.get_primary_race().getName())ret += 2;
+				if(c.sex.getName() == c_self.sex.getName())ret++;
 				//professional courtesy....
-				if(c.get_current_class() != null && c_self.get_current_class() != null && c.get_current_class().get_name() == c_self.get_current_class().get_name())ret++;
+				if(c.get_current_class() != null && c_self.get_current_class() != null && c.get_current_class().getName() == c_self.get_current_class().getName())ret++;
 				if(job != null && c.personality.job != null && job.get_name() == c.personality.job.get_name())ret++;
 				if(c.party != null && c.party == c_self.party)ret += 3;
 				
@@ -1435,7 +1431,7 @@ public class Personality {
 			}			
 			return ret;
 		}
-		*/
+		
 		public int determine_attraction(Character c, Character c_self){
 			int ret = 0;
 			
@@ -1469,26 +1465,24 @@ public class Personality {
 			
 			return ret;
 		}
-		/*
-		public function determine_orient(new_sex:Sex):void{
+		
+		public void determine_orient(Sex new_sex){
 			if(new_sex != null){
-				var temp:Array = new_sex.get_default_orient_attract();
+				ArrayList<Trait> temp = new_sex.get_default_orient_attract();//was array
 				if(temp!= null){
-					var i:int = 0;
-					for(i;i<temp.length;i++){
-						if(temp[i] != null && temp[i] is Trait)add_attraction(temp[i]);
+					for(int i=0;i<temp.size();i++){
+						if(temp.get(i) != null && temp.get(i) instanceof Trait)add_attraction(temp.get(i));
 					}
 				}
 				temp = new_sex.get_default_orient_disgust();
 				if(temp != null){
-					i = 0;
-					for(i;i<temp.length;i++){
-						if(temp[i] != null && temp[i] is Trait)add_disgust(temp[i]);
+					for(int i=0;i<temp.size();i++){
+						if(temp.get(i) != null && temp.get(i) instanceof Trait)add_disgust(temp.get(i));
 					}
 				}
 			}			
 		}
-        */
+        
         
 		public Boolean relationship_exists(Character c){
 			int i= 0;
@@ -1513,21 +1507,23 @@ public class Personality {
 			}
 		}
 		*/
+		public int check_relationship(Character c){
+			return check_relationship(c,null);
+		}
 		public int check_relationship(Character c, Character c_self){
 			int ret = 0;
 		    Boolean rel_found = false;
-			//if(relationship_exists(c)){
+			if(relationship_exists(c)){
                 int i = 0;
-                /*TODO Relationships class and arraylist
 				for(i=0;i<relationships.size();i++){
 					if(relationships.get(i).relationship_with == c){
 						rel_found = true;
-						ret = relationships.get(i).relationship_status();
+						ret = relationships.get(i).relationship_status().intValue();
 						break;						
 					}
                 }
-                */
-			//}
+                
+			}
 			
 			if(rel_found)return ret;
 			return determine_initial(c, c_self);
@@ -1554,281 +1550,352 @@ public class Personality {
 				}
 			}
 		}
-		/*
-		public function get_all_relationships(c:Character):String{
-			var s:String = "";
-			var i:int = 0;
-			for(i;i<relationships.size();i++){
+		
+		public String get_all_relationships(Character c){
+			String s = "";
+			int i= 0;
+			for(i=0;i<relationships.size();i++){
 				if(relationships.get(i).relationship_with.location == null) s+= "(Dead)";
-				s += relationships.get(i).relationship_with.get_name() + " : " + (relationships.get(i).positive - relationships.get(i).negative) + " : " + relationships.get(i).relationship_with.personality.check_relationship(c) + "\n";
+				s += relationships.get(i).relationship_with.getName() + " : " + (relationships.get(i).positive.doubleValue() - relationships.get(i).negative.doubleValue()) + " : " + relationships.get(i).relationship_with.personality.check_relationship(c) + "\n";
 			}
 			return s;
 		}
 		
-		public function get_damage_mod(id:int):Number{
-			var ret:Number = 1;
-			var i:int = 0;
-			var trait_count:int = 0;
-			for(trait_count;trait_count<likes.length;trait_count++){
-				i = 0
-				for(i;i<likes[trait_count].damage_type_strengths.length;i++){
-					if(likes[trait_count].damage_type_strengths[i] == id) ret = ret/2;
+		public Number get_damage_mod(int id){
+			Number ret= 1;
+			int i = 0;
+			int trait_count;
+			for(trait_count=0;trait_count<likes.size();trait_count++){
+				for(i=0;i<likes.get(trait_count).damage_type_strengths.length;i++){
+					if(likes.get(trait_count).damage_type_strengths[i] == id) ret = ret.doubleValue()/2;
 				}
-				i = 0
-				for(i;i<likes[trait_count].damage_type_weaknesses.length;i++){
-					if(likes[trait_count].damage_type_weaknesses[i] == id) ret = ret*2;
+				for(i=0;i<likes.get(trait_count).damage_type_weaknesses.length;i++){
+					if(likes.get(trait_count).damage_type_weaknesses[i] == id) ret = ret.doubleValue()*2;
 				}
 			}
 			trait_count = 0;
-			for(trait_count;trait_count<dislikes.length;trait_count++){
-				i = 0;
-				for(i;i<dislikes[trait_count].damage_type_strengths.length;i++){
-					if(dislikes[trait_count].damage_type_strengths[i] == id) ret = ret/2;
+			for(trait_count=0;trait_count<dislikes.size();trait_count++){
+				for(i=0;i<dislikes.get(trait_count).damage_type_strengths.length;i++){
+					if(dislikes.get(trait_count).damage_type_strengths[i] == id) ret = ret.doubleValue()/2;
 				}
-				i = 0
-				for(i;i<dislikes[trait_count].damage_type_weaknesses.length;i++){
-					if(dislikes[trait_count].damage_type_weaknesses[i] == id) ret = ret*2;
+				for(i=0;i<dislikes.get(trait_count).damage_type_weaknesses.length;i++){
+					if(dislikes.get(trait_count).damage_type_weaknesses[i] == id) ret = ret.doubleValue()*2;
 				}
 			}
 			return ret;
 		}
 		
-		public function advance_objectives(action_type:int, change_info:Array, c:Character):void{
-			var i:int = 0;
-			for(i;i<objectives.size();i++){
-				var current_step:int = curr_obj_step.get(i)[curr_obj_step.get(i).length-1];
-				if(objectives.get(i).objective_actions[current_step] == action_type || objectives.get(i).objective_actions[current_step] == Quest.no_action){
-					if(objectives.get(i).objective_timer[current_step] > -1){
-						trace("(Personality.advance_objectives)This is a timed quest... just ignoring it, though... current tick is " + c.get_tick() + " and start tick of the quest step was " + curr_obj_start_tick[i]);
+		public void advance_objectives(int action_type,ArrayList<Object> change_info, Character c){//int array c
+			int i = 0;
+			for(i=0;i<objectives.size();i++){
+				int current_step = curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1);
+				if(objectives.get(i).objective_actions.get(current_step) == action_type || 
+				objectives.get(i).objective_actions.get(current_step) == Quest.no_action){
+					if(objectives.get(i).objective_timer.get(current_step) > -1){
+						//trace("(Personality.advance_objectives)This is a timed quest... just ignoring it, though... current tick is " + c.get_tick() + " and start tick of the quest step was " + curr_obj_start_tick.get(i));
 					}
 					
 					if(action_type == Quest.area_action){
-						if(change_info[0] is int && objectives.get(i).objective_targets[current_step][0] is int && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] = c.get_tick();
+						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer &&
+						 change_info.get(0)== objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1); //curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask author
+								//curr_obj_step.get(i).add( objectives.get(i).next_objective.get(curr_obj_step.get(i)));
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get an area id as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get an area id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.wait_action){
-						if(change_info[0] is Room && objectives.get(i).objective_targets[current_step][0] is Room && change_info[0] == objectives.get(i).objective_targets[current_step][0] && change_info[1] > 0){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room &&
+						 change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0) && (Integer)change_info.get(1) > 0){
+							if(objectives.get(i).next_objective.get(current_step)< 0){
+								curr_obj_step.get(i).add(current_step+1); //[curr_obj_step.get(i).length] = current_step+1;
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a room and wait time as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a room and wait time as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.room_action){
-						if(change_info[0] is Room && objectives.get(i).objective_targets[current_step][0] is Room && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a room as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a room as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.class_action){
-						if(change_info[0] is Character_class && objectives.get(i).objective_targets[current_step][0] is Character_class && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+	
+						if(change_info.get(0) instanceof Character_class && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character_class){
+							Character_class temp1 = (Character_class)change_info.get(0);
+							Character_class temp2 = (Character_class)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a Character class as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a Character class as expected.... " + change_info);
 						}
+					
 					}else if(action_type == Quest.drop_action){
-						if(change_info[0] is Item && objectives.get(i).objective_targets[current_step][0] is Item && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+
+						if(change_info.get(0) instanceof Item && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Item){
+							Item temp1 = (Item)change_info.get(0);
+							Item temp2 = (Item)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
 						}
+						
 					}else if(action_type == Quest.equip_action){
-						if(change_info[0] is Equipment && objectives.get(i).objective_targets[current_step][0] is Equipment && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+
+						if(change_info.get(0) instanceof Equipment && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Equipment){
+							Equipment temp1 = (Equipment) change_info.get(0);
+							Equipment temp2 = (Equipment)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
 						}
+						
 					}else if(action_type == Quest.hold_action){
-						if(change_info[0] is Weapon && objectives.get(i).objective_targets[current_step][0] is Weapon && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Weapon && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Weapon){
+							Weapon temp1 = (Weapon)change_info.get(0);
+							Weapon temp2 = (Weapon)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
 						}
+						
 					}else if(action_type == Quest.incapacitate_action){
-						if(change_info[0] is Character && objectives.get(i).objective_targets[current_step][0] is Character && change_info[0].get_primary_race().get_name() == objectives.get(i).objective_targets[current_step][0].get_primary_race().get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
-							}
+						//if(change_info.get(0) instanceof Character && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character && change_info.get(0).get_primary_race().get_name() == objectives.get(i).objective_targets.get(current_step).get(0).get_primary_race().get_name()){
+							if(change_info.get(0) instanceof Character && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character){
+								Character temp1 = (Character)change_info.get(i);
+								Character temp2 = (Character)objectives.get(i).objective_targets.get(current_step).get(0);
+								if(temp1.get_primary_race().getName().equals(temp2.get_primary_race().getName())){
+									if(objectives.get(i).next_objective.get(current_step) < 0){
+										curr_obj_step.get(i).add(current_step+1);
+										curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									}else{
+										//TODO ask Author
+										//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+										curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									}
+								}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
+							//trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
 						}
 					}else if(action_type == Quest.kill_action){
-						if(change_info[0] is Character && objectives.get(i).objective_targets[current_step][0] is Character && change_info[0].get_primary_race().get_name() == objectives.get(i).objective_targets[current_step][0].get_primary_race().get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+					//if(change_info.get(0) instanceof Character && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character && change_info.get(0).get_primary_race().get_name() == objectives.get(i).objective_targets.get(current_step).get(0).get_primary_race().get_name()){
+						if(change_info.get(0) instanceof Character && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character){
+							Character temp1 = (Character)change_info.get(i);
+							Character temp2 = (Character)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.get_primary_race().getName().equals(temp2.get_primary_race().getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
+							//trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
 						}
 					}else if(action_type == Quest.part_action){
-						if(change_info[0] is Body_part && objectives.get(i).objective_targets[current_step][0] is Body_part && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof BodyPart && objectives.get(i).objective_targets.get(current_step).get(0) instanceof BodyPart){
+							BodyPart temp1 = (BodyPart)change_info.get(0);
+							BodyPart temp2 = (BodyPart)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a body part as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a body part as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.party_action){
-						if(change_info[0] is Party && objectives.get(i).objective_targets[current_step][0] is Party && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Party && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Party && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
+						
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a party as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a party as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.pick_up_action){
-						if(change_info[0] is Item && objectives.get(i).objective_targets[current_step][0] is Item && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Item && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Item){
+							Item temp1 = (Item)change_info.get(0);
+							Item temp2 = (Item)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.sex_action){
-						if(change_info[0] is Sex && objectives.get(i).objective_targets[current_step][0] is Sex && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Sex && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Sex){
+							Sex temp1 = (Sex)change_info.get(0);
+							Sex temp2 = (Sex)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a gender as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a gender as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.skill_action){
-						if(change_info[0] is int && objectives.get(i).objective_targets[current_step][0] is int && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get an skill id as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get an skill id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.status_add_action){
-						if(change_info[0] is Tick_Effect && objectives.get(i).objective_targets[current_step][0] is Tick_Effect && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof TickEffect && objectives.get(i).objective_targets.get(current_step).get(0) instanceof TickEffect && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a tick effect as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a tick effect as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.status_remove_action){
-						if(change_info[0] is int && objectives.get(i).objective_targets[current_step][0] is int && change_info[0] == objectives.get(i).objective_targets[current_step][0]){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+							if(objectives.get(i).next_objective.get(current_step) < 0){
+								curr_obj_step.get(i).add(current_step+1);
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+								//TODO ask Author
+								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a status id as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a status id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.talk_action){
-						trace("(Personality.advance_objectives)Shouldn't really ever get this one. Should be dealt with in an Action. " + change_info);
+						//trace("(Personality.advance_objectives)Shouldn't really ever get this one. Should be dealt with in an Action. " + change_info);
 					}else if(action_type == Quest.unequip_action){
-						if(change_info[0] is Equipment && objectives.get(i).objective_targets[current_step][0] is Equipment && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Equipment && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Equipment){
+							Equipment temp1 = (Equipment)change_info.get(0);
+							Equipment temp2 = (Equipment)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.unhold_action){
-						if(change_info[0] is Weapon && objectives.get(i).objective_targets[current_step][0] is Weapon && change_info[0].get_name() == objectives.get(i).objective_targets[current_step][0].get_name()){
-							if(objectives.get(i).next_objective[current_step] < 0){
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick[i] =  c.get_tick();
-							}else{
-								curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick[i] =  c.get_tick();
+						if(change_info.get(0) instanceof Weapon && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Weapon){
+							Weapon temp1 = (Weapon)change_info.get(0);
+							Weapon temp2 = (Weapon)objectives.get(i).objective_targets.get(current_step).get(0);
+							if(temp1.getName().equals(temp2.getName())){
+								if(objectives.get(i).next_objective.get(current_step) < 0){
+									curr_obj_step.get(i).add(current_step+1);
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}else{
+									//TODO ask Author
+									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								}
 							}
 						}else{
-							trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
+							//trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
 						}
-					}else if(objectives.get(i).objective_actions[current_step] == Quest.no_action){
-						trace("(Personality.advance_objectives)This is a no action quest... let's see what kind of info I got: " + change_info);
+					}else if(objectives.get(i).objective_actions.get(current_step) == Quest.no_action){
+						//trace("(Personality.advance_objectives)This is a no action quest... let's see what kind of info I got: " + change_info);
 					}else{
-						trace("(Personality.advance_objectives)Got an unknown action type of " + action_type + ". Doing nothing.");			
+						//trace("(Personality.advance_objectives)Got an unknown action type of " + action_type + ". Doing nothing.");			
 					}
 				}
             }
             
         }
-        */
+        
 
 }

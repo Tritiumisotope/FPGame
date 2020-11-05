@@ -175,7 +175,8 @@ crafts..............   17    -         | | | water.........   54  178
     }
     
     public static ArrayList<Skill> get_skill_list(){
-        if (skill_list == null) skill_list = new ArrayList<Skill>();
+        if (skill_list == null){ 
+            skill_list = new ArrayList<Skill>();
             Skill[] skillArrayDummy = {skill_adventure(), skill_perception(),
              skill_map_sight(), skill_map_making(), skill_map_reading(), skill_initiative(), skill_fortitude(),
               skill_swimming(), skill_fight(), skill_melee(), skill_one_handed(), skill_two_handed(), skill_unarmed(), 
@@ -188,7 +189,7 @@ crafts..............   17    -         | | | water.........   54  178
                for(Skill sk : skillArrayDummy){
                    skill_list.add(sk);
                }
-               
+            }
         return skill_list;
     }
     
@@ -221,8 +222,8 @@ crafts..............   17    -         | | | water.........   54  178
         while(child_array.get(i) != null){//[]
             if(get_skill_parent(child_array.get(i)) == skill_id){///[]
                 child_array = remove_skill_children(child_array.get(i), child_array);//[]
-                //child_array = child_array.slice(0,i).concat(child_array.slice(i+1, child_array.length));
-                //TODO slice
+                child_array.remove(i);//child_array = child_array.slice(0,i).concat(child_array.slice(i+1, child_array.length))
+                //TODO verify slice
             }else{
                 i++;
             }
@@ -237,18 +238,15 @@ crafts..............   17    -         | | | water.........   54  178
         ArrayList<Integer>  all_skills = new ArrayList<>();//was array
         int i = 0;
         for(i=0;i<skill_array.size();i++){//.length
-            //all_skills[i] = skill_array[i].get_id();
-            all_skills.set(i,skill_array.get(i).get_id());
+            all_skills.set(i,skill_array.get(i).get_id());//all_skills[i] = skill_array[i].get_id()
         }
         
         if(skill_id == -1){
-            i = 0;
             for(i=0;i<all_skills.size();i++){//.length
                 ret += c.get_skill_by_id(all_skills.get(i));//[]
             }
         }else{
             ret += c.get_skill_by_id(skill_id);
-            i = 0;
             for(i=0;i<all_skills.size();i++){//.length
                 if(get_skill_parent(all_skills.get(i)) == skill_id)ret += get_total_skill_value(c, all_skills.get(i));//[] and []
             }
@@ -263,66 +261,81 @@ crafts..............   17    -         | | | water.........   54  178
         int i = 0;
         int char_id = 0;
         String ret = "";
-        /*
+        
         if(c.party != null){
-            for(i=0;i<c.party.members.length;i++){
-                if(c.party.members[i] == c){
+            for(i=0;i<c.party.members.size();i++){
+                if(c.party.members.get(i) == c){
                     char_id = i;
-                    break;s
+                    break;
                 }
             }
         }
         
         
         
-        ArrayList<Integer>  all_skills = new ArrayList<>(); //var all_skills:Array = new Array;
-        /*
-        i = 0;
-        for(i;i<skill_array.length;i++){
-            all_skills[i] = skill_array[i].get_id();
+        ArrayList<Integer>  all_skills = new ArrayList<>(); //var all_skills:Array = new Array
+        
+        for(i=0;i<skill_array.size();i++){
+            all_skills.set(i,skill_array.get(i).get_id()); //all_skills[i] = skill_array[i].get_id()
         }
         if(show_children_of != null){
-            if(show_children_of.slice(3, show_children_of.length).toString() != all_skills.toString()){
+            ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
+            plchldr.remove(0);//0
+            plchldr.remove(0);//1
+            plchldr.remove(0);//2
+            if(!plchldr.toString().equals(all_skills.toString())){
                 ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ all_skills +"\">Show all</a>\n";
             }
         }else{
             ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ all_skills +"\">Show all</a>\n";
         }
         
-        var trained:Array = new Array();
-        i = 0;
-        for(i;i<ss.skill_ids.length;i++){
-            trained[trained.length] = ss.skill_ids[i];
-            var parent_id:int = get_skill_parent(ss.skill_ids[i]);
+        ArrayList<Integer> trained = new ArrayList<>();
+        for(i=0;i<ss.skill_ids.size();i++){
+            trained.add(ss.skill_ids.get(i)); //trained[trained.length] = ss.skill_ids[i]
+            int parent_id = get_skill_parent(ss.skill_ids.get(i));
             while(parent_id >= 0){
-                trained[trained.length] = parent_id;//probably going to get duplicates out of this
+                //trained[trained.length] = parent_id;//probably going to get duplicates out of this
+                trained.add(parent_id);
                 parent_id = get_skill_parent(parent_id);
             }
         }
-        if(trained != null && trained[0] != null){
+        if(trained != null && trained.get(0) != null){
             if(show_children_of != null){
-                if(show_children_of.slice(3, show_children_of.length).toString() != trained.toString()){
-                   ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
+                //if(show_children_of.slice(3, show_children_of.size()).toString() != trained.toString()){
+                   //ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
+                //}
+                //TODO verify replacement
+                ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
+                plchldr.remove(0);//0
+                plchldr.remove(0);//1
+                plchldr.remove(0);//2
+                if(plchldr.toString().equals(trained.toString())){
+                    ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
                 }
             }else{
                 ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
             }
         }
-        
+        int parent_id;
         if(c.get_current_class() != null){
-            var primaries:Array = new Array();
-            i = 0;
-            for(i;i<c.get_current_class().class_skills.length;i++){
-                primaries[primaries.length] = c.get_current_class().class_skills[i];
-                parent_id = get_skill_parent(c.get_current_class().class_skills[i]);
+            
+            ArrayList<Integer> primaries = new ArrayList<>();
+            for(i=0;i<c.get_current_class().class_skills.size();i++){
+                primaries.add(c.get_current_class().class_skills.get(i)); //primaries[primaries.length] = c.get_current_class().class_skills[i]
+                parent_id = get_skill_parent(c.get_current_class().class_skills.get(i));
                 while(parent_id >= 0){
-                    primaries[primaries.length] = parent_id;//probably going to get duplicates out of this
+                    primaries.add(parent_id); //primaries[primaries.length] = parent_id;//probably going to get duplicates out of this
                     parent_id = get_skill_parent(parent_id);
                 }
             }
-            if(primaries != null && primaries[0] != null){
+            if(primaries != null && primaries.get(0) != null){
                 if(show_children_of != null){
-                    if(show_children_of.slice(3, show_children_of.length).toString() != primaries.toString()){
+                    ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
+                    plchldr.remove(0);//0
+                    plchldr.remove(0);//1
+                    plchldr.remove(0);//2
+                    if(!plchldr.toString().equals(primaries.toString())){
                         ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a>\n";
                     }
                 }else{
@@ -332,66 +345,70 @@ crafts..............   17    -         | | | water.........   54  178
         }
         ret += "\n<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>"+c.get_xp()+"</font>/"+c.nxt_lvl_xp+"</tc></u></tr>";
         
-        i = 0;
-        for(i;i<skill_array.length;i++){
-            var j:int = 0;
-            var ranks:int = 0;
-            for(j;j<ss.skill_ids.length;j++){
-                if(skill_array[i].get_id() == ss.skill_ids[j]){
-                    ranks = ss.skill_ranks[j];
+        for(i=0;i<skill_array.size();i++){
+            int j = 0;
+            int ranks = 0;
+            for(j=0;j<ss.skill_ids.size();j++){
+                if(skill_array.get(i).get_id() == ss.skill_ids.get(j)){
+                    ranks = ss.skill_ranks.get(j);
                 }
             }
             
-            var s_name:String = skill_array[i].get_name();
-            var skill_val:int = 0;
-            var cost:int = ss.get_skill_cost(c,skill_array[i].get_id(),1);
-            skill_val = ss.get_skill_value(c, skill_array[i].get_id());
-            var child_array:Array;
+            String s_name = skill_array.get(i).get_name();
+            int skill_val = 0;
+            int cost = ss.get_skill_cost(c,skill_array.get(i).get_id(),1);
+            skill_val = ss.get_skill_value(c, skill_array.get(i).get_id());
+            ArrayList<Integer> child_array;
             if(show_children_of != null){
-                child_array = show_children_of.slice(3, show_children_of.length);
+                ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
+                plchldr.remove(0);//0
+                plchldr.remove(0);//1
+                plchldr.remove(0);//2
+                child_array = new ArrayList<>(plchldr);
             }else{
-                child_array = new Array();
+                child_array = new ArrayList<>();
             }
 
-            var remove_children:int = -1;
-            var no_show:Boolean = true;
-            var parent_check:int = 0;
-            for(parent_check;parent_check<child_array.length;parent_check++){
-                if(child_array[parent_check] == skill_array[i].get_parent()){
+            int remove_children = -1;
+            Boolean no_show= true;
+            int parent_check = 0;
+            for(parent_check=0;parent_check<child_array.size();parent_check++){
+                if(child_array.get(parent_check) == skill_array.get(i).get_parent()){
                    no_show = false;
                 }
-                if(child_array[parent_check] == skill_array[i].get_id()){
+                if(child_array.get(parent_check) == skill_array.get(i).get_id()){
                     remove_children = parent_check;
                 }
             }
             
-            if(no_show && skill_array[i].get_parent() != -1)continue;
+            if(no_show && skill_array.get(i).get_parent() != -1)continue;
             
-            parent_id = skill_array[i].get_id();
+            parent_id = skill_array.get(i).get_id();
             while(get_skill_parent(parent_id) != -1){
                 s_name = "~" + s_name;
                 parent_id = get_skill_parent(parent_id);
             }
             
-            var rc:Boolean = false;
+            Boolean rc = false;
             
             if(remove_children >= 0){
-                child_array = remove_skill_children(child_array[remove_children], child_array);
-                child_array = child_array.slice(0,remove_children).concat(child_array.slice(remove_children+1, child_array.length));
+                child_array = remove_skill_children(child_array.get(remove_children), child_array);
+                child_array.remove(remove_children);//child_array = child_array.slice(0,remove_children).concat(child_array.slice(remove_children+1, child_array.length))
                 rc = true;
             }else{
-                child_array[child_array.length] = skill_array[i].get_id();
+                
+                child_array.add(skill_array.get(i).get_id());//child_array[child_array.length] = skill_array[i].get_id()
             }
             
-            if(child_array.length > 0){
+            if(child_array.size() > 0){
                 if(rc){
-                    if(has_children(skill_array[i].get_id())){
+                    if(has_children(skill_array.get(i).get_id())){
                         s_name = "<tr><a href=\"event:show_skills,"+char_id+",-1,"+ child_array +"\"><tc>" + s_name + "[-]</tc></a>";
                     }else{
                         s_name = "<tr><a href=\"event:show_skills,"+char_id+",-1,"+ child_array +"\"><tc>" + s_name + "</tc></a>";
                     }
                 }else{
-                    if(has_children(skill_array[i].get_id())){
+                    if(has_children(skill_array.get(i).get_id())){
                         s_name = "<tr><a href=\"event:show_skills,"+char_id+",-1,"+ child_array +"\"><tc>" + s_name + "[+]</tc></a>";
                     }else{
                         s_name = "<tr><a href=\"event:show_skills,"+char_id+",-1,"+ child_array +"\"><tc>" + s_name + "</tc></a>";
@@ -402,20 +419,20 @@ crafts..............   17    -         | | | water.........   54  178
             }
             
             ret += s_name;
-            ret += "<tc>" + ranks.toString() + "</tc>";
+            ret += "<tc>" + Integer.toString(ranks) + "</tc>";
             
             
             if(cost<=c.get_xp()){
                 if(show_children_of != null){
-                    ret += "<tc>" + skill_val+"</tc><a href=\"event:show_skills,"+char_id+","+skill_array[i].get_id()+","+show_children_of+"\"><font color='#0000FF'><tc>"+ cost +"</tc></font></a></tr>";
+                    ret += "<tc>" + skill_val+"</tc><a href=\"event:show_skills,"+char_id+","+skill_array.get(i).get_id()+","+show_children_of+"\"><font color='#0000FF'><tc>"+ cost +"</tc></font></a></tr>";
                 }else{
-                    ret += "<tc>" + skill_val+"</tc><a href=\"event:show_skills,"+char_id+","+skill_array[i].get_id()+"\"><font color='#0000FF'><tc>"+ cost +"</tc></font></a></tr>";
+                    ret += "<tc>" + skill_val+"</tc><a href=\"event:show_skills,"+char_id+","+skill_array.get(i).get_id()+"\"><font color='#0000FF'><tc>"+ cost +"</tc></font></a></tr>";
                 }
             }else{
                 ret += "<tc>" + skill_val+"</tc><font color='#FF0000'><tc>"+ cost +"</tc></font></tr>";
             }
         }
-        */
+        
         return ret + "</table>";
         
     }
@@ -458,21 +475,20 @@ crafts..............   17    -         | | | water.........   54  178
                 int numerator= 0;
                 int denominator = 0;
                 for(j=0;j<skill_array.get(i).stat_list.size();j++){//[] and .length
-                    numerator += Math.max(Math.round(c.get_stat(skill_array.get(i).stat_list.get(j)).intValue() * skill_array.get(i).stat_ratio_list.get(j)),0);//[] and []
+                    numerator += Math.max(Math.round(c.get_stat(skill_array.get(i).stat_list.get(j)).intValue() * (float)skill_array.get(i).stat_ratio_list.get(j)),0);//[] and []
                     denominator += skill_array.get(i).stat_ratio_list.get(j);//[] and []
                 }
                 
                 if(denominator != 0){
-                    ret = (int)Math.round(Math.ceil(numerator/denominator) * (Math.log(skill_ranks*2)/0.699));
+                    ret = (int)Math.round(Math.ceil(numerator/(double)denominator) * (Math.log(skill_ranks*(double)2)/0.699));
                 }else{
                     ret = -1;
                 }
                 
                 if(skill_ranks == 0 && skill_array.get(i).get_parent() != -1){//[]
                     int temp = get_skill_value_by_id(c,skill_id, 1) - 1;
-                    //int temp_ranks = c.skills.get_skill_ranks(skill_array.get(i).get_parent());//[]
-                    //ret = Math.min(temp,temp_ranks);
-                    //TODO character skills
+                    int temp_ranks = c.skills.get_skill_ranks(skill_array.get(i).get_parent());//[]
+                    ret = Math.min(temp,temp_ranks);
                 }
                 
                 break;
@@ -504,7 +520,8 @@ crafts..............   17    -         | | | water.........   54  178
             
             Consequence consequence = new Consequence();
             consequence.addConsequence(0,0,"How long would you like to forage for: </c1>, </c3>, </c6>", 0);
-            //consequence.add_consequence(0,0,"</n> forages around, looking for something useful. ", 0,0,0,1);
+            //consequence.add_consequence(0,0,"</n> forages around, looking for something useful. ", 0,0,0,1)
+            //TODO originally commented?
             consequence.addConsequence(0,0,"</n> forages around for a bit, but finds nothing of use. ", -1);
             
             a.addChallenge(challenge,consequence);
