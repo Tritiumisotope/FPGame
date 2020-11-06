@@ -150,10 +150,17 @@ public class Item {
             effects[type] += multiplier;
         }			
         */
-        if(effects.get(type)==null){
-            effects.set(type, multiplier);
+        System.out.println("test");
+        System.out.println(effects==null);
+        System.out.println(type);
+        while(effects.size()<=type){//TODO oh fuck...null-fill!
+            this.effects.add(null);
+        }
+        if(this.effects.get(type)==null){
+
+            this.effects.set(type, multiplier);
         }else{
-            effects.set(type,effects.get(type) + multiplier);
+            this.effects.set(type,effects.get(type) + multiplier);
         }	
     }
     
