@@ -25,8 +25,8 @@ public class Equipment extends Item {
 		public ArrayList<Integer> skill_id;//public var skill_id:Array
 		public ArrayList<Integer> skill_bonus;//public var skill_bonus:Array
 
-		protected int[] cover_parts;//public var cover_parts:Array
-		protected int[] cover_parts_images;//public var cover_parts_images:Array
+		protected ArrayList<Integer> cover_parts;//public var cover_parts:Array
+		protected ArrayList<Integer> cover_parts_images;//public var cover_parts_images:Array
         
 		public int enchantment_level;
 		
@@ -67,8 +67,8 @@ public class Equipment extends Item {
 			skill_id = new ArrayList<>();
 			skill_bonus = new ArrayList<>();
 			
-			//cover_parts = new ArrayList<>()
-			//cover_parts_images = new ArrayList<>()
+			cover_parts = new ArrayList<>();
+			cover_parts_images = new ArrayList<>();
             
             
 			enchantment_level = 0;
@@ -144,17 +144,17 @@ public class Equipment extends Item {
 		}
 		
 		public void new_cover_image(int part_id, int image_id){
-			cover_parts[cover_parts.length] = part_id;
-			cover_parts_images[cover_parts_images.length] = image_id;
+			cover_parts.add(part_id); //cover_parts[cover_parts.length] = part_id
+			cover_parts_images.add(image_id); //cover_parts_images[cover_parts_images.length] = image_id
 		}
 		
 		
 		public int get_part_image(int part_id){
 			int ret = -1;
 			int i = 0;
-			for(i=0;i<cover_parts.length;i++){
-				if(cover_parts[i] == part_id){
-					ret = cover_parts_images[i];
+			for(i=0;i<cover_parts.size();i++){
+				if(cover_parts.get(i) == part_id){
+					ret = cover_parts_images.get(i);
 					break;
 				}
 			}
@@ -267,7 +267,7 @@ public class Equipment extends Item {
 		public String remove_effects(Character c,Boolean effects_only){//default false
 			String s = "";
 			int i = 0;
-			/*
+			/*TODO CHaracter
 			for(i=0;i<effects.size();i++){
 				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, -effects.get(i));//c.apply_affect_by_id(i,-effects[i],0,null, Body.change_stats_total);
 			}
@@ -355,21 +355,23 @@ public class Equipment extends Item {
 			}
 			return ret;
 		}
-		/*
-		public function covered_description(c:Character, id:int,bp:Body_part):String{
-			var s:String = "";
-			var i:int = 0;
-			for (i;i<covers.length;i++){
-				if(covers[i] == id && (cover_stat[i] == -1 || bp.get_stat(c, cover_stat[i]) >= cover_min[i])){
-					s = covers_desc[i];
+		
+		public String covered_description(Character c,int id, BodyPart bp){
+			String s = "";
+			int i = 0;
+			for (i=0;i<covers.size();i++){
+				if(covers.get(i) == id && (cover_stat.get(i) == -1 || bp.get_stat(c, cover_stat.get(i)).doubleValue() >= cover_min.get(i))){
+					s = covers_desc.get(i);
 				}
 			}
 			
-			var j:int = 0;
-			for (j;j<bp.stat_id.length;j++){
+			int j = 0;
+			for (j=0;j<bp.stat_id.length;j++){
 				if(bp.stat_description[j] != null){
+					/*TODO
 					s = s.replace("</" + bp.stat_id[j] + ">",String(bp.get_stat(c, bp.stat_id[j]).toFixed(bp.stat_description[j].show_decimals)));
 					s = s.replace("<sd/" + bp.stat_id[j] + ">",bp.stat_description[j].get_short_description(bp.get_stat(c, bp.stat_id[j])));
+					*/
 				}
 			}
 			
@@ -377,71 +379,69 @@ public class Equipment extends Item {
 		}
 		
 		@Override 
-		public function getDescription(c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false):String{
-			var ret:String = super.get_description(c, ident_effectiveness, keep_tags);
-			var ident_chance:Number = 0;
+		public String getDescription(Character c,ArrayList<Integer> ident_effectiveness,Boolean keep_tags){
+			//def null false
+			String ret = super.getDescription(c, ident_effectiveness, keep_tags);
+			Number ident_chance = 0;
 			if(ident_effectiveness != null){
-				ident_chance = ident_effectiveness[0]/ident_difficulty;
+				ident_chance = ident_effectiveness.get(0)/identDifficulty;
 			}
 			
-			var count:int = 0;
-			var showing:Boolean = false;
-			if(stat_req.length > 0){
-				for(count;count < stat_req.length;count ++){
-					var l_string:String = FPalace_helper.get_stat_name_by_id(stat_req[count]);
-					if(l_string != "?" && Math.random() <= ident_chance){
+			int count = 0;
+			Boolean showing = false;
+			if(stat_req.size() > 0){
+				for(count=0;count < stat_req.size();count ++){
+					String l_string = FPalaceHelper.get_stat_name_by_id(stat_req.get(count));
+					if(!l_string.equals("?") && Math.random() <= ident_chance.doubleValue()){
 						if(!showing){
 							showing = true;
 							ret += "\nRequires the following skills:\n";
 						}
 						
-						if(stat_min[count] > 0){
-							ret += "Between " + stat_min[count] + " and " + stat_max[count] + " " + l_string + "\n"
+						if(stat_min.get(count) > 0){
+							ret += "Between " + stat_min.get(count) + " and " + stat_max.get(count) + " " + l_string + "\n";
 						}else{
-							ret += "Under " + stat_max[count] + " " + l_string + "\n"
+							ret += "Under " + stat_max.get(count) + " " + l_string + "\n";
 						}
 					}
 				}
 			}
 			
 			showing = false;
-			count = 0;
-			if(skill_id.length > 0){
-				for(count;count < skill_id.length;count ++){
-					if(Math.random() <= ident_chance){
+			if(skill_id.size() > 0){
+				for(count=0;count < skill_id.size();count ++){
+					if(Math.random() <= ident_chance.doubleValue()){
 						if(!showing){
 							showing = true;
 							ret += "\nImpacts skills:\n";
 						}
-						ret += FPalace_skills.get_skill_name(skill_id[count]) + "\n"
+						ret += FPalace_skills.get_skill_name(skill_id.get(count)) + "\n";
 					}
 				}
 			}
 			
 			showing = false;
-			count = 0;
-			if(damage_type_strengths.length > 0){
-				for(count;count < damage_type_strengths.length;count ++){
-					if(Math.random() <= ident_chance){
+			if(damage_type_strengths.size() > 0){
+				for(count=0;count < damage_type_strengths.size();count ++){
+					if(Math.random() <= ident_chance.doubleValue()){
 						if(!showing){
 							showing = true;
 							ret += "\nProtects against:\n";
 						}
-						ret += FPalace_helper.get_type_name_by_id(damage_type_strengths[count]) + "\n"
+						ret += FPalaceHelper.get_type_name_by_id(damage_type_strengths.get(count)) + "\n";
 					}
 				}
 			}
 			
 			showing = false;
-			count = 0;
-			if(damage_type_weaknesses.length > 0){
-				for(count;count < damage_type_weaknesses.length;count ++){
-					if(Math.random() <= ident_chance){
+			if(damage_type_weaknesses.size() > 0){
+				for(count=0;count < damage_type_weaknesses.size();count ++){
+					if(Math.random() <= ident_chance.doubleValue()){
 						if(!showing){
 							showing = true;
 							ret += "\nWeak against:\n";
 						}
-						ret += FPalace_helper.get_type_name_by_id(damage_type_weaknesses[count]) + "\n"
+						ret += FPalaceHelper.get_type_name_by_id(damage_type_weaknesses.get(count)) + "\n";
 					}
 				}
 			}
@@ -449,23 +449,24 @@ public class Equipment extends Item {
 			return ret;
 		}
 		
-		override public function same_item(i:Item):Boolean{
-			var ret:Boolean = super.same_item(i);
+		@Override 
+		public Boolean sameItem(Item i){
+			Boolean ret = super.sameItem(i);
 			
-			if(ret && i is Equipment){
-				var temp:Equipment = i as Equipment;
+			if(ret && i instanceof Equipment){
+				Equipment temp = (Equipment)i;
 				
-				if(temp.equips_on.toString() == equips_on.toString() && temp.equips_on_num.toString() == equips_on_num.toString()
-				    && temp.covers.toString() == covers.toString() && temp.covers_desc.toString() == covers_desc.toString() 
-					&& temp.cover_stat.toString() == cover_stat.toString() && temp.cover_min.toString() == cover_min.toString() 
-					&& temp.stat_req.toString() == stat_req.toString() && temp.stat_min.toString() == stat_min.toString() 
-					&& temp.stat_max.toString() == stat_max.toString() && temp.cover_num.toString() == cover_num.toString()
-					&& temp.covered_perception_difficulty.toString() == covered_perception_difficulty.toString()
-					&& temp._show_other_cover == _show_other_cover && temp.skill_id.toString() == skill_id.toString()
-					&& temp.skill_bonus.toString() == skill_bonus.toString() && temp.cover_parts.toString() == cover_parts.toString()
-					&& temp.cover_parts_images.toString() == cover_parts_images.toString() && temp.enchantment_level == enchantment_level					
-					&& temp.damage_type_strengths.toString() == damage_type_strengths.toString()
-					&& temp.damage_type_weaknesses.toString() == damage_type_weaknesses.toString()){
+				if(temp.equips_on.toString().equals(equips_on.toString()) && temp.equips_on_num.toString().equals(equips_on_num.toString())
+				    && temp.covers.toString().equals(covers.toString()) && temp.covers_desc.toString().equals(covers_desc.toString())
+					&& temp.cover_stat.toString().equals(cover_stat.toString()) && temp.cover_min.toString().equals(cover_min.toString()) 
+					&& temp.stat_req.toString().equals(stat_req.toString()) && temp.stat_min.toString().equals(stat_min.toString())
+					&& temp.stat_max.toString().equals(stat_max.toString()) && temp.cover_num.toString().equals(cover_num.toString())
+					&& temp.covered_perception_difficulty.toString().equals(covered_perception_difficulty.toString())
+					&& temp._show_other_cover.equals(_show_other_cover) && temp.skill_id.toString().equals(skill_id.toString())
+					&& temp.skill_bonus.toString().equals(skill_bonus.toString()) && temp.cover_parts.toString().equals(cover_parts.toString())
+					&& temp.cover_parts_images.toString().equals(cover_parts_images.toString()) && temp.enchantment_level ==enchantment_level				
+					&& temp.damage_type_strengths.toString().equals(damage_type_strengths.toString())
+					&& temp.damage_type_weaknesses.toString().equals(damage_type_weaknesses.toString())){
 						ret = true;
 					}else{
 						ret = false;
@@ -479,34 +480,42 @@ public class Equipment extends Item {
 		
 		@Override 
 		public Item copyItem(){
-			var temp:Equipment = new Equipment();
+			Equipment temp = new Equipment();
 			temp.name = this.name;
-			temp.dropped_description = this.dropped_description;
+			temp.droppedDescription = this.droppedDescription;
 			temp.value = this.value;
-			var count:int = 0;
-			for(count;count<effects.length;count++){
+
+			/*Better way
+			for(count=0;count<effects.length;count++){
 				temp.effects[count] = this.effects[count];
 			}
-			temp.use_description = this.use_description;
-			count = 0;
-			for(count;count<changeEffects.length;count++){
+			*/
+			temp.effects = new ArrayList<>(this.effects);
+			temp.useDescription = this.useDescription;
+			/*Better way
+			for(count=0;count<changeEffects.size();count++){
 				temp.changeEffects[count] = this.changeEffects[count];
 			}
+			*/
+			temp.changeEffects = new ArrayList<>(this.changeEffects);
 			temp.equips_on = this.equips_on;
 			temp.equips_on_num = this.equips_on_num;
 			temp.propogate = this.propogate;
-			temp.inventory_description = inventory_description;
-			temp.ident_difficulty = this.ident_difficulty;
+			temp.inventoryDescription = this.inventoryDescription;
+			temp.identDifficulty = this.identDifficulty;
 			temp.weight = this.weight;
-			temp.num_uses = this.num_uses;
-			count = 0;
-			for(count;count < statActionAdd.size();count++){
+			temp.numUses = this.numUses;
+			/*Better way
+			for(count=0;count < statActionAdd.size();count++){
 				temp.statActionAdd[count] = this.statActionAdd[count];
 			}
+			*/
+			temp.statActionAdd = new ArrayList<>(this.statActionAdd);
 			
-			temp.covers = this.covers
+			temp.covers = new ArrayList<>(this.covers);
 			
-			var i:int = 0;
+			//int i = 0;
+			/*Better way
 			for(i;i<this.covers_desc.length;i++){
 				temp.covers_desc[i] = this.covers_desc[i];
 			}
@@ -544,37 +553,49 @@ public class Equipment extends Item {
 			for(count;count<skill_bonus.length;count++){
 				temp.skill_bonus[count] = this.skill_bonus[count];
 			}
+			*/
+			temp.covers_desc = new ArrayList<>(this.covers_desc);
+			temp.cover_stat =new ArrayList<>(this.cover_stat);
+			temp.cover_min = new ArrayList<>(this.cover_min);
+			temp.stat_req = new ArrayList<>(this.stat_req);
+			temp.stat_min =new ArrayList<>(this.stat_min);
+			temp.stat_max = new ArrayList<>(this.stat_max);
+			temp.covered_perception_difficulty = new ArrayList<>(this.covered_perception_difficulty);
+			temp.skill_id = new ArrayList<>(this.skill_id);
+			temp.skill_bonus =new ArrayList<>(this.skill_bonus);
+			temp.cover_num = new ArrayList<>(this.cover_num);
+			temp.imageID = this.imageID;
 			
-			temp.cover_num = this.cover_num;
-			temp.image_id = this.image_id;
-			
-			temp.cover_parts = this.cover_parts;
-			temp.cover_parts_images = this.cover_parts_images;
+			temp.cover_parts = new ArrayList<>(this.cover_parts);
+			temp.cover_parts_images = new ArrayList<>(this.cover_parts_images);
 			
 			temp.enchantment_level = this.enchantment_level;
 			temp._show_other_cover = this._show_other_cover;
 			
-			temp.damage_type_strengths = this.damage_type_strengths;
-			temp.damage_type_weaknesses = this.damage_type_weaknesses;
+			temp.damage_type_strengths = new ArrayList<>(this.damage_type_strengths);
+			temp.damage_type_weaknesses = new ArrayList<>(this.damage_type_weaknesses);
 			
 			temp.topic = this.topic;
 			
-			temp.crafting_requirements = this.crafting_requirements;
+			temp.craftingRequirements = new ArrayList<>(this.craftingRequirements);
 			
-			temp.upgrade_slot_ids = upgrade_slot_ids;
-			temp.upgrade_items = new Array();
+			temp.upgrade_slot_ids = new ArrayList<>(this.upgrade_slot_ids);
+			temp.upgrade_items = new ArrayList<>();
 			
+			/*
 			count = 0;
 			for(count;count<remove_consequence.length;count++){
 				temp.remove_consequence[count] = this.remove_consequence[count];
 			}
+			*/
+			temp.remove_consequence = new ArrayList<>(this.remove_consequence);
 			
-			temp.tick_count = 0;
-			temp.destroy_tick = this.destroy_tick;
-			temp.spawn_char = this.spawn_char;
+			temp.tickCount = 0;
+			temp.destroyTick = this.destroyTick;
+			temp.spawnChar = this.spawnChar;
 			
 			return temp;
         }
-        */
+        
 
 }

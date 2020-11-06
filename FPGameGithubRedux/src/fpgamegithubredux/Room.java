@@ -6,9 +6,10 @@ import java.util.logging.Logger;
 public class Room extends StaticObject{
     private static final Logger LOGGER = Logger.getLogger(Room.class.getName());
     //protected String description
+    protected ArrayList<Room> exits;
+    protected ArrayList<String> exit_names;
     protected ArrayList<Object> contents;
     protected ArrayList<CharAction> actions;
-    protected ArrayList<Room> exits;
     protected Area area;
     protected String[] exitNames;
     protected static final String[] REUSED = new String[]{"somewhere", " arrives from "};

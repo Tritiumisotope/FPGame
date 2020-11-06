@@ -20,7 +20,7 @@ public class Area extends StaticObject{
     public ArrayList<Template_Room> dynamicBuildTemplate;//var dynamicBuildTemplate:Array;//Template_Room
     public ArrayList<ArrayList<Integer>> dynamicBuildFloorRange;//var dynamicBuildFloorRange:Array
     public Boolean dynamicBuildUp;//var dynamic_build_up:Boolean
-    public ArrayList<Room> templateRooms;//var template_rooms:Array
+    public ArrayList<Template_Room> templateRooms;//var template_rooms:Array
     public ArrayList<Integer> templateFloorRange;//var template_floor_range:Array		
     public int[] tempOffset;//var temp_offset:Array, always 3 elements!
     public int totalActionsTaken = 0;//var totalActionsTaken:Number = 0
@@ -48,7 +48,7 @@ public class Area extends StaticObject{
         rooms = new ArrayList<ArrayList<ArrayList<Room>>>();//new Array()
         map = "";
         room_list = new ArrayList<Room>();
-        templateRooms = new ArrayList<Room>();//template_rooms = null;//new Array()
+        templateRooms = new ArrayList<Template_Room>();//template_rooms = null;//new Array()
         templateFloorRange = new ArrayList<Integer>();//template_floor_range = null;//new Array()
         legend = new ArrayList<String>();//new Array()
         legendFloor = new ArrayList<String>();//legend_floor = null;//new Array()
@@ -290,10 +290,10 @@ public class Area extends StaticObject{
             lr = room_list.get(wakka);
         }
         
-        if (lr != null) {
+        
             //We have to find the room we want to link to
             //but only if it's in the same area as the first
-            if(r.area == lr.area && r.area == this){
+            if(r.area == lr.area && r.area == this&&lr != null){//TODO pulling in null  okay
                 temp = find_room(lr);
                 if(temp != null){
                     int x = temp.get(0);//[0]
@@ -355,7 +355,7 @@ public class Area extends StaticObject{
                     return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
                 }
             }
-        }
+        
         return 1;
     }
     
@@ -456,7 +456,7 @@ public class Area extends StaticObject{
         Boolean other_rooms_ok = true;
         if(rooms.get(new_x)  != null){
             if(rooms.get(new_x).get(new_y) != null){
-                if(rooms.get(new_x).get(new_y).get(new_z) != null){
+                if(rooms.get(new_x).get(new_y).get(new_z) != null){//TODO will this return null if get x or y are?
                     if(rooms.get(new_x).get(new_y).get(new_z) != r)other_rooms_ok = false;
                 }
             }
@@ -938,13 +938,13 @@ public class Area extends StaticObject{
         }
         return ret_array;
     }
-    /*TODO Template room
+
     public void random_area(int num_rooms, Template_Room tr){
         //num+rooms = 10, tr= null
         int i;
         if(tr == null){
-            i = Math.round(Math.random() * (template_rooms.length - 1));
-            tr = template_rooms[i];
+            i = (int)Math.round(Math.random() * (templateRooms.size() - 1));
+            tr = templateRooms.get(i);
         }
         
         if(tr == null) return;
@@ -954,7 +954,7 @@ public class Area extends StaticObject{
         }
         
     }
-    */
+    
     
     
     public void filler_area(int floor_to_build){

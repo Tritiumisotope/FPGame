@@ -305,29 +305,29 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-            
-    public function get_inventory_weight():Number{
-        var ret:Number = 0;
-        var i:int = 0;
-        for(i;i<possessions.length;i++){
-            var item:Item = possessions[i] as Item;
-            ret += item.get_weight();
+    */    
+    public Number get_inventory_weight(){
+        Number ret = 0;
+        int i = 0;
+        for(i=0;i<possessions.size();i++){
+            Item item = (Item)possessions.get(i);
+            ret = ret.doubleValue() + item.getWeight(); //ret += item.getWeight();
         }
         return ret;
     }
     
-    public function get_equip_weight():Number{
-        var ret:Number = 0;
-        var equip_array:Array = body.get_equip_array(true);
-        var i:int = 0;
-        for(i;i<equip_array.length;i++){
-            var item:Item = equip_array[i] as Item;
-            ret += item.get_weight();
+    public Number get_equip_weight(){
+        Number ret = 0;
+        ArrayList<Object> equip_array = body.get_equip_array(true);
+        int i = 0;
+        for(i = 0;i<equip_array.size();i++){
+            Item item = (Item)equip_array.get(i);
+            ret = ret.doubleValue() + item.getWeight();
         }
         
         return ret;
     }
-    
+    /*
     public function judge_relative_skill(c:Character):String{
         var my_skill_tot:int = FPalace_skills.get_total_skill_value(this, FPalace_skills.fight_id);
         var other_skill_tot:int = FPalace_skills.get_total_skill_value(c, FPalace_skills.fight_id);
@@ -387,18 +387,21 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    
-    public function determine_sex(c:Character = null):Sex{
+    */
+    public Sex determine_sex(){
+        return determine_sex(null);
+    }
+    public Sex determine_sex(Character c){//def null
         if(c == null){
-            var temp:Sex = body.get_sex();
-            if(temp.get_name() != sex.get_name())set_sex(temp);
+            Sex temp = body.get_sex();
+            if(!temp.getName().equals(sex.getName()))set_sex(temp);
         }else{
-            var look_sex:Sex = c.body.get_sex(this, c);
+            Sex look_sex = c.body.get_sex(this, c);
             return look_sex;
         }
         return sex;
     }
-    
+    /*
     public function fire_action(i:int, k:int, j:String = null):String{
         var ret:String = "";
         if(location == null) return ret;
@@ -770,23 +773,21 @@ public class Character extends DynamicObject {
         }
         body.remove_stat_action(id, a);
     }
-    
-    public function get_stat_actions(id:int):Array{
-        var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat_id[i] == id)ret = ret.concat(stat[i].get_actions());
+    */
+    public ArrayList<Object> get_stat_actions(int id){
+        ArrayList<Object> ret = new ArrayList<>();
+        int i = 0;
+        for(i=0;i<stats.size();i++){//stat to stats, stat_id to statID
+            if(statID.get(i) == id)ret.addAll(stats.get(i).get_actions());//ret = ret.concat(stats.get(i).get_actions())
         }
-        ret = ret.concat(body.get_stat_actions(id));
+        ret.add(body.get_stat_actions(id));//ret = ret.concat(body.get_stat_actions(id));
         
         //remove duplicates
-        i = 0;
-        for(i;i<ret.length;i++){
-            if(ret[i] != null){
-                var k:int = i + 1;
-                for(k;k<ret.length;k++){
-                    if(ret[i] == ret[k]){
-                        ret[k] = null;
+        for(i=0;i<ret.size();i++){
+            if(ret.get(i) != null){
+                for(int k=1+1;k<ret.size();k++){
+                    if(ret.get(i) == ret.get(k)){
+                        ret.set(k,null); //ret[k] = null
                     }
                 }
             }
@@ -794,7 +795,7 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    */
+    
     public String set_sex(Sex s){
         String ret = "";
         if(sex != null && location != null){
@@ -845,67 +846,67 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-    public Number get_stat(int i){
+    public Number get_stat(Number i){
         return get_stat(i,1,0,-1,true);
     }
-    public Number get_stat(int i,int get_hard_value){
+    public Number get_stat(Number i,int get_hard_value){
         return get_stat(i,get_hard_value,0,-1,true);
     }
-    public Number get_stat(int i,int get_hard_value, int multi_part_process){
+    public Number get_stat(Number i,int get_hard_value, int multi_part_process){
         return get_stat(i,get_hard_value,multi_part_process,-1,true);
     }
-    public Number get_stat(int i,int get_hard_value, int multi_part_process, int part_id){
+    public Number get_stat(Number i,int get_hard_value, int multi_part_process, int part_id){
         return get_stat(i,get_hard_value,multi_part_process,part_id,true);
     }
-    public Number get_stat(int i,int get_hard_value, 
+    public Number get_stat(Number i,int get_hard_value, 
     int multi_part_process/*Body.get_stat_total*/, 
     int part_id/*Body.target_all_parts*/, Boolean add_equip){
         //default get_hard = 1, multi_part =0, part_id = -1, add_eqip = true
-        if(i == 0) return 0;
+        if(i.intValue() == 0) return 0;
         Number ret = -1;
         
         if(part_id < 0){
             int k = 0;
             for(k=0;k<statID.size();k++){//.length
                 if(i == statID.get(k)){//[]
-                    //ret += stat[k].get_stat_value(this, get_hard_value,add_equip) + 1;
+                    ret = ret.doubleValue() + stats.get(k).get_stat_value(this, get_hard_value,add_equip) + 1;//ret += stat[k].get_stat_value(this, get_hard_value,add_equip) + 1;
                 }
             }
-            /*
+            
             Number body_stat = -1;
             if(body != null){
-                body_stat = body.get_stat_by_id(this, i,get_hard_value,multi_part_process,part_id,add_equip);
+                body_stat = body.get_stat_by_id(this, i.intValue(),get_hard_value,multi_part_process,part_id,add_equip);
             }
-            */
-            /*
-            if(body_stat > -1 && ret > -1){
-                ret += body_stat; 
-            }else if(body_stat > - 1){
-                ret += body_stat + 1; 
+        
+            
+            if(body_stat.intValue() > -1 && ret.intValue() > -1){
+                ret = ret.doubleValue() + body_stat.doubleValue();//ret += body_stat; 
+            }else if(body_stat.intValue() > - 1){
+                ret = ret.doubleValue() + body_stat.doubleValue()+1;//ret += body_stat + 1; 
             }
-            */
+            
         }else{
-            /*
-            Number part_stat =body.get_stat_by_id(this, i, get_hard_value, multi_part_process, part_id,add_equip);
-            if(part_stat > - 1){
-                ret += part_stat + 1; 
+            
+            Number part_stat =body.get_stat_by_id(this, i.intValue(), get_hard_value, multi_part_process, part_id,add_equip);
+            if(part_stat.doubleValue() > - 1){
+                ret = ret.doubleValue() + part_stat.doubleValue() + 1; 
             }
-            */
+            
         }
                     
         if(ret.intValue() < 0){
             ret = -1;//stat not found
         }
-        /*
-        if(i == Character.relations_affect_id){
+        
+        if(i.intValue() == Character.relations_affect_id){
             //only one thing should ever do this, and it's just to see if the "stat" exists over in Challenge
             return 1;
         }
         
-        if(i == Character.gold_id){
+        if(i.intValue() == Character.gold_id){
             return gold;
         }
-        */           
+                  
         return ret;
     }
     public String apply_affect_by_id(int i,Number k){
@@ -1015,8 +1016,7 @@ public class Character extends DynamicObject {
         int index = statID.indexOf(statIDForChange);
         if(index >= 0){
             Stat temp = ((Stat)stats.get(index));
-            //temp.statValue += changeBy;
-            temp.statValue = temp.statValue.doubleValue()+ changeBy.doubleValue();
+            temp.statValue = temp.statValue.doubleValue()+ changeBy.doubleValue();//temp.statValue += changeBy
         }
 
         return ret;
@@ -1175,6 +1175,45 @@ public class Character extends DynamicObject {
     public int get_skill_rank_by_id(int skill_id){
         return skills.get_skill_ranks(skill_id);
     }
+    /*
+    public function set_skills_by_id(skill_id:int, change_amount:int):String{
+        var ret:String = "";
+        if(FPalace_skills.get_skill_by_id(skill_id) != null){
+            personality.advance_objectives(Quest.skill_action, [skill_id], this);
+            ret += sanitize(skills.set_skill_value(this, skill_id, change_amount));
+        }
+        return ret;
+    }
+    
+    public function increase_skill_by_id(skill_id:int, change_amount:int = 1):String{
+        var ret:String = "";
+        var cost:int = skills.get_skill_cost(this, skill_id, change_amount);
+        xp = xp - cost;
+        ret += skills.set_skill_value(this, skill_id, change_amount);
+        set_busy();
+        return ret;
+    }
+    
+    public function set_skill_bonus(skill_id:int, change_amt:int):String{
+        var ret:String = "";
+        if(FPalace_skills.get_skill_by_id(skill_id) != null){
+            ret += skills.set_bonus(skill_id, change_amt);
+        }			
+        
+        return ret;
+    }
+    
+    public function determine_sex(c:Character = null):Sex{
+        if(c == null){
+            var temp:Sex = body.get_sex();
+            if(temp.get_name() != sex.get_name())set_sex(temp);
+        }else{
+            var look_sex:Sex = c.body.get_sex(this, c);
+            return look_sex;
+        }
+        return sex;
+    }
+    */
     public String fireAction(int contendID, int actionID){
         String ret = "";
         if(location != null){
@@ -3304,11 +3343,11 @@ public class Character extends DynamicObject {
         int max_race_count = 0;
         int i = 0;
         
-        for(i=0;i<body.parts.length;i++){
-            r = body.parts[i].race;
+        for(i=0;i<body.parts.size();i++){
+            r = body.parts.get(i).race;
             r_count = 0;
-            for(int k=i;k<body.parts.length;k++){
-                if (body.parts[k].race.getName().equals(r.getName())){
+            for(int k=i;k<body.parts.size();k++){
+                if (body.parts.get(k).race.getName().equals(r.getName())){
                     r_count ++;
                 }
             }
@@ -3544,9 +3583,10 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    
-    public function fluid_extraction(fluid_id:int):String{
-        var ret:String = "";
+    */
+    /*
+    public String fluid_extraction(int fluid_id){
+        String ret = "";
         var extract_effects:Array = get_stat_actions(fluid_id);
         var i:int = 0;
         for(i;i<extract_effects.length;i++){
@@ -3587,7 +3627,8 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    
+    */
+    /*
     public function impregnate(c:Character = null, preg_to_tick:Boolean = false):String{
         var ret:String = "";
         //trace("(CHARACTER)impregnate attempt on " + get_name());

@@ -25,10 +25,8 @@ public class Area_weather {
 		}
 		
 		public void new_daytime_status(String stat, int time){
-            //daytime_status[daytime_status.length] = stat
-            daytime_status.add(stat);
-            //daytime_status_time[daytime_status_time.length] = time
-            daytime_status_time.add(time);
+            daytime_status.add(stat); //daytime_status[daytime_status.length] = stat
+            daytime_status_time.add(time);//daytime_status_time[daytime_status_time.length] = time
 		}
 		
 		public String get_description(int current_day_count){

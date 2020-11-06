@@ -14,12 +14,12 @@ public class Relationship {
     public static final int child_type = 4;
     public static final int married_type = 5;
     
-    public Character relationship_with;
-    public Number positive;
-    public Number negative;
-    public Boolean introduced;
-    public ArrayList<Integer> change_reasons;//public var change_reasons:Array
-    public int relationship_type;		
+    protected Character relationship_with;
+    protected Number positive;
+    protected Number negative;
+    protected Boolean introduced;
+    protected ArrayList<Integer> change_reasons;//protected var change_reasons:Array
+    protected int relationship_type;		
 
     public Relationship(){
         this(null);
@@ -75,8 +75,7 @@ public class Relationship {
         }
         //trace("(Relationship)made change of " + k + " ending status:" + relationship_status())
         //close bracket
-        //change_reasons[change_reasons.length] = change_id
-        change_reasons.add(change_id);
+        change_reasons.add(change_id);        //change_reasons[change_reasons.length] = change_id
     }
     
     public void change_to_aggressive(){

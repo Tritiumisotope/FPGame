@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class BodyPartState {
     
-        public Number mod;
+        protected Number mod;
 
-        public String[] descriptions;//public var descriptions:Array
-        public int[] mod_changes;//was Number[] public var mod_changes:Array
-        public int[] comparisons;//was number[] public var comparisons:Array
-        public String[] outputs;//public var outputs:Array
-        public Boolean[] rat_stat_id;//public var rat_stat_id:Array
-        public Boolean[] mod_stat_id;//public var mod_stat_id:Array
-		public int[] ratio_stat;//public var ratio_stat:Array
+        protected String[] descriptions;//protected var descriptions:Array
+        protected int[] mod_changes;//was Number[] protected var mod_changes:Array
+        protected int[] comparisons;//was number[] protected var comparisons:Array
+        protected String[] outputs;//protected var outputs:Array
+        protected Boolean[] rat_stat_id;//protected var rat_stat_id:Array
+        protected Boolean[] mod_stat_id;//protected var mod_stat_id:Array
+		protected int[] ratio_stat;//protected var ratio_stat:Array
 		//TODO double check ratio_stat only ever has two elements!
-		public Boolean[] static_ratio_stat;//public var static_ratio_stat:Array
-        protected String[] operations;//public var operations:Array
-        protected ArrayList<Integer> stat_effected;//public var stat_effected:Array
+		protected Boolean[] static_ratio_stat;//protected var static_ratio_stat:Array
+        protected String[] operations;//protected var operations:Array
+        protected ArrayList<Integer> stat_effected;//protected var stat_effected:Array
 		
 		public BodyPartState(){
 			// constructor code

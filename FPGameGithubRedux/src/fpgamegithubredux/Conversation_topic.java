@@ -11,25 +11,22 @@ public class Conversation_topic {
     
     public String dialog_name;
     
-    public ArrayList<CharAction> actions;//public var actions:Array;
+    public ArrayList<CharAction> actions;//public var actions:Array
     
     public ArrayList<Integer> tell_dialog;
+
+    
+    //maybe get rid of these three arrays, and replace with single array of instances of the Challenge class
     public ArrayList<ArrayList<Integer>> stat_check;
     public ArrayList<ArrayList<Integer>> check_challenge;
     public ArrayList<Boolean> party_check;
     public ArrayList<Mob> mob_check;
-    /*
-    //maybe get rid of these three arrays, and replace with single array of instances of the Challenge class
-    public var stat_check:Array;
-    public var check_challenge:Array;
-    public var party_check:Array;
-    public var mob_check:Array;
     //end contemplations
-    */
+    
     public Boolean no_spread;
     public Boolean no_mention;
     
-    protected ArrayList<String> ct_ref_names;//public var ct_ref_names:Array;
+    protected ArrayList<String> ct_ref_names;//public var ct_ref_names:Array
     
     public Conversation_topic(){
         // constructor code
@@ -50,8 +47,7 @@ public class Conversation_topic {
     }
     
     public void add_topic_reference_by_name(String ref_name){
-        //ct_ref_names[ct_ref_names.length] = ref_name;
-        ct_ref_names.set(ct_ref_names.size(),ref_name);
+        ct_ref_names.set(ct_ref_names.size(),ref_name);//ct_ref_names[ct_ref_names.length] = ref_name
     }
     
     public void set_no_spread(){
@@ -94,14 +90,12 @@ public class Conversation_topic {
     }
     public void add_action(CharAction a, int stat_id/*int = -1*/, int defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
         //a:Action, stat_id:Array = null/*int = -1*/, defence:Array = null/*int = 0*/, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
-        //actions[actions.length] = a;
-        //actions.set(actions.size(), a);
         //arraylist from single int hack
         ArrayList<Integer> dia1 = new ArrayList<>();
         ArrayList<Integer> dia2 = new ArrayList<>();
         dia1.add(stat_id);
         dia2.add(defence);
-        actions.add(a);
+        actions.add(a);//actions[actions.length] = a
         stat_check.add(dia1);//stat_check[stat_check.length] = stat_id
         check_challenge.add(dia2);//check_challenge[check_challenge.length] = defence
         party_check.add(same_party);//party_check[party_check.length] = same_party
@@ -113,9 +107,7 @@ public class Conversation_topic {
     }
     public void add_action(CharAction a, ArrayList<Integer> stat_id/*int = -1*/, ArrayList<Integer> defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
         //a:Action, stat_id:Array = null/*int = -1*/, defence:Array = null/*int = 0*/, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
-        //actions[actions.length] = a;
-        //actions.set(actions.size(), a);
-        actions.add(a);
+        actions.add(a);//actions[actions.length] = a
         stat_check.add(stat_id);//stat_check[stat_check.length] = stat_id
         check_challenge.add(defence);//check_challenge[check_challenge.length] = defence
         party_check.add(same_party);//party_check[party_check.length] = same_party
@@ -194,48 +186,48 @@ public class Conversation_topic {
                         //check relationship
                         if(stat_check.get(i).get(check_count) == Character.relations_affect_id){
                             if(c_self.personality.check_relationship(c_init,c_self) >= check_challenge.get(i).get(check_count)){
-                                /*TODO CHaracter party
+
                                 if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
-                                    //ret = i;
+                                    ret = i;
                                 }else{
                                     pass_check = false;
                                 }
-                                */
+
                             }else{
                                 pass_check = false;
                             }
                         }else if(stat_check.get(i).get(check_count) == Character.attraction_id){
                             if(c_self.personality.determine_attraction(c_init,c_self) >= check_challenge.get(i).get(check_count)){
-                                /*TODO Character party
-                                if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                    //ret = i;
+
+                                if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                    ret = i;
                                 }else{
                                     pass_check = false;
                                 }
-                                */
+                                
                             }else{
                                 pass_check = false;
                             }
                         }else if(stat_check.get(i).get(check_count) == Character.introduced_id){
-                            /*TODO relationships and related personality methods
+                            
                             if(c_self.personality.get_introduced(c_init,c_self)){
-                                if(check_challenge[i][check_count] < 0){
+                                if(check_challenge.get(i).get(check_count) < 0){
                                     pass_check = false;
                                 }else{
-                                    if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                        //ret = i;
+                                    if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                        ret = i;
                                     }else{
                                         pass_check = false;
                                     }
                                 }
                             }else{
-                                if(check_challenge[i][check_count] < 0){
+                                if(check_challenge.get(i).get(check_count)< 0){
                                     
                                 }else{
                                     pass_check = false;
                                 }
                             }
-                            */
+                            
                         }else{
                             //trace("(Conversation_topic.get_start_step)got id " + stat_check.get(i).get(check_count) + " and don't know what to do about it");
                         }
@@ -247,13 +239,13 @@ public class Conversation_topic {
                             c_init = temp_char;
                         }
                         if(c_self.getStat(stat_check.get(i).get(check_count)) >= check_challenge.get(i).get(check_count)){
-                            /*TODO CHaracter party
+
                             if(!party_check.get(i)|| (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
-                                //ret = i;
+                                ret = i;
                             }else{
                                 pass_check = false;
                             }
-                            */
+                            
                         }else{
                             pass_check = false;
                         }

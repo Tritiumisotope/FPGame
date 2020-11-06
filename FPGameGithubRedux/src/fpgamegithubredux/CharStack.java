@@ -17,7 +17,7 @@ public class CharStack{
 	}
 	 
 	private void ensureCapacity(int newSize) {
-	    char newBiggerArray[];
+	    char[] newBiggerArray;
 	    if (elements.length < newSize) {
 	        newBiggerArray = new char[elements.length * 2];
 	        System.arraycopy(elements, 0, newBiggerArray, 0, size);

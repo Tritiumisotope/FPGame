@@ -47,7 +47,7 @@ public class DynamicConsequence extends Consequence {
         consequence_list_action = list_action;
     }
     
-    //@Override 
+    @Override 
     public String trigger(Number r, Character c, Character c2){//default c1 null, c2 null
         String ret = super.trigger(r.intValue(),c,c2);
         ret += dynamic_choices(c, c2);
@@ -64,13 +64,13 @@ public class DynamicConsequence extends Consequence {
         //TODO location template, location exit_actions, character add_to_possessions
         /*
         if(consequence_list_type == DynamicConsequence.list_parts){
-            for(con_count=0;con_count < c.body.parts.length;con_count++){
-                temp_bp = c.body.parts[con_count];
+            for(con_count=0;con_count < c.body.parts.size();con_count++){
+                temp_bp = c.body.parts.get(con_count);
                 s += "<dc" + con_count + ">" + temp_bp.getName() + "</dc" + con_count + ">\n";
             }
         }else if(consequence_list_type == DynamicConsequence.list_noncrit_parts){
-            for(con_count=0;con_count < c.body.parts.length;con_count++){
-                temp_bp = c.body.parts[con_count];
+            for(con_count=0;con_count < c.body.parts.size();con_count++){
+                temp_bp = c.body.parts.get(con_count);
                 if(!temp_bp.crit_part()){
                     s += "<dc" + con_count + ">" + temp_bp.getName() + "</dc" + con_count + ">\n";
                 }
@@ -100,7 +100,7 @@ public class DynamicConsequence extends Consequence {
                 if(consequence_list_text != "") s += consequence_list_text;
                 if(temp_item != null){
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", temp_item.getName());
-                    temp_item = temp_item.itemCopy();//clone
+                    temp_item = temp_item.copyItem();//clone
                     c.add_to_possessions(temp_item);
                 }else{
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
@@ -172,20 +172,20 @@ public class DynamicConsequence extends Consequence {
         //TODO body, type, slice, possessions
         if(consequence_list_action == DynamicConsequence.list_removepart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice[0], c);
             //if(temp_bp.crit_part()) ret += c.die();				
         }else if(consequence_list_action == DynamicConsequence.list_removeandaddpart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice[0], c);
             //if(temp_bp.crit_part()) ret += c.die();
             //c2.apply_change_effect(temp_bp);
         }else if(consequence_list_action == DynamicConsequence.list_useitem){
             //right in combat, don't know about overworld
-            //temp_item = c2.possessions[choice[0]];
+            temp_item = c2.possessions.get(choice[0]);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon){//was is
                 //ret += c2.hold((Weapon)temp_item, 0, -1, true);
@@ -220,7 +220,7 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_action == DynamicConsequence.list_target_part){
             //right in combat, don't know about overworld
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             int count= 0;
             /*
             for(count=0;count<target_part.length;count++){
@@ -322,10 +322,10 @@ public class DynamicConsequence extends Consequence {
             if(temp_aitem.getName().indexOf("Refined") < 0)temp_aitem.setName("Refined " + temp_aitem.getName());
             if(temp_aitem.getPropogate())temp_aitem.setPropogate();
         }else if(consequence_list_action == DynamicConsequence.list_halvepart){
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             int i = 0;
-            for(i=0;i<temp_bp.stat_description.length;i++){
-                temp_stat = temp_bp.stat_description[i];
+            for(i=0;i<temp_bp.stat_description.size();i++){
+                temp_stat = temp_bp.stat_description.get(i);
                 Number tempValue = -1*temp_stat.statValue.doubleValue()/2;
                 ret += temp_bp.apply_effect(temp_stat.get_id(),tempValue,c);//-temp_stat.statValue
             }
@@ -340,43 +340,46 @@ public class DynamicConsequence extends Consequence {
         
     }
     
-    //@Override 
-    public Consequence copyConsequence(){
+    @Override 
+    public Consequence copyConsequence(){//TODO call to super?
         DynamicConsequence ret = new DynamicConsequence();
-        ret.statEffected = this.statEffected;
-        ret.conseq = this.conseq;//was consequence, presumed same
+        ret.statEffected = new ArrayList<>(this.statEffected);
+        ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
+        /*
         int i = 0;
-        for(i=0;i<this.consequenceDescription.length;i++){
+        for(i=0;i<this.consequenceDescription.size();i++){
             ret.consequenceDescription[i] = this.consequenceDescription[i];
         }
-        
-        ret.roll_required = this.roll_required;
-        ret.showEffects = this.showEffects;
-        ret.temp_flag = this.temp_flag;
+        */
+        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
+        ret.roll_required = new ArrayList<>(this.roll_required);
+        ret.showEffects = new ArrayList<>(this.showEffects);
+        ret.tempFlag = new ArrayList<>(this.tempFlag);
         ret.amt_by_roll = this.amt_by_roll;
-        ret.amt_formula = this.amt_formula;
+        ret.amt_formula = new ArrayList<>(this.amt_formula);
         ret.random_effect = this.random_effect;
-        ret.consequenceTickEffect = this.consequenceTickEffect;
+        ret.consequenceTickEffect = new ArrayList<>(this.consequenceTickEffect);
         ret.change_on_success = this.change_on_success;
         ret.always_change = this.always_change;
         ret.never_change = this.never_change;
-        //ret.changeEffects = this.changeEffects;
-        //ret.action_for_stat = this.action_for_stat;
-        ret.consequenceChallenge = this.consequenceChallenge;
+        ret.change_effects = new ArrayList<>(this.change_effects);
+        ret.action_for_stat = new ArrayList<>(this.action_for_stat);
+        ret.consequenceChallenge = new ArrayList<>(this.consequenceChallenge);
         ret.xp_reward = this.xp_reward;
-        //ret.un_equip_slots = this.un_equip_slots;
-        //ret.un_equip_target = this.un_equip_target;
+        ret.un_equip_slots = new ArrayList<>(this.un_equip_slots);
+        ret.un_equip_target = new ArrayList<>(this.un_equip_target);
         ret.impregnate = this.impregnate;
         ret.consume = this.consume;
         ret.extract = this.extract;
-        ret.consequenceTarget = this.consequenceTarget;
+        ret.consequenceTarget = new ArrayList<>(this.consequenceTarget);
         ret.make_party = this.make_party;
         ret.remove_party = this.remove_party;
         ret.max_damage = this.max_damage;
-        ret.targetPart = this.targetPart;
-        ret.remove_effect_ids = this.remove_effect_ids;
+        ret.targetPart = new ArrayList<>(this.targetPart);
+        ret.remove_effect_ids = new ArrayList<>(this.remove_effect_ids);
         ret.interupt_chal = this.interupt_chal;
-        //ret.char_effect = this.char_effect;
+        ret.char_effect = new ArrayList<>(this.char_effect);
+        ret.advance_effect_by = new ArrayList<>(this.advance_effect_by);//TODO why was missing?
         
         ret.consequence_list_type = this.consequence_list_type;
         ret.consequence_list_action = this.consequence_list_action;

@@ -20,10 +20,10 @@ public class Sex extends DynamicObject {
 
     public Sex() {
         name = "";
-        bonus = new ArrayList<>();//new Number[0];
-        age_stat = new ArrayList<>();//new int[0];
+        bonus = new ArrayList<>();//new Number[0]
+        age_stat = new ArrayList<>();//new int[0]
         ArrayList<Double> dubtemp = new ArrayList<>();
-        age_stat_change = new ArrayList<>();//new double[0][0];
+        age_stat_change = new ArrayList<>();//new double[0][0]
         age_stat_change.add(dubtemp);
         social_topics = new ArrayList<>();
         pronoun = "";
@@ -75,7 +75,7 @@ public class Sex extends DynamicObject {
     }
     
     public void new_age_name(int age, String desc){
-        age_name.add(new AgeNamePair(age,name));//age_name[age_name.size()] = new AgeNamePair(age,name);
+        age_name.add(new AgeNamePair(age,desc));//age_name[age_name.size()] = new AgeNamePair(age,name)
     }
     
     public String get_age_name(Character c){
@@ -107,8 +107,7 @@ public class Sex extends DynamicObject {
         c.equip_state = 1;
         int i= 0;
         for(i=0;i<equip_array.size();i++){
-            //temp_e = equip_array.get(i);
-            if(equip_array.get(i) instanceof Equipment){
+            if(equip_array.get(i) instanceof Equipment){//temp_e = equip_array.get(i)
                 temp_e = (Equipment)equip_array.get(i);
                 temp_e.remove_effects(c);
             }//TODO verify   
@@ -117,13 +116,13 @@ public class Sex extends DynamicObject {
         int starting_age = (int)c.getStat(FPalaceHelper.age_id);
         int ending_age = (int)c.getStat(FPalaceHelper.age_id) + age_change;
         for (i=0;i<age_stat.size();i++){
-            int j = starting_age;
+            int j;// = starting_age
             double percent_change = 0;//was Number
             if(age_stat_change.get(i) != null){
                 Number curr_stat_val;
                 if(age_change > 0){
                     curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
-                    j++;//starting_age+1
+                    //j++//starting_age+1
 
                     for(j=starting_age+1;j<= ending_age;j++){
                         if (age_stat_change.get(i).get(j) != null){

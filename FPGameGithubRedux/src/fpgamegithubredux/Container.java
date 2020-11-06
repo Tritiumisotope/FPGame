@@ -31,7 +31,7 @@ public class Container extends StaticObject {
     }
     
     public void set_bury(String s , String b, CharAction ba){//def "","",null
-        if(s == ""){
+        if(s.equals("")){
             bury = "Bury";
             bury_text = "buries";
         }else{
@@ -114,7 +114,7 @@ public class Container extends StaticObject {
             }				
         }
         
-        if(bury != ""){
+        if(!bury.equals("")){
             s += "\n\n<font color='#0000FF'><a href=\"event:loot,"+k+",-2\">"+bury+"</a></font>";
         }
         

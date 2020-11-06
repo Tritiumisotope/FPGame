@@ -42,7 +42,7 @@ public class Race extends DynamicObject {
     protected Stat[] stats;
     
     //public var actionArray s;
-    protected CharAction[] actions;
+    protected ArrayList<CharAction> actions;
 
     protected ArrayList<CharAction> attacks;
     protected ArrayList<Integer> attack_slots;
@@ -102,12 +102,12 @@ public class Race extends DynamicObject {
         */
         surnames[0] = "";
         
-        /*
-        stats = new Array();
-        actions = new Array();
-        attacks = new Array();
-        attack_slots = new Array();
-        */
+        
+        //stats = new Array();
+        actions = new ArrayList<>();
+        //attacks = new Array();
+        //attack_slots = new Array();
+        
         stats = null;
         preg_effect = null;
         
@@ -240,7 +240,7 @@ public class Race extends DynamicObject {
     }
     
     public void new_action(CharAction a){
-        actions[actions.length] = a;
+        actions.add(a); //actions[actions.length] = a;
     }
     
     public void new_attack(CharAction a){
@@ -253,25 +253,25 @@ public class Race extends DynamicObject {
         attack_slots.set(attack_slots.size(), slot_id);
     }
     
-    /*
-    public Array get_attacks(BodyPart bp){
-        var temp_arr:Array = new Array;
+    
+    public ArrayList<CharAction> get_attacks(BodyPart bp){
+        ArrayList<CharAction> temp_arr = new ArrayList<>();
         
         int count = 0;
-        for(count=0;count< attacks.length;count++){
-            if(attack_slots[count] > -1){
-                if(attack_slots[count] == bp.get_part_id()){
-                    temp_arr[temp_arr.length] = attacks[count];
+        for(count=0;count< attacks.size();count++){
+            if(attack_slots.get(count) > -1){
+                if(attack_slots.get(count) == bp.get_part_id()){
+                    temp_arr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count];
                 }
             }else{
-                temp_arr[temp_arr.length] = attacks[count];
+                temp_arr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count];
             }
         }
         
         
         return temp_arr;
     }
-    */
+    
     
     public void new_male_name(String s){
         male_names[male_names.length] = s;

@@ -189,11 +189,10 @@ public class Party {
         int reward = Math.round(i/members.size());//was uint
         
         int count = 0;
-        /*TODO set_xp Character
+        
         for(count=0;count<members.size();count++){
             s += members.get(count).set_xp(reward);
         }
-        */
         return s;
         
     }

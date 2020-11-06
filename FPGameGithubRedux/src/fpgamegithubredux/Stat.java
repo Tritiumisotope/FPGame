@@ -1,5 +1,7 @@
 package fpgamegithubredux;
 
+import java.util.ArrayList;
+
 public class Stat {
     public static final int STATUSCONFIRMEDOK = 1;//is all good
 	public static final int STATUSCONFIRMEDINCAPACITATED = 0;//incapacitates
@@ -37,7 +39,7 @@ public class Stat {
     protected int max_stat_id;
     protected int min_stat_id;
     protected Number tempStatValue;
-    protected double stat_value_from_equip;
+    protected double statValue_from_equip;
 
     protected String[] check_condition;//public var check_condition:Array
     protected int[] check_against;//public var check_against:Array
@@ -48,9 +50,9 @@ public class Stat {
 
     
     //public var stat_calculation:Array;
-    protected String[] stat_calculation;
+    protected ArrayList<String> stat_calculation;
     
-    protected CharAction[] stat_actions;//public var stat_actions:Array
+    protected ArrayList<CharAction> stat_actions;//public var stat_actions:Array
     public Stat(){
         this(-1);
     }
@@ -81,7 +83,7 @@ public class Stat {
         stat_down_products = null;
         
         
-        tempStatValue = statValue = stat_value_from_equip = 0;
+        tempStatValue = statValue = statValue_from_equip = 0;
         show_decimals = 2;
         stat_desc_ttl_or_indiv = false;
         always_show = false;
@@ -96,7 +98,7 @@ public class Stat {
         
         //stat_desc_ttl_part_limit = new Array();
         
-        //stat_calculation = null;
+        stat_calculation = null;
         
         rummage_inventory = false;
         rummage_body = false;
@@ -109,17 +111,17 @@ public class Stat {
         always_calc = !always_calc;
     }
     public void new_stat_action(CharAction a){
-        stat_actions[stat_actions.length] = a;
+        stat_actions.add(a); //stat_actions[stat_actions.length] = a;
     }
     
     public void remove_stat_action(CharAction a){
         
-        for(int i=0;i<stat_actions.length;i++){
-            if(stat_actions[i] == a)stat_actions[i] = null;
+        for(int i=0;i<stat_actions.size();i++){
+            if(stat_actions.get(i) == a)stat_actions.set(i,null); //stat_actions[i] = null;
         }
     }
     
-    public CharAction[] get_actions(){
+    public ArrayList<CharAction> get_actions(){
         return stat_actions;
     }
     
@@ -282,7 +284,7 @@ public class Stat {
         age = !age;
     }
     
-    public void set_stat_calculation(String[] sc){
+    public void set_stat_calculation(ArrayList<String> sc){
         stat_calculation = sc;
     }
     public void setStatValue(Number val, int dumb){
@@ -309,116 +311,120 @@ public class Stat {
     public double get_stat_value(Character c){
         return get_stat_value(c,1,true,false);
     }
+    public double get_stat_value(Character c, int i, Boolean add_equip){
+        return get_stat_value(c,i,add_equip);
+    }
     public double get_stat_value(Character c, int i, Boolean add_equip, Boolean skip_calc){//Number
         // i:int = 1, add_equip:Boolean = true, skip_calc:Boolean = false
         double ret = statValue.doubleValue();
         if(i == 1)ret = tempStatValue.doubleValue();
-        if(add_equip)ret += stat_value_from_equip;
+        if(add_equip)ret += statValue_from_equip;
         
         if((always_calc ||!skip_calc) && stat_calculation != null && c != null){
-            //if(rummage_inventory)ret += c.get_inventory_weight();
-            //if(rummage_body)ret += c.get_equip_weight();
-            //TODO
+            if(rummage_inventory)ret += c.get_inventory_weight().doubleValue();
+            if(rummage_body)ret += c.get_equip_weight().doubleValue();
             int count = 0;
-            String[] temp_calc = new String[0];//was Number maybe? in Array
+            ArrayList<Object> temp_calc = new ArrayList<>();//was Number maybe? in Array
             
-            for(count = 0;count < stat_calculation.length;count++){
-                if(temp_calc[count] == null){
-                    /*
-                    if(stat_calculation[count] instanceof String){//was is
-                        if(stat_calculation[count].indexOf("s") >= 0 || stat_calculation[count].indexOf("k") >= 0){
-                            if(stat_calculation[count].indexOf("s") >= 0){
-                                //temp_calc[count] = c.getStat(Integer.parseInt((stat_calculation[count].substring(stat_calculation[count].indexOf("s") + 1, stat_calculation[count].length()))));
-                                //TODO figure out WEIRDNESS
+            for(count = 0;count < stat_calculation.size();count++){
+                if(temp_calc.get(count) == null){
+                    
+                    if(stat_calculation.get(count) instanceof String){//was is
+                        if(stat_calculation.get(count).indexOf("s") >= 0 || stat_calculation.get(count).indexOf("k") >= 0){
+                            if(stat_calculation.get(count).indexOf("s") >= 0){
+                                //temp_calc.get(count) = c.getStat(Integer.parseInt((stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("s") + 1, stat_calculation.get(count).length()))));
+                                //replaced by below
+                                temp_calc.set(count,(int)c.getStat(Integer.parseInt(stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("s") + 1, stat_calculation.get(count).length()))));
                             }else{
-                                //temp_calc[count] = c.get_skill_by_id((int)(stat_calculation[count].substr(stat_calculation[count].indexOf("k") + 1, stat_calculation[count].length)));
+                                temp_calc.set(count, c.get_skill_by_id(Integer.parseInt(stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("k") + 1, stat_calculation.get(count).length()))));
                             }								
                             
-                            if(temp_calc[count] < 0)temp_calc[count] = 0;
+                            if((Integer)temp_calc.get(count) < 0)temp_calc.set(count, 0);
                             int temp_count = count + 1;
-                            for(temp_count= count + 1;temp_count< stat_calculation.length;temp_count++){
-                                if(stat_calculation[temp_count] == stat_calculation[count]){
-                                    temp_calc[temp_count] = temp_calc[count];
+                            for(temp_count= count + 1;temp_count< stat_calculation.size();temp_count++){
+                                if(stat_calculation.get(temp_count) == stat_calculation.get(count)){
+                                    temp_calc.set(temp_count, temp_calc.get(count));
                                 }
                             }
                         }else{
-                            temp_calc[count] = stat_calculation[count];
+                            temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));
                         }
-                        */
-                    //}else{
-                        temp_calc[count] = stat_calculation[count];
-                    //}
+                        
+                    }else{
+                        temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));//temp_calc.get(count) = stat_calculation.get(count);
+                    }
                 }
             }
             
             //TODO what even?!
             
-            StringStack char_stack = new StringStack(); // was array with new
-            NumStack num_stack = new NumStack();//new Array();
+            ArrayList<String> char_stack = new ArrayList<>(); // was array with new
+            ArrayList<Number> num_stack = new ArrayList<>();//new Array();
             
-            count = 0;
-            for(count=0; count <= temp_calc.length; count ++){
-                if(temp_calc[count] instanceof String || temp_calc[count] == null){//was is
+            for(count=0; count <= temp_calc.size(); count ++){//TODO this
+                
+                if(temp_calc.get(count) instanceof String || temp_calc.get(count) == null){//was is
                     String temp_char = "";
                     Number num1;
                     Number num2;
                     
-                    if(temp_calc[count].equals("(")){
-                        char_stack.push(temp_calc[count]);
-                    }else if(temp_calc[count].equals(")") || temp_calc[count] == null){
-                        temp_char = char_stack.pop();
+                    if(temp_calc.get(count).equals("(")){
+                        char_stack.add((String)temp_calc.get(count)); //char_stack.push(temp_calc.get(count));
+                    }else if(temp_calc.get(count).equals(")") || temp_calc.get(count) == null){
+                        temp_char = char_stack.remove(char_stack.size());//pop
                         if(!temp_char.equals("(")){
-                            char_stack.pop();
-                            num2 = num_stack.pop();
-                            num1 = num_stack.pop();
+                            char_stack.remove(char_stack.size());//pop
+                            num2 = num_stack.remove(num_stack.size());//pop
+                            num1 = num_stack.remove(num_stack.size());//pop
                             if(temp_char.equals("*")){
-                                num_stack.push(num1.doubleValue()*num2.doubleValue());
+                                num_stack.add(num1.doubleValue()*num2.doubleValue());//num_stack.push(num1.doubleValue()*num2.doubleValue());
                             }else if(temp_char.equals("/")){
-                                num_stack.push(num1.doubleValue()/num2.doubleValue());
+                                num_stack.add(num1.doubleValue()/num2.doubleValue());//push
                             }else if(temp_char.equals("+")){
-                                num_stack.push(num1.doubleValue()+num2.doubleValue());
+                                num_stack.add(num1.doubleValue()+num2.doubleValue());//push
                             }else if(temp_char.equals("-")){
-                                num_stack.push(num1.doubleValue()-num2.doubleValue());
+                                num_stack.add(num1.doubleValue()-num2.doubleValue());//push
                             }else{
-                                num_stack.push(num1);
-                                num_stack.push(num2);
+                                num_stack.add(num1);//push
+                                num_stack.add(num2);//push
                             }
                         }
                     }else{
-                        temp_char = char_stack.pop();
+                        temp_char = char_stack.remove(char_stack.size());//pop
                         if(temp_char.equals("(")){
-                            char_stack.push(temp_char);
-                            char_stack.push(temp_calc[count]);
+                            char_stack.add(temp_char);//push
+                            char_stack.add((String)temp_calc.get(count));//push
                         }else{
-                            char_stack.push(temp_calc[count]);
-                            num2 = num_stack.pop();
-                            num1 = num_stack.pop();
+                            char_stack.add((String)(temp_calc.get(count)));//push
+                            num2 = num_stack.remove(num_stack.size());//pop
+                            num1 = num_stack.remove(num_stack.size());//pop
                             if(temp_char.equals("*")){
-                                num_stack.push(num1.doubleValue()*num2.doubleValue());
+                                num_stack.add(num1.doubleValue()*num2.doubleValue());//push
                             }else if(temp_char.equals("/")){
-                                num_stack.push(num1.doubleValue()/num2.doubleValue());
+                                num_stack.add(num1.doubleValue()/num2.doubleValue());//push
                             }else if(temp_char.equals("+")){
-                                num_stack.push(num1.doubleValue()+num2.doubleValue());
+                                num_stack.add(num1.doubleValue()+num2.doubleValue());//push
                             }else if(temp_char.equals("-")){
-                                num_stack.push(num1.doubleValue()-num2.doubleValue());
+                                num_stack.add(num1.doubleValue()-num2.doubleValue());//push
                             }else{
-                                if(temp_char != null)num_stack.push(num1);
-                                num_stack.push(num2);
+                                if(temp_char != null)num_stack.add(num1);//push
+                                num_stack.add(num2);//push
                             }
                         }
                     }
                     
-                }else{
-                    //num_stack.push(temp_calc[count]);
+                }else{//TODO if stat_calculatio/temp_calc are arraylist<object>
+                    num_stack.add((Number)temp_calc.get(count));//num_stack.push(temp_calc.get(count));
                 }
+                
             }
-            /*
-            if(char_stack.length == 0 && num_stack.length == 1){
-                ret += num_stack[0];
+            
+            if(char_stack.size() == 0 && num_stack.size() == 1){
+                ret += num_stack.get(0).doubleValue();
             }else{
                 //trace("(Stat)We got a stat calculation gone wrong here....\n calc array:" + stat_calculation + "\n temp_calc:" + temp_calc + "\n char_stack:" + char_stack + "\n num_stack:" + num_stack);
             }
-            */
+            
             
         }
         return ret;
@@ -498,7 +504,7 @@ public class Stat {
     public String get_equip_change(Number change_amount,Character c){
         String ret= "";
         
-        stat_value_from_equip += change_amount.doubleValue();
+        statValue_from_equip += change_amount.doubleValue();
         
         int i = 0;
         
@@ -557,20 +563,25 @@ public class Stat {
         
         return false;
     }
-    /*
-    public void reset_stat(Character c, k:int = -1, BodyPart bp = null){
+    public void reset_stat(Character c){
+        reset_stat(c,-1,null);
+    }
+    public void reset_stat(Character c, int k){
+        reset_stat(c,k,null);
+    }
+    public void reset_stat(Character c, int k, BodyPart bp){//def -1, null
         min_max_check(c, bp);
         if(k == -1){
-            temp_stat_value = stat_value;								
+            tempStatValue = statValue;								
         }else{
-            if(temp_stat_value > stat_value){
-                temp_stat_value -= Math.min(k, temp_stat_value - stat_value);
-            }else if(temp_stat_value < stat_value){
-                temp_stat_value += Math.min(k, stat_value - temp_stat_value);
+            if(tempStatValue.doubleValue() > statValue.doubleValue()){
+                tempStatValue = tempStatValue.doubleValue() - Math.min(k, tempStatValue.doubleValue() - statValue.doubleValue());//tempStatValue -= Math.min(k, tempStatValue.doubleValue() - statValue.doubleValue())
+            }else if(tempStatValue.doubleValue() < statValue.doubleValue()){
+                tempStatValue = tempStatValue.doubleValue() + Math.min(k, statValue.doubleValue() - tempStatValue.doubleValue());//tempStatValue += Math.min(k, statValue.doubleValue() - tempStatValue.doubleValue())
             }
         }
     }
-    */
+    
     public void set_stat_description_show(){
         set_stat_description_show(null);
     }
@@ -695,7 +706,7 @@ public class Stat {
         max_stat_id = s.max_stat_id;
         min_stat_id = s.min_stat_id;
         statValue = s.statValue;
-        stat_value_from_equip = s.stat_value_from_equip;
+        statValue_from_equip = s.statValue_from_equip;
         tempStatValue = statValue;
         stat_desc_ttl_or_indiv = s.stat_desc_ttl_or_indiv;
         always_show = s.always_show;
@@ -709,9 +720,9 @@ public class Stat {
         check_combat = s.check_combat;
         incapac_text = s.incapac_text;
         check_total = s.check_total;
-        //stat_calculation = s.stat_calculation;
+        stat_calculation = s.stat_calculation;
         name = s.getName();
         stat_actions = s.stat_actions;
-        //stat_desc_ttl_part_limit = s.stat_desc_ttl_part_limit;
+        stat_desc_ttl_part_limit = s.stat_desc_ttl_part_limit;
     }
 }

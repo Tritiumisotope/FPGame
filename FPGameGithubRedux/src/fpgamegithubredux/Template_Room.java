@@ -170,14 +170,14 @@ public class Template_Room extends StaticObject {
     }
     
     public void add_no_connect_template(Template_Room t){
-        no_connect_template.add(t);//no_connect_template[no_connect_template.length] = t;
+        no_connect_template.add(t);//no_connect_template[no_connect_template.length] = t
     }
-    /*
-    public void check_template_connect(t:Template_Room):Boolean{
-        var ret:Boolean = true;
-        var int i = 0;
-        for(i;i<no_connect_template.length;i++){
-            if(t == no_connect_template[i]){
+
+    public Boolean check_template_connect(Template_Room t){
+        Boolean ret = true;
+        int i = 0;
+        for(i=0;i<no_connect_template.size();i++){
+            if(t == no_connect_template.get(i)){
                 ret = false;
                 break;
             }
@@ -185,7 +185,7 @@ public class Template_Room extends StaticObject {
         
         return ret;
     }
-    */
+    
     public void set_map_room_colour(int i){
         map_room_colour = i;
     }
@@ -261,32 +261,42 @@ public class Template_Room extends StaticObject {
         hidden_exit_challenge = ch;
         hidden_exit_consequence = con;
     }
-    /*
-    public void get_avail_exits(r:Room):Array{
-        var ret_arr:Array = new Array("North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West");
-        var int i = 0;
-        for(i;i<r.exit_names.length;i++){
-            var k:int = 0;
-            for(k;k<ret_arr.length;k++){
-                if(r.exit_names[i] == ret_arr[k]){
-                    if(k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.length){
+    
+    public ArrayList<String> get_avail_exits(Room r){
+        ArrayList<String> ret_arr = new ArrayList<>();
+        String[] first = new String[]{"North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"};;
+        for(int i=0;i<first.length;i++){
+        ret_arr.add(first[i]);
+        }
+                
+        int i= 0;
+        for(i=0;i<r.exit_names.size();i++){
+            int k = 0;
+            for(k=0;k<ret_arr.size();k++){
+                if(r.exit_names.get(i) == ret_arr.get(k)){
+                    if(k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size()){
                         if(k-same_exit_offset < 0){
-                            ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset);
+                            //ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset);
+                            ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size() - k-same_exit_offset);
                         }
-                        if(k+1+same_exit_offset >= ret_arr.length){
-                            ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset);
+                        if(k+1+same_exit_offset >= ret_arr.size()){
+                            //ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset);
+                            ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset - ret_arr.size(),k-same_exit_offset);
                         }
                     }else{
-                        ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length));
+                        //ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length));
+                        ArrayList<String> temp_arr = new ArrayList<>((ArrayList<String>)ret_arr.subList(0,k-same_exit_offset));
+                        temp_arr.addAll((ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
+                        ret_arr = new ArrayList<>(temp_arr);//TODO verify all three!!!
                     }
                     break;
                 }
             }
-            if(ret_arr.length<=0) break;
+            if(ret_arr.size()<=0) break;
         }
         return ret_arr;
     }
-    */
+    
     public void add_other_room(Template_Room t){
         other_rooms.add(t); //other_rooms[other_rooms.length] = t
     }
@@ -322,43 +332,45 @@ public class Template_Room extends StaticObject {
         parties.add(party); //parties[characters.length] = party
         parties_chance.add(n); //parties_chance[characters_chance.length] = n
     }
-    /*
-    public void spawn_creatures(r:Room, level_adjust:int = 0){
-        var family_array:Array = new Array();
-        var clonech1:Character;
-        var k:int = 0;
-        for(k;k<characters.length;k++){
-            if (Math.random() <= characters_chance[k] && characters[k] != null){
-                if(characters[k] is Character_template){
-                    clonech1 = characters[k].gen_char(level_adjust, r);
+    
+    public void spawn_creatures(Room r,int level_adjust){//def 0
+        ArrayList<Character> family_array = new ArrayList<>();
+        Character clonech1 = new Character();
+        int k = 0;
+        for(k=0;k<characters.size();k++){
+            if (Math.random() <= characters_chance.get(k).doubleValue() && characters.get(k) != null){
+                if(characters.get(k) instanceof Character_template){
+                    clonech1 = characters.get(k).gen_char(level_adjust, r);
                 }else{
-                    var rand_char:int = Math.round(Math.random()*(characters[k].length-1));
-                    clonech1 = characters[k][rand_char].gen_char(level_adjust, r);
+                    //int rand_char = Math.round(Math.random()*(characters.get(k).size()-1));
+                    //clonech1 = characters.get(k).get(rand_char).gen_char(level_adjust, r);
                 }
-                clonech1.new_location(r, true);
-                family_array[family_array.length] = clonech1;
+                //clonech1.new_location(r, true);
+                //TODO
+                family_array.add(clonech1);//family_array[family_array.length] = clonech1;
             }
         }
         
         k = 1;//Looking for a male/female pair
-        for(k;k<family_array.length;k++){
-            if(family_array[k].sex != family_array[0].sex){
-                family_array[k].impregnate(family_array[0],true);
-                family_array[0].impregnate(family_array[k],true);
-                family_array[k].surname = family_array[0].surname;
-                family_array[k].personality.new_relationship(family_array[0], family_array[k], Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
-                family_array[0].personality.new_relationship(family_array[k], family_array[0], Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
+        for(k=1;k<family_array.size();k++){
+            if(family_array.get(k).sex != family_array.get(0).sex){
+                //family_array.get(k).impregnate(family_array.get(0),true);
+                //family_array.get(0).impregnate(family_array.get(k),true);
+                family_array.get(k).surname = family_array.get(0).surname;
+                family_array.get(k).personality.new_relationship(family_array.get(0), family_array.get(k), Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
+                family_array.get(0).personality.new_relationship(family_array.get(k), family_array.get(0), Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
                 break;
             }
         }
         
         k = 0;
-        for(k;k<parties.length;k++){
-            if (Math.random() <= parties_chance[k] && parties[k] != null){
-                var clone_pty:Party = new Party();
+        for(k=0;k<parties.size();k++){
+            if (Math.random() <= parties_chance.get(k).doubleValue() && parties.get(k) != null){
+                Party clone_pty = new Party();
                 //parties[k].clone();
-                var int i = 0;
-                for(i;i<parties[k].length;i++){
+                int i = 0;
+                /*TODO Array of arrays?
+                for(i=0;i<parties[k].length;i++){
                     clonech1 = parties[k][i].gen_char(level_adjust, r);
                     clone_pty.add_member(clonech1);
                     clonech1.set_party(clone_pty);
@@ -367,12 +379,12 @@ public class Template_Room extends StaticObject {
                 for(i;i<clone_pty.members.length;i++){
                     clone_pty.members[i].new_location(r, true);
                 }
-                
+                */
             }
             
         }
     }
-    */
+    
     public Room make_room(){
         return make_room(0);
     }

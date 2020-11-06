@@ -48,7 +48,7 @@ public class AlchemyItem extends Item {
         ArrayList<Object> changes = new ArrayList<>();
         
         if(type_array != null){
-            ArrayList<Object> initial_array = new ArrayList<>();//var initial_array:Array = this.types.concat(item2.types);
+            ArrayList<Object> initial_array = new ArrayList<>();//var initial_array:Array = this.types.concat(item2.types)
             initial_array.addAll(types);
             initial_array.addAll(item2.types);
             //initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd);
@@ -56,7 +56,7 @@ public class AlchemyItem extends Item {
 
             ArrayList<Double> effect_amounts = new ArrayList<>();
             int x = 0;
-            /*
+            /*TODO suss
             for(x=0;x<type_array.size();x++){
                 int y = 0;
                 changes = new ArrayList<>();
@@ -243,8 +243,7 @@ public class AlchemyItem extends Item {
                 if(effect_amounts.get(i) != null){
                     //need to divide the effect by 100 if it's for a stat with a static max of 1
                     if(FPalaceHelper.get_stat_by_id(i)!= null && FPalaceHelper.get_stat_by_id(i).alchemy_hundreds){
-                        //effect_amounts[i] = effect_amounts[i]/100;
-                        effect_amounts.set(i, (double)effect_amounts.get(i)/100);
+                        effect_amounts.set(i, (double)effect_amounts.get(i)/100);//effect_amounts[i] = effect_amounts[i]/100
                     }
                     
                     item.add_effect(i, effect_amounts.get(i) * effect_multiplier.doubleValue());
@@ -255,7 +254,7 @@ public class AlchemyItem extends Item {
             int start_pos = 0;
             int i = 0;
             for (i=0;i<t.size();i++){
-                if(t.get(i) != t.get(i-1) && i - start_pos > 1){
+                if(!t.get(i).equals(t.get(i-1)) && i - start_pos > 1){
                     temp = (i-start_pos);
                     if(t.get(i-1) >= 0){
                         if(FPalaceHelper.get_stat_by_id(t.get(i-1)) != null && FPalaceHelper.get_stat_by_id(t.get(i-1)).alchemy_hundreds){
@@ -271,7 +270,7 @@ public class AlchemyItem extends Item {
                         }
                     }						
                     start_pos = i;						
-                }else if(t.get(i) == t.get(i-1)){
+                }else if(t.get(i).equals(t.get(i-1))){
                     //do nothing! Why? Cause it's the best thing ever!
                     
                 }else{
@@ -289,10 +288,8 @@ public class AlchemyItem extends Item {
             }				
             //need to figure out passing on change effects (like racial changes) on too...
             changes = new ArrayList<>();
-            //changes = this.changeEffects.concat(item2.changeEffects);
             changes.addAll(changeEffects);
-            changes.addAll(item2.changeEffects);
-            i = 0;
+            changes.addAll(item2.changeEffects);//changes = this.changeEffects.concat(item2.changeEffects)
             for(i=0;i<changes.size();i++){
                 if(Math.random() >= 0.5){
                     if(changes.get(i) instanceof DynamicObject){
@@ -327,10 +324,8 @@ public class AlchemyItem extends Item {
             if(item.effects.get(max_effect_id) < item.effects.get(i))max_effect_id = i;
             if(item.effects.get(max_effect_id) == null && item.effects.get(i) != null)max_effect_id = i;
         }
-        if(max_effect_id >= 0){
-            if(FPalaceHelper.get_stat_by_id(max_effect_id) != null){
-                //item.name = Main.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).get_name() + " Potion")
-            }
+        if(max_effect_id >= 0 &&FPalaceHelper.get_stat_by_id(max_effect_id) != null){
+            //item.name = Main.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).get_name() + " Potion")
         }
         
         if(skill > 0){
@@ -461,23 +456,20 @@ public class AlchemyItem extends Item {
         temp.value = this.value;
         
         for(count=0;count<effects.size();count++){
-            //temp.effects[count] = this.effects[count];
-            temp.effects.set(count, this.effects.get(count));
+            temp.effects.set(count, this.effects.get(count));//temp.effects[count] = this.effects[count]
         }
         
         temp.useDescription = this.useDescription;
         temp.numUses = this.numUses;
         
         for(count=0;count<changeEffects.size();count++){
-            //temp.changeEffects[count] = this.changeEffects[count];
-            temp.changeEffects.set(count, this.changeEffects.get(count));
+            temp.changeEffects.set(count, this.changeEffects.get(count));//temp.changeEffects[count] = this.changeEffects[count]
         }
         temp.propogate = this.propogate;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
         for(count=0;count < statActionAdd.size();count++){
-            //temp.statActionAdd[count] = this.statActionAdd[count];
-            temp.statActionAdd.set(count, this.statActionAdd.get(count));
+            temp.statActionAdd.set(count, this.statActionAdd.get(count));//temp.statActionAdd[count] = this.statActionAdd[count]
         }
         
         temp.imageID = this.imageID;

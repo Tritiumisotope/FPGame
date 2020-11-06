@@ -28,8 +28,7 @@ public class DynamicObject {
 			String repl_name= name;
 			if(c != null && this instanceof Character){//was in
 				Character temp_char = (Character)this;
-				//repl_name = temp_char.personality.get_name(c, temp_char);
-				//TODO character personality
+				repl_name = temp_char.personality.get_name(c, temp_char);
 			}
 			
 			while(ret.indexOf("</n>") >= 0){

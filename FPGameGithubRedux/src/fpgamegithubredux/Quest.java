@@ -25,16 +25,16 @@ public class Quest {
     public static final int room_action = 18;
     public static final int wait_action = 19;
     
-    public String name;
-    public ArrayList<String> objectives;//public var objectives:Array
-    public ArrayList<Integer> objective_actions;//public var objective_actions:Array
-    public ArrayList<ArrayList<Object>> objective_targets;//public var objective_targets:Array
-    public ArrayList<Conversation_topic> topics;//public var topics:Array
-    public ArrayList<Integer> topics_objective;//public var topics_objective:Array
-    public int end_step;
-    public ArrayList<Object> end_rewards;//public var end_rewards:Array
-    public ArrayList<Integer> next_objective;//public var next_objective:Array
-    public ArrayList<Integer> objective_timer;//public var objective_timer:Array
+    protected String name;
+    protected ArrayList<String> objectives;//protected var objectives:Array
+    protected ArrayList<Integer> objective_actions;//protected var objective_actions:Array
+    protected ArrayList<ArrayList<Object>> objective_targets;//protected var objective_targets:Array
+    protected ArrayList<Conversation_topic> topics;//protected var topics:Array
+    protected ArrayList<Integer> topics_objective;//protected var topics_objective:Array
+    protected int end_step;
+    protected ArrayList<Object> end_rewards;//protected var end_rewards:Array
+    protected ArrayList<Integer> next_objective;//protected var next_objective:Array
+    protected ArrayList<Integer> objective_timer;//protected var objective_timer:Array
 
     public Quest() {
         // constructor code
@@ -59,8 +59,8 @@ public class Quest {
     }
 
     public void add_end_reward(ArrayList<Object> reward){
-        //end_rewards = end_rewards.concat(reward);
-        end_rewards.add(reward);
+
+        end_rewards.add(reward);//end_rewards = end_rewards.concat(reward)
     }
     
     
@@ -70,7 +70,7 @@ public class Quest {
         for(i=0;i<end_rewards.size();i++){
             if(end_rewards.get(i) instanceof Integer){
                 Integer temp = (Integer)end_rewards.get(i);
-                //ret += c.set_xp(temp);//ret += c.set_xp(end_rewards.get(i))
+                ret += c.set_xp(temp);//ret += c.set_xp(end_rewards.get(i))
             }else if(end_rewards.get(i) instanceof Item){
                 //c.add_to_possessions(end_rewards.get(i));
                 //TODO
@@ -116,10 +116,8 @@ public class Quest {
     }
     
     public void add_conversation_topic(Conversation_topic ct,int obj_num){
-        //topics[topics.length] = ct;
-        topics.add(ct);
-        //topics_objective[topics_objective.length] = obj_num;
-        topics_objective.add(obj_num);
+        topics.add(ct);//topics[topics.length] = ct
+        topics_objective.add(obj_num);//topics_objective[topics_objective.length] = obj_num;
     }
     
     public ArrayList<Conversation_topic> get_conversation_topics(int curr_obj_num){
@@ -127,8 +125,7 @@ public class Quest {
         int i = 0;
         for(i=0;i<topics.size();i++){
             if(topics_objective.get(i) == curr_obj_num){
-                //ret = ret.concat(topics[i]);
-                ret.add(topics.get(i));
+                ret.add(topics.get(i));//ret = ret.concat(topics[i])
             }
         }
         
@@ -167,7 +164,7 @@ public class Quest {
     
     public CharAction get_target_action(int curr_obj_num){
         CharAction target_action= null;
-        /*
+        /* DUMMIED BEFORE
         if(objective_actions.get(curr_obj_num) == Quest.status_remove_action){
             target_action
         }else if(objective_actions.get(curr_obj_num) == Quest.status_add_action){
@@ -193,7 +190,7 @@ public class Quest {
     
     public Item get_target_item(int curr_obj_num){
         Item target_item = null;
-        /*
+        /*DUMMIED BEFORE
         if(objective_actions.get(curr_obj_num) == Quest.equip_action){
             target_item
         }else if(objective_actions.get(curr_obj_num) == Quest.unequip_action){

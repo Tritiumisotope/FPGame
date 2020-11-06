@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Character_class extends DynamicObject {
 		
 	
-    public ArrayList<CharAction> attacks;
-    public ArrayList<Number> bonus;
-    public ArrayList<Integer> attack_lvl_req;
-    public ArrayList<CharAction> actions;
-    public ArrayList<Integer> action_lvl_req;
+    protected ArrayList<CharAction> attacks;
+    protected ArrayList<Number> bonus;
+    protected ArrayList<Integer> attack_lvl_req;
+    protected ArrayList<CharAction> actions;
+    protected ArrayList<Integer> action_lvl_req;
     
-    public ArrayList<Integer> class_skills;
+    protected ArrayList<Integer> class_skills;
     
     public Character_class() {
         name = "";
@@ -26,7 +26,7 @@ public class Character_class extends DynamicObject {
     }
     
     public void add_class_skill(int skill_id){
-        class_skills.add(skill_id); //class_skills[class_skills.length] = skill_id;
+        class_skills.add(skill_id); //class_skills[class_skills.length] = skill_id
     }
     
     public Boolean is_class_skill(int skill_id){
@@ -49,8 +49,8 @@ public class Character_class extends DynamicObject {
         }
         a.set_cclass_origin(name);
         a.set_cclass_level(lr);
-        attacks.add(a); //attacks[attacks.size()] = a;
-        attack_lvl_req.add(lr); //attack_lvl_req[attack_lvl_req.length] = lr;
+        attacks.add(a); //attacks[attacks.size()] = a
+        attack_lvl_req.add(lr); //attack_lvl_req[attack_lvl_req.length] = lr
     }
     
     public void add_action(CharAction a,int lr){//def 0
@@ -59,8 +59,8 @@ public class Character_class extends DynamicObject {
         }
         a.set_cclass_origin(name);
         a.set_cclass_level(lr);
-        actions.add(a); //actions[actions.length] = a;
-        action_lvl_req.add(lr); //action_lvl_req[action_lvl_req.length] = lr;
+        actions.add(a); //actions[actions.length] = a
+        action_lvl_req.add(lr); //action_lvl_req[action_lvl_req.length] = lr
     }
     
     public String get_attack(int i, Character c){
@@ -74,7 +74,7 @@ public class Character_class extends DynamicObject {
     }
     
     public void set_bonus(int stat_id, Number i){
-        bonus.set(stat_id,i); //bonus.get(stat_id) = i;
+        bonus.set(stat_id,i); //bonus.get(stat_id) = i
         //TODO null-fill?
     }
     
@@ -87,7 +87,7 @@ public class Character_class extends DynamicObject {
     }
     
     public String level_up(Character c){
-        String ret = "";//apply_bonuses(c);
+        String ret = "";//apply_bonuses(c)
         
         int i = 0;
         for(i=0;i<actions.size();i++){

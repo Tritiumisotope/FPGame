@@ -3,64 +3,52 @@ package fpgamegithubredux;
 import java.util.ArrayList;
 
 public class Consequence {//TODO get count of all below
+    protected static int amt_from_roll_const = -999999;
+    
     protected ArrayList<Integer> statEffected;
-    protected double[] conseq;
-    protected String[] consequenceDescription;
-    protected int[] showEffects;
-    protected int[] tempFlag;
-    protected int[] consequenceChallenge;
-    protected Boolean[] consequenceTarget;
-    protected TickEffect[] consequenceTickEffect;
-    protected int[] targetPart;
-
-    public static int amt_from_roll_const = -999999;
-		
-    public int[] roll_required;//array
-    public Boolean temp_flag;//Array
-    public Boolean amt_by_roll;
-    //public var amt_formula:Array;
-    protected String[] amt_formula;
-    public Boolean random_effect;
-    public Boolean change_on_success;
-    public Boolean always_change;
-    public Boolean never_change;
-    public ArrayList<Object> change_effects;
-    public ArrayList<Integer> action_for_stat;
-    /*
-    public var change_effects:Array;
-    public var action_for_stat:Array;
-    */
-    public int xp_reward;//uint
-
-    
-    public ArrayList<Integer> un_equip_slots;//public var un_equip_slots:Array;
-    public ArrayList<Boolean> un_equip_target;//public var un_equip_target:Array;
-    
-    public int impregnate;
-    public int consume;
-    public int extract;
-    public int damage_type_id;
-    public Boolean make_party;
-    public Boolean remove_party;
-    public Number max_damage;
-    public Boolean change_skills;
-    public Challenge interupt_chal;
-    public CharAction replace_action;
-    //public var char_effect:Array;
-    public Boolean start_combat;
-    
-    protected ArrayList<String> conseqDescr;
+    protected ArrayList<Double> conseq;
+    protected ArrayList<String> consequenceDescription;
+    protected ArrayList<Integer> roll_required;//array
+    protected ArrayList<Integer> showEffects;
+    protected ArrayList<Integer> tempFlag;
+    protected ArrayList<Integer> consequenceChallenge;
+    protected ArrayList<Boolean> consequenceTarget;
+    protected ArrayList<TickEffect> consequenceTickEffect;
+    protected Boolean amt_by_roll;
+    protected ArrayList<String> amt_formula;
+    protected Boolean random_effect;
+    protected Boolean change_on_success;
+    protected Boolean always_change;
+    protected Boolean never_change;
+    protected ArrayList<Object> change_effects;
+    protected ArrayList<Integer> action_for_stat;
+    protected int xp_reward;//uint
+    protected ArrayList<Integer> un_equip_slots;//protected var un_equip_slots:Array
+    protected ArrayList<Boolean> un_equip_target;//protected var un_equip_target:Array
+    protected ArrayList<Integer> targetPart;//same to here as original
+    protected int impregnate;
+    protected int consume;
+    protected int extract;
+    protected int damage_type_id;
+    protected Boolean make_party;
+    protected Boolean remove_party;
+    protected Number max_damage;
+    protected Boolean change_skills;
+    protected ArrayList<Integer> remove_effect_ids;
+    protected ArrayList<Integer> advance_effect_by;
+    protected Challenge interupt_chal;
+    protected CharAction replace_action;
+    protected ArrayList<Character_template> char_effect;
+    protected Boolean start_combat;
     protected ArrayList<Double> effectAmount;
-    protected ArrayList<Integer> rollRequired;
 
-    public int[] remove_effect_ids;
-    public int[] advance_effect_by;
+
 
     public Consequence(){
         statEffected = new ArrayList<>();
-        conseqDescr = new ArrayList<>();
+        consequenceDescription = new ArrayList<>();
         effectAmount = new ArrayList<>();
-        rollRequired = new ArrayList<>();
+        roll_required = new ArrayList<>();
     }
     public void set_replace_action(CharAction a){
         replace_action = a;
@@ -73,24 +61,26 @@ public class Consequence {//TODO get count of all below
         add_remove_status(status_id, -1);
     }
     public void add_remove_status(int status_id, int tick_count){//default -1 tickCount
-        remove_effect_ids[remove_effect_ids.length] = status_id;
-        advance_effect_by[advance_effect_by.length] = tick_count;
+        remove_effect_ids.add(status_id); //remove_effect_ids[remove_effect_ids.length] = status_id;
+        advance_effect_by.add(tick_count); //advance_effect_by[advance_effect_by.length] = tick_count;
     }
     
     public void set_change_skills(){
         change_skills = !change_skills;
     }
-    /*TODO
-    public void add_char_effect(Character_template char,Boolean start_fight){//default true
-        char_effect[char_effect.length] = char;
+
+    public void add_char_effect(Character_template chare,Boolean start_fight){//default true
+        char_effect.add(chare); //char_effect[char_effect.length] = chare;
+        start_combat = start_fight;
+    }
+    public void add_char_list(ArrayList<Character_template> char_list){
+        add_char_list(char_list,true);
+    }
+    public void add_char_list(ArrayList<Character_template> char_list,Boolean start_fight){//default true
+        char_effect.addAll(char_list); //char_effect[char_effect.length] = char_list;
         start_combat = start_fight;
     }
     
-    public void add_char_list(char_list:Array, start_fight:Boolean = true){//default true
-        char_effect[char_effect.length] = char_list;
-        start_combat = start_fight;
-    }
-    */
     public void set_max_damage(Number i){
         max_damage = i;
     }
@@ -100,8 +90,13 @@ public class Consequence {//TODO get count of all below
     }
     public void amt_by_roll_flag(String[] a){///was array, def null
         amt_by_roll = !amt_by_roll;
+        ArrayList<String> dia1 = new ArrayList<>();
+        String[] first = a;//TODO check if can be just thrown arrays
+        for(int i =0;i<first.length;i++){
+        dia1.add(first[i]);
+        }
         if(a != null){
-            amt_formula = a;
+            amt_formula = dia1;//was a
         }else{
             amt_formula = null;
         }
@@ -169,10 +164,10 @@ public class Consequence {//TODO get count of all below
     public String trigger(Number roll, Character attacker, Character defender){//default null, null
         //String ret = ""
         StringBuilder bld = new StringBuilder();
-        for(String desc : conseqDescr){
-            int index = conseqDescr.indexOf(desc);
+        for(String desc : consequenceDescription){
+            int index = consequenceDescription.indexOf(desc);
             int statID = statEffected.get(index);
-            int neededRoll = rollRequired.get(index);
+            int neededRoll = roll_required.get(index);
 
             if(neededRoll >= 0 && roll.intValue() >= neededRoll && defender.getStat(statID) > -1){
                 bld.append(desc);//ret += desc
@@ -187,14 +182,14 @@ public class Consequence {//TODO get count of all below
     public void addConsequence(int statID, int changeBy, String desc, int requireRoll){
         statEffected.add(statID);
         effectAmount.add((double)changeBy);
-        conseqDescr.add(desc);
-        rollRequired.add(requireRoll);
+        consequenceDescription.add(desc);
+        roll_required.add(requireRoll);
     }
     public void addConsequence(int statID, Double changeBy, String desc, int requireRoll){
         statEffected.add(statID);
         effectAmount.add(changeBy);
-        conseqDescr.add(desc);
-        rollRequired.add(requireRoll);
+        consequenceDescription.add(desc);
+        roll_required.add(requireRoll);
     }
     public void addConsequence(int statID, Number conseq_amt,String desc,int require_roll,int show_changes){
         addConsequence(statID, conseq_amt, desc, require_roll, show_changes, 0, -1, false, null, -1);
@@ -218,14 +213,59 @@ public class Consequence {//TODO get count of all below
     int trigger_challenge, Boolean flip_target, TickEffect tf,int target_part_id/*Body.target_all_parts*/){
         //show_changes = 0, temp:int = 0, trigger_challenge:int = -1, flip_target:Boolean = false, tf:Tick_Effect = null, target_part_id:int = -1/*Body.target_all_parts*/
         statEffected.set(statEffected.size(), statID);//statEffected[statEffected.length] = statID;
-        conseq[conseq.length] = conseq_amt.doubleValue();
-        consequenceDescription[consequenceDescription.length] = desc;
-        rollRequired.set(rollRequired.size(), require_roll);
-        showEffects[showEffects.length] = show_changes;
-        tempFlag[tempFlag.length] = temp;
-        consequenceChallenge[consequenceChallenge.length] = trigger_challenge;
-        consequenceTarget[consequenceTarget.length] = flip_target;
-        consequenceTickEffect[consequenceTickEffect.length] = tf;
-        targetPart[targetPart.length] = target_part_id;
+        conseq.add(conseq_amt.doubleValue()); //conseq[conseq.length] = conseq_amt.doubleValue();
+        consequenceDescription.add(desc); //consequenceDescription[consequenceDescription.length] = desc;
+        roll_required.set(roll_required.size(), require_roll);
+        showEffects.add(show_changes); //showEffects[showEffects.length] = show_changes;
+        tempFlag.add(temp); //tempFlag[tempFlag.length] = temp;
+        consequenceChallenge.add(trigger_challenge); //consequenceChallenge[consequenceChallenge.length] = trigger_challenge;
+        consequenceTarget.add(flip_target); //consequenceTarget[consequenceTarget.length] = flip_target;
+        consequenceTickEffect.add(tf); //consequenceTickEffect[consequenceTickEffect.length] = tf;
+        targetPart.add(target_part_id); //targetPart[targetPart.length] = target_part_id;
+    }
+    public Consequence copyConsequence(){
+        Consequence ret = new Consequence();
+        ret.statEffected = new ArrayList<>(this.statEffected);
+        ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
+        /*
+        int i = 0;
+        for(i=0;i<this.consequenceDescription.size();i++){
+            ret.consequenceDescription[i] = this.consequenceDescription[i];
+        }
+        */
+        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
+        
+        ret.roll_required = new ArrayList<>(this.roll_required);
+        ret.showEffects = new ArrayList<>(this.showEffects);
+        ret.tempFlag = new ArrayList<>(this.tempFlag);
+        ret.amt_by_roll = this.amt_by_roll;
+        ret.amt_formula = new ArrayList<>(this.amt_formula);
+        ret.random_effect = this.random_effect;
+        ret.consequenceTickEffect = new ArrayList<>(this.consequenceTickEffect);
+        ret.change_on_success = this.change_on_success;
+        ret.always_change = this.always_change;
+        ret.never_change = this.never_change;
+        ret.change_effects = new ArrayList<>(this.change_effects);
+        ret.action_for_stat = new ArrayList<>(this.action_for_stat);
+        ret.consequenceChallenge = new ArrayList<>(this.consequenceChallenge);
+        ret.xp_reward = this.xp_reward;
+        ret.un_equip_slots = new ArrayList<>(this.un_equip_slots);
+        ret.un_equip_target = new ArrayList<>(this.un_equip_target);
+        ret.impregnate = this.impregnate;
+        ret.consume = this.consume;
+        ret.extract = this.extract;
+        ret.damage_type_id = this.damage_type_id;
+        ret.consequenceTarget = new ArrayList<>(this.consequenceTarget);
+        ret.make_party = this.make_party;
+        ret.remove_party = this.remove_party;
+        ret.max_damage = this.max_damage;
+        ret.targetPart = new ArrayList<>(this.targetPart);
+        ret.remove_effect_ids = new ArrayList<>(this.remove_effect_ids);
+        ret.advance_effect_by = new ArrayList<>(this.advance_effect_by);
+        ret.interupt_chal = this.interupt_chal;
+        ret.char_effect = new ArrayList<>(this.char_effect);
+        ret.start_combat = this.start_combat;
+        
+        return ret;
     }
 }
