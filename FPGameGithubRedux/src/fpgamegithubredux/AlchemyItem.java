@@ -15,7 +15,7 @@ public class AlchemyItem extends Item {
         types = new ArrayList<>();
     }
     
-    public Item combine(Character c, AlchemyItem item2, ArrayList<ArrayList<Integer>> type_array){//was type_array of type Array
+    public Item combine(Character c, AlchemyItem item2, ArrayList<ArrayList<String>> type_array){//was type_array of type Array
         int skill = -1;
         int k = 0;
         for (k=0;k<c.actions.size();k++){//.length
@@ -56,184 +56,205 @@ public class AlchemyItem extends Item {
 
             ArrayList<Double> effect_amounts = new ArrayList<>();
             int x = 0;
-            /*TODO suss
+
             for(x=0;x<type_array.size();x++){
                 int y = 0;
                 changes = new ArrayList<>();
                 int a1_count = 0;
                 int last_id = 0;
                 for(y=0;y<type_array.get(x).size();y++){
-                    if(type_array.get(x).get(y) == last_id){
+                    if(Integer.parseInt(type_array.get(x).get(y)) == last_id){//TODO CHECK THIS ALL WORKS, may need <Object> and instanceOfs
                         a1_count++;
                     }else{
-                        if(type_array.get(x).get(y).indexOf("c") >= 0 || type_array.get(x).get(y).indexOf("a") >= 0){
-                            if(type_array[x][y].indexOf("c") >= 0){
-                                changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                        if(((String)type_array.get(x).get(y)).indexOf("c") >= 0 || ((String)type_array.get(x).get(y)).indexOf("a") >= 0){
+                            if(((String)type_array.get(x).get(y)).indexOf("c") >= 0){
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                                changes.set(changes.size(),initial_array.get(Integer.parseInt(((String)type_array.get(x).get(y)).substring(((String)type_array.get(x).get(y)).indexOf("c")+1,((String)type_array.get(x).get(y)).length()))));
                             }else{
-                                changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                changes.set(changes.size(),initial_array.get(Integer.parseInt(((String)type_array.get(x).get(y)).substring(((String)type_array.get(x).get(y)).indexOf("a")+1,((String)type_array.get(x).get(y)).length()))));
                             }
                             a1_count++;
                         }else{
                             if(a1_count >= 2 && last_id != 0){
                                 if(last_id < 0){
-                                    if(effect_amounts[-last_id] != null){
-                                        effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                    if(effect_amounts.get(-last_id) != null){
+                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(-last_id, effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }else{
-                                    if(effect_amounts[last_id] != null){
-                                        effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                    if(effect_amounts.get(last_id) != null){
+                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(last_id, effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }
-                                if(changes.length > 0 && a1_count > 2){
+                                if(changes.size() > 0 && a1_count > 2){
                                     a1_count = 0;
-                                    for(a1_count;a1_count<changes.length;a1_count++){
-                                        if(changes[a1_count] is Consequence){
-                                            item.addConsequence(changes[a1_count]);
-                                        }else if(changes[a1_count] is Action){
-                                            item.add_action(changes[a1_count]);
+                                    for(a1_count=0;a1_count<changes.size();a1_count++){
+                                        if(changes.get(a1_count) instanceof Consequence){
+                                            item.addConsequence((Consequence)changes.get(a1_count));
+                                        }else if(changes.get(a1_count) instanceof CharAction){
+                                            item.add_action((CharAction)changes.get(a1_count));
                                         }
                                     }
                                 }
                             }
                             a1_count = 1;
-                            changes = new Array();
-                            if(type_array[x][y] != ""){
-                                var temp_y:int = y-1;
-                                while(type_array[x][temp_y] != null && (type_array[x][temp_y].indexOf("c") >= 0 || type_array[x][temp_y].indexOf("a") >= 0)){
-                                    if(type_array[x][temp_y].indexOf("c") >= 0){
-                                        changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("c")+1,type_array[x][temp_y].length)];
+                            changes = new ArrayList<>();
+                            if(type_array.get(x).get(y) != ""){
+                                int temp_y = y-1;
+                                while(type_array.get(x).get(temp_y) != null && (type_array.get(x).get(temp_y).indexOf("c") >= 0 || type_array.get(x).get(temp_y).indexOf("a") >= 0)){
+                                    if(type_array.get(x).get(temp_y).indexOf("c") >= 0){
+                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("c")+1,type_array[x][temp_y].length)];
+                                        changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(temp_y).substring(type_array.get(x).get(temp_y).indexOf("c")+1,type_array.get(x).get(temp_y).length()))));
                                     }else{
-                                        changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("a")+1,type_array[x][temp_y].length)];
+                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("a")+1,type_array[x][temp_y].length)];
+                                        changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(temp_y).substring(type_array.get(x).get(temp_y).indexOf("a")+1,type_array.get(x).get(temp_y).length()))));
                                     }
                                     a1_count++;
                                     temp_y--;
                                 }
                             }
-                            last_id = type_array[x][y];								
+                            last_id = Integer.parseInt(type_array.get(x).get(y));								
                         }
                     }
                 }
                 if(a1_count >= 2 && last_id != 0){
                     if(last_id < 0){
-                        if(effect_amounts[-last_id] != null){
-                            effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                        if(effect_amounts.get(-last_id) != null){
+                            effect_amounts.set(-last_id, effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }else{
-                        if(effect_amounts[last_id] != null){
-                            effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                        if(effect_amounts.get(last_id) != null){
+                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(last_id, effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }
-                    if(changes.length > 0 && a1_count > 2){
+                    if(changes.size() > 0 && a1_count > 2){
                         a1_count = 0;
-                        for(a1_count;a1_count<changes.length;a1_count++){
-                            if(changes[a1_count] is Consequence){
-                                item.addConsequence(changes[a1_count]);
-                            }else if(changes[a1_count] is Action){
-                                item.add_action(changes[a1_count]);
+                        for(a1_count=0;a1_count<changes.size();a1_count++){
+                            if(changes.get(a1_count) instanceof Consequence){
+                                item.addConsequence((Consequence)changes.get(a1_count));
+                            }else if(changes.get(a1_count) instanceof CharAction){
+                                item.add_action((CharAction)changes.get(a1_count));
                             }
                         }
                     }
                 }
             }
-            */
+            
             //left/right matches
             int y = 0;
-            /*
-            for(y=0;y<type_array.length;y++){
+            
+            for(y=0;y<type_array.size();y++){
                 x = 0;
-                changes = new Array();
-                a1_count = 0;
-                last_id = 0;
-                for(x;x<type_array.length;x++){
-                    if(type_array[x][y] == last_id){
+                changes = new ArrayList<>();
+                int a1_count = 0;
+                int last_id = 0;
+                for(x=0;x<type_array.size();x++){
+                    if(Integer.parseInt(type_array.get(x).get(y)) == last_id){
                         a1_count++;
                     }else{
-                        if(type_array[x][y].indexOf("c") >= 0 || type_array[x][y].indexOf("a") >= 0){
-                            if(type_array[x][y].indexOf("c") >= 0){
-                                changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                        if(type_array.get(x).get(y).indexOf("c") >= 0 || type_array.get(x).get(y).indexOf("a") >= 0){
+                            if(type_array.get(x).get(y).indexOf("c") >= 0){
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                                changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(y).substring(type_array.get(x).get(y).indexOf("c")+1,type_array.get(x).get(y).length()))));
                             }else{
-                                changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(y).substring(type_array.get(x).get(y).indexOf("a")+1,type_array.get(x).get(y).length()))));
                             }
                             a1_count++;
                         }else{
                             if(a1_count >= 2 && last_id != 0){
                                 if(last_id < 0){
-                                    if(effect_amounts[-last_id] != null){
-                                        effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                    if(effect_amounts.get(-last_id) != null){
+                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(-last_id,effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }else{
-                                    if(effect_amounts[last_id] != null){
-                                        effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                    if(effect_amounts.get(last_id) != null){
+                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(last_id,effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }
-                                if(changes.length > 0 && a1_count > 2){
+                                if(changes.size() > 0 && a1_count > 2){
                                     a1_count = 0;
-                                    for(a1_count;a1_count<changes.length;a1_count++){
-                                        if(changes[a1_count] is Consequence){
-                                            item.addConsequence(changes[a1_count]);
-                                        }else if(changes[a1_count] is Action){
-                                            item.add_action(changes[a1_count]);
+                                    for(a1_count=0;a1_count<changes.size();a1_count++){
+                                        if(changes.get(a1_count) instanceof Consequence){
+                                            item.addConsequence((Consequence)changes.get(a1_count));
+                                        }else if(changes.get(a1_count) instanceof CharAction){
+                                            item.add_action((CharAction)changes.get(a1_count));
                                         }
                                     }
                                 }
                             }
                             a1_count = 1;
-                            changes = new Array();
-                            if(type_array[x][y] != ""){
-                                var temp_x:int = x-1;
-                                while(type_array[temp_x] != null && type_array[temp_x][y] != null && (type_array[temp_x][y].indexOf("c") >= 0 || type_array[temp_x][y].indexOf("a") >= 0)){
-                                    if(type_array[temp_x][y].indexOf("c") >= 0){
-                                        changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("c")+1,type_array[temp_x][y].length)];
+                            changes = new ArrayList<>();
+                            if(type_array.get(x).get(y) != ""){
+                                int temp_x = x-1;
+                                while(type_array.get(temp_x) != null && type_array.get(temp_x).get(y) != null && (type_array.get(temp_x).get(y).indexOf("c") >= 0 || type_array.get(temp_x).get(y).indexOf("a") >= 0)){
+                                    if(type_array.get(temp_x).get(y).indexOf("c") >= 0){
+                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("c")+1,type_array[temp_x][y].length)];
+                                        changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(temp_x).get(y).substring(type_array.get(temp_x).get(y).indexOf("c")+1,type_array.get(temp_x).get(y).length()))));
                                     }else{
-                                        changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("a")+1,type_array[temp_x][y].length)];
+                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("a")+1,type_array[temp_x][y].length)];
+                                        changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(temp_x).get(y).substring(type_array.get(temp_x).get(y).indexOf("a")+1,type_array.get(temp_x).get(y).length()))));
                                     }
                                     a1_count++;
                                     temp_x--;
                                 }
                             }
-                            last_id = type_array[x][y];								
+                            last_id = Integer.parseInt(type_array.get(x).get(y));								
                         }
                     }
                 }
                 if(a1_count >= 2 && last_id != 0){
                     if(last_id < 0){
-                        if(effect_amounts[-last_id] != null){
-                            effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                        if(effect_amounts.get(-last_id) != null){
+                            //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(-last_id, effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }else{
-                        if(effect_amounts[last_id] != null){
-                            effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                        if(effect_amounts.get(last_id) != null){
+                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(last_id,effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }
-                    if(changes.length > 0 && a1_count > 2){
+                    if(changes.size() > 0 && a1_count > 2){
                         a1_count = 0;
-                        for(a1_count;a1_count<changes.length;a1_count++){
-                            if(changes[a1_count] is Consequence){
-                                item.addConsequence(changes[a1_count]);
-                            }else if(changes[a1_count] is Action){
-                                item.add_action(changes[a1_count]);
+                        for(a1_count=0;a1_count<changes.size();a1_count++){
+                            if(changes.get(a1_count) instanceof Consequence){
+                                item.addConsequence((Consequence)changes.get(a1_count));
+                            }else if(changes.get(a1_count) instanceof CharAction){
+                                item.add_action((CharAction)changes.get(a1_count));
                             }
                         }
                     }
                 }
             }
-            */
             
             Number effect_multiplier = 1;
             if(sameItem(item2))effect_multiplier = 0.5;
@@ -375,7 +396,7 @@ public class AlchemyItem extends Item {
         
         double ident_chance = 0;
         int ident_roll = 0;//TODO check if right to initialize instead of leave blank like original!
-        /*
+        
         if(ident_effectiveness != null){
             ident_chance = 2*ident_effectiveness.get(ident_effectiveness.size() - 1)/(identDifficulty);
             ident_roll = ident_effectiveness.get(ident_effectiveness.size() - 1);
@@ -383,7 +404,7 @@ public class AlchemyItem extends Item {
             //ident_effectiveness = Arrays.copyOfRange(ident_effectiveness,0, ident_effectiveness.size()-1)//TODO verify
             ident_effectiveness.remove(ident_effectiveness.size());//TODO verify
         }
-        */
+        
         ret += super.getDescription(c,ident_effectiveness, keep_tags) + "\n";
         
         Boolean showing= false;
