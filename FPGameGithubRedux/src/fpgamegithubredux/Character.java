@@ -296,7 +296,7 @@ public class Character extends DynamicObject {
         }else{
             returnString = "</n> Inventory contains: ";
             for(Item o : possessions){
-                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getDroppedDescription()+ "</a>,";
+                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getName()+ "</a>,";
             }
         }
 
@@ -311,7 +311,7 @@ public class Character extends DynamicObject {
         if(newItem != null){
             LOGGER.info("Item picked up is:" + newItem.getDroppedDescription());
             addToPossessions(newItem);
-            ret += sanitize("</n> got " + newItem.getDroppedDescription() + ".<br>") + look();
+            ret += sanitize("</n> got " + newItem.getName() + ".<br>") + look();
         }
 
         return ret;

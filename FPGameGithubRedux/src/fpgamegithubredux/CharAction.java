@@ -210,6 +210,7 @@ public class CharAction {
 
         return ret;
     }
+    
     public void set_requirement(int stat_id,int req){
         set_requirement(stat_id, req, true);
     }

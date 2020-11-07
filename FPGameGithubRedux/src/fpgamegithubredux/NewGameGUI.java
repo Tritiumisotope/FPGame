@@ -147,9 +147,12 @@ public class NewGameGUI implements ActionListener {
         Room tempRoom = new Room();
 
         Item tempItem = new Item();
-        tempItem.setDroppedDescription("something");
+        tempItem.setDroppedDescription("something is on the ground here");
+        tempItem.setName("something");
 
         tempRoom.newContent(tempItem);
+
+        tempRoom.newContent(FPalace_items.bandages());        
 
         Character tempChar = new Character();
         tempChar.location = tempRoom;

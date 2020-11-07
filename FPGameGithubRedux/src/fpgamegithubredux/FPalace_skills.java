@@ -215,7 +215,7 @@ crafts..............   17    -         | | | water.........   54  178
         
         return "";
     }
-    
+    /*
     private static ArrayList<Integer> remove_skill_children(int skill_id,ArrayList<Integer> child_array){//was array return and child
         int i = 0;
         while(child_array.get(i) != null){//[]
@@ -230,7 +230,7 @@ crafts..............   17    -         | | | water.........   54  178
         
         return child_array;
     }
-    
+    */
     public static int get_total_skill_value(Character c,int skill_id){//def -1
         int ret = 0;
         ArrayList<Skill>  skill_array = get_skill_list();

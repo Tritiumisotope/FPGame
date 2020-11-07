@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Item {
     protected String droppedDescription;
@@ -18,7 +19,7 @@ public class Item {
     protected int numUses;
     protected int imageID;
     protected Conversation_topic topic;
-    protected ItemCntPair[] craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
+    protected ArrayList<ItemCntPair> craftingRequirements;//protected Item[] craftingRequirements;//craftingRequirements
     protected Item dismantleItem;
 
     protected int tickCount;
@@ -42,7 +43,7 @@ public class Item {
         numUses = 1;
         imageID=-1;
         //topic
-        craftingRequirements = null;//craftingRequirements
+        craftingRequirements = new ArrayList<ItemCntPair>();//craftingRequirements
         tickCount = 0;
         destroyTick = -1;
         spawnChar = null;
@@ -102,7 +103,7 @@ public class Item {
         multiDroppedDescription = newMultiDropDesc;
     }
     public void add_crafting_requirement(Item craftRequirementItem,int num){
-        craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
+        craftingRequirements.add(new ItemCntPair(craftRequirementItem, num));
     }
     public void add_change_effect(Object o){
         Consequence consequence = new Consequence();
@@ -138,11 +139,13 @@ public class Item {
     }
 
     public void add_effect(int type, double multiplier){//was number
-        if(effects[type]==null){
-            effects[type] = multiplier;
-        }else{
-            effects[type] += multiplier;
-        }			
+        if(effects != null){
+            if(effects[type]==null){
+                effects[type] = multiplier;
+            }else{
+                effects[type] += multiplier;
+            }
+        }
     }
     
     public Boolean getPropogate(){
@@ -598,7 +601,8 @@ public class Item {
         retItem.numUses = numUses;
         retItem.imageID = imageID;
         //topic
-        retItem.craftingRequirements = Arrays.copyOf(craftingRequirements, craftingRequirements.length);//crafting requirements
+        retItem.craftingRequirements = (ArrayList<ItemCntPair>)craftingRequirements.clone();//crafting requirements
+        
 
         retItem.tickCount = 0;
         retItem.destroyTick = destroyTick;
