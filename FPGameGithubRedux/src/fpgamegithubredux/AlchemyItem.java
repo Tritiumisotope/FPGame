@@ -51,7 +51,7 @@ public class AlchemyItem extends Item {
             ArrayList<Object> initial_array = new ArrayList<>();//var initial_array:Array = this.types.concat(item2.types)
             initial_array.addAll(types);
             initial_array.addAll(item2.types);
-            //initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd);
+            //initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd)
             initial_array.addAll(changeEffects);
 
             ArrayList<Double> effect_amounts = new ArrayList<>();
@@ -68,10 +68,10 @@ public class AlchemyItem extends Item {
                     }else{
                         if(((String)type_array.get(x).get(y)).indexOf("c") >= 0 || ((String)type_array.get(x).get(y)).indexOf("a") >= 0){
                             if(((String)type_array.get(x).get(y)).indexOf("c") >= 0){
-                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)]
                                 changes.set(changes.size(),initial_array.get(Integer.parseInt(((String)type_array.get(x).get(y)).substring(((String)type_array.get(x).get(y)).indexOf("c")+1,((String)type_array.get(x).get(y)).length()))));
                             }else{
-                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)]
                                 changes.set(changes.size(),initial_array.get(Integer.parseInt(((String)type_array.get(x).get(y)).substring(((String)type_array.get(x).get(y)).indexOf("a")+1,((String)type_array.get(x).get(y)).length()))));
                             }
                             a1_count++;
@@ -79,18 +79,18 @@ public class AlchemyItem extends Item {
                             if(a1_count >= 2 && last_id != 0){
                                 if(last_id < 0){
                                     if(effect_amounts.get(-last_id) != null){
-                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(-last_id, effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }else{
                                     if(effect_amounts.get(last_id) != null){
-                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(last_id, effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }
@@ -107,14 +107,14 @@ public class AlchemyItem extends Item {
                             }
                             a1_count = 1;
                             changes = new ArrayList<>();
-                            if(type_array.get(x).get(y) != ""){
+                            if(!type_array.get(x).get(y).equals("")){
                                 int temp_y = y-1;
                                 while(type_array.get(x).get(temp_y) != null && (type_array.get(x).get(temp_y).indexOf("c") >= 0 || type_array.get(x).get(temp_y).indexOf("a") >= 0)){
                                     if(type_array.get(x).get(temp_y).indexOf("c") >= 0){
-                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("c")+1,type_array[x][temp_y].length)];
+                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("c")+1,type_array[x][temp_y].length)]
                                         changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(temp_y).substring(type_array.get(x).get(temp_y).indexOf("c")+1,type_array.get(x).get(temp_y).length()))));
                                     }else{
-                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("a")+1,type_array[x][temp_y].length)];
+                                        //changes[changes.length] = initial_array[type_array[x][temp_y].substr(type_array[x][temp_y].indexOf("a")+1,type_array[x][temp_y].length)]
                                         changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(temp_y).substring(type_array.get(x).get(temp_y).indexOf("a")+1,type_array.get(x).get(temp_y).length()))));
                                     }
                                     a1_count++;
@@ -134,10 +134,10 @@ public class AlchemyItem extends Item {
                         }
                     }else{
                         if(effect_amounts.get(last_id) != null){
-                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(last_id, effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }
@@ -168,10 +168,10 @@ public class AlchemyItem extends Item {
                     }else{
                         if(type_array.get(x).get(y).indexOf("c") >= 0 || type_array.get(x).get(y).indexOf("a") >= 0){
                             if(type_array.get(x).get(y).indexOf("c") >= 0){
-                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("c")+1,type_array[x][y].length)]
                                 changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(y).substring(type_array.get(x).get(y).indexOf("c")+1,type_array.get(x).get(y).length()))));
                             }else{
-                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)];
+                                //changes[changes.length] = initial_array[type_array[x][y].substr(type_array[x][y].indexOf("a")+1,type_array[x][y].length)]
                                 changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(x).get(y).substring(type_array.get(x).get(y).indexOf("a")+1,type_array.get(x).get(y).length()))));
                             }
                             a1_count++;
@@ -179,18 +179,18 @@ public class AlchemyItem extends Item {
                             if(a1_count >= 2 && last_id != 0){
                                 if(last_id < 0){
                                     if(effect_amounts.get(-last_id) != null){
-                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(-last_id,effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }else{
                                     if(effect_amounts.get(last_id) != null){
-                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(last_id,effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }else{
-                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                                        //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                                         effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }
@@ -207,14 +207,14 @@ public class AlchemyItem extends Item {
                             }
                             a1_count = 1;
                             changes = new ArrayList<>();
-                            if(type_array.get(x).get(y) != ""){
+                            if(!type_array.get(x).get(y).equals("")){
                                 int temp_x = x-1;
                                 while(type_array.get(temp_x) != null && type_array.get(temp_x).get(y) != null && (type_array.get(temp_x).get(y).indexOf("c") >= 0 || type_array.get(temp_x).get(y).indexOf("a") >= 0)){
                                     if(type_array.get(temp_x).get(y).indexOf("c") >= 0){
-                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("c")+1,type_array[temp_x][y].length)];
+                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("c")+1,type_array[temp_x][y].length)]
                                         changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(temp_x).get(y).substring(type_array.get(temp_x).get(y).indexOf("c")+1,type_array.get(temp_x).get(y).length()))));
                                     }else{
-                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("a")+1,type_array[temp_x][y].length)];
+                                        //changes[changes.length] = initial_array[type_array[temp_x][y].substr(type_array[temp_x][y].indexOf("a")+1,type_array[temp_x][y].length)]
                                         changes.set(changes.size(), initial_array.get(Integer.parseInt(type_array.get(temp_x).get(y).substring(type_array.get(temp_x).get(y).indexOf("a")+1,type_array.get(temp_x).get(y).length()))));
                                     }
                                     a1_count++;
@@ -228,18 +228,18 @@ public class AlchemyItem extends Item {
                 if(a1_count >= 2 && last_id != 0){
                     if(last_id < 0){
                         if(effect_amounts.get(-last_id) != null){
-                            //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[-last_id] -= Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(-last_id, effect_amounts.get(-last_id) - Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[-last_id] = -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(-last_id, -Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }else{
                         if(effect_amounts.get(last_id) != null){
-                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] += Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(last_id,effect_amounts.get(last_id) + Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }else{
-                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0);
+                            //effect_amounts[last_id] = Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0)
                             effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                         }
                     }
@@ -325,15 +325,16 @@ public class AlchemyItem extends Item {
             ArrayList<StatAction> sa_changes = new ArrayList<>();//ArrayList<StatAction> sa_changes = this.statActionAdd.concat(item2.statActionAdd)
             sa_changes.addAll(this.statActionAdd);
             sa_changes.addAll(item2.statActionAdd);
-            /*TODO wat
+            /*TODO WAT?! can't be, defined as stat_action
             for(i=0;i<sa_changes.size();i++){
                 if(sa_changes.get(i) instanceof CharAction){
                     if(Math.random() >= 0.5){
-                        item.new_stat_action(sa_changes.get(i-1),sa_changes[i]);
+                        item.new_stat_action(sa_changes.get(i-1),sa_changes.get(i));
                     }
                 }
             }
-            */				
+            */
+            				
         }
         
         item.numUses = Math.max(this.numUses,item2.numUses);
@@ -347,6 +348,7 @@ public class AlchemyItem extends Item {
         }
         if(max_effect_id >= 0 &&FPalaceHelper.get_stat_by_id(max_effect_id) != null){
             //item.name = Main.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).get_name() + " Potion")
+            //TODO
         }
         
         if(skill > 0){

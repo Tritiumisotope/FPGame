@@ -33,7 +33,7 @@ public class Room extends StaticObject{
 
     public String custom_name;
 		
-	//public Combat_manager cm = null;
+	//public Combat_manager cm = null
 
     protected int lastAreaTick;
 
@@ -171,8 +171,7 @@ public class Room extends StaticObject{
                 if((Character)contents.get(count) != c){
                     if(c != null){
                         if(c.party == null){
-                            //tempArray[tempArray.length] = contents[count];
-                            tempArray.add((Character)contents.get(count));
+                            tempArray.add((Character)contents.get(count));//tempArray[tempArray.length] = contents[count]
                         }else{
                             if(!c.party.member_of((Character)contents.get(count)))tempArray.add((Character)contents.get(count));
                         }
@@ -250,8 +249,7 @@ public class Room extends StaticObject{
         for (i=0;i<exits.size();i++){
             if(exits.get(i) == r){
                 a.set_id(actions.size() + i);
-                //exit_actions[i] = a;
-                exit_actions.set(i, a);
+                exit_actions.set(i, a);//exit_actions[i] = a
             }
         }
     }
@@ -491,7 +489,7 @@ public class Room extends StaticObject{
         if(actionID>=0 && actionID < actions.size()){
             //action_current_num_times.set(actionID, action_current_num_times.get(actionID+1));
             return actions.get(actionID);
-            /*
+            /*TODO uncomment at leisure
         }else if(actionID>=0){
             return exit_actions.get(actionID - actions.size());
             */
@@ -539,9 +537,8 @@ public class Room extends StaticObject{
         if (d == null){
             for (i=0;i<dir_list.length;i++){
                 Boolean b = false;
-                k = 0;
                 for (k=0;k<exit_names.size();k++){
-                    if (dir_list[i] == exit_names.get(k)){
+                    if (dir_list[i].equals(exit_names.get(k))){
                         b = true;
                         break;
                     }
@@ -549,8 +546,8 @@ public class Room extends StaticObject{
                 if (b) continue;
                 
                 if (e.new_exit(this,not_dir_list[i]) != -1){
-                    exit_names.add(dir_list[i]); //exit_names[exit_names.length] = dir_list[i];
-                    exits.add(e); //exits[exits.length] = e;
+                    exit_names.add(dir_list[i]); //exit_names[exit_names.length] = dir_list[i]
+                    exits.add(e); //exits[exits.length] = e
                     if(template != null && template.exit_actions.get(0) != null){
                         add_exit_action(e, Area.generate_filler_exit_action(null, e, dir_list[i], template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
                     }
@@ -559,10 +556,8 @@ public class Room extends StaticObject{
             }
         }else{
             for (i=0;i<exit_names.size();i++){
-                if (d == exit_names.get(i) || e == exits.get(i)) return -1;
+                if (d.equals(exit_names.get(i)) || e == exits.get(i)) return -1;
             }
-            
-            i = 0;
             for(i=0;i<=exit_names.size();i++){
                 if(exit_names.get(i) == null){
                     exit_names.set(i, d);
@@ -574,13 +569,12 @@ public class Room extends StaticObject{
                 }
                 
                 if(arbitrary_value_generator(d) < arbitrary_value_generator(exit_names.get(i))){
-                    exit_names.add(i,d); //exit_names = exit_names.slice(0,i).concat(d).concat(exit_names.slice(i,exit_names.length));
-                    exits.add(i,e); //exits = exits.slice(0,i).concat(e).concat(exits.slice(i,exits.length));
-                    exit_actions.add(i,null); //exit_actions = exit_actions.slice(0,i).concat(null).concat(exit_actions.slice(i,exit_actions.length));
+                    exit_names.add(i,d); //exit_names = exit_names.slice(0,i).concat(d).concat(exit_names.slice(i,exit_names.length))
+                    exits.add(i,e); //exits = exits.slice(0,i).concat(e).concat(exits.slice(i,exits.length))
+                    exit_actions.add(i,null); //exit_actions = exit_actions.slice(0,i).concat(null).concat(exit_actions.slice(i,exit_actions.length))
                     if(template != null && template.exit_actions.get(0) != null){
                         add_exit_action(e, Area.generate_filler_exit_action(null, e, d, template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
                     }
-                    k = 0;
                     for(k=0;k<exit_actions.size();k++){
                         if(exit_actions.get(k) != null)exit_actions.get(k).set_id(k + actions.size());
                     }
@@ -724,7 +718,7 @@ public class Room extends StaticObject{
     public int get_exit_by_name(String s){
         int i= 0;
         for(i=0;i<exit_names.size();i++){
-            if(exit_names.get(i) == s) return i;
+            if(exit_names.get(i).equals(s)) return i;
         }
         return -1;
     }
