@@ -18,32 +18,32 @@ public class Challenge {
     protected int ticks_to_pass;
     protected Random r = new Random();
 
-    public int attack_stat;
-    public int attack_part_process;
-    public Boolean static_attack;
-    public int attack_equip_slot;
-    public Boolean attack_equip_slot_count;
-    public int attack_status_id;
-    public Boolean attack_hold;
-    public Item attack_item;
-    //public Quest attack_quest;
-    public int attack_quest_step;
+    protected int attack_stat;
+    protected int attack_part_process;
+    protected Boolean static_attack;
+    protected int attack_equip_slot;
+    protected Boolean attack_equip_slot_count;
+    protected int attack_status_id;
+    protected Boolean attack_hold;
+    protected Item attack_item;
+    protected Quest attack_quest;
+    protected int attack_quest_step;
     
-    public double defense_stat;
-    public int defense_part_process;
-    public Boolean static_defense;
-    public int defense_increment;
-    public int defense_equip_slot;
-    public Boolean defense_equip_slot_count;
-    public int defense_status_id;
-    public Boolean defense_hold;
-    public Item defense_item;
+    protected double defense_stat;
+    protected int defense_part_process;
+    protected Boolean static_defense;
+    protected int defense_increment;
+    protected int defense_equip_slot;
+    protected Boolean defense_equip_slot_count;
+    protected int defense_status_id;
+    protected Boolean defense_hold;
+    protected Item defense_item;
     public Challenge(){
         this(false);
     }
-    public Challenge(Boolean bool){
+    public Challenge(Boolean useSkills){
         tag = "";
-        variability = 20;
+        this.variability = 20;
         static_defense = false;
         static_attack = false;
         defense_increment = 0;
@@ -57,14 +57,14 @@ public class Challenge {
         defense_hold = false;
         attack_stat = -1;
         defense_stat = -1;
-        //attack_part_process = Body.get_stat_total;
-        //defense_part_process = Body.get_stat_total;
-        //stats_or_skills = use_skills;
+        attack_part_process = Body.get_stat_total;
+        defense_part_process = Body.get_stat_total;
+        stats_or_skills = useSkills;
         hard_stats = false;
         room_challenge = 0;
         ticks_to_pass = 0;
         attack_item = null;
-        //attack_quest = null;
+        attack_quest = null;
         attack_quest_step = -1;
         
         defense_item = null;
@@ -93,12 +93,14 @@ public class Challenge {
     public void set_attack_item(Item i){
         attack_item = i;
     }
-    /*
-    public function set_attack_quest(q:Quest, quest_step:int = -1):void{
+    public void set_attack_quest(Quest q){
+        attack_quest = q;
+        attack_quest_step = -1;
+    }
+    public void set_attack_quest(Quest q,int quest_step){//def -1
         attack_quest = q;
         attack_quest_step = quest_step;
     }
-    */
     public void set_defense_item(Item i){
         defense_item = i;
     }

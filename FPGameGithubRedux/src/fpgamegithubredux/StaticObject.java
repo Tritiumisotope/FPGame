@@ -4,17 +4,23 @@ import java.util.ArrayList;
 
 public class StaticObject {
    
-		public int id;
-        //public var descriptions:Array;
-        public ArrayList<String> descriptions;
-		public String description;
+		protected int id;
+        protected ArrayList<String> descriptions;//public var descriptions:Array
+		protected String description;
 		
-				
-		public void Static_object(int i, ArrayList<String> descs, String desc){
+		public StaticObject(){
+			this(-1,null,null);
+		}
+		public StaticObject(int i){
+			this(i,null,null);
+		}
+		public StaticObject(int i, ArrayList<String> descs){
+			this(i,descs,null);
+		}
+		public StaticObject(int i, ArrayList<String> descs, String desc){
             //default -1, null array, null
 			if(descs == null){
-                //descriptions = new Array();
-                descriptions = new ArrayList<String>();
+                descriptions = new ArrayList<>();//descriptions = new Array()
 			}else{
 				descriptions = descs;
 			}
@@ -38,8 +44,8 @@ public class StaticObject {
 				ret = ret.replace("</s"+i+">","</i></a>");
 			}
 			
-            //ret = ret.replace("</id>",id);
-            ret = ret.replace("</id>",Integer.toString(id));
+
+            ret = ret.replace("</id>",Integer.toString(id));//ret = ret.replace("</id>",id)
 			
 			return ret;
 		}
@@ -59,15 +65,13 @@ public class StaticObject {
 				ret = ret.replace("</s"+i+">","</i></a>");
 			}
 			
-            //ret = ret.replace("</id>",id);
-            ret = ret.replace("</id>",Integer.toString(id));
-			
+            
+            ret = ret.replace("</id>",Integer.toString(id));//ret = ret.replace("</id>",id)
 			return ret;
 		}
 		
 		public void add_sub_descriptions(String s){
-            //descriptions[descriptions.length] = s;
-            descriptions.set(descriptions.size(), s);
+            descriptions.set(descriptions.size(), s);//descriptions[descriptions.length] = s
 		}
         
 		 

@@ -19,9 +19,9 @@ public class CharAction {
     public DynamicObject originator;
     protected int charID;
     protected ArrayList<Consequence> consequences;
-    public ArrayList<Integer>  requirement;
-    public ArrayList<Integer>  requirement_amount;
-    public ArrayList<Boolean>  requirement_remove;
+    protected ArrayList<Integer>  requirement;
+    protected ArrayList<Integer>  requirement_amount;
+    protected ArrayList<Boolean>  requirement_remove;
     public int blowback;
     public int blowback_amount;
     protected Item item_req;
@@ -210,18 +210,40 @@ public class CharAction {
 
         return ret;
     }
-    
+    public static void rest_action(Character c){
+        if(c.party != null){
+            int i = 0;
+            for(i=0;i<c.party.members.size();i++){
+                Character temp_char = c.party.members.get(i);
+                //temp_char.reset_stats(-1, c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
+                //TODO
+                temp_char.apply_affect_by_id(FPalaceHelper.curr_hp_id, temp_char.get_stat(FPalaceHelper.max_hp_id),0, null, Body.change_stats_total);
+                temp_char.apply_affect_by_id(FPalaceHelper.curr_mp_id, temp_char.get_stat(FPalaceHelper.max_mp_id),0, null, Body.change_stats_total);
+                temp_char.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, temp_char.get_stat(FPalaceHelper.max_fatigue_id),0, null, Body.change_stats_total);
+                temp_char.setBusy(FPGameGithub.T1_HOUR*8);
+                temp_char.waitTime = -FPGameGithub.T1_HOUR*8;
+            }
+        }else{
+            //c.reset_stats(-1, c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
+            //TODO
+            c.apply_affect_by_id(FPalaceHelper.curr_hp_id, c.get_stat(FPalaceHelper.max_hp_id),0, null, Body.change_stats_total);
+            c.apply_affect_by_id(FPalaceHelper.curr_mp_id, c.get_stat(FPalaceHelper.max_mp_id),0, null, Body.change_stats_total);
+            c.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, c.get_stat(FPalaceHelper.max_fatigue_id),0, null, Body.change_stats_total);
+            c.setBusy(FPGameGithub.T1_HOUR*8);
+            c.waitTime = -FPGameGithub.T1_HOUR*8;
+        }
+    }
     public void set_requirement(int stat_id,int req){
         set_requirement(stat_id, req, true);
     }
     public void set_requirement(int stat_id,int req,Boolean req_rmv){//default true
-        requirement.set(requirement.size(), stat_id);
-        requirement_amount.set(requirement_amount.size(),req);
-        requirement_remove.set(requirement_remove.size(),req_rmv);
-        //requirement[requirement.length] = stat_id;
-        //requirement_amount[requirement_amount.length] = req;
-        //requirement_remove[requirement_remove.length] = req_rmv;
-    }
+        //requirement[requirement.length] = stat_id
+        requirement.add(stat_id);
+        //requirement_amount[requirement_amount.length] = req
+        requirement_amount.add(req);
+        //requirement_remove[requirement_remove.length] = req_rmv
+        requirement_remove.add(req_rmv);
+    }//TODO verify
     
     public void set_blowback(int stat_id,int req){
         blowback = stat_id;
@@ -262,5 +284,74 @@ public class CharAction {
     public void set_personal(){
         //nothing personal
         personal = !personal;
+    }
+    public String get_cclass_origin(){
+        return cclass_origin;
+    }
+    
+    public void set_cclass_origin(String s){
+        if(cclass_origin.equals("")){
+            cclass_origin = s;
+        }
+    }
+    
+    public int get_cclass_level(){
+        return cclass_level;
+    }
+    
+    public void set_cclass_level(int i){
+        if(cclass_level < i){
+            cclass_level = i;
+        }
+    }
+    public void copyCharAction(CharAction a){
+        name = a.name;
+        //This... probably isn't the right way to clone these
+        /*
+        var i:int = 0;
+        for(i;i<a.challenges.length;i++){
+            challenges[i] = a.challenges[i];
+        }
+        i = 0;
+        for(i;i<a.consequences.length;i++){
+            consequences[i] = a.consequences[i];
+        }
+        */
+        challenges = new ArrayList<>(a.challenges);
+        consequences = new ArrayList<>(a.consequences);			
+        dialogue = a.dialogue;
+        status_change = a.status_change;
+        auto_trigger_id = a.auto_trigger_id;
+        requirement = a.requirement;
+        requirement_amount = a.requirement_amount;
+        requirement_remove = a.requirement_remove;
+        blowback = a.blowback;
+        blowback_amount = a.blowback_amount;
+        item_req = a.item_req;
+        force_failure = a.force_failure;
+        alchemy_flag = a.alchemy_flag;
+        enchant_flag = a.enchant_flag;
+        trade_flag = a.trade_flag;
+        dismantle_flag = a.dismantle_flag;
+        talk_flag = a.talk_flag;
+        personal = a.personal;
+        party_use = a.party_use;
+        cclass_origin = a.cclass_origin;
+        cclass_level = a.cclass_level;
+        trader_item = a.trader_item;
+        attack_order = a.attack_order;
+        attack_desc = a.attack_desc;
+        delayed_trigger = a.delayed_trigger;
+        consume_action = a.consume_action;
+        impreg_action = a.impreg_action;
+        extract_action = a.extract_action;
+        bury_action = a.bury_action;
+        sewing_flag = a.sewing_flag;
+        rest_flag = a.rest_flag;
+        attack_flag = a.attack_flag;
+        attack_type = a.attack_type;
+        fire_weapon_challenge = a.fire_weapon_challenge;
+        cclass_origin = a.cclass_origin;
+        cclass_level = a.cclass_level;
     }
 }

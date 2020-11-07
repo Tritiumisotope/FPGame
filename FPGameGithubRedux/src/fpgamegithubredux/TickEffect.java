@@ -1,6 +1,8 @@
 package fpgamegithubredux;
 
-public class TickEffect{
+import java.util.ArrayList;
+
+public class TickEffect {
 
     public static final int prone_status = 1;
     public static final int poisoned_status = 2;
@@ -24,9 +26,9 @@ public class TickEffect{
     public Consequence end_consequence;
     public int status_id;
     
-    public double[] tick_count;
-    public Consequence[] tick_consequence;
-    public Challenge[] tick_challenge;
+    public ArrayList<Number> tick_count;
+    public ArrayList<Consequence> tick_consequence;
+    public ArrayList<Challenge> tick_challenge;
     
     public static String get_status_effect_name(int status_id){
         String ret = "";
@@ -73,9 +75,9 @@ public class TickEffect{
     }
     public void set_tick_consequence(double tick_num, Consequence c, Challenge chall){
         //default Challenge null
-        tick_count[tick_count.length] = tick_num;
-        tick_consequence[tick_consequence.length] = c;
-        tick_challenge[tick_challenge.length] = chall;
+        tick_count.add(tick_num); //tick_count[tick_count.size()] = tick_num
+        tick_consequence.add(c); //tick_consequence[tick_consequence.length] = c
+        tick_challenge.add(chall); //tick_challenge[tick_challenge.length] = chall
     }
     
     public void set_character_effect(Character c){
@@ -93,24 +95,24 @@ public class TickEffect{
         int i = 0;
         int roll = 1;
         
-        for(i=0;i<tick_count.length;i++){
+        for(i=0;i<tick_count.size();i++){
             if(end_tick > -1){
-                if(current_tick == tick_count[i]){
-                    if(tick_challenge[i] != null){
-                        roll = tick_challenge[i].roll(c, c);
+                if(current_tick == tick_count.get(i).intValue()){
+                    if(tick_challenge.get(i) != null){
+                        roll = tick_challenge.get(i).roll(c, c);
                     }else{
                         roll = 1;
                     }
-                    ret += tick_consequence[i].trigger(roll, c, c);
+                    ret += tick_consequence.get(i).trigger(roll, c, c);
                 }
             }else{
-                if(current_tick%tick_count[i]==0){
-                    if(tick_challenge[i] != null){
-                        roll = tick_challenge[i].roll(c, c);
+                if(current_tick%tick_count.get(i).intValue()==0){
+                    if(tick_challenge.get(i) != null){
+                        roll = tick_challenge.get(i).roll(c, c);
                     }else{
                         roll = 1;
                     }
-                    ret += tick_consequence[i].trigger(roll, c, c);
+                    ret += tick_consequence.get(i).trigger(roll, c, c);
                 }
             }
         }

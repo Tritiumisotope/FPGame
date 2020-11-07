@@ -47,13 +47,15 @@ public class DynamicConsequence extends Consequence {
         consequence_list_action = list_action;
     }
     
-    //@Override 
+    @Override 
     public String trigger(Number r, Character c, Character c2){//default c1 null, c2 null
         String ret = super.trigger(r.intValue(),c,c2);
         ret += dynamic_choices(c, c2);
         return ret;
     }
-    
+    public String dynamic_choices(Character c){
+        return dynamic_choices(c, null);
+    }
     public String dynamic_choices(Character c, Character c2){//default c2 null
         String s = "";
         if(c2 == null) c2 = c;
@@ -63,13 +65,13 @@ public class DynamicConsequence extends Consequence {
         //TODO location template, location exit_actions, character add_to_possessions
         
         if(consequence_list_type == DynamicConsequence.list_parts){
-            for(con_count=0;con_count < c.body.parts.length;con_count++){
-                temp_bp = c.body.parts[con_count];
+            for(con_count=0;con_count < c.body.parts.size();con_count++){
+                temp_bp = c.body.parts.get(con_count);
                 s += "<dc" + con_count + ">" + temp_bp.getName() + "</dc" + con_count + ">\n";
             }
         }else if(consequence_list_type == DynamicConsequence.list_noncrit_parts){
-            for(con_count=0;con_count < c.body.parts.length;con_count++){
-                temp_bp = c.body.parts[con_count];
+            for(con_count=0;con_count < c.body.parts.size();con_count++){
+                temp_bp = c.body.parts.get(con_count);
                 if(!temp_bp.crit_part()){
                     s += "<dc" + con_count + ">" + temp_bp.getName() + "</dc" + con_count + ">\n";
                 }
@@ -99,7 +101,7 @@ public class DynamicConsequence extends Consequence {
                 if(consequence_list_text != "") s += consequence_list_text;
                 if(temp_item != null){
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", temp_item.getName());
-                    temp_item = temp_item.itemCopy();//clone
+                    temp_item = temp_item.copyItem();//clone
                     c.add_to_possessions(temp_item);
                 }else{
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
@@ -156,44 +158,44 @@ public class DynamicConsequence extends Consequence {
     public String trigger_dynamic(int[] choice,int roll, Character c, Character c2){//was array for choice, default c null, c2 null
         String ret = "";
         
-        if(consequence_list_text != "") ret += consequence_list_text;
+        if(!consequence_list_text.equals("")) ret += consequence_list_text;
         
         ArrayList<Integer> choiceList = new ArrayList<>();
         for(int i:choice){
             choiceList.add(i);
         }
         if(choiceList == null || choiceList.get(0) == null) return ret;//[]
-        /*
-        Stat temp_stat;
-        BodyPart temp_bp;
-        Item temp_item;
-        AlchemyItem temp_aitem;
-        TODO body, type, slice, possessions
+        
+        Stat temp_stat=null;
+        BodyPart temp_bp=null;
+        Item temp_item = null;
+        AlchemyItem temp_aitem=null;
+        //TODO body, type, slice, possessions
         if(consequence_list_action == DynamicConsequence.list_removepart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts[choice[0]];
-            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.get_name());
+            temp_bp = c.body.parts.get(choice[0]);
+            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice[0], c);
-            if(temp_bp.crit_part()) ret += c.die();				
+            //if(temp_bp.crit_part()) ret += c.die();				
         }else if(consequence_list_action == DynamicConsequence.list_removeandaddpart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts[choice[0]];
-            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.get_name());
+            temp_bp = c.body.parts.get(choice[0]);
+            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice[0], c);
-            if(temp_bp.crit_part()) ret += c.die();
-            c2.apply_change_effect(temp_bp);
+            //if(temp_bp.crit_part()) ret += c.die();
+            //c2.apply_change_effect(temp_bp);
         }else if(consequence_list_action == DynamicConsequence.list_useitem){
             //right in combat, don't know about overworld
-            temp_item = c2.possessions[choice[0]];
-            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.get_name());
+            temp_item = c2.possessions.get(choice[0]);
+            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon){//was is
-                ret += c2.hold(temp_item as Weapon, 0, -1, true);
+                //ret += c2.hold((Weapon)temp_item, 0, -1, true);
             }else if(temp_item instanceof Equipment){//was is
-                ret += c2.equip((Equipment)temp_item , 0, -1, true);//was as
+                //ret += c2.equip((Equipment)temp_item , 0, -1, true);//was as
             }else{
                 if(temp_item != null){
                     ret += temp_item.useItem(c2,choice[0]);
-                    if(!temp_item.still_usable())c2.drop(choice[0]);
+                    //if(!temp_item.still_usable())c2.drop(choice[0]);
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_useitemonother){
@@ -205,8 +207,8 @@ public class DynamicConsequence extends Consequence {
             }else{
                 if(temp_item != null){
                     if(choiceList.get(1) != null){//[]
-                        if(temp_item.changeEffects[0] instanceof CharAction){//was is
-                            CharAction temp_a = temp_item.changeEffects[0];
+                        if(temp_item.changeEffects.get(0) instanceof CharAction){//was is
+                            CharAction temp_a = (CharAction)temp_item.changeEffects.get(0);
                             if(temp_item.numUses>0)temp_item.numUses--;
                             //ret += temp_a.challenge(0,c,c,1,choice.slice(1,choice.length));
                             //TODO slice
@@ -214,26 +216,29 @@ public class DynamicConsequence extends Consequence {
                     }else{
                         ret += temp_item.useItem(c,choice[0],1);
                     }
-                    if(!temp_item.still_usable())c2.drop(choice[0]);
+                    //if(!temp_item.still_usable())c2.drop(choice[0]);
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_target_part){
             //right in combat, don't know about overworld
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             int count= 0;
+            /*
             for(count=0;count<target_part.length;count++){
                 if(!consequence_target[count])target_part[count] = temp_bp.get_part_id();
             }
+            */
             ret += trigger(roll, c, c2);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
         }else if(consequence_list_action == DynamicConsequence.list_dilute){
-            temp_aitem = c2.possessions[choice[0]];
+            //temp_aitem = c2.possessions.get(choice.get(0));
+            //TODO double list
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(temp_aitem != null){
                 //Should go through the use and alchemy effects of the item, and halving them
-                if(temp_aitem.getName().indexOf("Diluted") < 0)temp_aitem.set_name("Diluted " + temp_aitem.getName());
+                if(temp_aitem.getName().indexOf("Diluted") < 0)temp_aitem.setName("Diluted " + temp_aitem.getName());
                 int i = 0;
-                for(i=0;i<temp_aitem.types.length;i++){
+                for(i=0;i<temp_aitem.types.size();i++){
                     //go through and randomly remove types...
                     if(Math.random() < 0.5){
                         //temp_aitem.types = temp_aitem.types.slice(0,i).concat(temp_aitem.types.slice(i+1,temp_aitem.types.length));
@@ -242,12 +247,12 @@ public class DynamicConsequence extends Consequence {
                     }
                 }
                 i = 0;
-                for(i=0;i<temp_aitem.effects.length;i++){
+                for(i=0;i<temp_aitem.effects.size();i++){
                     //go through and halve effects...
-                    if(temp_aitem.effects[i] != null)temp_aitem.effects[i] = temp_aitem.effects[i]/2;
+                    if(temp_aitem.effects.get(i) != null)temp_aitem.effects.set(i,temp_aitem.effects.get(i)/2);
                 }
                 i = 0;
-                for(i=0;i<temp_aitem.changeEffects.length;i++){
+                for(i=0;i<temp_aitem.changeEffects.size();i++){
                     //go through and randomly remove change effects...
                     if(Math.random() < 0.5){
                         //temp_aitem.changeEffects = temp_aitem.changeEffects.slice(0,i).concat(temp_aitem.changeEffects.slice(i+1,temp_aitem.changeEffects.length));
@@ -256,7 +261,7 @@ public class DynamicConsequence extends Consequence {
                     }
                 }
                 i = 0;
-                for(i=0;i<temp_aitem.statActionAdd.length;i++){
+                for(i=0;i<temp_aitem.statActionAdd.size();i++){
                     //go through and randomly remove action adds...
                     if(Math.random() < 0.5){
                         //temp_aitem.statActionAdd = temp_aitem.statActionAdd.slice(0,i).concat(temp_aitem.statActionAdd.slice(i+1,temp_aitem.statActionAdd.length));
@@ -268,7 +273,7 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_action == DynamicConsequence.list_refine){
             //need to list the types available to refine...
-            temp_aitem = c2.possessions[choice[0]];
+            //temp_aitem = c2.possessions[choice[0]];
             int alch_ident = 0;
             Character char_for_chal = c2;
             if(c2.party != null)char_for_chal = c2.party.get_best_at_skill(FPalace_skills.item_alchemy_effects_id);
@@ -284,14 +289,14 @@ public class DynamicConsequence extends Consequence {
             }
             int i;
             i = 0;
-            for(i=0;i<temp_aitem.types.length;i++){
-                if(temp_aitem.types[i] != null){
+            for(i=0;i<temp_aitem.types.size();i++){
+                if(temp_aitem.types.get(i) != null){
                     String name_string = "";
                     if(Math.random() <= alch_ident){
-                        if(temp_aitem.types[i] >= 0){
-                            name_string = FPalaceHelper.get_stat_name_by_id(temp_aitem.types[i]);
+                        if(temp_aitem.types.get(i) >= 0){
+                            name_string = FPalaceHelper.get_stat_name_by_id(temp_aitem.types.get(i));
                         }else{
-                            name_string = FPalaceHelper.get_stat_name_by_id(-temp_aitem.types[i]);
+                            name_string = FPalaceHelper.get_stat_name_by_id(-temp_aitem.types.get(i));
                         }
                     }
                     if(name_string == "")name_string = "?";
@@ -299,7 +304,7 @@ public class DynamicConsequence extends Consequence {
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_remove_alchemy){
-            temp_aitem = c2.possessions.get(choice[0]);//was[[]]
+            //temp_aitem = c2.possessions.get(choice[0]);//was[[]]
             Challenge alch_challenge = new Challenge(true);
             alch_challenge.set_attack_stat(FPalace_skills.alchemy_id);
             alch_challenge.set_defense_stat(-1,temp_aitem.getIdentifyDifficulty());
@@ -310,68 +315,72 @@ public class DynamicConsequence extends Consequence {
             int type_to_remove = choice[1];
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(result < 0){
-                temp_aitem.types = temp_aitem.types.slice(0,(type_to_remove>0) ? type_to_remove-1:0).concat(temp_aitem.types.slice(type_to_remove+2,temp_aitem.types.length));
+                //temp_aitem.types = temp_aitem.types.slice(0,(type_to_remove>0) ? type_to_remove-1:0).concat(temp_aitem.types.slice(type_to_remove+2,temp_aitem.types.length));
             }else{
-                temp_aitem.types = temp_aitem.types.slice(0,type_to_remove).concat(temp_aitem.types.slice(type_to_remove+1,temp_aitem.types.length));
+                //temp_aitem.types = temp_aitem.types.slice(0,type_to_remove).concat(temp_aitem.types.slice(type_to_remove+1,temp_aitem.types.length));
+                //TODO math
             }
             if(temp_aitem.getName().indexOf("Refined") < 0)temp_aitem.setName("Refined " + temp_aitem.getName());
             if(temp_aitem.getPropogate())temp_aitem.setPropogate();
         }else if(consequence_list_action == DynamicConsequence.list_halvepart){
-            temp_bp = c.body.parts[choice[0]];
+            temp_bp = c.body.parts.get(choice[0]);
             int i = 0;
-            for(i=0;i<temp_bp.stat_description.length;i++){
-                temp_stat = temp_bp.stat_description[i];
-                Number tempValue = -1*temp_stat.statValue.doubleValue()/2
+            for(i=0;i<temp_bp.stat_description.size();i++){
+                temp_stat = temp_bp.stat_description.get(i);
+                Number tempValue = -1*temp_stat.statValue.doubleValue()/2;
                 ret += temp_bp.apply_effect(temp_stat.get_id(),tempValue,c);//-temp_stat.statValue
             }
-            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.get_name());				
+            while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());				
         }else{
             if(consequence_list_action != DynamicConsequence.list_noaction){
                 //trace("(DynamicConsequence.trigger_dynamic)Got an unknown action id... " + consequence_list_action + " came with choices: " + choice);
             }
         }
-        */
+        
         return ret;
         
     }
     
-    //@Override 
-    public Consequence copyConsequence(){
+    @Override 
+    public Consequence copyConsequence(){//TODO call to super?
         DynamicConsequence ret = new DynamicConsequence();
-        ret.statEffected = this.statEffected;
-        ret.conseq = this.conseq;//was consequence, presumed same
+        ret.statEffected = new ArrayList<>(this.statEffected);
+        ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
+        /*
         int i = 0;
-        for(i=0;i<this.consequenceDescription.length;i++){
+        for(i=0;i<this.consequenceDescription.size();i++){
             ret.consequenceDescription[i] = this.consequenceDescription[i];
         }
-        
-        ret.roll_required = this.roll_required;
-        ret.showEffects = this.showEffects;
-        ret.temp_flag = this.temp_flag;
+        */
+        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
+        ret.roll_required = new ArrayList<>(this.roll_required);
+        ret.showEffects = new ArrayList<>(this.showEffects);
+        ret.tempFlag = new ArrayList<>(this.tempFlag);
         ret.amt_by_roll = this.amt_by_roll;
-        ret.amt_formula = this.amt_formula;
+        ret.amt_formula = new ArrayList<>(this.amt_formula);
         ret.random_effect = this.random_effect;
-        ret.consequenceTickEffect = this.consequenceTickEffect;
+        ret.consequenceTickEffect = new ArrayList<>(this.consequenceTickEffect);
         ret.change_on_success = this.change_on_success;
         ret.always_change = this.always_change;
         ret.never_change = this.never_change;
-        //ret.changeEffects = this.changeEffects;
-        //ret.action_for_stat = this.action_for_stat;
-        ret.consequenceChallenge = this.consequenceChallenge;
+        ret.change_effects = new ArrayList<>(this.change_effects);
+        ret.action_for_stat = new ArrayList<>(this.action_for_stat);
+        ret.consequenceChallenge = new ArrayList<>(this.consequenceChallenge);
         ret.xp_reward = this.xp_reward;
-        //ret.un_equip_slots = this.un_equip_slots;
-        //ret.un_equip_target = this.un_equip_target;
+        ret.un_equip_slots = new ArrayList<>(this.un_equip_slots);
+        ret.un_equip_target = new ArrayList<>(this.un_equip_target);
         ret.impregnate = this.impregnate;
         ret.consume = this.consume;
         ret.extract = this.extract;
-        ret.consequenceTarget = this.consequenceTarget;
+        ret.consequenceTarget = new ArrayList<>(this.consequenceTarget);
         ret.make_party = this.make_party;
         ret.remove_party = this.remove_party;
         ret.max_damage = this.max_damage;
-        ret.targetPart = this.targetPart;
-        ret.remove_effect_ids = this.remove_effect_ids;
+        ret.targetPart = new ArrayList<>(this.targetPart);
+        ret.remove_effect_ids = new ArrayList<>(this.remove_effect_ids);
         ret.interupt_chal = this.interupt_chal;
-        //ret.char_effect = this.char_effect;
+        ret.char_effect = new ArrayList<>(this.char_effect);
+        ret.advance_effect_by = new ArrayList<>(this.advance_effect_by);//TODO why was missing?
         
         ret.consequence_list_type = this.consequence_list_type;
         ret.consequence_list_action = this.consequence_list_action;

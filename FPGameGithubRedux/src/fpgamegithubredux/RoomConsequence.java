@@ -11,8 +11,8 @@ public class RoomConsequence extends Consequence{
 		public int floor_to_generate;
 		public String room_effect_exit_name_from;
 		public String room_effect_exit_name_to;
-        //public ArrayList<Container> containers;//public var containers:Array;
-		public ArrayList<CharActionObject> actions_to_add;//public var actions_to_add:Array;
+        public ArrayList<Container> containers;//public var containers:Array
+		public ArrayList<CharActionObject> actions_to_add;//public var actions_to_add:Array
 		public Boolean never_move;
 		
 		public RoomConsequence() {
@@ -25,7 +25,7 @@ public class RoomConsequence extends Consequence{
 			floor_to_generate = -2;
 			room_effect_exit_name_from = null;
 			room_effect_exit_name_to = null;
-			//containers = new Array();
+			containers = new ArrayList<>();
 			actions_to_add = new ArrayList<>();
 			never_move = false;
 		}
@@ -35,8 +35,7 @@ public class RoomConsequence extends Consequence{
 		}
 		
 		public void add_room_action(CharActionObject a){
-            //actions_to_add[actions_to_add.length] = a;
-            actions_to_add.set(actions_to_add.size(),a);
+            actions_to_add.set(actions_to_add.size(),a);//actions_to_add[actions_to_add.length] = a
 		}
 		public void generate_new_floor(){
             generate_new_floor(0);
@@ -63,13 +62,13 @@ public class RoomConsequence extends Consequence{
 			if (s != null) room_effect_exit_name_from = s;
 			if(s2 != null) room_effect_exit_name_to = s2;
 		}
-		/*TODO Container class
+		
 		public void add_container_creation(Container c, Room r){
-			containers[containers.length] = c;
+			containers.add(c); //containers[containers.length] = c
 			join_room = r;
         }
-        */
-		/*
+        
+		/*TODO
         @Override 
         public String trigger(r:Number, c:Character = null, c2:Character = null){
 			var ret:String = super.trigger(r,c,c2);
@@ -189,7 +188,7 @@ public class RoomConsequence extends Consequence{
 			return ret;
 		}
         */
-        /*
+        /*TODO
 		override public function clone():Consequence{
 			var ret:Room_Consequence = new Room_Consequence();
 			ret.stat_effected = this.stat_effected;

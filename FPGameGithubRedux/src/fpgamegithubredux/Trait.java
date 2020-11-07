@@ -1,22 +1,24 @@
 package fpgamegithubredux;
 
+import java.util.ArrayList;
+
 public class Trait {
     
-		public static final int attracted = 0;
-		public static final int disgusted = 1;
+		protected static final int attracted = 0;
+		protected static final int disgusted = 1;
 		
-		public Race racial_trait;
-		public int part_trait;
+		protected Race racial_trait;
+		protected int part_trait;
 		
-		public int stat_trait;
-		public Number stat_amt;
-		public Boolean abv_or_blw;
-		public int trait_strength;
+		protected int stat_trait;
+		protected Number stat_amt;
+		protected Boolean abv_or_blw;
+		protected int trait_strength;
 		
-		public int attraction_check;
+		protected int attraction_check;
 		
-		public int[] damage_type_strengths;
-		public int[] damage_type_weaknesses;
+		protected ArrayList<Integer> damage_type_strengths;
+		protected ArrayList<Integer> damage_type_weaknesses;
 		
 		public Trait() {
 			// constructor code
@@ -30,8 +32,8 @@ public class Trait {
 			
 			attraction_check = -1;
 			
-			damage_type_strengths = null;// new Array();
-			damage_type_weaknesses = null;//new Array();
+			damage_type_strengths = new ArrayList<>();// new Array()
+			damage_type_weaknesses = new ArrayList<>();//new Array()
 		}
 		
 		public void set_trait_strength(int i){
@@ -60,7 +62,7 @@ public class Trait {
 		public void set_racial_trait(Race r){
 			racial_trait = r;
 		}
-		/*
+		
 		public Boolean has_trait(Character c,Character c_self){
 			Boolean ret= false;
 			
@@ -69,10 +71,10 @@ public class Trait {
 					if(c.body.has_part(part_trait))ret = true;
 				}
 				if(racial_trait != null){
-					if(c.get_primary_race().get_name() == racial_trait.get_name())ret = true;
+					if(c.get_primary_race().getName().equals(racial_trait.getName()))ret = true;
 				}
 				if(stat_trait > -1){
-					if(stat_amt.intValue() != 0 && (c.getStat(stat_trait) >= stat_amt && abv_or_blw) || (c.getStat(stat_trait) <= stat_amt && !abv_or_blw))ret = true;
+					if(stat_amt.intValue() != 0 && (c.getStat(stat_trait) >= stat_amt.doubleValue() && abv_or_blw) || (c.getStat(stat_trait) <= stat_amt.doubleValue() && !abv_or_blw))ret = true;
 				}else if(stat_amt.intValue() == -1 &&(c.getStat(stat_trait) >= c_self.getStat(stat_trait) && abv_or_blw) || (c.getStat(stat_trait) <= c_self.getStat(stat_trait) && !abv_or_blw)){
 					ret = true;
 				}
@@ -80,7 +82,7 @@ public class Trait {
 			
 			return ret;
 		}
-		*/
+		
 		public Number reaction_mod(Character c, int quant, Character c_self){//was number
 			int ret = 0;//was number
 			if(abv_or_blw){
@@ -92,7 +94,7 @@ public class Trait {
 					ret += (stat_amt.intValue() - quant) * trait_strength;
 				}
 			}
-			/*
+			
 			if(attraction_check == attracted){
 				if(c != c_self && !(c_self.personality.determine_attraction(c, c_self) > 5 || c_self.personality.check_relationship(c,c_self) > Personality.friends)){
 					ret = 0;
@@ -102,15 +104,15 @@ public class Trait {
 					ret = 0;
 				}
 			}
-			*/
+			
 			return ret;
 		}
 		
 		public void add_damage_resistance(int id){
-			damage_type_strengths[damage_type_strengths.length] = id;
+			damage_type_strengths.add(id); //damage_type_strengths[damage_type_strengths.length] = id
 		}
 		
 		public void add_damage_weakness(int id){
-			damage_type_weaknesses[damage_type_weaknesses.length] = id;
+			damage_type_weaknesses.add(id); //damage_type_weaknesses[damage_type_weaknesses.length] = id
 		}
 }

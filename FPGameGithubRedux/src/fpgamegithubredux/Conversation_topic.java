@@ -11,42 +11,43 @@ public class Conversation_topic {
     
     public String dialog_name;
     
-    public ArrayList<CharAction> actions;//public var actions:Array;
-    /*
-    public var tell_dialog:Array;
+    public ArrayList<CharAction> actions;//public var actions:Array
+    
+    public ArrayList<Integer> tell_dialog;
+
+    
     //maybe get rid of these three arrays, and replace with single array of instances of the Challenge class
-    public var stat_check:Array;
-    public var check_challenge:Array;
-    public var party_check:Array;
-    public var mob_check:Array;
+    public ArrayList<ArrayList<Integer>> stat_check;
+    public ArrayList<ArrayList<Integer>> check_challenge;
+    public ArrayList<Boolean> party_check;
+    public ArrayList<Mob> mob_check;
     //end contemplations
-    */
+    
     public Boolean no_spread;
     public Boolean no_mention;
     
-    protected ArrayList<String> ct_ref_names;//public var ct_ref_names:Array;
+    protected ArrayList<String> ct_ref_names;//public var ct_ref_names:Array
     
     public Conversation_topic(){
         // constructor code
         
         dialog_name = "";
         actions = new ArrayList<>();
-        /*
-        tell_dialog = new Array();
-        stat_check = new Array();
-        check_challenge = new Array();
-        party_check = new Array();
-        mob_check = new Array();
-        ct_ref_names = new Array();
-        */
+        
+        tell_dialog = new ArrayList<>();
+        stat_check = new ArrayList<>();
+        check_challenge = new ArrayList<>();
+        party_check = new ArrayList<>();
+        mob_check = new ArrayList<>();
+        ct_ref_names = new ArrayList<>();
+        
         no_spread = false;
         no_mention = false;
         
     }
     
     public void add_topic_reference_by_name(String ref_name){
-        //ct_ref_names[ct_ref_names.length] = ref_name;
-        ct_ref_names.set(ct_ref_names.size(),ref_name);
+        ct_ref_names.set(ct_ref_names.size(),ref_name);//ct_ref_names[ct_ref_names.length] = ref_name
     }
     
     public void set_no_spread(){
@@ -64,66 +65,94 @@ public class Conversation_topic {
     public Boolean get_mention(){
         return !no_mention;
     }
-    /*
-    public function add_dialog(s:String, stat_id:Array = null/*int = -1*//*, defence:Array = null/*int = 0*//*, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null):void{
-        var n_action:Action = new Action();
+    public void add_dialog(String s, int stat_id/*int = -1*/, int defence/*int = 0*/,Boolean same_party,int ask_or_tell){
+        add_dialog(s, stat_id, defence, same_party, ask_or_tell, null);
+    }
+    public void add_dialog(String s, int stat_id/*int = -1*/, int defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
+        //stat_id:Array = null/*int = -1*//*, defence:Array = null/*int = 0*//*, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
+        CharAction n_action = new CharAction();
         n_action.set_dialogue(s);
         add_action(n_action, stat_id, defence, same_party, ask_or_tell,mob);
     }
-    */
-    public void add_action(CharAction a, int[] stat_id/*int = -1*/, int[] defence/*int = 0*/,Boolean same_party,int ask_or_tell){
+    
+    public void add_dialog(String s, ArrayList<Integer> stat_id, ArrayList<Integer> defence,Boolean same_party,int ask_or_tell){
+        add_dialog(s, stat_id, defence, same_party, ask_or_tell, null);
+    }
+    public void add_dialog(String s, ArrayList<Integer> stat_id, ArrayList<Integer> defence,Boolean same_party,int ask_or_tell, Mob mob){
+        //stat_id:Array = null/*int = -1*//*, defence:Array = null/*int = 0*//*, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
+        CharAction n_action = new CharAction();
+        n_action.set_dialogue(s);
+        add_action(n_action, stat_id, defence, same_party, ask_or_tell,mob);
+    }
+    
+    public void add_action(CharAction a, int stat_id/*int = -1*/, int defence/*int = 0*/,Boolean same_party,int ask_or_tell){
         add_action(a,stat_id,defence,same_party,ask_or_tell,null);
     }
-    public void add_action(CharAction a, int[] stat_id/*int = -1*/, int[] defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
+    public void add_action(CharAction a, int stat_id/*int = -1*/, int defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
         //a:Action, stat_id:Array = null/*int = -1*/, defence:Array = null/*int = 0*/, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
-        //actions[actions.length] = a;
-        actions.set(actions.size(), a);
-        /*
-        stat_check[stat_check.length] = stat_id;
-        check_challenge[check_challenge.length] = defence;
-        party_check[party_check.length] = same_party;
-        tell_dialog[tell_dialog.length] = ask_or_tell;
-        mob_check[mob_check.length] = mob;
-        */
+        //arraylist from single int hack
+        ArrayList<Integer> dia1 = new ArrayList<>();
+        ArrayList<Integer> dia2 = new ArrayList<>();
+        dia1.add(stat_id);
+        dia2.add(defence);
+        actions.add(a);//actions[actions.length] = a
+        stat_check.add(dia1);//stat_check[stat_check.length] = stat_id
+        check_challenge.add(dia2);//check_challenge[check_challenge.length] = defence
+        party_check.add(same_party);//party_check[party_check.length] = same_party
+        tell_dialog.add(ask_or_tell);//tell_dialog[tell_dialog.length] = ask_or_tell
+        mob_check.add(mob);//mob_check[mob_check.length] = mob
+    }
+    public void add_action(CharAction a, ArrayList<Integer> stat_id/*int = -1*/, ArrayList<Integer> defence/*int = 0*/,Boolean same_party,int ask_or_tell){
+        add_action(a,stat_id,defence,same_party,ask_or_tell,null);
+    }
+    public void add_action(CharAction a, ArrayList<Integer> stat_id/*int = -1*/, ArrayList<Integer> defence/*int = 0*/,Boolean same_party,int ask_or_tell, Mob mob){
+        //a:Action, stat_id:Array = null/*int = -1*/, defence:Array = null/*int = 0*/, same_party:Boolean = false, ask_or_tell:int = 0, mob:Mob = null
+        actions.add(a);//actions[actions.length] = a
+        stat_check.add(stat_id);//stat_check[stat_check.length] = stat_id
+        check_challenge.add(defence);//check_challenge[check_challenge.length] = defence
+        party_check.add(same_party);//party_check[party_check.length] = same_party
+        tell_dialog.add(ask_or_tell);//tell_dialog[tell_dialog.length] = ask_or_tell
+        mob_check.add(mob);//mob_check[mob_check.length] = mob
     }
     
     public void set_topic_name(String s){
         dialog_name = s;
     }
-    /*
-    public function get_topic_name():String{
+    
+    public String get_topic_name(){
         return dialog_name;
     }
     
-    public function get_topic_step(i:int):Action{
-        if(actions[i] != null) return actions[i];
+    public CharAction get_topic_step(int i){
+        if(actions.get(i) != null) return actions.get(i);
         return null;
     }
-    
-    public function get_start_step(c_self:Character, c_init:Character, init_listening:Boolean = false):int{
-        var ret:int = -1;
+    public int get_start_step(Character c_self, Character c_init){
+        return get_start_step(c_self,c_init, false);
+    }
+    public int get_start_step(Character c_self, Character c_init,Boolean init_listening){//def false
+        int ret = -1;
         //figure out the ask/tell/being told situation here...
-        var initiator_has_topic:Boolean = false;
-        var i:int = 0;
-        var init_topics:Array = c_init.personality.get_topics(c_init);
-        for(i;i<init_topics.length;i++){
-            if(init_topics[i] == this || (init_topics[i].dialog_name == this.dialog_name && init_topics[i].actions.length == this.actions.length)){
+        Boolean initiator_has_topic = false;
+        int i = 0;
+        ArrayList<Conversation_topic> init_topics = c_init.personality.get_topics(c_init);
+        for(i=0;i<init_topics.size();i++){
+            if(init_topics.get(i) == this || (init_topics.get(i).dialog_name.equals(this.dialog_name) && init_topics.get(i).actions.size() == this.actions.size())){
                 initiator_has_topic = true;
                 break;
             }
         }
         
-        var char_swap:Boolean = false;
-        var need_ask:Boolean = false;
-        var need_tell:Boolean = false;
-        var need_told:Boolean = false;
+        Boolean char_swap = false;
+        Boolean need_ask = false;
+        Boolean need_tell = false;
+        Boolean need_told = false;
         //if c_init has the conversation topic, chances are we are in an ask/tell situation... if they do not, it is likely a "being told" situation.
         if(initiator_has_topic){
-            var self_has_topic:Boolean = false;
-            i = 0;
-            var self_topics:Array = c_self.personality.get_topics(c_self);
-            for(i;i<self_topics.length;i++){
-                if(self_topics[i] == this || (self_topics[i].dialog_name == this.dialog_name && self_topics[i].actions.length == this.actions.length)){
+            Boolean self_has_topic = false;
+            ArrayList<Conversation_topic> self_topics = c_self.personality.get_topics(c_self);
+            for(i=0;i<self_topics.size();i++){
+                if(self_topics.get(i) == this || (self_topics.get(i).dialog_name.equals(this.dialog_name) && self_topics.get(i).actions.size() == this.actions.size())){
                     self_has_topic = true;
                     break;
                 }
@@ -145,87 +174,93 @@ public class Conversation_topic {
             need_told = true;
         }
         
-        i = 0;
-        for(i;i<actions.length;i++){
-            if((need_ask && tell_dialog[i] == Conversation_topic.ask_topic) ||
-               (need_tell && tell_dialog[i] == Conversation_topic.telling_topic) ||
-               (need_told && tell_dialog[i] == Conversation_topic.being_told_topic)){
+        for(i=0;i<actions.size();i++){
+            if((need_ask && tell_dialog.get(i) == Conversation_topic.ask_topic) ||
+               (need_tell && tell_dialog.get(i) == Conversation_topic.telling_topic) ||
+               (need_told && tell_dialog.get(i) == Conversation_topic.being_told_topic)){
             
-                var pass_check:Boolean = true
-                var check_count:int = 0;
-                for(check_count;check_count<stat_check[i].length;check_count++){
-                    if(stat_check[i][check_count] < 0 && stat_check[i][check_count] != Character.gold_id){
+                Boolean pass_check = true;
+                int check_count = 0;
+                for(check_count=0;check_count<stat_check.get(i).size();check_count++){
+                    if(stat_check.get(i).get(check_count) < 0 && stat_check.get(i).get(check_count) != Character.gold_id){
                         //check relationship
-                        if(stat_check[i][check_count] == Character.relations_affect_id){
-                            if(c_self.personality.check_relationship(c_init,c_self) >= check_challenge[i][check_count]){
-                                if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                    //ret = i;
+                        if(stat_check.get(i).get(check_count) == Character.relations_affect_id){
+                            if(c_self.personality.check_relationship(c_init,c_self) >= check_challenge.get(i).get(check_count)){
+
+                                if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                    ret = i;
                                 }else{
                                     pass_check = false;
                                 }
+
                             }else{
                                 pass_check = false;
                             }
-                        }else if(stat_check[i][check_count] == Character.attraction_id){
-                            if(c_self.personality.determine_attraction(c_init,c_self) >= check_challenge[i][check_count]){
-                                if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                    //ret = i;
+                        }else if(stat_check.get(i).get(check_count) == Character.attraction_id){
+                            if(c_self.personality.determine_attraction(c_init,c_self) >= check_challenge.get(i).get(check_count)){
+
+                                if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                    ret = i;
                                 }else{
                                     pass_check = false;
                                 }
+                                
                             }else{
                                 pass_check = false;
                             }
-                        }else if(stat_check[i][check_count] == Character.introduced_id){
+                        }else if(stat_check.get(i).get(check_count) == Character.introduced_id){
+                            
                             if(c_self.personality.get_introduced(c_init,c_self)){
-                                if(check_challenge[i][check_count] < 0){
+                                if(check_challenge.get(i).get(check_count) < 0){
                                     pass_check = false;
                                 }else{
-                                    if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                        //ret = i;
+                                    if(!party_check.get(i) || (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                        ret = i;
                                     }else{
                                         pass_check = false;
                                     }
                                 }
                             }else{
-                                if(check_challenge[i][check_count] < 0){
+                                if(check_challenge.get(i).get(check_count)< 0){
                                     
                                 }else{
                                     pass_check = false;
                                 }
                             }
+                            
                         }else{
-                            trace("(Conversation_topic.get_start_step)got id " + stat_check[i][check_count] + " and don't know what to do about it");
+                            //trace("(Conversation_topic.get_start_step)got id " + stat_check.get(i).get(check_count) + " and don't know what to do about it");
                         }
                     }else{
                         //check stat
                         if(char_swap){//need to swap characters for this stat check
-                            var temp_char:Character = c_self;
+                            Character temp_char = c_self;
                             c_self = c_init;
                             c_init = temp_char;
                         }
-                        if(c_self.get_stat(stat_check[i][check_count]) >= check_challenge[i][check_count]){
-                            if(!party_check[i] || (party_check[i] && c_self.party == c_init.party && c_self.party != null)){
-                                //ret = i;
+                        if(c_self.getStat(stat_check.get(i).get(check_count)) >= check_challenge.get(i).get(check_count)){
+
+                            if(!party_check.get(i)|| (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
+                                ret = i;
                             }else{
                                 pass_check = false;
                             }
+                            
                         }else{
                             pass_check = false;
                         }
                         if(char_swap){//swap 'em back
-                            temp_char = c_self;
+                            Character temp_char = c_self;
                             c_self = c_init;
                             c_init = temp_char;
                         }
                     }
                 }
                 
-                if(pass_check && mob_check[i] != null){
+                if(pass_check && mob_check.get(i) != null){
                     pass_check = false;
-                    check_count = 0;
-                    for(check_count;check_count<c_self.personality.mob_allegiances.length;check_count++){
-                        if(mob_check[i] == c_self.personality.mob_allegiances[check_count]){
+                    for(check_count=0;check_count<c_self.personality.mob_allegiances.size();check_count++){
+                        if(mob_check.get(i) == c_self.personality.mob_allegiances.get(check_count)){
                             pass_check = true;
                             break;
                         }
@@ -238,5 +273,5 @@ public class Conversation_topic {
         return ret;
         
     }
-    */
+    
 }
