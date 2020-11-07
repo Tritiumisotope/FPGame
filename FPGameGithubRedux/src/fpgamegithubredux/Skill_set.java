@@ -54,7 +54,7 @@ public class Skill_set {
     public int get_skill_value(Character c,int skill_id){
         int ret = 0;
         int skill_rank = 0;
-        int bonus = 0;
+        //int bonus = 0;
         int i = 0;
         for(i=0;i<skill_ids.size();i++){//.length
             if(skill_ids.get(i) == skill_id){//[]

@@ -78,21 +78,24 @@ public class Room{
                 if(o instanceof Character){
                     Character tempChar = (Character)o;
                     if(tempChar != lookingCharacter){
-                        bld.append("<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,");
-                        //ret += "<a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,"
+                        bld.append(" <a href=\"event:look," + contents.indexOf(o) +"\">" +tempChar.getStatus(lookingCharacter) + "</a>,");
                         nothing = false;
                     }
                 }else if(o instanceof Item){
                     Item tempItem = (Item)o;
 
-                    bld.append("<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,");
-                    //ret += "<a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,"
+                    bld.append(" <a href=\"event:pick_up," + contents.indexOf(o) +"\">" + tempItem.getDroppedDescription() + "</a>,");                    
                     nothing = false;
                 }
             }
         }
-        ret = bld.toString();
+        
         if(Boolean.TRUE.equals(nothing))bld.append("Nothing!");//ret += "Nothing!"
+        
+        ret = bld.toString();
+
+        if(ret.charAt(ret.length()-1) == ',')ret = ret.substring(0, ret.length()-1);
+
         for(CharAction a : actions){
             if(a != null){
                 ret = ret.replaceAll("<a"+actions.indexOf(a)+">", "<a href=\"event:action,-1," + actions.indexOf(a) +"\"><i>"+a.getName() +"</i></a>");

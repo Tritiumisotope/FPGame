@@ -278,7 +278,7 @@ public String getName(){
          int ret = 1;//everything is a-ok
         //0 can't move, but still alive
         //-1 somebody killed me
-         int i = 0;
+        //int i = 0;
          /*TODO
         for(i=0;i<stat_description.length;i++){
              int ps = stat_description[i].check_combat_status(c, this);
@@ -382,7 +382,7 @@ public String getName(){
     private String get_covered_desc(Character c){
          String ret = null;
         if(covered_by[covered_by.length -1] != null) {
-            Equipment cover_equip = covered_by[covered_by.length -1];
+            //Equipment cover_equip = covered_by[covered_by.length -1];
             /*TODO
             if(cover_equip.show_other_cover() && covered_by[covered_by.length -2] != null){
                 ret = covered_by[covered_by.length -2].covered_description(c, part_id,this) + cover_equip.covered_description(c, part_id,this) + stat_descriptions(c,1);
@@ -627,11 +627,12 @@ public String appearance(int i, Character c){//default 0, null
                     s += stat_description[i].get_description(c, (double)get_stat(c, stat_id[i]));
                 }else{
                     if(c == null)continue;
-                     BodyPart p = null;
-                     //found_array:Array = new Array();
-                     int j = 0;
-                     int parts_count = 0;
-                     /*
+                    /*
+                    BodyPart p = null;
+                    //found_array:Array = new Array();
+                    int j = 0;
+                    int parts_count = 0;
+                     
                     if(stat_description[i].stat_desc_ttl_part_limit.length > 0){
                          Boolean show_desc = false;
                          Number stat_total = 0;

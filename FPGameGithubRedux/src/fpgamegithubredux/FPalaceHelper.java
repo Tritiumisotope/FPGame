@@ -504,7 +504,7 @@ public class FPalaceHelper{
 
 			private static Stat[] stat_names;
 			private static DamageType[] damage_types;
-			private static int[] images;
+			//private static int[] images;
 
 			protected static ArrayList<JLabel> humanBodyImgs = new ArrayList<JLabel>();
 			protected static ArrayList<JLabel> otherImgs = new ArrayList<JLabel>();

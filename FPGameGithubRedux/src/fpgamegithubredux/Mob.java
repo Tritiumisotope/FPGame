@@ -11,7 +11,7 @@ public class Mob {
 		
 		//public var topics:Array;
 
-		public void Mob(){
+		public Mob(){
 			// constructor code
 			//ideals = new Array();
 			controlled_areas = null;

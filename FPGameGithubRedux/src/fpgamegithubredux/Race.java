@@ -86,7 +86,7 @@ public class Race extends DynamicObject {
 
     public Boolean anthropomorphic;
 
-    public void Race(){
+    public Race(){
         name = "";
         /*
         bonus_stat = new Array();
@@ -182,8 +182,8 @@ public class Race extends DynamicObject {
     public Object[] get_new_parts(Character c){
         Object[] ret = null;
         //Object[] avail_connect = c.body.get_avail_connect_part();
-        int i = 0;
         /*
+        int i = 0;        
         for(i=0;i<parts.length;i++){
             BodyPart temp_bp = parts[i];
             if(c.body.part_count_by_name(temp_bp.name) < parts_count[i] && (parts_gender[i] == null || parts_gender[i] == c.sex.name)){
@@ -218,7 +218,7 @@ public class Race extends DynamicObject {
                 ret.set_character_effect(kid);
             }else if(preg_type == egg_pregnancy){
                 if(ret.end_consequence != null && ret.end_consequence instanceof ItemConsequence){//was is
-                    ItemConsequence icons = (ItemConsequence)ret.end_consequence ;
+                    //ItemConsequence icons = (ItemConsequence)ret.end_consequence ;
                     //Item temp_egg = icons.item_reward[0];
                     //temp_egg.add_spawn_at_tick(kid, Math.round(8*FPGameGithub.T1_MONTH*aging_mod.doubleValue()));
                     //TODO
@@ -405,7 +405,7 @@ public class Race extends DynamicObject {
         i = 0;
         for(i=0;i<skill_bonus.length;i++){
             if (skill_bonus[i] != null && (p.part_id == skill_bonus_part[i] || skill_bonus_part[i] == -1)){
-                Number out = -1*skill_bonus[i].doubleValue();
+                //Number out = -1*skill_bonus[i].doubleValue();
                 //c.set_skill_bonus(skill_bonus_id[i], out);
                 //TODO
             }

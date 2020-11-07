@@ -258,12 +258,13 @@ crafts..............   17    -         | | | water.........   54  178
     }
     
     public static String get_skill_tree(Character c, Skill_set ss, ArrayList<Integer> show_children_of){//show_children_of:Array = null
+        String ret = "";
+        /*
         ArrayList<Skill>  skill_array = get_skill_list();
         
         int i = 0;
-        int char_id = 0;
-        String ret = "";
-        /*
+        int char_id = 0;        
+        
         if(c.party != null){
             for(i=0;i<c.party.members.length;i++){
                 if(c.party.members[i] == c){
@@ -469,7 +470,7 @@ crafts..............   17    -         | | | water.........   54  178
                 }
                 
                 if(skill_ranks == 0 && skill_array.get(i).get_parent() != -1){//[]
-                    int temp = get_skill_value_by_id(c,skill_id, 1) - 1;
+                    //int temp = get_skill_value_by_id(c,skill_id, 1) - 1;
                     //int temp_ranks = c.skills.get_skill_ranks(skill_array.get(i).get_parent());//[]
                     //ret = Math.min(temp,temp_ranks);
                     //TODO character skills

@@ -237,7 +237,7 @@ public class Character extends DynamicObject {
         return "";
     }
     public void drop(int item){
-        //dummy
+        possessions.remove(item);
     }
     public String look(){return look(-1, 0);}
     public String look(int contentID){return look(contentID, 0);}
@@ -315,6 +315,253 @@ public class Character extends DynamicObject {
         }
 
         return ret;
+    }
+    public String getItemDescription(Item item){return getItemDescription(item, false);}
+    public String getItemDescription(Item item, Boolean keep_tags){
+        int identification = 0;
+        Character char_for_chal = this;
+        
+        //if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.item_effects_id);
+            
+        Challenge ident_challenge = new Challenge(true);
+        ident_challenge.set_attack_stat(FPalace_skills.item_effects_id);
+        ident_challenge.set_defense_stat(-1,item.getIdentifyDifficulty());
+        ident_challenge.setVariability(5);
+        
+        int result = ident_challenge.roll(char_for_chal);
+
+        if(result >= 0){
+            identification += result;
+        }
+        
+        String item_desc = "";
+        Integer[] ident_array = {identification};
+        /*
+        identification = 0;
+        char_for_chal = this;
+        
+        if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
+            
+        var weight_challenge:Challenge = new Challenge(true);
+        weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
+        weight_challenge.set_defense_stat(-1,item.get_identify_difficulty());
+        weight_challenge.set_variability(5);
+        
+        result = weight_challenge.roll(char_for_chal);
+
+        if(result >= 0){
+            identification += result;
+        }
+        
+        ident_array[ident_array.length] = identification;
+        
+        if(item is Alchemy_item){
+            var alch_ident:int = 0;
+            char_for_chal = this;
+            if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.item_alchemy_effects_id);
+            var alch_ident_challenge:Challenge = new Challenge(true);
+            alch_ident_challenge.set_attack_stat(FPalace_skills.item_alchemy_effects_id);
+            alch_ident_challenge.set_defense_stat(-1,item.get_identify_difficulty());
+            alch_ident_challenge.set_variability(5);
+            
+            result = alch_ident_challenge.roll(char_for_chal);
+
+            if(result >= 0){
+                alch_ident += result;
+            }
+            ident_array[ident_array.length] = alch_ident;
+        }
+        */
+        item_desc += item.getDescription(this, ident_array, keep_tags);
+        return item_desc;
+    }
+
+    public String use_item(int inventoryID){return use_item(inventoryID, -1,-1, -1);}
+    public String use_item(int inventoryID, int useCase){return use_item(inventoryID, useCase,-1, -1);}
+    public String use_item(int inventoryID, int useCase, int j){return use_item(inventoryID, useCase,j, -1);}
+    public String use_item(int inventoryID, int useCase, int j, int num_to_move){
+        int party_id = 0;
+        int count;
+        /*
+        if(party != null){
+            for(count=0;count<party.members.length;count++){
+                if(party.members[count] == this){
+                    party_id = count;
+                    break;
+                }
+            }
+        }
+        */
+        String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+        
+        
+        Item item = null;
+        if( 0 <= inventoryID && inventoryID <possessions.size()){
+            item = possessions.get(inventoryID);
+        }
+        
+        String item_desc = getItemDescription(item);
+        
+        if(useCase == -1){
+            /*if(party != null){
+                if( item.getUseDescription() != ""){
+                    return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + inventoryID +",3,"+party_id+"\">give</a>?";
+                }else{
+                    return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID+",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + inventoryID +",3,"+party_id+"\">give</a>?";
+                }
+            }else{*/
+                if( item.getUseDescription() != ""){
+                    return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>?";
+                }else{
+                    return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>?";
+                }
+            //}
+        }
+        
+        
+        ArrayList<Object> move_array = new ArrayList<Object>();
+        int found_num = 0;
+        for(Item tempItem : possessions){
+            if(tempItem.getName() == item.getName()){
+                move_array.add(tempItem);
+                found_num++;
+            }else{
+                move_array.add(null);
+            }
+        }
+        
+        //found_num--;
+        
+        String ret = "";
+        
+        if(useCase == 0){
+            if(found_num > 1 && num_to_move == -1){
+                /*
+                ret += "How many would you like to use?<br><a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+                */
+            }else{
+                /*
+                if(num_to_move > 1){
+                    found_num = 0;
+                    count = 0;
+                    for(count;count<move_array.length;count++){
+                        if(num_to_move <= 0)break;
+                        if(move_array[count] != null){
+                            item = possessions[count-found_num];
+                            ret += item.use_item(this,count-found_num);
+                            set_busy();
+                            if(!item.still_usable()){ 
+                                drop(count - found_num);
+                                found_num++
+                            }
+                            num_to_move--;
+                        }
+                    }
+                    ret += back_string
+                }else{
+                    ret += item.use_item(this,i);
+                    if(!item.still_usable()) drop(i);
+                    set_busy();
+                }
+                */					
+            }
+            return ret;
+        }else if(useCase == 1){
+            if(found_num > 1 && num_to_move == -1){
+                ret += "How many would you like to drop?<br><a href=\"event:use_item," + inventoryID +",1,"+party_id+",-1,1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + inventoryID +",1,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," + inventoryID +",1,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+                return ret;
+            }else{
+                if(num_to_move > 1){
+                    found_num = 0;
+                    count = 0;
+                    for(count = 0;count<move_array.size();count++){
+                        if(found_num >= num_to_move)break;
+                        if(move_array.get(count) != null){
+                            item = possessions.get(count - found_num);
+                            drop(count - found_num);
+                            location.newContent(item);
+                            found_num++;
+                        }
+                    }
+                }else{
+                    drop(inventoryID);
+                    location.newContent(item);
+                }
+                setBusy();
+                return "You place the " + item.getName() + " on the ground here.";// + back_string;
+            }
+        }else if( useCase == 2){
+            if(found_num > 1 && num_to_move == -1){
+                ret += "How many would you like to throw away?<br><a href=\"event:use_item," + inventoryID +",2,"+party_id+",-1,1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + inventoryID +",2,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," + inventoryID +",2,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+                return ret;
+            }else{
+                if(num_to_move > 1){
+                    found_num = 0;
+                    count = 0;
+                    for(count = 0;count<move_array.size();count++){
+                        if(found_num >= num_to_move)break;
+                        if(move_array.get(count) != null){
+                            drop(count - found_num);
+                            found_num++;
+                        }
+                    }
+                }else{
+                    drop(inventoryID);
+                }
+                setBusy();
+                return "You throw away the " + item.getName() + " never to see it again." + back_string;
+            }
+        }else if(useCase == 3 && j == -1){
+            String s = "Who do you want to give it to?<br>";
+            /*
+            count = 0;
+            for(count;count<party.members.length;count++){
+                if(party_id != count){
+                    s += " <a href=\"event:use_item," + String(i) +",3,"+party_id+","+count+"\">"+ party.members[count].get_name() +"</a>";
+                }
+            }
+            */
+            return s + back_string;
+        }else if(useCase == 3 && j >= 0){
+            /*
+            if(found_num > 1 && num_to_move == -1){
+                ret += "How many would you like to give?<br><a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+",1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+found_num+"\">x"+found_num+"</a>";
+                return ret;
+            }else{
+                if(num_to_move > 1){
+                    found_num = 0;
+                    count = 0;
+                    for(count;count<move_array.length;count++){
+                        if(found_num >= num_to_move)break;
+                        if(move_array[count] != null){
+                            item = possessions[count - found_num];
+                            drop(count - found_num);
+                            party.members[j].add_to_possessions(item);
+                            
+                            //move_array = move_array.slice(0,count).concat(move_array.slice(count+1,move_array.length));
+                            //count--;
+                            found_num++
+                        }
+                    }
+                }else{
+                    drop(i);
+                    party.members[j].add_to_possessions(item);
+                }
+                set_busy();
+                return "Gave item" + back_string;
+            }
+            */
+        }
+        
+        return "";
     }
 
     public String statistics(){

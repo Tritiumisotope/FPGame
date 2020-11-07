@@ -302,7 +302,7 @@ public class Area{
                     int new_z = connect_status[3];
                     Boolean other_rooms_ok= true;
                     
-                    String to_path= get_direction(new_x, new_y, new_z, x, y, z);
+                    //String to_path= get_direction(new_x, new_y, new_z, x, y, z);
                     String from_path = get_direction(x, y, z, new_x, new_y, new_z);
                     
                     if(r.exits.length > 0){
@@ -533,10 +533,11 @@ public class Area{
         return other_rooms_ok;
     }
     
-    
+    /*
     private void set_already_checked(Room[] a){
         alreadyCheckedPlaceholder = a;
     }
+    */
     
     private Room[] get_already_checked(){
         return alreadyCheckedPlaceholder;
@@ -637,13 +638,13 @@ public class Area{
             if(rooms[new_x][new_y][new_z] != null){
                 //Let's join them... if they aren't already joined
                 if(new_x != x || new_y != y || new_z != z){
-                    String to_path= get_direction(new_x, new_y, new_z, x, y, z);
-                    String from_path = get_direction(x, y, z, new_x, new_y, new_z);
+                    //String to_path= get_direction(new_x, new_y, new_z, x, y, z);
+                    //String from_path = get_direction(x, y, z, new_x, new_y, new_z);
                     
                     if(rooms[new_x] != null){
                         //check to see if the existing room already has enough exits
                         int same_room_count = 1;
-                        int temp_room_count = 0;
+                        //int temp_room_count = 0;
                         int temp_max_same = -1;
                         /*
                         if(lr.template != null)temp_max_same = lr.template.get_max_same_exits();
@@ -794,8 +795,8 @@ public class Area{
         if(rooms[new_x] == null) rooms[new_x] = null;//new Array()
         if(rooms[new_x][new_y] == null) rooms[new_x][new_y] = null;//new Array()
         
-        String to_path = get_direction(new_x, new_y, new_z, x, y, z);
-        String from_path = get_direction(x, y, z, new_x, new_y, new_z);
+        //String to_path = get_direction(new_x, new_y, new_z, x, y, z);
+        //String from_path = get_direction(x, y, z, new_x, new_y, new_z);
         /*
         if (max_same_room > -1){
             
@@ -1248,9 +1249,9 @@ public class Area{
             //(conseq as Room_Consequence).add_room_effect(move_room);//as
             conseq.add_room_effect(move_room);
         }
-        */
+        
         int con_count = 0;
-        /*
+        
         for(con_count=0;con_count<conseq.consequence_description.length;con_count++){
             conseq.consequence_description[con_count] = conseq.consequence_description[con_count].replace("</path>", path);
         }
@@ -1449,7 +1450,7 @@ public class Area{
                             
                         }
                     }else{
-                        Room r = rooms[x][y][z];
+                        //Room r = rooms[x][y][z];
                         /*
                         if(r.template != null){
                             if(r.template.get_propagating_description_distance() > 0){
@@ -1912,8 +1913,8 @@ public class Area{
     }
     public Room get_random_room(Boolean for_area_connect){
         //was false
-        int room_num;
-        int min_room = 0;
+        //int room_num;
+        //int min_room = 0;
         //choose rooms from that later half of the list to spread the area out - doesn't matter if you don't control the directions!
         //min_room = Math.floor((room_list.length-1)*0.6);
         //room_num = min_room + (int)(Math.random()*(room_list.length-1 - min_room));
@@ -1940,7 +1941,7 @@ public class Area{
         Room[] list = null;//var list:Array = null//new Array()
         int x = 0;
         int y = 0;
-        int z = baseFloorZ;
+        //int z = baseFloorZ;
         
         int max_y = 0;
         for(x=0;x<rooms.length;x++){
@@ -1989,7 +1990,7 @@ public class Area{
                 }
             }
         }
-        
+        /*
         if(list == null){//was [0]
             list = new Room[0];
             if(indent>0){
@@ -2001,6 +2002,7 @@ public class Area{
             }
             return get_edge_rooms(1,skip_area_check);
         }
+        */
         return list;
     }
     public Room get_edge_room(){
@@ -2059,7 +2061,7 @@ public class Area{
         }
         */
         int npc_count = 0;
-        int q;
+        //int q;
         int i = 0;
         
         for(i=0;i<room_list.length;i++){
@@ -2133,14 +2135,14 @@ public class Area{
         
         if(npc_count <= npcSpawnThreshold){
             if(spawnCreatures.length > 0){
-                int spawn_choice = 0;
+                //int spawn_choice = 0;
                 //if(spawnCreatures.length > 1)spawn_choice = Math.round(Math.random() *(spawnCreatures.length - 1));
                 //Character new_char = spawnCreatures[spawn_choice].gen_char();
                 //new_char.newLocation(new Room());//(get_random_room(), true);
                 
             }else{
                 //use the template_rooms spawns
-                Room temp_room = get_random_room();
+                //Room temp_room = get_random_room();
                 //if(temp_room.template != null){
                     //temp_room.template.spawn_creatures(temp_room);
                 //}

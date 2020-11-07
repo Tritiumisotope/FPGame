@@ -316,13 +316,14 @@ public class AlchemyItem extends Item{
         }
         
         if(skill > 0){
+            /*
             int num_to_get = 3;
             if(skill > 2){
                 num_to_get = 12;
             }else if(skill > 1){
                 num_to_get = 6;
             }
-            /*
+            
             if(t.length > num_to_get){
                 i = Math.round(Math.random()*(t.length - num_to_get));
                 item.types = t.slice(i,i+num_to_get);
@@ -356,19 +357,19 @@ public class AlchemyItem extends Item{
     public String getDescription(Character c, Integer[] ident_effectiveness, Boolean keep_tags){
         //c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false
         String ret = "";
-        
+        /*
         double ident_chance = 0;
         int ident_roll;
         if(ident_effectiveness != null){
-            //ident_chance = 2*ident_effectiveness[ident_effectiveness.length - 1]/(identDifficulty);
+            ident_chance = 2*ident_effectiveness[ident_effectiveness.length - 1]/(identDifficulty);
             ident_roll = ident_effectiveness[ident_effectiveness.length - 1];
-            //ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1);
+            ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1);
         }
-        
+        */
         ret += super.getDescription(c,ident_effectiveness, keep_tags) + "\n";
         
-        Boolean showing= false;
-        int count = 0;
+        //Boolean showing= false;
+        //int count = 0;
         /*
         if(types.length > 0){
             for(count = 0;count < types.length;count ++){

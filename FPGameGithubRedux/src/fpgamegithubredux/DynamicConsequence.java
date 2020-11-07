@@ -57,10 +57,11 @@ public class DynamicConsequence extends Consequence {
     public String dynamic_choices(Character c, Character c2){//default c2 null
         String s = "";
         if(c2 == null) c2 = c;
+        /*
         BodyPart temp_bp;
         int con_count = 0;
         //TODO location template, location exit_actions, character add_to_possessions
-        /*
+        
         if(consequence_list_type == DynamicConsequence.list_parts){
             for(con_count=0;con_count < c.body.parts.length;con_count++){
                 temp_bp = c.body.parts[con_count];
@@ -162,12 +163,12 @@ public class DynamicConsequence extends Consequence {
             choiceList.add(i);
         }
         if(choiceList == null || choiceList.get(0) == null) return ret;//[]
-        
+        /*
         Stat temp_stat;
         BodyPart temp_bp;
         Item temp_item;
         AlchemyItem temp_aitem;
-        /*TODO body, type, slice, possessions
+        TODO body, type, slice, possessions
         if(consequence_list_action == DynamicConsequence.list_removepart){
             //wrong in combat, right in overworld...
             temp_bp = c.body.parts[choice[0]];

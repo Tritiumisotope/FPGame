@@ -96,7 +96,15 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
              int challengeID = Integer.parseInt(splitResult[3]);
              int triggeringContentID = Integer.parseInt(splitResult[4]);
              textField.setText(player.fireChallenge(contentID, actionID, challengeID, triggeringContentID));
-         }else{
+         }else if(result.contains("event:use_item")&&splitResult.length > 1){
+            int inventoryID = Integer.parseInt(splitResult[1]);
+            if(splitResult.length > 2){
+                int useCase = Integer.parseInt(splitResult[2]);
+                textField.setText(player.use_item(inventoryID,useCase));
+            }else{
+                textField.setText(player.use_item(inventoryID));
+            }            
+        }else{
              String msg = "(MainGUIPanel.java)got unexpected result: " + result;
              LOGGER.info(msg);
          }

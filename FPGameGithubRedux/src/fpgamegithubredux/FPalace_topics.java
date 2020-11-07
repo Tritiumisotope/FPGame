@@ -2781,10 +2781,10 @@ package fpgamegithubredux;
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Becoming like Heidi");
-			
+			/*
 			Item cola_item = FPalace_items.futa_cola();
             //Quest get_futa_cola_quest= new Quest();
-            /*TODO Quest
+            TODO Quest
 			get_futa_cola_quest.set_name("Helping out Lucy");
 			get_futa_cola_quest.new_objective("Find something to help Lucy become more like her big sister Heidi. ",Quest.pick_up_action,[cola_item]);
 			get_futa_cola_quest.new_objective("Get the cola back to Lucy. ",Quest.talk_action,null);
@@ -3078,9 +3078,10 @@ package fpgamegithubredux;
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Filling the quota for cum");
+			/*
 			Item temp_item = FPalace_items.cum_jug();
             //Quest cum_quota_quest = new Quest();
-            /*TODO Quest
+            TODO Quest
 			cum_quota_quest.set_name("Filling the quota for cum");
 			cum_quota_quest.new_objective("Get a jug of cum for Heidi. ",Quest.pick_up_action,[temp_item]);
 			cum_quota_quest.new_objective("Get the cum back to Heidi. ",Quest.talk_action,null);
@@ -3191,6 +3192,7 @@ package fpgamegithubredux;
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Potion Ingredients");
+			/*
 			Item temp_item = FPalace_items.floppy_cucumber();
 			Item temp_item2 = FPalace_items.dickweed();
 			Item temp_item3 = FPalace_items.Stubby_twig();
@@ -3198,7 +3200,7 @@ package fpgamegithubredux;
 			
 			
             //Quest gathering_quest = new Quest();
-            /*TODO Quest
+            TODO Quest
 			gathering_quest.set_name("Gathering Ingredients for a Hermit");
 			gathering_quest.new_objective("Get a floppy cucumber for the Hermit. ",Quest.pick_up_action,[temp_item]);
 			gathering_quest.new_objective("Give the cucumber to the Hermit. ",Quest.talk_action,null);

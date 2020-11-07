@@ -16,7 +16,7 @@ public class Sex extends DynamicObject{
     public int[] damage_type_strengths;
     public int[] damage_type_weaknesses;
 
-    public void Sex() {
+    public Sex() {
         name = "";
         bonus = null;
         age_stat = null;

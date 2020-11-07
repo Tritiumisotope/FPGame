@@ -39,7 +39,7 @@ public class Challenge {
     public Boolean defense_hold;
     public Item defense_item;
     public Challenge(){
-        new Challenge(false);
+        this(false);
     }
     public Challenge(Boolean bool){
         tag = "";

@@ -183,7 +183,7 @@ public class Item {
         double weightDeviation = 1;
         if(identEfficacy != null){
             identChance = 2*identEfficacy[0]/(identDifficulty);
-            if(identEfficacy[1]!=null){
+            if(identEfficacy.length > 1 && identEfficacy[1]!=null){
                 weightDeviation -= (double)identEfficacy[1]/identDifficulty;
                 if(weightDeviation <= 0)weightDeviation = 0.01;
                 if(weightDeviation >= 1)weightDeviation = 0.99;
@@ -201,7 +201,7 @@ public class Item {
     public String describeEffects(Integer[] identEfficacy,Boolean keepTags, int identChance, String desc){
         int count;
         Boolean showing = false;
-        if(effects.length > 0){
+        if(effects != null && effects.length > 0){
             for(count = 0;count<effects.length;count++){
                 if(effects[count] != null && Math.random() <= identChance){
                     if(!showing){
@@ -253,7 +253,7 @@ public class Item {
 
         int count = 0; //for effects and such
         desc = describeEffects(identEfficacy,keepTags, identChance, desc);
-        if(changeEffects.length > 0){
+        if(changeEffects != null && changeEffects.length > 0){
             desc += "\n";
             count = 0;
             for(count=0;count<changeEffects.length;count++){
@@ -283,7 +283,7 @@ public class Item {
                 }
             }
         }
-        if(statActionAdd.length > 0){
+        if(statActionAdd != null && statActionAdd.length > 0){
             desc += "\n";
             count = 0;
             //for(count=0;count<Math.ceil(statActionAdd.length/2);count++){
