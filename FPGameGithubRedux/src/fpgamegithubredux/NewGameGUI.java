@@ -258,7 +258,7 @@ public class NewGameGUI implements ActionListener {
                 + "How old are you?";
         textField.setText(output2);
         ageEntry = new JFormattedTextField(amountFormat);
-        ageEntry.setBounds(10, 40, 300, 22);
+        ageEntry.setBounds(10, 120, 300, 22);
         ageEntry.setValue("Please enter age");
         confirmAge.setEnabled(false);
         ageEntry.setColumns(10);
@@ -281,17 +281,14 @@ public class NewGameGUI implements ActionListener {
             }
 
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyTyped(KeyEvent e) {//needed
             }
-
             @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-
+            public void keyReleased(KeyEvent e) {//needed
             }
          });
         textField.add(ageEntry);
-        confirmAge.setBounds(310,40,80,22);
+        confirmAge.setBounds(310,120,80,22);
         
         textField.add(confirmAge);
 
