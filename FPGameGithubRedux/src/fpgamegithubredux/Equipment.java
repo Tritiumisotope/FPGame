@@ -366,8 +366,8 @@ public class Equipment extends Item {
 			}
 			
 			int j = 0;
-			for (j=0;j<bp.stat_id.length;j++){
-				if(bp.stat_description[j] != null){
+			for (j=0;j<bp.stat_id.size();j++){
+				if(bp.stat_description.get(j) != null){
 					/*TODO
 					s = s.replace("</" + bp.stat_id[j] + ">",String(bp.get_stat(c, bp.stat_id[j]).toFixed(bp.stat_description[j].show_decimals)));
 					s = s.replace("<sd/" + bp.stat_id[j] + ">",bp.stat_description[j].get_short_description(bp.get_stat(c, bp.stat_id[j])));
