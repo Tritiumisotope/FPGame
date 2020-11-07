@@ -22,6 +22,7 @@ public class Character extends DynamicObject {
     
     private static final Logger LOGGER = Logger.getLogger(Character.class.getName());
     protected ArrayList<Item> possessions;
+
     protected Character mother;
     protected Character father;
     
@@ -60,11 +61,6 @@ public class Character extends DynamicObject {
 	public int lvl;//:uint
     public int stat_points;//:uint
     
-    public int fitness;//this must die
-    public int ageDemo;//this must ide
-
-
-    
     protected ArrayList<Integer> statID;
     protected ArrayList<Stat> stats;
     protected Party party;
@@ -75,7 +71,11 @@ public class Character extends DynamicObject {
     public String next_attack;
     
     public int char_sprite_id;
-    public int char_34sprite_id;
+    public int char_34sprite_id;//all original Class vars copied
+
+
+    public int fitness;//this must die
+    public int ageDemo;//this must ide
 
     
             
@@ -87,9 +87,9 @@ public class Character extends DynamicObject {
         //setSex(newSex)
         //sex = new Sex()
         possessions = new ArrayList<>();
+        actions = new ArrayList<>();
         statID = new ArrayList<>();
         stats = new ArrayList<>();
-        actions = new ArrayList<>();
         currentTickEffects = new ArrayList<>();
 
         personality = new Personality();
@@ -98,10 +98,15 @@ public class Character extends DynamicObject {
         location = null;//non_standard
 
         gold = 0;
-
+        xp = 0;
+        lvl = 1;
+        stat_points = 0;
+        nxt_lvl_xp = 100;
+        total_actions_taken = 0;
         busy = 0;
         waitTime = 0;
-        
+        previous_action_output = "";
+        ///TESTING
         Stat tempStat = new Stat();
         tempStat.setName("Fitness");
         tempStat.statID = 0;
@@ -114,6 +119,33 @@ public class Character extends DynamicObject {
         tempAction.dialogue = "</n> takes a moment to talk to </n2>";
         
         actions.add(tempAction);
+        //END TESTING
+        /*unsafe additions for now
+        new_stat(FPalaceHelper.age_id, FPalaceHelper.stat_age(), 23);//probably won't move this one
+			
+        new_stat(FPalaceHelper.weight_id, FPalaceHelper.stat_weight(), 0);
+        new_stat(FPalaceHelper.max_weight_id, FPalaceHelper.stat_max_weight(), 0);
+        
+        body = new Body();
+        sex = new Sex();
+        cclass = new Array();
+        
+        skills = new Skill_set();
+        
+        challenge_output = "";
+        next_attack = "";
+        
+        CharAction a = new Action();
+        a.set_name("Attack");
+        add_action(a);
+        
+        a = new CharAction();
+        a.set_name("Talk");
+        a.set_talk_flag();
+        add_action(a);
+        */
+        char_sprite_id = -1;
+        char_34sprite_id = -1;
     }
     public String set_surname(String s){
         return set_surname(s, false);
@@ -121,10 +153,9 @@ public class Character extends DynamicObject {
     public String set_surname(String s,Boolean full_name){//default false
         String ret = s;
         if(full_name){
-            if(s.indexOf(" ") > 0){
-                //TODO
-                //ret = s.substr(0,s.indexOf(" "));
-                //surname = s.substr(s.indexOf(" ")+1,s.length);
+            if(s.indexOf(" ") > 1){//0 is ignored so 1 is probably first char
+                ret = s.substring(0,s.indexOf(" "));//ret = s.substr(0,s.indexOf(" "))
+                surname = s.substring(s.indexOf(" ")+1,s.length());//surname = s.substr(s.indexOf(" ")+1,s.length)
             }else{
                 surname = "";
             }
@@ -146,9 +177,9 @@ public class Character extends DynamicObject {
     }
     /*
     public function remove_status_effect_by_id(status_id:int, tick_count:int = -1):String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<current_tick_effects.length;i++){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<current_tick_effects.length;i++){
             if(current_tick_effects[i].get_id() == status_id){
                 if(tick_count == -1){
                     personality.advance_objectives(Quest.status_remove_action, [status_id],this);
@@ -174,7 +205,7 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    
+    /*
     public function set_challenge_output(s:String):void{
         //attempt to remove duplicate warnings and empty space
         if(s.indexOf("<sid") >= 0){
@@ -478,14 +509,16 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    
-    public function apply_tick_effect(tf:Tick_Effect):void{
+    */
+    public void apply_tick_effect(TickEffect tf){
         if(!get_primary_race().check_immunity(tf.status_id)){
-            personality.advance_objectives(Quest.status_add_action, [tf], this);
-            current_tick_effects[current_tick_effects.length] = tf;
+            ArrayList<Object> teTemp = new ArrayList<>();
+            teTemp.add(tf);
+            personality.advance_objectives(Quest.status_add_action, teTemp, this);//[tf]
+            currentTickEffects.add(tf); //current_tick_effects[current_tick_effects.length] = tf;
         }
     }
-    */
+    
     /*TODO make work, dummy other
     public void newStat(int id, Stat s, Number c){//def 0
         stat_id[stat_id.length] = id;
@@ -507,12 +540,12 @@ public class Character extends DynamicObject {
         set_busy();
         return personality.talk(c, this, topic, topic_step, challenge_num, dynamic_choice);			
     }
-    
+    */
     //gets called from apply_affect_by_id
-    public function character_reaction(c:Character, stat_id:int, quant:Number):Number{
+    public Number character_reaction(Character c,int stat_id,Number quant){
         return personality.determine_reaction(c, stat_id, quant, this);
     }
-    
+    /*
     public function get_aggresive(c:Character, party_check:int = 0, c_party_check:int = 0):Boolean{
         var agg:Boolean = false;
         if(c == this) return agg;
@@ -621,64 +654,66 @@ public class Character extends DynamicObject {
         }
         return s;
     }
-    
-    public function get_lvl():int{
+    */
+    public int get_lvl(){
         return lvl;
     }
     
-    public function set_busy(i:int = 1):void{
-        busy+=i;
-        wait_time = 0;
+    public void setBusy(){setBusy(1);}
+    public void setBusy(int numTicks){
+        busy += numTicks;
+        waitTime = 0;
     }
-    
-    public function get_move():Boolean{
+    public Boolean get_move(){
         if (ai_move > 0)return true;
         return false;
     }
     
-    public function set_move(i:int=1):void{
+    public void set_move(int i){//default 1
         ai_move+=i;
     }
     
-    public function get_short_description(c:Character):String{
-        var ret:String = "";
-        var determined_sex:Sex = c.determine_sex(this);
-        var temp_string:String = "";
-        if(get_primary_race().get_name() != c.get_primary_race().get_name()){
+    
+    public String get_short_description(Character c){
+        String ret = "";
+        Sex determined_sex = c.determine_sex(this);
+        String temp_string = "";
+        if(get_primary_race().getName() != c.get_primary_race().getName()){
             if(personality.job == null){
                 temp_string = determined_sex.get_age_name(this);
-                if(temp_string == ""){
-                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
+                if(temp_string.equals("")){
+                    temp_string = determined_sex.getName() + " " + get_primary_race().getName();
                 }else{
                     if(get_primary_race().get_anthro()){
-                        temp_string = get_primary_race().get_name() + " " + temp_string;
+                        temp_string = get_primary_race().getName() + " " + temp_string;
                     }else{
-                        temp_string = get_primary_race().get_name();
+                        temp_string = get_primary_race().getName();
                     }
                 }
             }else{
-                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
+                temp_string = get_primary_race().getName() + " " + personality.job.get_name();
             }
         }else{
             if(personality.job == null){
                 temp_string = determined_sex.get_age_name(this);
-                if(temp_string == ""){
-                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
+                if(temp_string.equals("")){
+                    temp_string = determined_sex.getName() + " " + get_primary_race().getName();
                 }
             }else{
-                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
+                temp_string = get_primary_race().getName() + " " + personality.job.get_name();
             }
         }
-        
-        if(temp_string.charAt(0) == "a" || temp_string.charAt(0) == "e" || temp_string.charAt(0) == "i" || temp_string.charAt(0) == "o" || temp_string.charAt(0) == "u"){
+        //below changed from double to single quotes
+        if(temp_string.charAt(0) == 'a' || temp_string.charAt(0) == 'e' || temp_string.charAt(0) == 'i' || temp_string.charAt(0) == 'o' || temp_string.charAt(0) == 'u'){
             ret = "an " + temp_string;
-        }else if(temp_string != ""){
+        }else if(!temp_string.equals("")){
             ret = "a " + temp_string;
         }
-            
+        
         return ret;
     }
-    
+
+    /*
     override public function appearance(i:int = 0, c:Character = null):String{
          var s:String = "";
          s += get_status(c) + ".\n";
@@ -754,7 +789,7 @@ public class Character extends DynamicObject {
         }
         
         a.set_id(actions.size());
-        actions.add(a); //actions[actions.length] = a;
+        actions.add(a); //actions[actions.length] = a
         a.set_originator(this);
     }
     /*
@@ -818,15 +853,223 @@ public class Character extends DynamicObject {
     public void setSexDemo(int theSex){
         sexDemo = sexChoices[theSex];
     }
-    
-    public void apply_tick_effect(TickEffect tf){
-        /*
-        if(!get_primary_race().check_immunity(tf.status_id)){
-            personality.advance_objectives(Quest.status_add_action, tf, this);
-            current_tick_effects[current_tick_effects.length] = tf;
-        }
-        */
+    /*
+    public function new_body_part(p:Body_part, give_bonus:Boolean = true):String{
+        var ret:String = "";
+        
+        if(p.get_name() != "")ret += "</n> now has " + p.get_name() + ". ";
+        
+        if(p.race == null) p.set_race(this.get_primary_race());
+        
+        body.add_part(p,this);
+        if(give_bonus)p.race.apply_bonuses(this,p);
+        
+        determine_sex();
+        
+        personality.advance_objectives(Quest.part_action, [p], this);
+        
+        return ret;
     }
+    
+    public function re_equip(curr_state:int = 0):String{
+        if(curr_state != 0) return "";
+        if(equip_state == 1) return "";
+        equip_state = 1;
+        var s:String = ""
+        var i:int = 0;
+        for(i;i<body.parts.length;i++){
+            var j:int = 0;
+            if(body.parts[i].get_hold() != null){
+                var w:Weapon = body.parts[i].get_hold();
+                for(j;j<w.stat_req.length;j++){
+                    if(w.stat_min[j] > get_stat(w.stat_req[j])){
+                        set_challenge_output("<b></n>s change has caused </noun> " + w.get_name() + " to fall from </noun> " + body.parts[i].get_name() + "!</b> ");
+                        if(location!= null){
+                            unhold(w);
+                            var k:int = 0;
+                            for(k;k<possessions.length;k++){
+                                if(possessions[k] == w){
+                                    drop(k);
+                                    break;
+                                }
+                            }
+                            location.new_content(w);
+                        }   
+                    }
+                }
+            }
+            
+            if(body.parts[i].equip != null){
+                for(j;j<body.parts[i].equip.length;j++){
+                    var e:Equipment = body.parts[i].equip[j];
+                    if(e != null){
+                        var count:int = 0;					
+                        for (count;count<e.stat_req.length;count++){
+                            if( e.stat_min[count] > get_stat(e.stat_req[count]) || get_stat(e.stat_req[count]) > e.stat_max[count]) {
+                                //Need to figure out what happened... did we outgrow the garment, or shrink below it's requirement?
+                                k = 0;
+                                if(get_stat(e.stat_req[count]) > e.stat_max[count]){						
+                                    set_challenge_output("<b></n>s change has torn </noun> " + e.get_name() + " to shreds! </b>")
+                                    unequip(e);
+                                    for(k;k<possessions.length;k++){
+                                        if(possessions[k] == e){
+                                            drop(k);
+                                            break;
+                                        }
+                                    }
+                                }else{
+                                    set_challenge_output("<b></n>s change has caused </noun> " + e.get_name() + " to fall from </noun> " + body.parts[i].get_name() + "! </b>")
+                                    unequip(e);
+                                    if(location!= null){
+                                        for(k;k<possessions.length;k++){
+                                            if(possessions[k] == e){
+                                                drop(k);
+                                                break;
+                                            }
+                                        }
+                                        location.new_content(e);
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    if(body.parts[i] == null) break;
+                }
+            }
+        }
+        equip_state = 0;
+        return s;
+    }
+    *//*
+    public function new_race(i:int, r:Race):String{
+			var ret:String = "\n";
+			if (i >= 0 && i < body.parts.length) {
+				if(body.parts[i].race != null){
+					body.parts[i].race.reverse_bonuses(this, body.parts[i],true);
+					body.parts[i].set_race(r);
+					body.parts[i].race.apply_bonuses(this, body.parts[i],true);
+					if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+					
+				}else{
+					body.parts[i].race.reverse_bonuses(this, body.parts[i]);
+					body.parts[i].set_race(r);
+					body.parts[i].race.apply_bonuses(this, body.parts[i]);
+					if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+				}
+			}
+			return ret;
+        }
+        public function new_location(r:Room, skip_check:Boolean = false, is_player:Boolean = false, ignore_party:Boolean = false):String{
+			var ret:String = "";
+			var init_r:Room = null;
+			if(location == null)skip_check = true;
+			var move_flag:Boolean = true;
+			if(this.party != null){
+				if(this.party.get_leader() != this){
+					if(party.get_leader().location == location || party.get_leader().location == r){
+						//ret += sanitize("</n> stays with </noun> party.\n");
+						if(party.get_leader().location == location)move_flag = false;
+					}
+				}
+			}
+			
+			if(move_flag){
+				if(location != null){
+					location.remove_content(this);
+					init_r = location;
+				}
+				location = r;
+				if(r != null){
+					r.new_content(this,init_r);
+					if(location.area != null){
+						if((init_r != null && location.area != init_r.area) || init_r == null)personality.advance_objectives(Quest.area_action, [location.area.id], this);
+					}
+					personality.advance_objectives(Quest.room_action, [location], this);
+				}
+				status = " is standing here";							
+			}
+			
+			if(this.party != null && !ignore_party){
+				if(this.party.get_leader() == this){
+					var k:int = 1;
+					move_flag = true;
+					for(k;k<this.party.members.length;k++){
+						if(this.party.members[k].location == init_r){
+							ret += this.party.members[k].new_location(r, skip_check, is_player);
+							if(this.party.members[k].location != location){
+								move_flag = false;
+							}
+						}
+					}
+					if(!move_flag){
+						k = 0;
+						for(k;k<this.party.members.length;k++){
+							if(this.party.members[k].location != init_r){
+								this.party.members[k].new_location(init_r, true, is_player, true);
+							}
+						}
+						ret += "the party stops.\n";
+					}
+				}
+			}
+			return ret;
+		}
+		
+		public function go_to_new_location(i:int,is_player:int = 0,no_look:int = 0):String{	
+			var ret:String = "";
+			var look_flag:Boolean = true;
+			if(no_look > 0) look_flag = false;
+			if(location != null){
+				if(get_overworld_status()){
+					if(location.area != null){
+						set_busy(location.area.move_time_mod);
+					}else{
+						set_busy();
+					}
+					var s:Room = location.get_exit(i);
+					if (s != null){
+						ret += "</n> moves " + location.get_exit_direction(i) + ". ";
+						if(location.exit_actions[i] != null){						
+							ret += location.exit_actions[i].trigger(this);						
+							look_flag = false;
+						}else{					
+							ret += "The trip takes " + Main.get_time(location.area.move_time_mod) + ".\n"
+							ret += new_location(s);
+						}
+						
+						if(location != null && is_player == 1){
+							if(!location.player_discovered && location.get_discovery_difficulty() >= 0){
+								var char_for_chal:Character = this;
+								if(party != null) char_for_chal = party.get_best_at_skill(FPalace_skills.map_making_id);
+								
+								var discovery_chal:Challenge = new Challenge(true);
+								discovery_chal.set_attack_stat(FPalace_skills.map_making_id);
+								discovery_chal.set_defense_stat(-1,location.get_discovery_difficulty());
+								discovery_chal.set_variability(5);
+								
+								var result:int = discovery_chal.roll(char_for_chal);
+					
+								if(result >= 0){
+									location.player_found();
+								}
+							}
+						}
+						
+						if(look_flag){
+							ret += look();
+						}						
+					}
+				}else{
+					ret += sanitize(get_overworld_failures())+"\n";
+				}
+			}			
+			
+			return sanitize(ret, null);
+		}
+		
+    */
+    //TODO dummy later, ignore for now
     public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
     public void newStat(int newStatID, Stat newStat, Double statVal){
         if(!statID.contains(newStatID)){
@@ -846,7 +1089,7 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-    public Number get_stat(Number i){
+    public Number get_stat(Number i){//Real thing, copied all original methods so far
         return get_stat(i,1,0,-1,true);
     }
     public Number get_stat(Number i,int get_hard_value){
@@ -909,8 +1152,148 @@ public class Character extends DynamicObject {
                   
         return ret;
     }
+    /*
+    		public function apply_change_effect(o:Object, id:int = -1):String{
+			var ret:String = "";
+			
+			if (o is Sex){
+				var new_sex:Sex = o as Sex;
+				new_sex = new_sex.clone();
+				ret += set_sex(new_sex);
+			}else if(o is Character_job){
+				var new_job:Character_job = o as Character_job;
+				ret += personality.set_job(new_job, this);
+			}else if(o is Character_class){
+				var new_cc:Character_class = o as Character_class;
+				new_cc = new_cc.clone();
+				ret += set_character_class(new_cc);
+			}else if(o is Body_part){
+				var new_bp:Body_part = new Body_part();
+				if(id != -1  && body.get_part_by_id(id) != null){
+					var temp_e:Equipment;
+					var equip_array:Array = body.get_equip_array();
+					var count:int = 0;
+					equip_state = 1;
+					for(count;count<equip_array.length;count++){
+						temp_e = equip_array[count];
+						temp_e.remove_effects(this);
+					}
+					equip_state = 0;
+					
+					new_bp.clone(body.get_part_by_id(id) as Body_part);
+					
+					equip_state = 1;
+					count = 0;
+					for(count;count<equip_array.length;count++){
+						temp_e = equip_array[count];
+						temp_e.equip_effects(this);
+					}
+					equip_state = 0;
+					
+					ret += new_body_part(new_bp,false);
+				}else{
+					new_bp.clone(o as Body_part);
+					ret += new_body_part(new_bp);
+				}
+			}else if(o is Race){
+				var part_array:Array = new Array;
+				var temp_race:Race = o as Race;
+				var i:int = 0;
+				var j:int = 0;
+				var desc_exists:Boolean = false;
+				if(id != -1){
+					for(i;i<body.parts.length;i++){
+						if(body.parts[i].race.get_name() != temp_race.get_name() && body.parts[i].get_part_id() == id){
+							j = 0;
+							desc_exists = false;
+							for(j;j<temp_race.desc_part.length;j++){
+								if(temp_race.desc_part[j] == body.parts[i].get_part_id()){
+									desc_exists = true;
+									break;
+								}
+							}
+							if(desc_exists){
+								part_array[part_array.length] = i;
+							}
+						}
+					}
+				}else{
+					for(i;i<body.parts.length;i++){
+						if(body.parts[i].race.get_name() != temp_race.get_name()){
+							j = 0;
+							desc_exists = false;
+							for(j;j<temp_race.desc_part.length;j++){
+								if(temp_race.desc_part[j] == body.parts[i].get_part_id()){
+									desc_exists = true;
+									break;
+								}
+							}
+							if(desc_exists){
+								part_array[part_array.length] = i;
+							}
+						}
+					}
+					part_array = part_array.concat(temp_race.get_new_parts(this));
+				}
+				i = Math.round(Math.random()*(part_array.length-1));
+				if(part_array[i] != null && part_array[i] is Body_part){
+					ret += apply_change_effect(part_array[i]);
+				}else if(part_array[i] != null){
+					ret += new_race(part_array[i], o as Race);
+				}
+			}else if(o is Room){
+				ret += new_location(o as Room);
+			}else if(o is Action){
+				if(id != -1){
+					add_stat_action(id, o as Action);
+				}
+			}
+			
+			ret += re_equip();
+			
+			return ret;
+		}
+		
+		public function apply_equip_affect_by_id(id:int, change_amt:Number):String{
+			var ret:String = "";
+			
+			var count:int = 0;
+			var i:int = 0;
+			for(i;i<stat_id.length;i++){
+				if(stat_id[i] == id)count++;
+			}
+			count += body.part_count_by_stat(this, id);
+			
+			change_amt = change_amt/count;
+			i = 0;
+			for(i;i<stat_id.length;i++){
+				if(stat_id[i] == id){
+					ret += stat[i].get_equip_change(change_amt, this);
+				}
+			}
+			
+			ret += body.get_equip_effects(id, change_amt, this);
+			
+			if(equip_state == 0){
+				get_combat_status();//will remove dead parts, if there are any
+				if(!body.alive(this) && location != null)ret += die();
+				ret += re_equip(equip_state);
+				ret += body.check_state(this);
+			}
+			
+			if(ret != ""){
+				set_challenge_output("<sid"+id+","+change_amt+",0,\""+ret+"\">");
+				
+			}
+			
+			return ret;
+        }
+        */
     public String apply_affect_by_id(int i,Number k){
         return apply_affect_by_id(i,k, 0, null, 0, false, -1,-1);
+    }
+    public String apply_affect_by_id(Number i,Number k,int temp, Character c){
+        return apply_affect_by_id(i,k, temp, c, 0, false, -1,-1);
     }
     public String apply_affect_by_id(Number i,Number k,int temp, Character c,int body_app_method){
         return apply_affect_by_id(i,k, temp, c, body_app_method, false, -1,-1);
@@ -923,9 +1306,10 @@ public class Character extends DynamicObject {
         int count = 0;
         if (k.intValue() == 0) i = -1;
         if(effect_type > -1){
-            //k *= sex.get_damage_mod(effect_type);
-            //k = k.doubleValue()* sex.get_damage_mod(effect_type);
-            //k *= personality.get_damage_mod(effect_type);
+            //replaced by belowk *= sex.get_damage_mod(effect_type)
+            k = k.doubleValue()* sex.get_damage_mod(effect_type);
+            //replaced by below//k *= personality.get_damage_mod(effect_type)
+            k = k.doubleValue()* personality.get_damage_mod(effect_type).doubleValue();
         }
         int j = 0;
         if(part_id == Body.target_all_parts){
@@ -934,56 +1318,60 @@ public class Character extends DynamicObject {
                 if(i == statID.get(j)){
                     count++;
                     if(stats.get(j).age){
-                        //k = Math.ceil(k/get_primary_race().get_aging_mod());
-                        //sex.age(this,k);
-                        //s += stat[j].get_change_magnitude(k,this,temp);
+                        k = Math.ceil(k.doubleValue()/get_primary_race().get_aging_mod().doubleValue());
+                        sex.age(this,k.intValue());
+                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);
                     }//TODO so much
                     
                     if(body_app_method == Body.change_stats_individual){
-                        //s += stats[j].get_change_magnitude(k,this,temp);				
+                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);				
                     }else if(body_app_method == Body.change_first_stat && !found){
-                        //s += stats[j].get_change_magnitude(k,this,temp);
+                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);
                         found = true;
                     }
                 }
             }
             
-            /*if(body_app_method == Body.change_stats_total && !char_only && count > 0){
+            if(body_app_method == Body.change_stats_total && !char_only && count > 0){
                 if(temp == 0){
-                    if(k > 0){
-                        count += body.part_count_by_stat(this, i, 1);
+                    if(k.intValue() > 0){
+                        count += body.part_count_by_stat(this, i.intValue(), 1);
                     }else{
-                        count += body.part_count_by_stat(this, i, 0);
+                        count += body.part_count_by_stat(this, i.intValue(), 0);
                     }
                 }else{
-                    count += body.part_count_by_stat(this, i);
+                    count += body.part_count_by_stat(this, i.intValue());
                 }
                 
-                var start_amt:Number = get_stat(i,temp);
-                var change_by:Number = k/count;
+                Number start_amt = get_stat(i,temp);
+                Number change_by = k.doubleValue()/count;
                 s += apply_affect_by_id(i,change_by,temp,c,Body.change_stats_individual,true,-1,effect_type);
-                var end_amt:Number = get_stat(i,temp);
-                change_by = k - (end_amt - start_amt);
-                if((change_by >= 0.05 || change_by <= -0.05) && temp == 0 && change_by.toFixed(2) != k.toFixed(2) && change_by.toFixed(2) != (-k).toFixed(2)){
+                Number end_amt = get_stat(i,temp);
+                change_by = k.doubleValue() - (end_amt.doubleValue() - start_amt.doubleValue());
+                //TODO toFixed
+                /*
+                if((change_by.doubleValue() >= 0.05 || change_by.doubleValue()
+                 <= -0.05) && temp == 0 && change_by.toFixed(2) != k.toFixed(2) && change_by.toFixed(2) != (-k).toFixed(2)){
                     //We've run into mins or maxes... need to do... something
                     apply_affect_by_id(i,change_by,temp,c,Body.change_stats_total,false, -1, effect_type);
                 }
-            }else{		*/			
-                //s += body.get_effects(i,k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
-            /*}*/
+                */
+            }else{					
+                s += body.get_effects(i.intValue(),k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
+            }
         }else if(part_id == Body.target_parts_one_by_one){
             //trace("(Character) Should be eroding stat from part by part, instead of all at once.. doing nothing");
             //not sure what to do here yet...
         }else if(part_id >= 0){
             //we have a specific part id to apply this affect to...
-            //if(!char_only)s += body.get_effects(i,k,this, temp,body_app_method,0, part_id,effect_type);
+            if(!char_only)s += body.get_effects(i.intValue(),k,this, temp,body_app_method,0, part_id,effect_type);
         }else{
             //trace("(Character) got passed a part id of "+ part_id + " and I have no idea what to do with it");
         }
         
         //deal with the relationship garbage - this should really happen when an action is attempted, not when it's successful....
         if(c != null){
-            //personality.new_relationship(c, this, Relationship.stat_change, character_reaction(c, i, k));
+            personality.new_relationship(c, this, Relationship.stat_change, character_reaction(c, i.intValue(), k));
             //c.personality.determine_reaction_to_other(c, this, c, i, k);
             if(location == null){
                  if(c.location != null){
@@ -1021,6 +1409,584 @@ public class Character extends DynamicObject {
 
         return ret;
     }
+    /*
+		public function equip(e:Equipment, k:int = -1, j:int = -1, no_back_string:Boolean = false):String{
+			var party_id:int = 0;
+			var count:int;
+			if(party != null){
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party.members[count] == this){
+						party_id = count;
+						break;
+					}
+				}
+			}
+			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			if(no_back_string) back_string = "";
+			
+			var i:int = -1;
+			for(i;i<possessions.length;i++){
+				if(possessions[i] == e) break;
+			}
+			
+			var char_for_chal:Character = this;
+			var equip_ident:int = 0;
+			char_for_chal = this;
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.equipment_effects_id);
+			var equip_ident_challenge:Challenge = new Challenge(true);
+			equip_ident_challenge.set_attack_stat(FPalace_skills.equipment_effects_id);
+			equip_ident_challenge.set_defense_stat(-1,e.get_identify_difficulty());
+			equip_ident_challenge.set_variability(5);
+			
+			var result:int = equip_ident_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				equip_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.equipment_effects_id)/e.get_identify_difficulty());
+			}
+			
+			var weight_ident:int = 0;
+			char_for_chal = this;
+			
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
+				
+			var weight_challenge:Challenge = new Challenge(true);
+			weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
+			weight_challenge.set_defense_stat(-1,e.get_identify_difficulty());
+			weight_challenge.set_variability(5);
+			
+			result = weight_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/e.get_identify_difficulty());
+			}
+			
+			var ret:String = e.get_description(this, [equip_ident, weight_ident]);
+			
+			if(k == -1){
+				var attach_option:Boolean = false;
+				if(e.upgrade_slot_ids.length > 0){
+					count = 0;
+					for(count;count<e.upgrade_slot_ids.length;count++){
+						if(e.upgrade_items[count] == null){
+							attach_option = true;
+							break;
+						}
+					}
+				}
+				if(attach_option){
+					if(party != null){
+						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + String(i) +","+party_id+",3,-1\">give</a>?";
+					}else{
+						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>?";
+					}
+				}else{
+					if(party != null){
+						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + String(i) +","+party_id+",3,-1\">give</a>?";
+					}else{
+						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>?";
+					}
+				}
+			}
+			
+			if(k == 0){
+				var slot_array:Array = e.get_equip_slots();
+				count = 0;
+				for(count;count<slot_array.length;count++){
+					if(!body.has_part(slot_array[count])) return sanitize("</n> can't equip that!", null) + back_string;
+				}
+				
+				count = 0;
+				for (count;count<e.stat_req.length;count++){
+					if(get_stat(e.stat_req[count]) > e.stat_max[count])return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req[count]) + " is too large to equip that!", null) + back_string;
+					if(e.stat_min[count] > get_stat(e.stat_req[count]))return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req[count]) + " is too small to equip that!", null) + back_string;
+				}
+				
+				ret = body.equip(e,this);
+				drop(i);
+				set_busy();
+				personality.advance_objectives(Quest.equip_action, [e], this);
+				return sanitize("</n> equips the " + e.get_name() + "\n" + ret, null) + back_string;
+			}else if(k == 1){
+				drop(i);
+				location.new_content(e);
+				set_busy();
+				return "You place the " + e.get_name() + " on the ground here." + back_string;
+			}else if( k == 2){
+				drop(i);
+				set_busy();
+				return "You throw away the " + e.get_name() + " never to see it again." + back_string;
+			}else if( k == 3 && j == -1){
+				var s:String = "Who do you want to give it to?\n";
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party_id != count){
+						s += " <a href=\"event:equip," + String(i) +","+party_id+",3,"+count+"\">"+ party.members[count].get_name() +"</a>\n";
+					}
+				}
+				return s + back_string;
+			}else if(k == 3 && j >= 0){
+				drop(i);
+				party.members[j].add_to_possessions(e);
+				set_busy();
+				return "Gave item" + back_string;
+			}else if(k == 4){
+				s = "";
+				if(j == -1){
+					s += "Choose a mod:\n";
+					var avail_mods:Array = new Array();
+					count = 0;
+					for(count;count<e.upgrade_slot_ids.length;count++){
+						if(e.upgrade_items[count] == null){
+							avail_mods[avail_mods.length] = e.upgrade_slot_ids[count];
+						}
+					}
+					
+					count = 0;
+					for(count;count<possessions.length;count++){
+						if(possessions[count] is Upgrade_Item){
+							var count2:int = 0;
+							for(count2;count2< avail_mods.length;count2++){
+								if(possessions[count].upgrade_type_id == avail_mods[count2]){
+									 s += " <a href=\"event:equip," + String(i) +","+party_id+",4,"+count+"\">"+ possessions[count].get_name() +"</a>";
+								}
+							}
+						}
+					}
+				}else{
+					s += e.attach_upgrade_item(possessions[j],this);					
+				}
+				
+				return sanitize(s) + back_string;
+			}
+			return "";
+		}
+		
+		public function unequip(e:Equipment):String{
+			set_busy();
+			var party_id:int = 0;
+			var count:int;
+			if(party != null){
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party.members[count] == this){
+						party_id = count;
+						break;
+					}
+				}
+			}
+			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			personality.advance_objectives(Quest.unequip_action, [e], this);
+			return sanitize(body.unequip(e,this) + back_string, null);
+		}
+		
+		public function hold(w:Weapon, k:int = -1, j:int = -1, no_back_string:Boolean = false):String{
+			var party_id:int = 0;
+			var count:int;
+			if(party != null){
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party.members[count] == this){
+						party_id = count;
+						break;
+					}
+				}
+			}
+			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			if(no_back_string) back_string = "";
+			
+			var i:int = -1;
+			for(i;i<possessions.length;i++){
+				if(possessions[i] == w) break;
+			}
+			
+			var weapon_ident:int = 0;
+			var char_for_chal:Character = this;
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weapon_effects_id);
+			var weapon_ident_challenge:Challenge = new Challenge(true);
+			weapon_ident_challenge.set_attack_stat(FPalace_skills.weapon_effects_id);
+			weapon_ident_challenge.set_defense_stat(-1,w.get_identify_difficulty());
+			weapon_ident_challenge.set_variability(5);
+			
+			var result:int = weapon_ident_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				weapon_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.weapon_effects_id)/w.get_identify_difficulty());
+			}
+			
+			var weight_ident:int = 0;
+			char_for_chal = this;
+			
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
+				
+			var weight_challenge:Challenge = new Challenge(true);
+			weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
+			weight_challenge.set_defense_stat(-1,w.get_identify_difficulty());
+			weight_challenge.set_variability(5);
+			
+			result = weight_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/w.get_identify_difficulty());
+			}
+						
+			var ret:String = w.get_description(this, [weapon_ident, weight_ident]);
+			
+			if(k == -1){
+				var attach_option:Boolean = false;
+				if(w.upgrade_slot_ids.length > 0){
+					count = 0;
+					for(count;count<w.upgrade_slot_ids.length;count++){
+						if(w.upgrade_items[count] == null){
+							attach_option = true;
+							break;
+						}
+					}
+				}
+				if(attach_option){
+					if(party != null){
+						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + String(i) +","+party_id+",3,-1\">give</a>?";
+					}else{
+						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>?";
+					}
+				}else{
+					if(party != null){
+						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + String(i) +","+party_id+",3,-1\">give</a>?";
+					}else{
+						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>?";
+					}
+				}
+			}
+			
+			if(k == 0){
+				set_busy();
+				if(body.hold(w,this)> 0){
+					drop(i);
+					personality.advance_objectives(Quest.hold_action, [w], this);
+					return sanitize("</n> holds the " + w.get_name() + back_string, null);
+				}else{
+					return sanitize("</n> can't hold that!" + back_string, null);
+				}
+			}else if(k == 1){
+				drop(i);
+				location.new_content(w);
+				set_busy();
+				return "You place the " + w.get_name() + " on the ground here." + back_string;
+			}else if( k == 2){
+				drop(i);
+				set_busy();
+				return "You throw away the " + w.get_name() + " never to see it again." + back_string;
+			}else if( k == 3 && j == -1){
+				var s:String = "Who do you want to give it to?\n";
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party_id != count){
+						s += " <a href=\"event:hold," + String(i) +","+party_id+",3,"+count+"\">"+ party.members[count].get_name() +"</a>";
+					}
+				}
+				return s + back_string;
+			}else if(k == 3 && j >= 0){
+				drop(i);
+				party.members[j].add_to_possessions(w);
+				set_busy();
+				return "Gave item" + back_string;
+			}else if(k == 4){
+				s = "";
+				if(j == -1){
+					s += "Choose a mod:\n";
+					var avail_mods:Array = new Array();
+					count = 0;
+					for(count;count<w.upgrade_slot_ids.length;count++){
+						if(w.upgrade_items[count] == null){
+							avail_mods[avail_mods.length] = w.upgrade_slot_ids[count];
+						}
+					}
+					
+					count = 0;
+					for(count;count<possessions.length;count++){
+						if(possessions[count] is Upgrade_Item){
+							var count2:int = 0;
+							for(count2;count2< avail_mods.length;count2++){
+								if(possessions[count].upgrade_type_id == avail_mods[count2]){
+									 s += " <a href=\"event:hold," + String(i) +","+party_id+",4,"+count+"\">"+ possessions[count].get_name() +"</a>";
+								}
+							}
+						}
+					}
+				}else{
+					s += w.attach_upgrade_item(possessions[j], this);
+				}
+				
+				return sanitize(s) + back_string;
+			}
+			return "";
+		}
+		
+		public function unhold(w:Weapon):String{
+			set_busy();
+			
+			var party_id:int = 0;
+			var count:int;
+			if(party != null){
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party.members[count] == this){
+						party_id = count;
+						break;
+					}
+				}
+			}
+			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			personality.advance_objectives(Quest.unhold_action, [w], this);
+			return sanitize(body.unhold(w,this) + back_string, null);
+		}
+        */
+        public String get_item_description(Item item){
+            return get_item_description(item, false);
+        }
+		public String get_item_description(Item item,Boolean keep_tags){//falsle
+			int identification = 0;
+			Character  char_for_chal= this;
+			
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.item_effects_id);
+				
+			Challenge ident_challenge = new Challenge(true);
+			ident_challenge.set_attack_stat(FPalace_skills.item_effects_id);
+			ident_challenge.set_defense_stat(-1,item.getIdentifyDifficulty());
+			ident_challenge.setVariability(5);
+			
+			int result = ident_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				identification += result;
+			}
+			
+			String item_desc= "";
+            ArrayList<Integer> ident_array = new ArrayList<>();
+            ident_array.add(identification);
+			
+			identification = 0;
+			char_for_chal = this;
+			
+			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
+				
+			Challenge weight_challenge = new Challenge(true);
+			weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
+			weight_challenge.set_defense_stat(-1,item.getIdentifyDifficulty());
+			weight_challenge.setVariability(5);
+			
+			result = weight_challenge.roll(char_for_chal);
+
+			if(result >= 0){
+				identification += result;
+			}
+			
+			ident_array.add(identification); //ident_array[ident_array.length] = identification;
+			
+			if(item instanceof AlchemyItem){
+				int alch_ident = 0;
+				char_for_chal = this;
+				if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.item_alchemy_effects_id);
+				Challenge alch_ident_challenge= new Challenge(true);
+				alch_ident_challenge.set_attack_stat(FPalace_skills.item_alchemy_effects_id);
+				alch_ident_challenge.set_defense_stat(-1,item.getIdentifyDifficulty());
+				alch_ident_challenge.setVariability(5);
+				
+				result = alch_ident_challenge.roll(char_for_chal);
+	
+				if(result >= 0){
+					alch_ident += result;
+				}
+				ident_array.add(alch_ident); //ident_array[ident_array.length] = alch_ident;
+			}
+			
+			item_desc += item.getDescription(this, ident_array, keep_tags);
+			return item_desc;
+		}
+		/*
+		public function use_item(i:int, k:int = -1, j:int = -1, num_to_move:int = -1):String{
+			var party_id:int = 0;
+			var count:int;
+			if(party != null){
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party.members[count] == this){
+						party_id = count;
+						break;
+					}
+				}
+			}
+			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			
+			
+			var item:Item;
+			if( 0 <= i && i <possessions.length){
+				item = possessions[i] as Item;
+			}
+			
+			var item_desc:String = get_item_description(item);
+			
+			if(k == -1){
+				if(party != null){
+					if( item.get_use_description() != ""){
+						return item_desc + "\nWould you like to <a href=\"event:use_item," + String(i) +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + String(i) +",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + String(i) +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + String(i) +",3,"+party_id+"\">give</a>?";
+					}else{
+						return item_desc + "\nWould you like to <a href=\"event:use_item," + String(i) +",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + String(i) +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + String(i) +",3,"+party_id+"\">give</a>?";
+					}
+				}else{
+					if( item.get_use_description() != ""){
+						return item_desc + "\nWould you like to <a href=\"event:use_item," + String(i) +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + String(i) +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + String(i) +",2,"+party_id+"\">throw away</a>?";
+					}else{
+						return item_desc + "\nWould you like to <a href=\"event:use_item," + String(i) +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + String(i) +",2,"+party_id+"\">throw away</a>?";
+					}
+				}
+			}
+			
+			var move_array:Array = new Array();
+			var found_num:int = 0;
+			count = 0;
+			for(count;count < possessions.length;count++){
+				if(possessions[count].get_name() == item.get_name()){
+					move_array[count] = possessions[i];
+					found_num++;
+				}else{
+					move_array[count] = null;
+				}
+			}
+			//found_num--;
+			var ret:String = "";
+			if(k == 0){
+				if(found_num > 1 && num_to_move == -1){
+					ret += "How many would you like to use?\n<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,1\">x1</a>";
+					if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+					ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+				}else{
+					if(num_to_move > 1){
+						found_num = 0;
+						count = 0;
+						for(count;count<move_array.length;count++){
+							if(num_to_move <= 0)break;
+							if(move_array[count] != null){
+								item = possessions[count-found_num];
+								ret += item.use_item(this,count-found_num);
+								set_busy();
+								if(!item.still_usable()){ 
+									drop(count - found_num);
+									found_num++
+								}
+								num_to_move--;
+							}
+						}
+						ret += back_string
+					}else{
+						ret += item.use_item(this,i);
+						if(!item.still_usable()) drop(i);
+						set_busy();
+					}					
+				}
+				return ret;
+			}else if(k == 1){
+				if(found_num > 1 && num_to_move == -1){
+					ret += "How many would you like to drop?\n<a href=\"event:use_item," + String(i) +",1,"+party_id+",-1,1\">x1</a>";
+					if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",1,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+					ret += "\t<a href=\"event:use_item," + String(i) +",1,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+					return ret;
+				}else{
+					if(num_to_move > 1){
+						found_num = 0;
+						count = 0;
+						for(count;count<move_array.length;count++){
+							if(found_num >= num_to_move)break;
+							if(move_array[count] != null){
+								item = possessions[count - found_num];
+								drop(count - found_num);
+								location.new_content(item);
+								found_num++
+							}
+						}
+					}else{
+						drop(i);
+						location.new_content(item);
+					}
+					set_busy();
+					return "You place the " + item.get_name() + " on the ground here." + back_string;
+				}
+			}else if( k == 2){
+				if(found_num > 1 && num_to_move == -1){
+					ret += "How many would you like to throw away?\n<a href=\"event:use_item," + String(i) +",2,"+party_id+",-1,1\">x1</a>";
+					if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",2,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+					ret += "\t<a href=\"event:use_item," + String(i) +",2,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+					return ret;
+				}else{
+					if(num_to_move > 1){
+						found_num = 0;
+						count = 0;
+						for(count;count<move_array.length;count++){
+							if(found_num >= num_to_move)break;
+							if(move_array[count] != null){
+								drop(count - found_num);
+								found_num++
+							}
+						}
+					}else{
+						drop(i);
+					}
+					set_busy();
+					return "You throw away the " + item.get_name() + " never to see it again." + back_string;
+				}
+			}else if( k == 3 && j == -1){
+				var s:String = "Who do you want to give it to?\n";
+				count = 0;
+				for(count;count<party.members.length;count++){
+					if(party_id != count){
+						s += " <a href=\"event:use_item," + String(i) +",3,"+party_id+","+count+"\">"+ party.members[count].get_name() +"</a>";
+					}
+				}
+				return s + back_string;
+			}else if(k == 3 && j >= 0){
+				if(found_num > 1 && num_to_move == -1){
+					ret += "How many would you like to give?\n<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+",1\">x1</a>";
+					if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+					ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+found_num+"\">x"+found_num+"</a>";
+					return ret;
+				}else{
+					if(num_to_move > 1){
+						found_num = 0;
+						count = 0;
+						for(count;count<move_array.length;count++){
+							if(found_num >= num_to_move)break;
+							if(move_array[count] != null){
+								item = possessions[count - found_num];
+								drop(count - found_num);
+								party.members[j].add_to_possessions(item);
+								
+								//move_array = move_array.slice(0,count).concat(move_array.slice(count+1,move_array.length));
+								//count--;
+								found_num++
+							}
+						}
+					}else{
+						drop(i);
+						party.members[j].add_to_possessions(item);
+					}
+					set_busy();
+					return "Gave item" + back_string;
+				}
+			}
+			return "";
+		}
+		
+		public function add_to_possessions(i:Item):void{
+			if (i != null){
+				if (i.get_name().toLowerCase() == "gold"){
+					set_gold(i.get_value(null, null));
+				}else{
+					possessions[possessions.length] = i;
+				}
+				personality.advance_objectives(Quest.pick_up_action, [i], this);
+			}
+		}
+    *///same down to here, line 1857 in original
     public int get_gold(){
         return gold;
     }
@@ -1123,8 +2089,13 @@ public class Character extends DynamicObject {
         }
         
         return s;
-    }
-    public String appearance(int lookID, Character c){
+    }//line 1958
+    //++++++++++++++++++++++++++++++++++++++++++++++++
+    //
+    //   EARLY TESTING METHODS
+    //
+    //+++++++++++++++++++++++++++++++++++++++++++++++
+    public String appearance(int lookID, Character c){//dummy
         String ret = "";
         if(c == this || c == null){
             ret = "You are " + name + "<br>";
@@ -1152,7 +2123,7 @@ public class Character extends DynamicObject {
     }
     public String look(){return look(-1, 0);}
     public String look(int contentID){return look(contentID, 0);}
-    public String look(int contentID, int lookID){
+    public String look(int contentID, int lookID){//dummy
         String ret = "";
 
         if(location != null){
@@ -1168,52 +2139,14 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-    public int get_skill_by_id(int skill_id){
+    public int get_skill_by_id(int skill_id){//dummy
         return skills.get_skill_value(this, skill_id);
     }
     
-    public int get_skill_rank_by_id(int skill_id){
+    public int get_skill_rank_by_id(int skill_id){//dummy
         return skills.get_skill_ranks(skill_id);
     }
-    /*
-    public function set_skills_by_id(skill_id:int, change_amount:int):String{
-        var ret:String = "";
-        if(FPalace_skills.get_skill_by_id(skill_id) != null){
-            personality.advance_objectives(Quest.skill_action, [skill_id], this);
-            ret += sanitize(skills.set_skill_value(this, skill_id, change_amount));
-        }
-        return ret;
-    }
-    
-    public function increase_skill_by_id(skill_id:int, change_amount:int = 1):String{
-        var ret:String = "";
-        var cost:int = skills.get_skill_cost(this, skill_id, change_amount);
-        xp = xp - cost;
-        ret += skills.set_skill_value(this, skill_id, change_amount);
-        set_busy();
-        return ret;
-    }
-    
-    public function set_skill_bonus(skill_id:int, change_amt:int):String{
-        var ret:String = "";
-        if(FPalace_skills.get_skill_by_id(skill_id) != null){
-            ret += skills.set_bonus(skill_id, change_amt);
-        }			
-        
-        return ret;
-    }
-    
-    public function determine_sex(c:Character = null):Sex{
-        if(c == null){
-            var temp:Sex = body.get_sex();
-            if(temp.get_name() != sex.get_name())set_sex(temp);
-        }else{
-            var look_sex:Sex = c.body.get_sex(this, c);
-            return look_sex;
-        }
-        return sex;
-    }
-    */
+    //Dummy test version
     public String fireAction(int contendID, int actionID){
         String ret = "";
         if(location != null){
@@ -1230,7 +2163,7 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-
+    //dummy
     public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
         String ret = "";
             if(contentID<0){
@@ -1239,7 +2172,7 @@ public class Character extends DynamicObject {
         return ret;
     }
 
-    public String inventory(){
+    public String inventory(){//dummy
         String returnString = "";
         if(possessions.isEmpty()){
             returnString = "</n>\'s Inventory contains nothing.";
@@ -1255,7 +2188,7 @@ public class Character extends DynamicObject {
         return sanitize(returnString);
     }
 
-    public String pickUp(int contentID){
+    public String pickUp(int contentID){//ignore
         String ret = "";
         Item newItem = location.itemLoss(contentID);
         if(newItem != null){
@@ -1267,7 +2200,7 @@ public class Character extends DynamicObject {
         return ret;
     }
 
-    public String statistics(){
+    public String statistics(){//ignore
         String ret = "Name: " + name + "<br>";
         for(Stat s:stats){
             ret += s.getName() + ": " + s.statValue + "(" + s.tempStatValue + ")";
@@ -1276,73 +2209,21 @@ public class Character extends DynamicObject {
         return ret;
     }
 
-    public String showAllSkills(){
+    public String showAllSkills(){//ignore
         return "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
     }
 
-    public String sanitize(String stringToSanitize){
+    public String sanitize(String stringToSanitize){//dummy, ignore
         return stringToSanitize.replace("</n>", name);
     }
 
-    public void setBusy(){setBusy(1);}
-    public void setBusy(int numTicks){
-        busy += numTicks;
-        waitTime = 0;
-    }
-    public Boolean get_move(){
-        if (ai_move > 0)return true;
-        return false;
-    }
-    
-    public void set_move(int i){//default 1
-        ai_move+=i;
-    }
-    
-    public String get_short_description(Character c){
-        String ret = "";
-        /*TODO determine_sex, get_primary_race
-        Sex determined_sex = c.determine_sex(this);
-        String temp_string = "";
-        if(get_primary_race().get_name() != c.get_primary_race().get_name()){
-            if(personality.job == null){
-                temp_string = determined_sex.get_age_name(this);
-                if(temp_string == ""){
-                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
-                }else{
-                    if(get_primary_race().get_anthro()){
-                        temp_string = get_primary_race().get_name() + " " + temp_string;
-                    }else{
-                        temp_string = get_primary_race().get_name();
-                    }
-                }
-            }else{
-                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
-            }
-        }else{
-            if(personality.job == null){
-                temp_string = determined_sex.get_age_name(this);
-                if(temp_string == ""){
-                    temp_string = determined_sex.get_name() + " " + get_primary_race().get_name();
-                }
-            }else{
-                temp_string = get_primary_race().get_name() + " " + personality.job.get_name();
-            }
-        }
-        
-        if(temp_string.charAt(0) == "a" || temp_string.charAt(0) == "e" || temp_string.charAt(0) == "i" || temp_string.charAt(0) == "o" || temp_string.charAt(0) == "u"){
-            ret = "an " + temp_string;
-        }else if(temp_string != ""){
-            ret = "a " + temp_string;
-        }
-        */  
-        return ret;
-    }
 
-    public String getPersonalActions(){
+    
+    public String getPersonalActions(){//ignore
         return "";
     }
 
-    public ArrayList<CharAction> getAllOverworldActions(){
+    public ArrayList<CharAction> getAllOverworldActions(){//Dummy, ignore
         ArrayList<CharAction> ret = new ArrayList<>();
         
         for(CharAction a : actions )ret.add(a);
@@ -1350,7 +2231,7 @@ public class Character extends DynamicObject {
         return ret;
     }    
 
-    public void addToPossessions(Item newItem){
+    public void addToPossessions(Item newItem){//early dummy, ignore
         if(newItem != null){
             LOGGER.info("valid item passed is:" + newItem.getDroppedDescription());
             if(newItem.getDroppedDescription().equalsIgnoreCase("gold")){
@@ -1370,7 +2251,75 @@ public class Character extends DynamicObject {
 
         return ret;
     }
+    //ALL SAME FROM HERE BELOW, line 1960 in original
     /*
+    		public function reset_stats(i:int = -1, j:int = -1):void{
+			var k:int = 0;
+			if (i == -1){
+				for (k;k<stat.length;k++){
+					stat[k].reset_stat(this,j);
+				}
+			}else{
+				//apply the reset to a specific stat
+				for(k;k<stat.length;k++){
+					if(stat[k].get_id() == i) stat[k].reset_stat(this,j);
+				}
+			}
+			
+			body.reset_stat(this,i,j);
+		}
+		
+		public function look(o:int = -1, j:int = 0):String{
+			var ret:String = "";
+			if(location != null){
+				if (o != -1){
+					if(location.get_content(o) != null){
+						return location.get_content(o).appearance(j, this);
+					}else{
+						//trace("(Character)looking at null content... id: " + o);
+					}
+				}
+				ret = location.get_room_description(this);
+				ret = sanitize(get_challenge_output()) + ret;
+				if(party != null && party.members != null){
+					if(party.get_leader() == this){
+						var i:int = 0;
+						for(i;i<party.members.length;i++){
+							if(party.members[i] != null && party.members[i] != this){
+								ret = party.members[i].sanitize(party.members[i].get_challenge_output(), this) + ret;
+							}
+						}
+					}
+				}
+			}
+			return ret;
+		}
+    		public function inspect(i:int, k:int):String{
+			var ret:String = "";
+			ret = location.get_content_sub_description(i,k);
+			//need to check for bury action, and add own bury actions (if they exist)
+			if(location.static_contents[i] is Container){
+				var temp_cont:Container = location.static_contents[i] as Container;
+				
+				if(possessions.length > 0){
+					ret += "\n<font color='#0000FF'><a href=\"event:loot,"+i+",-3\">Store</a></font>";
+				}
+				
+				if(temp_cont.bury_action == null && temp_cont.bury != ""){
+					var count:int = 0;
+					for (count;count<actions.length;count++){
+						if(actions[count] != null && location != null){
+							if(actions[count].get_name() != "" && actions[count].get_bury()){
+								ret += "\n<a href=\"event:action," + location.get_content_id(this) + "," + String(count)+","+String(i)+"\"><font color='#0000FF'>"+ actions[count].get_name() +"</font></a>";
+							}
+						}
+					}
+				}
+			}
+					
+			set_busy();
+			return ret;
+		}
     public function get_status(c:Character = null):String{
         var s:String = "";
         var char_init:int = -1;
@@ -4105,7 +5054,7 @@ public class Character extends DynamicObject {
         
         return ret_sprite;
     }
-    
+
     public function clone(c:Character):void{
         if(!c.body.alive(c))trace("(Character.clone) Trying to clone a dead character..."); 
         

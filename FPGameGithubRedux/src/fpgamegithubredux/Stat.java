@@ -526,7 +526,9 @@ public class Stat {
     
     
     //I'm not sure if this is displaying correctly... particularly for temp effects
-    
+    public String get_change_magnitude(int change_amount, Character c, int temp_flag){
+        return get_change_magnitude(change_amount, c, temp_flag,null);
+    }
     public String get_change_magnitude(int change_amount, Character c, int temp_flag,BodyPart bp){
         //change_amount:Number,Character c,temp_flag:int, BodyPart bp = null
         String s = "";

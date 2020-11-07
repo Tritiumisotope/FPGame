@@ -1,10 +1,12 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
+import java.util.regex.*;
 
 public class Personality {
     
-
+	private static final Logger LOGGER = Logger.getLogger(NewGameGUI.class.getName());
 		public static final int hate = -1;
 		public static final int dislike = 0;
 		public static final int tolerate = 5;
@@ -108,13 +110,23 @@ public class Personality {
 		}
 		
 		public void add_recipe(Item r){
+			/*
 			int i = 0;
 			for(i=0;i<known_recipes.size();i++){
 				if(known_recipes.get(i).getName().equals(r.getName()))break;
 			}
-            
-			if(i >= known_recipes.size())known_recipes.add(r);//if(i >= known_recipes.size())known_recipes[known_recipes.length] = r
+			*/
+			Boolean found = false;
+			for(int i=0;i<known_recipes.size();i++){
+				if(known_recipes.get(i).getName().equals(r.getName())){
+					found = true;
+					break;
+				}
+			}
+			//if(i >= known_recipes.size())known_recipes.add(r);//known_recipes[known_recipes.length] = r
+			if(!found)known_recipes.add(r);
 			//TODO i stays 0
+			//TODO confirm this is better method
 		}
 		
 		public void add_like(Trait t){
@@ -175,7 +187,7 @@ public class Personality {
 						curr_obj_step.get(i).set(curr_obj_step.get(i).size(), new_step);//curr_obj_step.get(i).get(curr_obj_step.get(i).length) = new_step
 						curr_obj_start_tick.set(i, c.get_tick());//curr_obj_start_tick[i] = c.get_tick()
 						if(q.objective_actions.get(new_step) == Quest.pick_up_action){
-							//trace("(Personality.set_obj_step)Should go through inventory to check and see if we've already got this objective step done...");
+							LOGGER.info("(Personality.set_obj_step)Should go through inventory to check and see if we've already got this objective step done...");
 						}
 					}//TODO remove the start_tick.set dupes out of if-else?
 					break;
@@ -495,16 +507,14 @@ public class Personality {
 			
 			return s;
 		}
-		/*
-		
-		public function gossip(c:Character, c_self:Character, gossip_step:int):String{
-			var ret:String = "";
-			var temp_r:Relationship;
-			var gossip_mod:Number = 0;
-			var i:int = 0;
+		public String gossip(Character c,Character c_self,int gossip_step){
+			String ret = "";
+			Relationship temp_r;
+			int gossip_mod = 0;//was number
+			int i = 0;
 			if(gossip_step == -2){//c_self is the one gossiping... 
-				temp_r = relationships[Math.round(Math.random()*(relationships.size()-1))];
-				gossip_mod = temp_r.relationship_status();
+				temp_r = relationships.get((int)Math.round(Math.random()*(relationships.size()-1)));
+				gossip_mod = temp_r.relationship_status().intValue();
 				if(temp_r.relationship_with == c_self){
 					//hmmm should we talk about ourselves...?
 					if(check_relationship(c, c_self) >= Personality.friends){
@@ -529,54 +539,54 @@ public class Personality {
 						gossip_mod = 0;
 					}					
 				}else{
-					ret += "</n2> tells you about "+ temp_r.relationship_with.get_name() +". ";
+					ret += "</n2> tells you about "+ temp_r.relationship_with.getName() +". ";
 					if(temp_r.relationship_with.location == null){//this is heavy handed... you don't know someone is dead until you've been told or seen the body
-						ret += "</pronoun2> goes on to say how much </pronoun2> misses "+ temp_r.relationship_with.get_name() +" and how they died too soon. ";
+						ret += "</pronoun2> goes on to say how much </pronoun2> misses "+ temp_r.relationship_with.getName() +" and how they died too soon. ";
 					}
 					if(temp_r.relationship_type == Relationship.child_type){
-						ret += "</pronoun2> mentions how " + temp_r.relationship_with.get_name() + " is </noun2> child. ";
+						ret += "</pronoun2> mentions how " + temp_r.relationship_with.getName() + " is </noun2> child. ";
 					}else if(temp_r.relationship_type == Relationship.father_type){
-						ret += "</pronoun2> mentions how " + temp_r.relationship_with.get_name() + " is </noun2> father. ";
+						ret += "</pronoun2> mentions how " + temp_r.relationship_with.getName() + " is </noun2> father. ";
 					}else if(temp_r.relationship_type == Relationship.married_type){
-						ret += "</pronoun2> mentions how " + temp_r.relationship_with.get_name() + " is </noun2> significant other. ";
+						ret += "</pronoun2> mentions how " + temp_r.relationship_with.getName() + " is </noun2> significant other. ";
 					}else if(temp_r.relationship_type == Relationship.mother_type){
-						ret += "</pronoun2> mentions how " + temp_r.relationship_with.get_name() + " is </noun2> mother. ";
+						ret += "</pronoun2> mentions how " + temp_r.relationship_with.getName() + " is </noun2> mother. ";
 					}else if(temp_r.relationship_type == Relationship.sibling_type){
-						ret += "</pronoun2> mentions how " + temp_r.relationship_with.get_name() + " is </noun2> sibling. ";
+						ret += "</pronoun2> mentions how " + temp_r.relationship_with.getName() + " is </noun2> sibling. ";
 					}
 									
 					if(gossip_mod <= Personality.hate){
-						ret += "</n2> seems to hate "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to hate "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.true_love){
-						ret += "</n2> seems to be in love with "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to be in love with "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.friends){
-						ret += "</n2> seems to be friends with "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to be friends with "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.really_like){
-						ret += "</n2> seems to really like "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to really like "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.like){
-						ret += "</n2> seems to like "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to like "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.tolerate){
-						ret += "</n2> seems to tolerate "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to tolerate "  + temp_r.relationship_with.getName() + ". ";
 					}else if(gossip_mod >= Personality.dislike){
-						ret += "</n2> seems to dislike "  + temp_r.relationship_with.get_name() + ". ";
+						ret += "</n2> seems to dislike "  + temp_r.relationship_with.getName() + ". ";
 					}
 				}
 				gossip_mod = gossip_mod * c.personality.check_relationship(c_self,c)/100;
 				c.personality.new_relationship(temp_r.relationship_with,c, Relationship.initial_reaction_change,gossip_mod);
 			}else if(gossip_step == -1){//c is the one gossiping... 
 				//Should be giving the option about who you gossip about, instead of choosing at random, but meh for now...
-				temp_r = c.personality.relationships[Math.round(Math.random()*(c.personality.relationships.size()-1))];
-				gossip_mod = temp_r.relationship_status();
+				temp_r = c.personality.relationships.get((int)Math.round(Math.random()*(c.personality.relationships.size()-1)));
+				gossip_mod = temp_r.relationship_status().intValue();
 				if(temp_r.relationship_with == c){
 					ret += "You tell </n2> a little bit about yourself. ";
 				}else{
-					ret += "You tell </n2> about "+ temp_r.relationship_with.get_name() +". ";
+					ret += "You tell </n2> about "+ temp_r.relationship_with.getName() +". ";
 				}
 				
 				gossip_mod = gossip_mod * check_relationship(c, c_self)/100;
 				new_relationship(temp_r.relationship_with,c_self, Relationship.initial_reaction_change,gossip_mod);
 			}else{
-				trace("(Personality.gossip)Got a gossip step that I don't know what to do with.");
+				//trace("(Personality.gossip)Got a gossip step that I don't know what to do with.");
 			}
 			c.apply_affect_by_id(Character.relations_affect_id,c.personality.check_relationship(c_self,c)/100,0,c_self);
 			c_self.apply_affect_by_id(Character.relations_affect_id,check_relationship(c, c_self)/100,0,c);
@@ -586,8 +596,9 @@ public class Personality {
 			return ret;
 		}
 		
-		public function talk(c:Character, c_self:Character, topic_num:int, topic_step:int, challenge_num:int = -1, dynamic_choice:Array = null):String{
-			var s:String = "";
+		public String talk(Character c,Character c_self,int topic_num,int topic_step,int challenge_num,ArrayList<Object> dynamic_choice){
+			//challenge_num=-1, dynamic_choice = null
+			String s = "";
 			
 			if(topic_num == -1){
 				return start_conversation(c, c_self);
@@ -595,28 +606,28 @@ public class Personality {
 				return gossip(c, c_self, topic_step);
 			}
 			
-			var char_topics:Array = get_topics(c_self);
-			var new_topic:Conversation_topic;
-			var i:int = 0;
-			if(topic_num >= char_topics.length){
-				new_topic = c.personality.get_topics(c)[topic_num - char_topics.length];			
+			ArrayList<Conversation_topic> char_topics = get_topics(c_self);
+			Conversation_topic new_topic;
+			int i = 0;
+			if(topic_num >= char_topics.size()){
+				new_topic = c.personality.get_topics(c).get(topic_num - char_topics.size());			
 				add_conversation_topic(new_topic);
 				char_topics = get_topics(c_self);
 				topic_num = 0;
-				for(topic_num;topic_num < char_topics.length; topic_num++){
-					if(char_topics[topic_num] == new_topic) break;
+				for(topic_num=0;topic_num < char_topics.size(); topic_num++){
+					if(char_topics.get(topic_num) == new_topic) break;
 				}
 			}else{//if c doesn't have this topic, they should now...
-				new_topic = char_topics[topic_num];
+				new_topic = char_topics.get(topic_num);
 				if(!new_topic.get_spread()){
 					new_topic = new Conversation_topic();
-					new_topic.set_topic_name(char_topics[topic_num].get_topic_name());
+					new_topic.set_topic_name(char_topics.get(topic_num).get_topic_name());
 				}
 				
-				var add_flag:Boolean = true;
-				var init_topics:Array = c.personality.get_topics(c);
-				for(i;i<init_topics.length;i++){
-					if(init_topics[i].get_topic_name() == new_topic.get_topic_name()){
+				Boolean add_flag = true;
+				ArrayList<Conversation_topic> init_topics = c.personality.get_topics(c);
+				for(i=0;i<init_topics.size();i++){
+					if(init_topics.get(i).get_topic_name() == new_topic.get_topic_name()){
 						add_flag = false;
 						break;
 					}
@@ -626,86 +637,89 @@ public class Personality {
 				}
 			}
 			
-			if(char_topics[topic_num] != null){
-				var o:Object = char_topics[topic_num].get_topic_step(topic_step);
-				if(o is Action){
-					var a:Action = o as Action;
+			if(char_topics.get(topic_num) != null){
+				Object o = char_topics.get(topic_num).get_topic_step(topic_step);
+				if(o instanceof CharAction){
+					CharAction a = (CharAction)o;
 					if(challenge_num == -1){
 						a.set_originator(c_self);
-						s += a.trigger(c, 1) + "\n";					
+						//s += a.trigger(c, 1) + "\n";					
 					}else{
-						s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
+						///s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
+						//TODO real methods
 					}
 				
 					i = 0;
-					for(i;i<a.challenges.length;i++){
-						var temp:Challenge = a.challenges[i];
-						while(s.indexOf("</c"+ String(i) +">") > -1)s = s.replace("</c"+ String(i) +">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+topic_step+","+i+"\"><i>" + temp.get_text() + "</i></a>");
+					for(i=0;i<a.challenges.size();i++){
+						Challenge temp = a.challenges.get(i);
+						while(s.indexOf("</c"+ Integer.toString(i) +">") > -1)s = s.replace("</c"+ Integer.toString(i) +">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+topic_step+","+i+"\"><i>" + temp.getText() + "</i></a>");
 					}
 					
-					var dynamic_challenge:int = 0;
+					var dynamic_challenge = 0;
 					while(s.indexOf("</dc") > -1){
 						while(s.indexOf("</dc" + dynamic_challenge + ">") > -1){
-							s = s.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+ topic_step +","+challenge_num+((dynamic_choice!=null&&dynamic_choice[0]!=null)?","+ dynamic_choice:"") +","+dynamic_challenge+"\">");
+							s = s.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+topic_num+","+ topic_step +","+challenge_num+((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +","+dynamic_challenge+"\">");
 							s = s.replace("</dc" + dynamic_challenge + ">", "</a>");
 						}
 						dynamic_challenge++;
 					}
 				}else{
-					s += o as String;
+					s += (String)o;
 				}
 				
 				//deal with references to other conversation topics: <ctref0>, <ctref1>, ... , <ctrefn>
 				i = 0;
-				for(i;i<char_topics[topic_num].ct_ref_names.length;i++){
+				for(i=0;i<char_topics.get(topic_num).ct_ref_names.size();i++){
 					//let's go a lookin for a conversation topic name "topics[topic_num].ct_ref_names[i]"
-					var connect_topic:Conversation_topic = get_conversation_topic_by_name(char_topics[topic_num].ct_ref_names[i],c_self);
+					Conversation_topic  connect_topic= get_conversation_topic_by_name(char_topics.get(topic_num).ct_ref_names.get(i),c_self);
 					
 					if(connect_topic != null){
-						var new_topic_num:int = 0;
-						for(new_topic_num;new_topic_num<char_topics.length;new_topic_num++){
-							if(char_topics[new_topic_num] == connect_topic)break;
+						int new_topic_num = 0;
+						for(new_topic_num=0;new_topic_num<char_topics.size();new_topic_num++){
+							if(char_topics.get(new_topic_num) == connect_topic)break;
 						}
 						
-						if(new_topic_num >= char_topics.length)new_topic_num = -1;
-						var new_topic_step:int = connect_topic.get_start_step(c_self, c, true);
+						if(new_topic_num >= char_topics.size())new_topic_num = -1;
+						int new_topic_step = connect_topic.get_start_step(c_self, c, true);
 						
 						if(new_topic_step >= 0){
 							while(s.indexOf("<ctref" + i + ">") > -1){
-								s = s.replace("<ctref" + i + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+new_topic_num+","+ new_topic_step +"\"><i>"+char_topics[topic_num].ct_ref_names[i]+"</i></a>");
+								s = s.replace("<ctref" + i + ">", "<a href=\"event:talk,"+c.location.getContentID(c_self)+","+new_topic_num+","+ new_topic_step +"\"><i>"+char_topics.get(topic_num).ct_ref_names.get(i)+"</i></a>");
 							}
 						}else{
 							while(s.indexOf("<ctref" + i + ">") > -1){
-								s = s.replace("<ctref" + i + ">", ""+char_topics[topic_num].ct_ref_names[i]+"");//this should actually be replace with some anchor tag...
+								s = s.replace("<ctref" + i + ">", ""+char_topics.get(topic_num).ct_ref_names.get(i)+"");//this should actually be replace with some anchor tag...
 							}
 						}
 					}else{
 						while(s.indexOf("<ctref" + i + ">") > -1){
-							s = s.replace("<ctref" + i + ">", ""+char_topics[topic_num].ct_ref_names[i]+"");//this should actually be replace with some anchor tag...
+							s = s.replace("<ctref" + i + ">", ""+char_topics.get(topic_num).ct_ref_names.get(i)+"");//this should actually be replace with some anchor tag...
 						}
 					}
 				}
 			}
 			
 			if(c.location == c_self.location)s += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>";
-			
-			var c_chall_out:String = c.get_challenge_output();
+			/*
+			//String c_chall_out = c.get_challenge_output();
+			//TODO
 			if(c_chall_out!="")c_chall_out+="\n";
 			s = c_chall_out + s;
-			c.set_busy();
-			c_self.set_busy();
+			*/
+			c.setBusy();
+			c_self.setBusy();
 			
 			return s;
 		}
 		
-		private function get_conversation_topic_by_name(looking_for:String, c_self:Character):Conversation_topic{
-			var ret:Conversation_topic = null;
-			var i:int = 0;
-			var temp_array:Array = get_topics(c_self);
-			for(i;i<temp_array.length;i++){
-				if(temp_array[i].get_topic_name() == looking_for){
-					if(temp_array[i].get_topic_step(0) != null){
-						ret = temp_array[i];
+		private Conversation_topic get_conversation_topic_by_name(String looking_for,Character c_self){
+			Conversation_topic ret = null;
+			int i = 0;
+			ArrayList<Conversation_topic> temp_array = new ArrayList<>(get_topics(c_self));
+			for(i=0;i<temp_array.size();i++){
+				if(temp_array.get(i).get_topic_name() == looking_for){
+					if(temp_array.get(i).get_topic_step(0) != null){
+						ret = temp_array.get(i);
 						break;
 					}
 				}
@@ -714,12 +728,12 @@ public class Personality {
 			return ret;
 		}
 		
-		public function add_conversation_topic(ct:Conversation_topic):void{
-			topics[topics.length] = ct;
+		public void add_conversation_topic(Conversation_topic ct){
+			topics.add(ct); //topics[topics.length] = ct
 		}
-		
-		public function determine_target(enemies:Array, c_self:Character):int{
-			var ret:int = 0;//Math.round(Math.random()*(enemies.length-1));
+		/*
+		public int determine_target(enemies:Array, c_self:Character):int{
+			int ret = 0;//Math.round(Math.random()*(enemies.length-1));
 			var min_like:int = 0;
 			var i:int = 0;
 			for(i;i<enemies.length;i++){
@@ -742,7 +756,7 @@ public class Personality {
 			}
 			return ret;
 		}
-		
+		/*
 		public function determine_action(c:Character, self:Character):int{
 			var actions:Array = self.get_attack_actions();
 			var choice_target:Character;
@@ -761,7 +775,7 @@ public class Personality {
 						choice_target = c;
 					}
 					action_value = determine_action_consequence(actions[i], self, choice_target);
-					//trace(actions[i].get_name() + " " + action_value);
+					LOGGER.info(actions[i].get_name() + " " + action_value);
 					if(top_three_val[0] == null){
 						top_three[0] = i;
 						top_three_val[0] = action_value;
@@ -898,28 +912,41 @@ public class Personality {
 			*/
 			return ret;
 		}
-		/*TODO a whole lot
-		public function determine_item_consequences(item:Item, self:Character):int{
-			var ret:int = 0;
-			var temp_str:String = self.get_item_description(item, true);
-			var stat_expression:RegExp = new RegExp("<s[-]*\\d*>","gi");
-			var	stat_effects:Array = temp_str.match(stat_expression);
-			var i:int = 0;
-			for(i;i<stat_effects.length;i++){
-				var stat_id:int = int(stat_effects[i].substr(2,stat_effects[i].length-3));
+		
+		public int determine_item_consequences(Item item,Character self){
+			int ret = 0;
+			String temp_str = self.get_item_description(item, true);
+			/*TODO RegExp port example
+			//old//RegExp stat_expression = new RegExp("<s[-]*\\d*>","gi");
+			Pattern pattern = Pattern.compile("w3schools", Pattern.CASE_INSENSITIVE);
+			Matcher matcher = pattern.matcher("Visit W3Schools!");
+			boolean matchFound = matcher.find();
+			//old//String[] stat_effects= temp_str.match(stat_expression);
+			*/
+			Matcher matcher = Pattern.compile("<s[-]*\\d*>",2).matcher(temp_str);
+			
+			ArrayList<String> stat_effects = new ArrayList<String>();
+			while(matcher.find()){
+				stat_effects.add(matcher.group());
+			}
+
+			int i = 0;
+			for(i=0;i<stat_effects.size();i++){
+				int  stat_id = Integer.parseInt(stat_effects.get(i).substring(2,stat_effects.get(i).length()-3));
 				if(stat_id < 0){
-					ret += determine_reaction(self, -stat_id, -1, self);
+					ret += determine_reaction(self, -stat_id, -1, self).intValue();
 				}else{
-					ret += determine_reaction(self, stat_id, 1, self);
+					ret += determine_reaction(self, stat_id, 1, self).intValue();
 				}
 			}
-			if(item is Weapon){
-				ret += determine_action_consequence((item as Weapon).attack_action,self);
+			if(item instanceof Weapon){
+				ret += determine_action_consequence(((Weapon)item).attack_action,self);
 			}			
 			
 			return ret;
 		}
 		
+		/*
 		public function determine_dynamic(enemy_id:int, attack_id:int, self:Character):int{
 			var ret:int = 0;
 			
@@ -1034,37 +1061,42 @@ public class Personality {
 			
 			return ret;
 		}
-		
-		public function determine_option_value(options:String, overworld_stat:Boolean, c:Character):int{
+		*/
+		/*TODO find out how to handle the int in string situation
+		public int determine_option_value(String options,Boolean overworld_stat,Character c){
 			if(options == null) return -999;
-			options = options.slice(options.indexOf(":")+1, options.length-2);
+			options = options.slice(options.indexOf(":")+1, options.length()-2);
 			
-			var current_step:int;
-			var target_room:Room = null;
-			var target_char:Character = null;
-			var target_action:Action = null;
-			var target_item:Item = null;
-			var target_command:String = null;
+			int current_step;
+			Room target_room = null;
+			Character target_char = null;
+			CharAction target_action = null;
+			Item  target_item= null;
+			String  target_command= null;
 			
-			var temp_item:Item;
-			var temp_char:Character;
-			var temp_options:Array;
-			var ret:int = 0;
-			var i:int = 0;
-			var tempArray:Array = options.split(",");			
+			Item temp_item;
+			Character temp_char;
+			ArrayList<Object> temp_options;
+			int ret = 0;
+			int i = 0;
+			ArrayList<Object> tempArray;
+			String[] optSplit = options.split(",");	
+			for(int arr;arr<optSplit.length;arr++){
+				tempArray.add(optSplit[i]);
+			}	
 			
-			if (tempArray[0] == "open"){
+			if (tempArray.get(0) == "open"){
 				ret = 1;
-			}else if(tempArray[0] == "inspect"){
+			}else if(tempArray.get(0) == "inspect"){
 				ret = 1;
-			}else if(tempArray[0] == "go_to_new_room"){
+			}else if(tempArray.get(0) == "go_to_new_room"){
 				if(overworld_stat){
 					ret = 1;
 				}else{
 					ret = -1;
 				}
-			}else if (tempArray[0] == "pick_up"){
-				if(c.location.contents[tempArray[1]] is Item){
+			}else if (tempArray.get(0) == "pick_up" ){
+				if(c.location.contents.get(tempArray.get(1)) instanceof Item){//i guess tempArray.get(1) is an Integer?
 					temp_item = c.location.contents[tempArray[1]];
 					if(temp_item != null){
 						ret = determine_item_consequences(temp_item, c);
@@ -1073,7 +1105,7 @@ public class Personality {
 						ret = -1;
 					}
 				}
-			}else if (tempArray[0] == "loot"){
+			}else if (tempArray.get(0) == "loot"){
 				ret = 1;				
 				if(c.location != null && c.location.static_contents[tempArray[1]] != null){
 					temp_item = c.location.static_contents[tempArray[1]].contents[tempArray[2]];
@@ -1083,7 +1115,7 @@ public class Personality {
 					ret += determine_reaction(c, Character.gold_id, temp_item.get_value(c, c), c);					
 					
 				}
-			}else if (tempArray[0] == "look"){
+			}else if (tempArray.get(0) == "look"){
 				if(tempArray[1] == null){
 					ret = 1;
 				}else{
@@ -1097,7 +1129,7 @@ public class Personality {
 						ret = 1;
 					}
 				}
-			}else if(tempArray[0] == "use_item"){
+			}else if(tempArray.get(0) == "use_item"){
 				if(int(tempArray[3]) == 2){
 					//never throw items away...
 					ret = -999;
@@ -1117,7 +1149,7 @@ public class Personality {
 				if(temp_item != null){
 					ret = determine_item_consequences(temp_item, c);
 				}
-			}else if(tempArray[0] == "action"){
+			}else if(tempArray.get(0) == "action"){
 				//should be checking if this is a good idea or not...
 				var action_to_lookat:Action = null;
 				if(int(tempArray[1]) == -1){
@@ -1134,11 +1166,11 @@ public class Personality {
 						ret = determine_action_consequence(action_to_lookat, c, c.location.contents[int(tempArray[1])]);
 					}
 				}
-			}else if(tempArray[0] == "challenge"){
+			}else if(tempArray.get(0) == "challenge"){
 				ret = 1;
-			}else if(tempArray[0] == "combat"){
+			}else if(tempArray.get(0) == "combat"){
 				ret = 0;
-			}else if(tempArray[0] == "equip"){
+			}else if(tempArray.get(0) == "equip"){
 				if(int(tempArray[3]) == 2){
 					//never throw items away...
 					ret = -999;
@@ -1158,7 +1190,7 @@ public class Personality {
 				if(temp_item != null){
 					ret = determine_item_consequences(temp_item, c);
 				}
-			}else if(tempArray[0] == "unequip"){
+			}else if(tempArray.get(0) == "unequip"){
 				if(c.party == null){
 					temp_item = c.get_equip_by_count(int(tempArray[1]));
 				}else{
@@ -1167,7 +1199,7 @@ public class Personality {
 				if(temp_item != null){
 					ret = -1 -determine_item_consequences(temp_item, c);
 				}
-			}else if(tempArray[0] == "hold"){
+			}else if(tempArray.get(0) == "hold"){
 				if(int(tempArray[3]) == 2){
 					//never throw items away...
 					ret = -999;
@@ -1187,7 +1219,7 @@ public class Personality {
 				if(temp_item != null){
 					ret = determine_item_consequences(temp_item, c);
 				}
-			}else if(tempArray[0] == "unhold"){
+			}else if(tempArray.get(0) == "unhold"){
 				if(c.party == null){
 					temp_item = c.body.parts[int(tempArray[1])].hold;
 				}else{
@@ -1196,40 +1228,40 @@ public class Personality {
 				if(temp_item != null){
 					ret = -1 -determine_item_consequences(temp_item, c);
 				}
-			}else if(tempArray[0] == "alchemy"){
+			}else if(tempArray.get(0) == "alchemy"){
 				ret = 1;
-			}else if(tempArray[0] == "enchant"){
+			}else if(tempArray.get(0) == "enchant"){
 				ret = 1;
-			}else if(tempArray[0] == "sew"){
+			}else if(tempArray.get(0) == "sew"){
 				ret = 1;
-			}else if(tempArray[0] == "buy"){
+			}else if(tempArray.get(0) == "buy"){
 				//should be checking if this is a good idea or not...
 				ret = 1;
-			}else if(tempArray[0] == "sell"){
+			}else if(tempArray.get(0) == "sell"){
 				//should be checking if this is a good idea or not...
 				ret = 1;
-			}else if(tempArray[0] == "inventory"){
+			}else if(tempArray.get(0) == "inventory"){
 				ret = 1;
-			}else if(tempArray[0] == "appearance"){
+			}else if(tempArray.get(0) == "appearance"){
 				ret = 1;
-			}else if(tempArray[0] == "status"){
+			}else if(tempArray.get(0) == "status"){
 				ret = 1;
-			}else if(tempArray[0] == "act_by_type"){
+			}else if(tempArray.get(0) == "act_by_type"){
 				ret = 1;
-			}else if(tempArray[0] == "talk"){
+			}else if(tempArray.get(0) == "talk"){
 				ret = 1;
-			}else if(tempArray[0] == "wait"){
+			}else if(tempArray.get(0) == "wait"){
 				ret = 1;
-			}else if(tempArray[0] == "show_skills"){
+			}else if(tempArray.get(0) == "show_skills"){
 				ret = 1;
 				//should be checking if this is a good idea or not...
-			}else if(tempArray[0] == "cclass_history"){
+			}else if(tempArray.get(0) == "cclass_history"){
 				ret = 0;
-			}else if(tempArray[0] == "sew"){
+			}else if(tempArray.get(0) == "sew"){
 				ret = 1;
-			}else if(tempArray[0] == "dismantle"){
+			}else if(tempArray.get(0) == "dismantle"){
 				ret = 1;
-			}else if(tempArray[0] == "craft"){
+			}else if(tempArray.get(0) == "craft"){
 				ret = 1;
 			}else{
 				trace("(Personality)Don't know what to think of this:"+tempArray);
@@ -1240,7 +1272,7 @@ public class Personality {
 			for(i;i<objectives.size();i++){
 				current_step = curr_obj_step.get(i)[curr_obj_step.get(i).length-1];
 				
-				if(tempArray[0] == "go_to_new_room"){
+				if(tempArray.get(0) == "go_to_new_room"){
 					target_room = objectives.get(i).get_target_room(current_step);
 					if(c.location != null && c.location.get_exit(tempArray[1]) == target_room){
 						ret += 5;
@@ -1254,7 +1286,7 @@ public class Personality {
 				//var target_item:Item = objectives.get(i).get_target_item(current_step);
 				
 				target_command = objectives.get(i).get_target_command(current_step);
-				if(target_command == tempArray[0])ret += 5;
+				if(target_command == tempArray.get(0))ret += 5;
 			}
 			return ret;
 		}
@@ -1273,14 +1305,14 @@ public class Personality {
 						int j = 0;
 						for(j=0;j<mob_allegiances.get(i).ideals.size();j++){
 							if(stat_id == mob_allegiances.get(i).ideals.get(j).stat_trait){
-								//like_amt += mob_allegiances.get(i).ideals.get(j).reaction_mod(c, quant.intValue(), c_self);
+								//like_amt += mob_allegiances.get(i).ideals.get(j).reaction_mod(c, quant.intValue(), c_self)
 								like_amt = like_amt.doubleValue() +  mob_allegiances.get(i).ideals.get(j).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 							}
 						}
 					}
 					for(i=0;i<likes.size();i++){
 						if(stat_id == likes.get(i).stat_trait){
-							//like_amt += likes.get(i).reaction_mod(c, quant.intValue(), c_self);
+							//like_amt += likes.get(i).reaction_mod(c, quant.intValue(), c_self)
 							like_amt = like_amt.doubleValue() + likes.get(i).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 						}
 					}
@@ -1288,7 +1320,7 @@ public class Personality {
 					Number dislike_amt = 0;
 					for(i=0;i<dislikes.size();i++){
 						if(stat_id == dislikes.get(i).stat_trait){
-							//dislike_amt += dislikes.get(i).reaction_mod(c, quant.intValue(), c_self);
+							//dislike_amt += dislikes.get(i).reaction_mod(c, quant.intValue(), c_self)
 							dislike_amt =dislike_amt.doubleValue() + dislikes.get(i).reaction_mod(c, quant.intValue(), c_self).doubleValue();
 						}
 					}
@@ -1298,27 +1330,27 @@ public class Personality {
 			}
 			return quant;
 		}
-		/*
-		public function determine_reaction_to_other(c_self:Character, c_effected:Character, c_acted:Character, i:int, k:Number):void{
+		
+		public void determine_reaction_to_other(Character c_self, Character c_effected, Character c_acted, int i,Number k){
 			if(c_self == c_effected || c_self == c_acted) return;
-			var my_reaction:Number = determine_reaction(c_acted, i, k, c_self);			
-			var acting_rel:Number = Number(check_relationship(c_acted,c_self));
-			var effect_rel:Number = Number(check_relationship(c_effected,c_self));
+			Number my_reaction = determine_reaction(c_acted, i, k, c_self);			
+			Number acting_rel = (Number)(check_relationship(c_acted,c_self));
+			Number effect_rel = (Number)(check_relationship(c_effected,c_self));
 			
-			if(my_reaction >= 0){
-				new_relationship(c_acted, c_self, (my_reaction * Math.abs(acting_rel)/1000));
-				new_relationship(c_effected, c_self, (my_reaction * Math.abs(effect_rel)/1000));
+			if(my_reaction.doubleValue() >= 0){
+				new_relationship(c_acted, c_self, (int)(my_reaction.doubleValue() * Math.abs(acting_rel.doubleValue())/1000));
+				new_relationship(c_effected, c_self, (int)(my_reaction.doubleValue() * Math.abs(effect_rel.doubleValue())/1000));
 			}else{
-				if(effect_rel >= acting_rel){
-					new_relationship(c_acted, c_self, (my_reaction * Math.abs(acting_rel)/1000));
-					new_relationship(c_effected, c_self, -(my_reaction * Math.abs(effect_rel)/1000));//pity
+				if(effect_rel.doubleValue() >= acting_rel.doubleValue()){
+					new_relationship(c_acted, c_self, (int)(my_reaction.doubleValue() * Math.abs(acting_rel.doubleValue())/1000));
+					new_relationship(c_effected, c_self, (int)-(my_reaction.doubleValue() * Math.abs(effect_rel.doubleValue())/1000));//pity
 				}else{
-					new_relationship(c_acted, c_self, -(my_reaction * Math.abs(acting_rel)/1000));
-					new_relationship(c_effected, c_self, (my_reaction * Math.abs(effect_rel)/1000));
+					new_relationship(c_acted, c_self, (int)-(my_reaction.doubleValue() * Math.abs(acting_rel.doubleValue())/1000));
+					new_relationship(c_effected, c_self, (int)(my_reaction.doubleValue() * Math.abs(effect_rel.doubleValue())/1000));
 				}
 			}
 		}
-		*/
+		
 		public void new_relationship(Character c, Character c_self,int change_id){
 			new_relationship(c,c_self,change_id,0,0);
 		}
@@ -1328,8 +1360,7 @@ public class Personality {
 		public void new_relationship(Character c, Character c_self,int change_id,Number k,int rel_type){//default k=0, rel_type=0
 			if(!relationship_exists(c)){
 				Relationship r = new Relationship(c);
-				//relationships[relationships.size()] = r;
-				relationships.add(r);
+				relationships.add(r);//relationships[relationships.size()] = r
 				r.change_type(rel_type);
 				change_relationship(c, determine_initial(c, c_self), Relationship.initial_reaction_change);
 			}
@@ -1353,9 +1384,8 @@ public class Personality {
 				}
 			}
 			
-			//ret += determine_attraction(c, c_self);
-            //ret += determine_similarity(c, c_self);
-            //TODO so much Character
+			ret += determine_attraction(c, c_self);
+            ret += determine_similarity(c, c_self);
 			
 			for(i=0;i<mob_allegiances.size();i++){
 				int j = 0;
@@ -1483,16 +1513,16 @@ public class Personality {
 			return found;			
         }
         
-		/*
-		public function change_relationship_type(c:Character, rel_type:int):void{
-			var i:int = 0;
-			for(i;i<relationships.size();i++){
+		
+		public void change_relationship_type(Character c,int rel_type){
+			int i= 0;
+			for(i=0;i<relationships.size();i++){
 				if(relationships.get(i).relationship_with == c){
 					relationships.get(i).change_type(rel_type);
 				}
 			}
 		}
-		*/
+		
 		public int check_relationship(Character c){
 			return check_relationship(c,null);
 		}
@@ -1552,19 +1582,19 @@ public class Personality {
 			int i = 0;
 			int trait_count;
 			for(trait_count=0;trait_count<likes.size();trait_count++){
-				for(i=0;i<likes.get(trait_count).damage_type_strengths.length;i++){
-					if(likes.get(trait_count).damage_type_strengths[i] == id) ret = ret.doubleValue()/2;
+				for(i=0;i<likes.get(trait_count).damage_type_strengths.size();i++){
+					if(likes.get(trait_count).damage_type_strengths.get(i) == id) ret = ret.doubleValue()/2;
 				}
-				for(i=0;i<likes.get(trait_count).damage_type_weaknesses.length;i++){
-					if(likes.get(trait_count).damage_type_weaknesses[i] == id) ret = ret.doubleValue()*2;
+				for(i=0;i<likes.get(trait_count).damage_type_weaknesses.size();i++){
+					if(likes.get(trait_count).damage_type_weaknesses.get(i) == id) ret = ret.doubleValue()*2;
 				}
 			}
 			for(trait_count=0;trait_count<dislikes.size();trait_count++){
-				for(i=0;i<dislikes.get(trait_count).damage_type_strengths.length;i++){
-					if(dislikes.get(trait_count).damage_type_strengths[i] == id) ret = ret.doubleValue()/2;
+				for(i=0;i<dislikes.get(trait_count).damage_type_strengths.size();i++){
+					if(dislikes.get(trait_count).damage_type_strengths.get(i) == id) ret = ret.doubleValue()/2;
 				}
-				for(i=0;i<dislikes.get(trait_count).damage_type_weaknesses.length;i++){
-					if(dislikes.get(trait_count).damage_type_weaknesses[i] == id) ret = ret.doubleValue()*2;
+				for(i=0;i<dislikes.get(trait_count).damage_type_weaknesses.size();i++){
+					if(dislikes.get(trait_count).damage_type_weaknesses.get(i) == id) ret = ret.doubleValue()*2;
 				}
 			}
 			return ret;
@@ -1577,7 +1607,7 @@ public class Personality {
 				if(objectives.get(i).objective_actions.get(current_step) == action_type || 
 				objectives.get(i).objective_actions.get(current_step) == Quest.no_action){
 					if(objectives.get(i).objective_timer.get(current_step) > -1){
-						//trace("(Personality.advance_objectives)This is a timed quest... just ignoring it, though... current tick is " + c.get_tick() + " and start tick of the quest step was " + curr_obj_start_tick.get(i));
+						LOGGER.info("(Personality.advance_objectives)This is a timed quest... just ignoring it, though... current tick is " + c.get_tick() + " and start tick of the quest step was " + curr_obj_start_tick.get(i));
 					}
 					
 					if(action_type == Quest.area_action){
@@ -1592,7 +1622,7 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get an area id as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get an area id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.wait_action){
 						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room &&
@@ -1606,7 +1636,7 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a room and wait time as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a room and wait time as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.room_action){
 						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
@@ -1619,7 +1649,7 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a room as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a room as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.class_action){
 	
@@ -1637,7 +1667,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a Character class as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a Character class as expected.... " + change_info);
 						}
 					
 					}else if(action_type == Quest.drop_action){
@@ -1656,7 +1686,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
 						}
 						
 					}else if(action_type == Quest.equip_action){
@@ -1675,7 +1705,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
 						}
 						
 					}else if(action_type == Quest.hold_action){
@@ -1693,7 +1723,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
 						}
 						
 					}else if(action_type == Quest.incapacitate_action){
@@ -1712,7 +1742,7 @@ public class Personality {
 									}
 								}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
+							//LOGGER.info("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets.get(curr_obj_step.get(i)));
 						}
 					}else if(action_type == Quest.kill_action){
 					//if(change_info.get(0) instanceof Character && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Character && change_info.get(0).get_primary_race().get_name() == objectives.get(i).objective_targets.get(current_step).get(0).get_primary_race().get_name()){
@@ -1730,7 +1760,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
+							//LOGGER.info("(Personality.advance_objectives)Didn't get a character as expected.... or we've got a race missmatch between the targets\nChange Info:" + change_info + "\nObjective target:" + objectives.get(i).objective_targets[curr_obj_step.get(i)]);
 						}
 					}else if(action_type == Quest.part_action){
 						if(change_info.get(0) instanceof BodyPart && objectives.get(i).objective_targets.get(current_step).get(0) instanceof BodyPart){
@@ -1747,7 +1777,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a body part as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a body part as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.party_action){
 						if(change_info.get(0) instanceof Party && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Party && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
@@ -1761,7 +1791,7 @@ public class Personality {
 							}
 						
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a party as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a party as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.pick_up_action){
 						if(change_info.get(0) instanceof Item && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Item){
@@ -1778,7 +1808,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get an item as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.sex_action){
 						if(change_info.get(0) instanceof Sex && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Sex){
@@ -1795,7 +1825,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a gender as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a gender as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.skill_action){
 						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
@@ -1808,7 +1838,7 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get an skill id as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get an skill id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.status_add_action){
 						if(change_info.get(0) instanceof TickEffect && objectives.get(i).objective_targets.get(current_step).get(0) instanceof TickEffect && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
@@ -1821,7 +1851,7 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a tick effect as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a tick effect as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.status_remove_action){
 						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
@@ -1834,10 +1864,10 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a status id as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a status id as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.talk_action){
-						//trace("(Personality.advance_objectives)Shouldn't really ever get this one. Should be dealt with in an Action. " + change_info);
+						LOGGER.info("(Personality.advance_objectives)Shouldn't really ever get this one. Should be dealt with in an Action. " + change_info);
 					}else if(action_type == Quest.unequip_action){
 						if(change_info.get(0) instanceof Equipment && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Equipment){
 							Equipment temp1 = (Equipment)change_info.get(0);
@@ -1853,7 +1883,7 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a piece of equipment as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.unhold_action){
 						if(change_info.get(0) instanceof Weapon && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Weapon){
@@ -1870,12 +1900,12 @@ public class Personality {
 								}
 							}
 						}else{
-							//trace("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
+							LOGGER.info("(Personality.advance_objectives)Didn't get a weapon as expected.... " + change_info);
 						}
 					}else if(objectives.get(i).objective_actions.get(current_step) == Quest.no_action){
-						//trace("(Personality.advance_objectives)This is a no action quest... let's see what kind of info I got: " + change_info);
+						LOGGER.info("(Personality.advance_objectives)This is a no action quest... let's see what kind of info I got: " + change_info);
 					}else{
-						//trace("(Personality.advance_objectives)Got an unknown action type of " + action_type + ". Doing nothing.");			
+						LOGGER.info("(Personality.advance_objectives)Got an unknown action type of " + action_type + ". Doing nothing.");			
 					}
 				}
             }

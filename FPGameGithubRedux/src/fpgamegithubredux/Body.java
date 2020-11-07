@@ -654,7 +654,9 @@ public class Body {
         return s;
     }
     
-    
+    public int part_count_by_stat(Character c,int stat_id){
+        return part_count_by_stat(c, stat_id,-1);
+    }
     public int part_count_by_stat(Character c,int stat_id,int min_max_chk){//default min_max_chk -1
         int j = 0;
         int parts_count = 0;
@@ -837,8 +839,8 @@ public class Body {
     
     public int hold(Weapon w,Character c){
         int i = 0;
-        for(i=0;i<w.stat_req.length;i++){
-            if(c.get_stat(w.stat_req[i]).intValue() < w.stat_min[i]) return -1;
+        for(i=0;i<w.stat_req.size();i++){
+            if(c.get_stat(w.stat_req.get(i)).intValue() < w.stat_min.get(i)) return -1;
         }			
         
         int slots_req = w.get_num_hold();
