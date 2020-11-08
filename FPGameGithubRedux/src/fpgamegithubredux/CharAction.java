@@ -176,6 +176,12 @@ public class CharAction {
         attack_desc = s;
     }
     public String trigger(Character triggeringChar){
+        return trigger(triggeringChar,0,null);
+    }
+    public String trigger(Character triggeringChar,int force_tags){
+        return trigger(triggeringChar,force_tags,null);
+    }
+    public String trigger(Character triggeringChar,int force_tags,Character sanitize_for){//def 0,null
         String ret = dialogue;
 
         int contID = -1;
@@ -187,8 +193,12 @@ public class CharAction {
 
         return ret;
     }
-
-    public String challenge(int challengeID, Character triggeringCharacter){
+    public String challenge(int challengeID, Character triggeringCharacter){//TODO actually write this method
+        return challenge(challengeID,triggeringCharacter,null/*,0,null,false,null*/);
+    }
+    public String challenge(int challengeID, Character triggeringCharacter,Character reactiveCharacter
+    /*, force_tags:int = 0, dynamic_choice:Array = null, no_requirement:Boolean = false, sanitize_for:Character = null*/){
+        //def null,null,0,null,false,null, rest of params dummied for now
         String ret = "";
 
         int roll = rollChallenge(challengeID, triggeringCharacter);
@@ -215,8 +225,7 @@ public class CharAction {
             int i = 0;
             for(i=0;i<c.party.members.size();i++){
                 Character temp_char = c.party.members.get(i);
-                //temp_char.reset_stats(-1, c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
-                //TODO
+                temp_char.reset_stats(-1, (int)c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
                 temp_char.apply_affect_by_id(FPalaceHelper.curr_hp_id, temp_char.get_stat(FPalaceHelper.max_hp_id),0, null, Body.change_stats_total);
                 temp_char.apply_affect_by_id(FPalaceHelper.curr_mp_id, temp_char.get_stat(FPalaceHelper.max_mp_id),0, null, Body.change_stats_total);
                 temp_char.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, temp_char.get_stat(FPalaceHelper.max_fatigue_id),0, null, Body.change_stats_total);
@@ -224,8 +233,7 @@ public class CharAction {
                 temp_char.waitTime = -FPGameGithub.T1_HOUR*8;
             }
         }else{
-            //c.reset_stats(-1, c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
-            //TODO
+            c.reset_stats(-1, (int)c.get_stat(FPalaceHelper.con_id).doubleValue()/10);
             c.apply_affect_by_id(FPalaceHelper.curr_hp_id, c.get_stat(FPalaceHelper.max_hp_id),0, null, Body.change_stats_total);
             c.apply_affect_by_id(FPalaceHelper.curr_mp_id, c.get_stat(FPalaceHelper.max_mp_id),0, null, Body.change_stats_total);
             c.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, c.get_stat(FPalaceHelper.max_fatigue_id),0, null, Body.change_stats_total);
@@ -285,6 +293,16 @@ public class CharAction {
         //nothing personal
         personal = !personal;
     }
+    public void set_party_use(){
+        party_use = !party_use;
+    }
+    
+    public Boolean get_personal(){
+        return personal;
+    }
+    public Boolean get_party_use(){
+        return party_use;
+    }
     public String get_cclass_origin(){
         return cclass_origin;
     }
@@ -306,18 +324,7 @@ public class CharAction {
     }
     public void copyCharAction(CharAction a){
         name = a.name;
-        //This... probably isn't the right way to clone these
-        /*
-        var i:int = 0;
-        for(i;i<a.challenges.length;i++){
-            challenges[i] = a.challenges[i];
-        }
-        i = 0;
-        for(i;i<a.consequences.length;i++){
-            consequences[i] = a.consequences[i];
-        }
-        */
-        challenges = new ArrayList<>(a.challenges);
+        challenges = new ArrayList<>(a.challenges);//TODO show this is the right way to clone!
         consequences = new ArrayList<>(a.consequences);			
         dialogue = a.dialogue;
         status_change = a.status_change;

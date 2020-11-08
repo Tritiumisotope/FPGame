@@ -41,8 +41,15 @@ public class Room extends StaticObject{
     public int combat_image_id;
 
     public Room(){
+        exits = new ArrayList<>();
+        exit_names = new ArrayList<>();
         contents = new ArrayList<>();
+        static_contents = new ArrayList<>();
+
         actions = new ArrayList<>();
+        action_max_times = new ArrayList<>();
+        action_current_num_times = new ArrayList<>();
+        exit_actions = new ArrayList<>();
         description = "This is a room. There is something <a0> about it.";
 
         CharAction tempAction = new CharAction();

@@ -19,7 +19,7 @@ public class AlchemyItem extends Item {
         int skill = -1;
         int k = 0;
         for (k=0;k<c.actions.size();k++){//.length
-            if(c.actions.get(k).alchemy_flag){//[]
+            if(Boolean.TRUE.equals(c.actions.get(k).alchemy_flag)){//[]
                 skill++;
             }
         }
@@ -94,8 +94,7 @@ public class AlchemyItem extends Item {
                                         effect_amounts.set(last_id, Math.ceil(Math.pow(50.0,(0.5 + (a1_count/4.0)))/50.0));
                                     }
                                 }
-                                if(changes.size() > 0 && a1_count > 2){
-                                    a1_count = 0;
+                                if(changes.size() > 0 && a1_count > 2){//todo IsEmpty?
                                     for(a1_count=0;a1_count<changes.size();a1_count++){
                                         if(changes.get(a1_count) instanceof Consequence){
                                             item.addConsequence((Consequence)changes.get(a1_count));
@@ -142,7 +141,6 @@ public class AlchemyItem extends Item {
                         }
                     }
                     if(changes.size() > 0 && a1_count > 2){
-                        a1_count = 0;
                         for(a1_count=0;a1_count<changes.size();a1_count++){
                             if(changes.get(a1_count) instanceof Consequence){
                                 item.addConsequence((Consequence)changes.get(a1_count));
@@ -158,7 +156,6 @@ public class AlchemyItem extends Item {
             int y = 0;
             
             for(y=0;y<type_array.size();y++){
-                x = 0;
                 changes = new ArrayList<>();
                 int a1_count = 0;
                 int last_id = 0;
@@ -195,7 +192,6 @@ public class AlchemyItem extends Item {
                                     }
                                 }
                                 if(changes.size() > 0 && a1_count > 2){
-                                    a1_count = 0;
                                     for(a1_count=0;a1_count<changes.size();a1_count++){
                                         if(changes.get(a1_count) instanceof Consequence){
                                             item.addConsequence((Consequence)changes.get(a1_count));
@@ -244,7 +240,6 @@ public class AlchemyItem extends Item {
                         }
                     }
                     if(changes.size() > 0 && a1_count > 2){
-                        a1_count = 0;
                         for(a1_count=0;a1_count<changes.size();a1_count++){
                             if(changes.get(a1_count) instanceof Consequence){
                                 item.addConsequence((Consequence)changes.get(a1_count));
@@ -257,7 +252,7 @@ public class AlchemyItem extends Item {
             }
             
             Number effect_multiplier = 1;
-            if(sameItem(item2))effect_multiplier = 0.5;
+            if(Boolean.TRUE.equals(sameItem(item2)))effect_multiplier = 0.5;
             
             int i = 0;
             for(i=0;i<effect_amounts.size();i++){

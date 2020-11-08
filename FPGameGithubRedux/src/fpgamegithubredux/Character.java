@@ -6,6 +6,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -65,7 +66,7 @@ public class Character extends DynamicObject {
     protected ArrayList<Stat> stats;
     protected Party party;
 
-    protected ArrayList<Object> currentTickEffects;
+    protected ArrayList<TickEffect> currentTickEffects;
 
     public String challenge_output;
     public String next_attack;
@@ -179,23 +180,23 @@ public class Character extends DynamicObject {
     public function remove_status_effect_by_id(status_id:int, tick_count:int = -1):String{
         String ret = "";
         int i = 0;
-        for(i=0;i<current_tick_effects.length;i++){
-            if(current_tick_effects[i].get_id() == status_id){
+        for(i=0;i<currentTickEffects.length;i++){
+            if(currentTickEffects[i].get_id() == status_id){
                 if(tick_count == -1){
                     personality.advance_objectives(Quest.status_remove_action, [status_id],this);
-                    current_tick_effects = current_tick_effects.slice(0,i).concat(current_tick_effects.slice(i+1,current_tick_effects.length));
-                    if(ret.indexOf(Tick_Effect.get_status_effect_name(status_id))<0)ret += get_name() + " is cured of " + Tick_Effect.get_status_effect_name(status_id);
+                    currentTickEffects = currentTickEffects.slice(0,i).concat(currentTickEffects.slice(i+1,currentTickEffects.length));
+                    if(ret.indexOf(TickEffect.get_status_effect_name(status_id))<0)ret += get_name() + " is cured of " + TickEffect.get_status_effect_name(status_id);
                     i--;
                 }else{
                     var count:int = 0;
                     for(count;count<tick_count;count++){
-                        var temp_string:Array = current_tick_effects[i].tick(this).split(".");
+                        var temp_string:Array = currentTickEffects[i].tick(this).split(".");
                         var effect_count:int = 0;
                         for(effect_count;effect_count<temp_string.length;effect_count++){
                             if(ret.indexOf(temp_string[effect_count]) < 0) ret += temp_string[effect_count]+".";
                         }
-                        if(current_tick_effects[i].ticks_left() <= 0){//this effect is done
-                            current_tick_effects = current_tick_effects.slice(0, i).concat(current_tick_effects.slice(i+1, current_tick_effects.length));
+                        if(currentTickEffects[i].ticks_left() <= 0){//this effect is done
+                            currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
                             i--;
                             break;
                         }
@@ -321,17 +322,17 @@ public class Character extends DynamicObject {
     public function get_status_effects():Array{
         var ret:Array = new Array();
         var i:int = 0;
-        for(i;i<current_tick_effects.length;i++){
-            if(current_tick_effects[i].get_id() >= 0){
+        for(i;i<currentTickEffects.length;i++){
+            if(currentTickEffects[i].get_id() >= 0){
                 var found:Boolean = false;
                 var k:int = 0;
                 for(k;k<ret.length;k++){
-                    if(ret[k] == current_tick_effects[i].get_id()){
+                    if(ret[k] == currentTickEffects[i].get_id()){
                         found = true;
                         break;
                     }
                 }
-                if(!found)ret[ret.length] = current_tick_effects[i].get_id();
+                if(!found)ret[ret.length] = currentTickEffects[i].get_id();
             }
         }
         return ret;
@@ -510,12 +511,12 @@ public class Character extends DynamicObject {
         return ret;
     }
     */
-    public void apply_tick_effect(TickEffect tf){
+    public void apply_TickEffect(TickEffect tf){
         if(!get_primary_race().check_immunity(tf.status_id)){
             ArrayList<Object> teTemp = new ArrayList<>();
             teTemp.add(tf);
             personality.advance_objectives(Quest.status_add_action, teTemp, this);//[tf]
-            currentTickEffects.add(tf); //current_tick_effects[current_tick_effects.length] = tf;
+            currentTickEffects.add(tf); //currentTickEffects[currentTickEffects.length] = tf;
         }
     }
     
@@ -567,16 +568,16 @@ public class Character extends DynamicObject {
         
         return agg;
     }
-    
-    public function get_all_overworld_actions():Array{
-        var ret:Array = new Array();
-        ret = ret.concat(actions);
-        ret = ret.concat(skills.get_skill_actions(this));
-        ret = ret.concat(body.get_actions_array(this));
-        if(personality.job != null)ret = ret.concat(personality.job.get_actions(this));
+    */
+    public ArrayList<Object> get_all_overworld_actions(){
+        ArrayList<Object> ret = new ArrayList<>();
+        ret.addAll(actions);//ret = ret.concat(actions)
+        ret.addAll(skills.get_skill_actions(this));//ret = ret.concat(skills.get_skill_actions(this))
+        ret.addAll(body.get_actions_array(this));//ret = ret.concat(body.get_actions_array(this))
+        if(personality.job != null)ret.addAll(personality.job.get_actions(this));//ret = ret.concat(personality.job.get_actions(this))
         return ret;
     }
-    
+    /*
     public function get_overworld_actions_by_type(type_name:String, init_char:Character):String{
         var ret:String = "";
         var temp_array:Array = get_all_overworld_actions();
@@ -853,11 +854,13 @@ public class Character extends DynamicObject {
     public void setSexDemo(int theSex){
         sexDemo = sexChoices[theSex];
     }
-    /*
-    public function new_body_part(p:Body_part, give_bonus:Boolean = true):String{
-        var ret:String = "";
+    public String new_body_part(BodyPart p){
+        return new_body_part(p, true);
+    }
+    public String new_body_part(BodyPart p, Boolean give_bonus){//def true
+        String ret = "";
         
-        if(p.get_name() != "")ret += "</n> now has " + p.get_name() + ". ";
+        if(p.getName() != "")ret += "</n> now has " + p.getName() + ". ";
         
         if(p.race == null) p.set_race(this.get_primary_race());
         
@@ -866,11 +869,12 @@ public class Character extends DynamicObject {
         
         determine_sex();
         
-        personality.advance_objectives(Quest.part_action, [p], this);
+        //personality.advance_objectives(Quest.part_action, [p], this);
+        personality.advance_objectives(Quest.part_action, new ArrayList<Object>(Arrays.asList(p)), this);
         
         return ret;
     }
-    
+    /*
     public function re_equip(curr_state:int = 0):String{
         if(curr_state != 0) return "";
         if(equip_state == 1) return "";
@@ -1803,7 +1807,7 @@ public class Character extends DynamicObject {
 			item_desc += item.getDescription(this, ident_array, keep_tags);
 			return item_desc;
 		}
-		public String use_item(int inventoryID){return use_item(inventoryID, -1,-1, -1);}
+	public String use_item(int inventoryID){return use_item(inventoryID, -1,-1, -1);}
     public String use_item(int inventoryID, int useCase){return use_item(inventoryID, useCase,-1, -1);}
     public String use_item(int inventoryID, int useCase, int j){return use_item(inventoryID, useCase,j, -1);}
     public String use_item(int inventoryID, int useCase, int j, int num_to_move){
@@ -1863,36 +1867,35 @@ public class Character extends DynamicObject {
         
         if(useCase == 0){
             if(found_num > 1 && num_to_move == -1){
-                /*
-                ret += "How many would you like to use?<br><a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,1\">x1</a>";
-                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
-                ret += "\t<a href=\"event:use_item," + String(i) +",0,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
-                */
+                //NOTE i was inventoryID
+                ret += "How many would you like to use?<br><a href=\"event:use_item," + Integer.toString(inventoryID) +",0,"+party_id+",-1,1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + Integer.toString(inventoryID) +",0,"+party_id+",-1,"+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," + Integer.toString(inventoryID) +",0,"+party_id+",-1,"+found_num+"\">x"+found_num+"</a>";
+                
             }else{
-                /*
+                
                 if(num_to_move > 1){
                     found_num = 0;
-                    count = 0;
-                    for(count;count<move_array.length;count++){
+                    for(count=0;count<move_array.size();count++){
                         if(num_to_move <= 0)break;
-                        if(move_array[count] != null){
-                            item = possessions[count-found_num];
-                            ret += item.use_item(this,count-found_num);
-                            set_busy();
-                            if(!item.still_usable()){ 
+                        if(move_array.get(count) != null){
+                            item = possessions.get(count-found_num);
+                            ret += item.useItem(this,count-found_num);
+                            setBusy();
+                            if(!item.stillUsable()){ 
                                 drop(count - found_num);
-                                found_num++
+                                found_num++;
                             }
                             num_to_move--;
                         }
                     }
-                    ret += back_string
+                    ret += back_string;
                 }else{
-                    ret += item.use_item(this,i);
-                    if(!item.still_usable()) drop(i);
-                    set_busy();
+                    ret += item.useItem(this,inventoryID);
+                    if(!item.stillUsable()) drop(inventoryID);
+                    setBusy();
                 }
-                */					
+                			
             }
             return ret;
         }else if(useCase == 1){
@@ -1904,7 +1907,6 @@ public class Character extends DynamicObject {
             }else{
                 if(num_to_move > 1){
                     found_num = 0;
-                    count = 0;
                     for(count = 0;count<move_array.size();count++){
                         if(found_num >= num_to_move)break;
                         if(move_array.get(count) != null){
@@ -1930,7 +1932,6 @@ public class Character extends DynamicObject {
             }else{
                 if(num_to_move > 1){
                     found_num = 0;
-                    count = 0;
                     for(count = 0;count<move_array.size();count++){
                         if(found_num >= num_to_move)break;
                         if(move_array.get(count) != null){
@@ -2268,24 +2269,29 @@ public class Character extends DynamicObject {
         return ret;
     }
     //ALL SAME FROM HERE BELOW, line 1960 in original
-    /*
-    		public function reset_stats(i:int = -1, j:int = -1):void{
-			var k:int = 0;
+    public void reset_stats(){
+        reset_stats(-1,-1);
+    }
+    public void reset_stats(int i){
+        reset_stats(i,-1);
+    }
+    public void reset_stats(int i,int j){//def -1, -1
+			int k = 0;
 			if (i == -1){
-				for (k;k<stat.length;k++){
-					stat[k].reset_stat(this,j);
+				for (k=0;k<stats.size();k++){
+					stats.get(k).reset_stat(this,j);
 				}
 			}else{
 				//apply the reset to a specific stat
-				for(k;k<stat.length;k++){
-					if(stat[k].get_id() == i) stat[k].reset_stat(this,j);
+				for(k=0;k<stats.size();k++){
+					if(stats.get(k).get_id() == i) stats.get(k).reset_stat(this,j);
 				}
 			}
 			
 			body.reset_stat(this,i,j);
-		}
-		
-		public function look(o:int = -1, j:int = 0):String{
+	}
+	/*
+	public function look(o:int = -1, j:int = 0):String{
 			var ret:String = "";
 			if(location != null){
 				if (o != -1){
@@ -2309,8 +2315,8 @@ public class Character extends DynamicObject {
 				}
 			}
 			return ret;
-		}
-    		public function inspect(i:int, k:int):String{
+	}
+    public function inspect(i:int, k:int):String{
 			var ret:String = "";
 			ret = location.get_content_sub_description(i,k);
 			//need to check for bury action, and add own bury actions (if they exist)
@@ -2335,7 +2341,7 @@ public class Character extends DynamicObject {
 					
 			set_busy();
 			return ret;
-		}
+	}
     public function get_status(c:Character = null):String{
         var s:String = "";
         var char_init:int = -1;
@@ -4145,7 +4151,7 @@ public class Character extends DynamicObject {
                             previous_action_output = char.talk(this, int(tempArray[2]), int(tempArray[3]));
                         }
                     }else if(tempArray[0] == "wait"){
-                        set_busy(Main.t1_hour);
+                        set_busy(FPGameGithub.T1_HOUR);
                         status = " is waiting here";
                     }else if(tempArray[0] == "show_skills"){
                         if(tempArray[2] != null){
@@ -4206,15 +4212,15 @@ public class Character extends DynamicObject {
         var global_ret:String = "";
         
         var i:int = 0;
-        for(i;i<current_tick_effects.length;i++){
-            if(current_tick_effects[i] != null){
-                ret += current_tick_effects[i].tick(this) + "\n";
-                if(current_tick_effects[i] != null && current_tick_effects[i].ticks_left() <= 0){//this effect is done
-                    current_tick_effects = current_tick_effects.slice(0, i).concat(current_tick_effects.slice(i+1, current_tick_effects.length));
+        for(i;i<currentTickEffects.length;i++){
+            if(currentTickEffects[i] != null){
+                ret += currentTickEffects[i].tick(this) + "\n";
+                if(currentTickEffects[i] != null && currentTickEffects[i].ticks_left() <= 0){//this effect is done
+                    currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
                     i--;
                 }
             }else{
-                current_tick_effects = current_tick_effects.slice(0, i).concat(current_tick_effects.slice(i+1, current_tick_effects.length));
+                currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
                 i--;
             }
         }
@@ -4229,7 +4235,7 @@ public class Character extends DynamicObject {
         if(busy <= 0 && location != null)global_ret += AI();
         //while(busy <= 0 && location != null)global_ret += AI();
         
-        if(wait_time%Main.t1_hour == 0 && wait_time > 0){
+        if(wait_time%FPGameGithub.T1_HOUR == 0 && wait_time > 0){
             reset_stats(-1, get_stat(FPalaceHelper.con_id)/10);
             ret += apply_affect_by_id(FPalaceHelper.curr_hp_id, 5, 0, null, Body.change_stats_total);
             ret += apply_affect_by_id(FPalaceHelper.curr_mp_id, 5, 0, null, Body.change_stats_total);
@@ -4249,7 +4255,7 @@ public class Character extends DynamicObject {
         }
         
         //this should be temporary, though the effect needs to come from somewhere....
-        if(total_actions_taken%Main.t1_hour == 0){
+        if(total_actions_taken%FPGameGithub.T1_HOUR == 0){
             if(location != null){
                 var curr_lust:Number = get_stat(FPalaceHelper.lust_id);
                 var max_lust:Number = get_stat(FPalaceHelper.max_lust_id);
@@ -4263,9 +4269,9 @@ public class Character extends DynamicObject {
                         //need to check if there's any seminal volume missing...
                         var grow_flag:Boolean = true;
                         i = 0;
-                        for(i;i<current_tick_effects.length;i++){
-                            //ret += current_tick_effects[i].tick(this) + "\n";
-                            if(current_tick_effects[i].status_id == Tick_Effect.fluid_regen_status){
+                        for(i;i<currentTickEffects.length;i++){
+                            //ret += currentTickEffects[i].tick(this) + "\n";
+                            if(currentTickEffects[i].status_id == TickEffect.fluid_regen_status){
                                 grow_flag = false;
                                 break;
                             }
@@ -4407,9 +4413,9 @@ public class Character extends DynamicObject {
                 s += Math.floor(temp_tick / Main.t1_month) + " Months ";
                 temp_tick = temp_tick - (Math.floor(temp_tick / Main.t1_month)*Main.t1_month);
             }
-            if(temp_tick / Main.t1_day > 0){
-                s += "and " + Math.floor(temp_tick / Main.t1_day) + " Days ";
-                temp_tick = temp_tick - (Math.floor(temp_tick / Main.t1_day)*Main.t1_day);
+            if(temp_tick / FPGameGithub.T1_DAY > 0){
+                s += "and " + Math.floor(temp_tick / FPGameGithub.T1_DAY) + " Days ";
+                temp_tick = temp_tick - (Math.floor(temp_tick / FPGameGithub.T1_DAY)*FPGameGithub.T1_DAY);
             }
             s += "\n";
             
@@ -4419,7 +4425,7 @@ public class Character extends DynamicObject {
                 var temp_array:Array = this.get_status_effects();
                 var count:int = 0;
                 for(count;count<temp_array.length;count++){
-                    temp_string = Tick_Effect.get_status_effect_name(temp_array[count]);
+                    temp_string = TickEffect.get_status_effect_name(temp_array[count]);
                     if(temp_string != ""){
                         s+=temp_string + "\t";
                     }
@@ -4500,45 +4506,48 @@ public class Character extends DynamicObject {
         
         return s;
     }
-    
-    public function consume(consumption_id:int, c:Character = null):String{
-        var ret:String = "";
+    */
+    public String consume(int consumption_id){
+        return consume(consumption_id,null);
+    }
+    public String consume(int consumption_id, Character c){//def null
+        String ret = "";
         if(c != null){
-            var consume_volume:Number = c.get_stat(consumption_id);
+            Number consume_volume = c.get_stat(consumption_id);
             
-            ret += this.apply_affect_by_id(FPalaceHelper.bloat_id, Math.floor(consume_volume/500), 0, null, Body.change_stats_total);
+            ret += this.apply_affect_by_id(FPalaceHelper.bloat_id, Math.floor(consume_volume.doubleValue()/500), 0, null, Body.change_stats_total);
             
-            var num_consequences:int = Main.t1_day/Main.t1_hour;
+            int num_consequences = FPGameGithub.T1_DAY/FPGameGithub.T1_HOUR;
         
-            var tf:Tick_Effect = new Tick_Effect();
-            tf.set_end_tick(Main.t1_day);
-            var consequence:Consequence = new Consequence();
-            consequence.add_consequence(FPalaceHelper.bloat_id, -Math.floor(consume_volume/500)/num_consequences, "", 0);
+            TickEffect tf = new TickEffect();
+            tf.set_end_tick(FPGameGithub.T1_DAY);
+            Consequence consequence = new Consequence();
+            consequence.addConsequence(FPalaceHelper.bloat_id, -Math.floor(consume_volume.doubleValue()/500)/num_consequences, "", 0);
             
             tf.set_end_consequence(consequence);
             
             consequence = new Consequence();
-            consequence.add_consequence(FPalaceHelper.bloat_id, -Math.floor(consume_volume/500)/num_consequences, "", 0, 1);
+            consequence.addConsequence(FPalaceHelper.bloat_id, -Math.floor(consume_volume.doubleValue()/500)/num_consequences, "", 0, 1);
             
-            var i:int = 0;
-            for(i;i<num_consequences;i++){
-                tf.set_tick_consequence(Math.floor((i+1)*Main.t1_day/(num_consequences-1)),consequence);
+            int i = 0;
+            for(i=0;i<num_consequences;i++){
+                tf.set_tick_consequence(Math.floor((i+1)*FPGameGithub.T1_DAY/(num_consequences-1)),consequence);
             }
             
-            this.apply_tick_effect(tf);
+            this.apply_TickEffect(tf);
             
             ret += this.apply_affect_by_id(FPalaceHelper.biomass_consumed, consume_volume, 0, null, Body.change_stats_total);
             
-            var consume_effects:Array = c.get_stat_actions(consumption_id);
+            ArrayList<Object> consume_effects = c.get_stat_actions(consumption_id);
             
             i = 0;
-            for(i;i<consume_effects.length;i++){
-                var temp_a:Action = consume_effects[i] as Action;
+            for(i=0;i<consume_effects.size();i++){
+                CharAction temp_a = (CharAction)consume_effects.get(i);
                 if(temp_a != null){
                     if(temp_a.get_consume())ret += temp_a.challenge(0,this,c);
                 }
             }
-            var temp:String = c.fluid_extraction(consumption_id);
+            String temp = c.fluid_extraction(consumption_id);
             //need to swap the name tags... this makes the fluid extraction correct, but the stat action incorrect...
             while(temp.indexOf("</n>") >= 0) temp = temp.replace("</n>","</n2>");
             while(temp.indexOf("</noun>") >= 0) temp = temp.replace("</noun>","</noun2>");
@@ -4548,156 +4557,162 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    */
-    /*
+    
+    
     public String fluid_extraction(int fluid_id){
         String ret = "";
-        var extract_effects:Array = get_stat_actions(fluid_id);
-        var i:int = 0;
-        for(i;i<extract_effects.length;i++){
-            var temp_a:Action = extract_effects[i] as Action;
+        ArrayList<Object> extract_effects = get_stat_actions(fluid_id);
+        int i = 0;
+        for(i=0;i<extract_effects.size();i++){
+            CharAction temp_a = (CharAction)extract_effects.get(i);
             if(temp_a != null){
                 if(temp_a.get_extract())ret += temp_a.challenge(0,this,this);
             }
         }
         
-        var consume_volume:Number = get_stat(fluid_id);
-        ret += this.apply_affect_by_id(fluid_id, (-consume_volume/2), 0, null, Body.change_stats_total);
+        Number consume_volume = get_stat(fluid_id);
+        ret += this.apply_affect_by_id(fluid_id, (-consume_volume.doubleValue()/2), 0, null, Body.change_stats_total);
         //want 18con: ready again in 10min, 10con: ready again in 2 hours
-        //var ticks_to_take:int = ((Main.t1_hour*2 - Main.t10_min)/-8)*get_stat(FPalaceHelper.con_id) + (Main.t1_hour*2) + ((((Main.t1_hour*2)-(Main.t10_min))/8)*10);
+        //var ticks_to_take:int = ((FPGameGithub.T1_HOUR*2 - Main.t10_min)/-8)*get_stat(FPalaceHelper.con_id) + (FPGameGithub.T1_HOUR*2) + ((((FPGameGithub.T1_HOUR*2)-(Main.t10_min))/8)*10);
         
         //10 con = 1 week to be ready again, 20 con = 3.5 days to be ready again...
-        var ticks_to_take:int = (Main.t1_week/(get_stat(FPalaceHelper.con_id)/10))/(get_stat(FPalaceHelper.min_lust_id)+1);
+        int ticks_to_take = (int)Math.round((FPGameGithub.T1_WEEK/(getStat(FPalaceHelper.con_id)/10))/(getStat(FPalaceHelper.min_lust_id)+1));
         if(ticks_to_take < 4)ticks_to_take = 4;
         
-        var num_consequences:int = Main.t1_week/Main.t1_hour;
+        int num_consequences = FPGameGithub.T1_WEEK/FPGameGithub.T1_HOUR;
         
-        var tf:Tick_Effect = new Tick_Effect();
-        tf.set_status_id(Tick_Effect.fluid_regen_status);
+        TickEffect tf = new TickEffect();
+        tf.set_status_id(TickEffect.fluid_regen_status);
         tf.set_end_tick(ticks_to_take);
-        var consequence:Consequence = new Consequence();
-        consequence.add_consequence(fluid_id,consume_volume/2/num_consequences, "", 0);
+        Consequence consequence = new Consequence();
+        consequence.addConsequence(fluid_id,consume_volume.doubleValue()/2/num_consequences, "", 0);
         
         tf.set_end_consequence(consequence);
         
         consequence = new Consequence();
-        consequence.add_consequence(fluid_id,consume_volume/2/num_consequences, "", 0, 1);
+        consequence.addConsequence(fluid_id,consume_volume.doubleValue()/2/num_consequences, "", 0, 1);
         
         i = 0;
-        for(i;i<num_consequences;i++){
+        for(i=0;i<num_consequences;i++){
             tf.set_tick_consequence(Math.floor((i+1)*ticks_to_take/(num_consequences-1)),consequence);
         }
         
-        this.apply_tick_effect(tf);
+        this.apply_TickEffect(tf);
         
         return ret;
     }
-    */
-    /*
-    public function impregnate(c:Character = null, preg_to_tick:Boolean = false):String{
-        var ret:String = "";
+    
+    
+    public String impregnate(Character c,Boolean preg_to_tick){//def null,false
+        String ret = "";
         //trace("(CHARACTER)impregnate attempt on " + get_name());
         if(c != null){
             //trace("by " + c.get_name());
             //assume the character passed in is the father, and that this is the mother for now
-            var impreg_volume:Number = c.get_stat(FPalaceHelper.cum_volume_id);
+            Number impreg_volume = c.get_stat(FPalaceHelper.cum_volume_id);
             ret += consume(FPalaceHelper.cum_volume_id,c);
             //make sure no one is infertile
-            if(c.get_stat(FPalaceHelper.semen_fertility_id) < 0.0 || get_stat(FPalaceHelper.egg_fertility_id) < 0.0 || body.get_pregnant_race().preg_effect == null){
+            if(c.getStat(FPalaceHelper.semen_fertility_id) < 0.0 || getStat(FPalaceHelper.egg_fertility_id) < 0.0 || body.get_pregnant_race().preg_effect == null){
                 //trace("but one of them is infertile...");
                 return ret;
             }
             
             //Check to see if we're already pregnant
-            var i:int = 0;
-            for(i;i<current_tick_effects.length;i++){
-                if(current_tick_effects[i].get_id()  == Tick_Effect.pregnant_status){
+            int i = 0;
+            for(i=0;i<currentTickEffects.size();i++){
+                if(currentTickEffects.get(i).get_id()  == TickEffect.pregnant_status){
                     //trace("but "+get_name()+" is already pregnant!");
                     return ret;
                 }
             }
-            var egg_fertility:Number = get_stat(FPalaceHelper.egg_fertility_id);
-            var semen_fertility:Number = c.get_stat(FPalaceHelper.semen_fertility_id);
-            var n:Number = Math.log(((semen_fertility + egg_fertility) * impreg_volume))*egg_fertility;
+            Number egg_fertility = get_stat(FPalaceHelper.egg_fertility_id);
+            Number semen_fertility = c.get_stat(FPalaceHelper.semen_fertility_id);
+            Number n = Math.log(((semen_fertility.doubleValue() + egg_fertility.doubleValue()) * impreg_volume.doubleValue()))*egg_fertility.doubleValue();
             
             //trace("child probability is " + n + " impreg volume:" + impreg_volume +"mL semen fertility:"+ semen_fertility + " egg fertility:"+egg_fertility);
             
             sex.reverse_bonuses(this);
             c.sex.reverse_bonuses(c);
-            var mom_parts:Array = null;
-            var dad_parts:Array = null;
-            var both_parts:Array = null;
-            var child_array:Array = new Array();
-            while(n>=0){
-                if(Math.random() < n){
-                    var baby:Character = new Character("Child");
+            ArrayList<BodyPart> mom_parts = null;
+            ArrayList<BodyPart> dad_parts = null;
+            ArrayList<BodyPart[]> both_parts = null;//array size two
+            ArrayList<Character> child_array = new ArrayList<>();
+            while(n.intValue()>=0){
+                if((int)Math.random() < n.intValue()){
+                    Character baby = new Character("Child");
                     
                     baby.mother = this;
                     baby.father = c;
                     
                     //give the child parts both mother and father have in common... though this means if a parent lost an arm, the child will be born without one too... hmmm
-                    var rand_sex:int;
+                    int rand_sex;
                     if(mom_parts == null && dad_parts == null && both_parts == null){
-                        mom_parts = new Array();
-                        dad_parts = new Array();
-                        both_parts = new Array();
-                        var mom_found_parts:Array = new Array();
+                        mom_parts = new ArrayList<>();
+                        dad_parts = new ArrayList<>();
+                        both_parts = new ArrayList<>();
+                        ArrayList<Boolean> mom_found_parts = new ArrayList<>();
                         i = 0;
-                        for(i;i<c.body.parts.length;i++){
-                            var found:Boolean = false;
-                            var k:int = 0;
-                            for(k;k<body.parts.length;k++){
-                                if(c.body.parts[i].get_name() == body.parts[k].get_name()){
-                                    both_parts[both_parts.length] = [body.parts[k],c.body.parts[i]];
-                                    mom_found_parts[k] = true;
+                        for(i=0;i<c.body.parts.size();i++){
+                            Boolean found = false;
+                            int k= 0;
+                            for(k=0;k<body.parts.size();k++){
+                                if(c.body.parts.get(i).getName() == body.parts.get(k).getName()){
+                                    //both_parts[both_parts.length] = [body.parts[k],c.body.parts[i]]
+                                    both_parts.add(new BodyPart[]{body.parts.get(k),c.body.parts.get(i)}); 
+                                    mom_found_parts.set(k,true);//mom_found_parts[k] = true
                                     found = true;
-                                }else if(i >=c.body.parts.length-1){
-                                    if(mom_found_parts[k] == null){
-                                        mom_parts[mom_parts.length] = body.parts[k];
+                                }else if(i >=c.body.parts.size()-1){
+                                    if(mom_found_parts.get(k) == null){
+                                        mom_parts.add(body.parts.get(k));//mom_parts[mom_parts.length] = body.parts[k];
                                     }
                                 }
                             }
                             if(!found){
-                                dad_parts[dad_parts.length] = c.body.parts[i];
+                                dad_parts.add(c.body.parts.get(i));//dad_parts[dad_parts.length] = c.body.parts[i];
                             }
                         }
                     }
-                    var part_array1:Array = new Array();
+                    ArrayList<BodyPart> part_array1 = new ArrayList<>();
                     i = 0;
-                    for(i;i<both_parts.length;i++){
-                        var new_part:Body_part = new Body_part();
-                        if(Math.random() <= 0.5){
-                            part_array1[part_array1.length] = both_parts[i][0];
+                    BodyPart new_part = new BodyPart();
+                    for(i=0;i<both_parts.size();i++){
+                        
+                        if(Math.random() <= 0.5){//
+                            part_array1.add(both_parts.get(i)[0]); //part_array1[part_array1.length] = both_parts[i][0];
                         }else{
-                            part_array1[part_array1.length] = both_parts[i][1];
+                            part_array1.add(both_parts.get(i)[1]);//part_array1[part_array1.length] = both_parts[i][1];
                         }
                     }
                     
-                    rand_sex = Math.round(Math.random()*101);
+                    rand_sex = (int)Math.round(Math.random()*101);
                     if(rand_sex <= 50){
-                        part_array1 = part_array1.concat(mom_parts);
+                        //part_array1 = part_array1.concat(mom_parts);
+                        part_array1.addAll(mom_parts);
                     }else if(rand_sex <= 100){
-                        part_array1 = part_array1.concat(dad_parts);
+                        //part_array1 = part_array1.concat(dad_parts);
+                        part_array1.addAll(dad_parts);
                     }else{
                         //Part bonanza!
-                        part_array1 = part_array1.concat(dad_parts.concat(mom_parts));
+                        //part_array1 = part_array1.concat(dad_parts.concat(mom_parts));
+                        part_array1.addAll(dad_parts);//TODO verify dad then mom
+                        part_array1.addAll(mom_parts);
                     }
                     
                     //put the baby together
                     i = 0;
-                    for(i;i<part_array1.length;i++){
-                        new_part = new Body_part();
+                    for(i=0;i<part_array1.size();i++){
+                        new_part = new BodyPart();
                             
-                        new_part.clone(part_array1[i]);
-                        new_part.equip = new Array();
-                        new_part.covered_by = new Array();
+                        new_part.bodyPartCopy(part_array1.get(i));
+                        new_part.equip = new ArrayList<>();
+                        new_part.covered_by = new ArrayList<>();
                         new_part.hold = null;
                         
                         baby.new_body_part(new_part);
                     }
                     baby.body.check_state(c);
                     //Figure out the kids name
-                    var baby_name:String = " child of " + this.get_name() + " and " + c.get_name();
+                    String baby_name = " child of " + this.getName() + " and " + c.getName();
                     
                     if(baby.sex.name == "Male"){
                         baby_name = baby.get_primary_race().get_random_male_name();
@@ -4705,8 +4720,8 @@ public class Character extends DynamicObject {
                         baby_name = baby.get_primary_race().get_random_female_name();
                     }
                     
-                    if(c.get_name().indexOf(" ") > 0){
-                       baby_name += c.get_name().substr(c.get_name().indexOf(" "), c.get_name().length - c.get_name().indexOf(" "));
+                    if(c.getName().indexOf(" ") >= 1){//TODO verify not >0 as it was before
+                       baby_name += c.getName().substring(c.getName().indexOf(" "), c.getName().length() - c.getName().indexOf(" "));
                     }
                     baby.set_name(baby_name);
                     
@@ -4714,35 +4729,34 @@ public class Character extends DynamicObject {
                     baby.apply_affect_by_id(FPalaceHelper.curr_hp_id, baby.get_stat(FPalaceHelper.max_hp_id),0,null,Body.change_stats_total);
                     baby.apply_affect_by_id(FPalaceHelper.curr_mp_id, baby.get_stat(FPalaceHelper.max_mp_id),0,null,Body.change_stats_total);
                     baby.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, baby.get_stat(FPalaceHelper.max_fatigue_id),0,null,Body.change_stats_total);
-                    baby.apply_affect_by_id(FPalaceHelper.bloat_id,-baby.get_stat(FPalaceHelper.bloat_id),0,null,Body.change_stats_total);
-                    baby.apply_affect_by_id(FPalaceHelper.lust_id, -baby.get_stat(FPalaceHelper.lust_id),0,null,Body.change_stats_total);
+                    baby.apply_affect_by_id(FPalaceHelper.bloat_id,-baby.get_stat(FPalaceHelper.bloat_id).doubleValue(),0,null,Body.change_stats_total);
+                    baby.apply_affect_by_id(FPalaceHelper.lust_id, -baby.get_stat(FPalaceHelper.lust_id).doubleValue(),0,null,Body.change_stats_total);
                     
-                    baby.apply_affect_by_id(FPalaceHelper.age_id,-baby.get_stat(FPalaceHelper.age_id));
+                    baby.apply_affect_by_id(FPalaceHelper.age_id,-baby.get_stat(FPalaceHelper.age_id).doubleValue());
                     //trace(baby.appearance(1));
                     baby.set_move(Math.max(c.ai_move, ai_move));
                     baby.personality.new_relationship(this,baby,Relationship.initial_reaction_change, 20);
-                    child_array[child_array.length] = baby;
+                    child_array.add(baby);//child_array[child_array.length] = baby
                     
                 }
                 
-                n = n - 1;
+                n = n.doubleValue() - 1;
             }
             sex.apply_bonuses(this);
             c.sex.apply_bonuses(c);
             
-            i = 0;
-            for(i;i<child_array.length;i++){
+            for(i=0;i<child_array.size();i++){
                 if(preg_to_tick){
-                    body.make_pregnant(child_array[i], this, Math.random()*body.get_pregnant_race().preg_effect.end_tick);
+                    body.make_pregnant(child_array.get(i), this, (int)Math.random()*body.get_pregnant_race().preg_effect.end_tick);
                 }else{
-                    body.make_pregnant(child_array[i], this);
+                    body.make_pregnant(child_array.get(i), this);
                 }
             }
             
         }
         return ret;
     }
-    
+     /*
     public function draw_34self(center_x:int, center_y:int, c:Character, mirror:Boolean = false):Sprite{
         var sprite:Sprite = new Sprite( );
         sprite.x = center_x - 50;
@@ -5031,10 +5045,10 @@ public class Character extends DynamicObject {
             var status_effect_array:Array = get_status_effects();
             for(i;i<status_effect_array.length;i++){
                 var found:Boolean = false;
-                if(status_effect_array[i] == Tick_Effect.prone_status){
+                if(status_effect_array[i] == TickEffect.prone_status){
                     g.beginFill( 0x5F1E02);
                     found = true;
-                }else if(status_effect_array[i] == Tick_Effect.poisoned_status){
+                }else if(status_effect_array[i] == TickEffect.poisoned_status){
                     g.beginFill( 0x49E20E);
                     found = true;
                 }

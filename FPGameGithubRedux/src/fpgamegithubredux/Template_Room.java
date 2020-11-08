@@ -273,18 +273,18 @@ public class Template_Room extends StaticObject {
         for(i=0;i<r.exit_names.size();i++){
             int k = 0;
             for(k=0;k<ret_arr.size();k++){
-                if(r.exit_names.get(i) == ret_arr.get(k)){
+                if(r.exit_names.get(i).equals(ret_arr.get(k))){
                     if(k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size()){
                         if(k-same_exit_offset < 0){
-                            //ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset);
+                            //ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset)
                             ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size() - k-same_exit_offset);
                         }
                         if(k+1+same_exit_offset >= ret_arr.size()){
-                            //ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset);
+                            //ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset)
                             ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset - ret_arr.size(),k-same_exit_offset);
                         }
                     }else{
-                        //ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length));
+                        //ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length))
                         ArrayList<String> temp_arr = new ArrayList<>((ArrayList<String>)ret_arr.subList(0,k-same_exit_offset));
                         temp_arr.addAll((ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
                         ret_arr = new ArrayList<>(temp_arr);//TODO verify all three!!!
@@ -332,7 +332,9 @@ public class Template_Room extends StaticObject {
         parties.add(party); //parties[characters.length] = party
         parties_chance.add(n); //parties_chance[characters_chance.length] = n
     }
-    
+    public void spawn_creatures(Room r){
+        spawn_creatures(r,0);
+    }
     public void spawn_creatures(Room r,int level_adjust){//def 0
         ArrayList<Character> family_array = new ArrayList<>();
         Character clonech1 = new Character();
@@ -344,15 +346,14 @@ public class Template_Room extends StaticObject {
                 }else{
                     //int rand_char = Math.round(Math.random()*(characters.get(k).size()-1));
                     //clonech1 = characters.get(k).get(rand_char).gen_char(level_adjust, r);
-                }
+                }//TODO array of arrays?
                 //clonech1.new_location(r, true);
                 //TODO
-                family_array.add(clonech1);//family_array[family_array.length] = clonech1;
+                family_array.add(clonech1);//family_array[family_array.length] = clonech1
             }
         }
         
-        k = 1;//Looking for a male/female pair
-        for(k=1;k<family_array.size();k++){
+        for(k=1;k<family_array.size();k++){//Looking for a male/female pair
             if(family_array.get(k).sex != family_array.get(0).sex){
                 //family_array.get(k).impregnate(family_array.get(0),true);
                 //family_array.get(0).impregnate(family_array.get(k),true);
@@ -363,11 +364,10 @@ public class Template_Room extends StaticObject {
             }
         }
         
-        k = 0;
         for(k=0;k<parties.size();k++){
             if (Math.random() <= parties_chance.get(k).doubleValue() && parties.get(k) != null){
                 Party clone_pty = new Party();
-                //parties[k].clone();
+                parties.get(k).copyParty();
                 int i = 0;
                 /*TODO Array of arrays?
                 for(i=0;i<parties[k].length;i++){
@@ -390,41 +390,39 @@ public class Template_Room extends StaticObject {
     }
     public Room make_room(int level_adjust){//def 0
         Room new_room = new Room(description);
-        //new_room.set_template(this);
-        //TODO ROOM
+        new_room.set_template(this);
         int k = 0;
         for(k=0;k<descriptions.size();k++){
             new_room.add_sub_descriptions(descriptions.get(k));
         }
         for(k=0;k<room_actions.size();k++){
-            //new_room.add_action(room_actions.get(k));
+            new_room.addAction(room_actions.get(k));
             //TODO ROOM
         }
         for(k=0;k<container.size();k++){
             if (Math.random() <= container_chance.get(k).doubleValue() && container.get(k) != null){
                 Container cloneCont1 = new Container();
-                //cloneCont1.clone(container.get(k),Math.abs(level_adjust));
-                //new_room.new_static_content(cloneCont1);
-                //TODO
+                cloneCont1.clone(container.get(k),Math.abs(level_adjust));
+                new_room.new_static_content(cloneCont1);
             }
         }
         for(k=0;k<action_objects.size();k++){
             if(Math.random() <= action_chance.get(k).doubleValue() && action_objects.get(k) != null){
                 CharActionObject cloneAction = new CharActionObject();
-                //cloneAction.clone(action_objects.get(k));
-                //new_room.new_static_content(cloneAction);
+                cloneAction.clone(action_objects.get(k));
+                new_room.new_static_content(cloneAction);
             }				
         }
         for(k=0;k<item.size();k++){
             if (Math.random() <= item_chance.get(k).doubleValue() && item.get(k) != null){
                 Item cloneit1 = item.get(k).copyItem();
-                //new_room.new_content(cloneit1);
+                new_room.newContent(cloneit1);
             }
         }
-        //spawn_creatures(new_room,level_adjust);
+        spawn_creatures(new_room,level_adjust);
         for(k=0;k<other_rooms.size();k++){
             if(other_rooms.get(k) != null){
-                //Room temp_room = other_rooms.get(k).make_room();
+                Room temp_room = other_rooms.get(k).make_room();
                 
                 //get the new direction
                 int rand_x = 0;
@@ -439,16 +437,13 @@ public class Template_Room extends StaticObject {
                 
                 String to_name = Area.get_direction(0, 0, 0, rand_x, rand_y, rand_z);
                 String from_name = Area.get_direction(rand_x, rand_y, rand_z, 0, 0, 0);
-                /*TODO
                 if(new_room.new_exit(temp_room, to_name) == 1){
                     temp_room.new_exit(new_room, from_name);
                 }else{
                     k--;
                 }
-                */
             }
         }
-        /*   TODO
         new_room.set_discovery_difficulty(discovered_difficulty);
     
         new_room.set_sight_difficulty(sight_difficulty);
@@ -460,7 +455,6 @@ public class Template_Room extends StaticObject {
         new_room.set_background_img(background_image_id);
         
         new_room.set_combat_img(combat_image_id);
-        */
         return new_room;
     }
     

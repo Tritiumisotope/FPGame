@@ -193,4 +193,32 @@ public class Challenge {
     public int roll(Character onlyChar){
         return r.nextInt(variability);
     }
+    //TODO @Override?
+    public void clone(Challenge c){
+        tag = c.tag;
+        attack_stat = c.attack_stat;
+        attack_part_process = c.attack_part_process;
+        defense_stat = c.defense_stat;
+        variability = c.variability;
+        static_defense = c.static_defense;
+        defense_increment = c.defense_increment;
+        defense_part_process = c.defense_part_process;
+        static_attack = c.static_attack;
+        attack_equip_slot = c.attack_equip_slot;
+        attack_equip_slot_count = c.attack_equip_slot_count;
+        defense_equip_slot = c.defense_equip_slot;
+        defense_equip_slot_count = c.defense_equip_slot_count;
+        attack_status_id = c.attack_status_id;
+        defense_status_id = c.defense_status_id;
+        attack_hold = c.attack_hold;
+        defense_hold = c.defense_hold;			
+        stats_or_skills = c.stats_or_skills;
+        room_challenge = c.room_challenge;
+        hard_stats = c.hard_stats;
+        attack_item = c.attack_item;
+        attack_quest = c.attack_quest;
+        attack_quest_step = c.attack_quest_step;
+        
+        defense_item = c.defense_item;
+    }
 }

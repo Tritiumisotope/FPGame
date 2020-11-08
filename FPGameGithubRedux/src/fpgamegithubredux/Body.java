@@ -1,8 +1,11 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Body {
+
+    private static final Logger LOGGER = Logger.getLogger(Body.class.getName());
 
     public static final int change_stats_individual = 0;
     public static final int change_stats_total = 1;
@@ -144,7 +147,7 @@ public class Body {
         Boolean ret = true;
         
         if(parts.size() <= 0 && c.location != null){
-            //trace("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
+            LOGGER.info("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
             ret = false;
         }
         int i = 0;
@@ -286,14 +289,14 @@ public class Body {
             }
             
             BodyPart temp_part = parts.get(i);
-            parts.remove(i); //parts = parts.slice(0,i).concat(parts.slice(i+1,parts.size()));
+            parts.remove(i); //parts = parts.slice(0,i).concat(parts.slice(i+1,parts.size()))
             
             
             //need to go through and make sure the numbering is correct...
             int num_found = 0;
             if(temp_part.part_count > 0){
                 for(count=0;count<parts.size();count++){
-                    if(parts.get(count).name == temp_part.name && parts.get(count).get_part_id() == temp_part.get_part_id()){
+                    if(parts.get(count).name.equals(temp_part.name) && parts.get(count).get_part_id() == temp_part.get_part_id()){
                         if(parts.get(count).part_count > temp_part.part_count){
                             parts.get(count).part_count--;
                         }
@@ -303,7 +306,7 @@ public class Body {
             }
             if(num_found == 1){//we now only have one part like this. We need to set its part_count to 0
                 for(count=0;count<parts.size();count++){
-                    if(parts.get(count).name == temp_part.name && parts.get(count).get_part_id() == temp_part.get_part_id()){
+                    if(parts.get(count).name.equals(temp_part.name) && parts.get(count).get_part_id() == temp_part.get_part_id()){
                         parts.get(count).part_count = 0;
                         break;	
                     }
@@ -321,7 +324,7 @@ public class Body {
                         if(connect_part != null){
                             if(connect_part.crit_part() && !crit_part_connection){
                                 crit_part_connection = true;
-                                //count == 0;
+                                //count == 0
                                 //TODO wat
                             }
                             if(crit_part_connection && !connect_part.crit_part()){
@@ -371,7 +374,7 @@ public class Body {
         ArrayList<CharAction> ret = new ArrayList<>();
         int i = 0;
         for(i=0;i<parts.size();i++){
-            ret.addAll(parts.get(i).get_stat_actions(stat_id));//ret = ret.concat(parts.get(i).get_stat_actions(stat_id));
+            ret.addAll(parts.get(i).get_stat_actions(stat_id));//ret = ret.concat(parts.get(i).get_stat_actions(stat_id))
         }
         return ret;
     }
@@ -409,32 +412,32 @@ public class Body {
         return equip_array;
     }
     
-    /*TODO Array method sussing
-    public function get_avail_connect_part():Array{
-        var ret:Array = new Array();
+    
+    public ArrayList<Integer> get_avail_connect_part(){
+        ArrayList<Integer> ret= new ArrayList<>();
         int i = 0;
         for(i=0;i<parts.size();i++){
-            var temp_part:Body_part = parts.get(i);
-            var k:int = 0;
-            for(k;k<temp_part.can_connect_to.length;k++){
-                if(temp_part.connected_to[k] == null){
-                    var duplicate:Boolean = false;
-                    var j:int = 0;
-                    for(j;j<ret.length;j++){
-                        if(temp_part.can_connect_to[k] == ret[j]){
+            BodyPart temp_part = parts.get(i);
+            int k = 0;
+            for(k=0;k<temp_part.can_connect_to.size();k++){
+                if(temp_part.connected_to.get(k) == null){
+                    Boolean duplicate = false;
+                    int j = 0;
+                    for(j=0;j<ret.size();j++){
+                        if(temp_part.can_connect_to.get(k).equals(ret.get(j))){
                             duplicate = true;
                             break;
                         }
                     }
-                    if(!duplicate)ret[ret.length] = temp_part.can_connect_to[k];
+                    if(!duplicate)ret.add(temp_part.can_connect_to.get(k));//ret[ret.length] = temp_part.can_connect_to[k]
                 }
             }
         }
         
         return ret;
     }
-    */
-    /*TODO get_equip_array
+    
+    
     public void add_part(BodyPart p,Character c){
         int i = 0;
         int j = 0;
@@ -442,16 +445,16 @@ public class Body {
         int name_in_use = 0;
         Boolean added= false;
         Equipment temp_e;
-        var equip_array:Array = get_equip_array();
+        ArrayList<Object> equip_array = get_equip_array();
         if(c.location != null && c.equip_state == 0){//make sure we aren't in world gen
             c.equip_state = 1;
-            for(i=0;i<equip_array.length;i++){
-                temp_e = equip_array[i];
+            for(i=0;i<equip_array.size();i++){
+                temp_e = (Equipment)equip_array.get(i);
                 temp_e.remove_effects(c,true);
             }
             c.equip_state = 0;
         }
-        temp_array[0] = p;
+        temp_array.set(0,p); //temp_array[0] = p;
         i = 0;
         for(i=0;i<parts.size();i++){
             if(parts.get(i) != null){
@@ -460,16 +463,22 @@ public class Body {
                     name_in_use++;
                 }
             }
-            if(!added && parts[i - 1] != null && parts.get(i) != null){
-                if(p.get_part_id() >= parts[i - 1].get_part_id()
+            if(!added && parts.get(i - 1) != null && parts.get(i) != null){
+                if(p.get_part_id() >= parts.get(i - 1).get_part_id()
                    && p.get_part_id() < parts.get(i).get_part_id() ){
-                    parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
+                    //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
+                    ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
+                    temp_parts.addAll(temp_array);
+                    temp_parts.addAll(parts.subList(i,parts.size()));
+                    parts = new ArrayList<>(temp_parts);
                     i++;
                     added = true;
                 }
-            }else if(!added && parts[i - 1] == null){
+            }else if(!added && parts.get(i - 1) == null){
                 if(p.get_part_id() < parts.get(i).get_part_id()){
-                    parts = temp_array.concat(parts);
+                    //parts = temp_array.concat(parts);
+                    temp_array.addAll(parts);
+                    parts = new ArrayList<>(temp_array);
                     added = true;
                 }
             }
@@ -481,17 +490,17 @@ public class Body {
         if(i >= parts.size() && parts.size() > 2){
             if(name_in_use > 0){
                 i = 0;
-                var lowest:int = 100;
-                var lowest_id:int = -1;
-                for(i=0;i<p.can_connect_to.length;i++){
-                    var temp_connect_part:Array = get_part_by_id(p.can_connect_to[i]);
-                    if(temp_connect_part.length > 0){
-                        var already_connected_count:int = 0;
+                int lowest = 100;
+                int lowest_id = -1;
+                for(i=0;i<p.can_connect_to.size();i++){
+                    ArrayList<BodyPart> temp_connect_part = get_part_by_id(p.can_connect_to.get(i));
+                    if(temp_connect_part.size() > 0){
+                        int already_connected_count = 0;
                         j = 0;
-                        for(j;j<temp_connect_part.length;j++){
-                            var k:int = 0;
-                            for(k;k<temp_connect_part[j].can_connect_to.length;k++){
-                                if(temp_connect_part[j].can_connect_to[k] == p.get_part_id() && temp_connect_part[j].connected_to[k] != null){
+                        for(j=0;j<temp_connect_part.size();j++){
+                            int k = 0;
+                            for(k=0;k<temp_connect_part.get(j).can_connect_to.size();k++){
+                                if(temp_connect_part.get(j).can_connect_to.get(k) == p.get_part_id() && temp_connect_part.get(j).connected_to.get(k) != null){
                                     already_connected_count++;
                                 }
                             }
@@ -503,28 +512,29 @@ public class Body {
                     }
                 }
                 
-                var connect_part_arr:Array = get_part_by_id(p.can_connect_to[lowest_id]);
-                if(lowest_id >= 0 && connect_part_arr.length > 0){
-                    p.connect_to_part(connect_part_arr[0],false,true);
+                ArrayList<BodyPart> connect_part_arr = get_part_by_id(p.can_connect_to.get(lowest_id));
+                if(lowest_id >= 0 && connect_part_arr.size() > 0){
+                    p.connect_to_part(connect_part_arr.get(0),false,true);
                 }
             }else{
-                trace("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.get_name()+ " " + p.get_name());				
+                //LOGGER.info("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.getName()+ " " + p.getName());				
             }
         }
         
         if(name_in_use > 0)	p.set_part_count(name_in_use + 1);
         
-        if(!added)parts[parts.size()] = p;
+        if(!added)parts.add(p);//parts[parts.size()] = p;
         
         //go through the equipment and see if any of it should be covering/equiped on the new part
-        if(!(p.covered_by[0] != null || p.equip[0] != null)){
+        if(!(p.covered_by.get(0) != null || p.equip.get(0) != null)){
             i = 0;
-            for(i=0;i<equip_array.length;i++){
-                temp_e = equip_array[i];
+            for(i=0;i<equip_array.size();i++){
+                temp_e = (Equipment)equip_array.get(i);
                 j = 0;
-                temp_array = temp_e.get_cover_slots();
-                for(j;j<temp_array.length;j++){
-                    if(temp_array[j] == p.get_part_id()){
+                /*temp_array = temp_e.get_cover_slots();
+                //TODO why is this not int
+                for(j=0;j<temp_array.size();j++){
+                    if(temp_array.get(j) == p.get_part_id()){
                         p.set_cover(temp_e);
                         break;
                     }
@@ -532,25 +542,26 @@ public class Body {
                 
                 j = 0;
                 temp_array = temp_e.get_equip_slots();
-                for(j;j<temp_array.length;j++){
-                    if(temp_array[j] == p.get_part_id()){
+                for(j=0;j<temp_array.length;j++){
+                    if(temp_array.get(j) == p.get_part_id()){
                         p.set_equip(temp_e);
                         break;
                     }
                 }
+                */
             }
         }
         if(c.location != null && c.equip_state == 0){//make sure we aren't in world gen
             c.equip_state = 1;
             i = 0;
-            for(i=0;i<equip_array.length;i++){
-                temp_e = equip_array[i];
+            for(i=0;i<equip_array.size();i++){
+                temp_e = (Equipment)equip_array.get(i);
                 temp_e.equip_effects(c,true);
             }
             c.equip_state = 0;
         }
     }
-    */
+    
     public String get_parts_appearance(Character c){
         int i = 0;
         String s = "";
@@ -725,18 +736,18 @@ public class Body {
         }
         return parts_count;
     }
-    /*Array Sussing
-    public function get_part_by_id(int part_id):Array{
+    
+    public ArrayList<BodyPart> get_part_by_id(int part_id){
         int i = 0;
-        var ret_part:Array = new Array();
+        ArrayList<BodyPart> ret_part = new ArrayList<>();
         for(i=0;i<parts.size();i++){
             if(parts.get(i).get_part_id() == part_id){
-                ret_part[ret_part.length] = parts.get(i);					
+                ret_part.add(parts.get(i));//ret_part[ret_part.length] = parts.get(i)					
             }
         }
         return ret_part;
     }
-    */
+    
     
     public BodyPart get_part_by_stat(int stat_id){
         int i = 0;
@@ -1010,22 +1021,22 @@ public class Body {
                 for(k=0;k<temp_array.size();k++){
                     //should check to see if the attack is already present in the return...
                     if( ret.indexOf(temp_array.get(k).getName()) < 0){
-                        if(temp_array.get(k).getName() != "" ){
+                        if(!temp_array.get(k).getName().equals("" )){
                             //need to get personal actions sometimes... and the form is different if i'm getting it and am not the player/party leader
                             if(c.location != null){
-                                /*TODO
+                                
                                 if(strangers_personal_party_ind == 0 && !temp_array.get(k).get_personal()){
-                                    ret += "<a href=\"event:action," + c.location.get_content_id(c) + "," + String(start_id) +"\"><font color='#0000FF'>"+temp_array.get(k).get_name() +"</font></a>    "; 
+                                    ret += "<a href=\"event:action," + c.location.getContentID(c) + "," + Integer.toString(start_id) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                                 }else if( strangers_personal_party_ind == 1 && temp_array.get(k).get_personal()){
-                                    ret += "<a href=\"event:action," + c.location.get_content_id(c) + "," + String(start_id) +"\"><font color='#0000FF'>"+ temp_array.get(k).get_name() +"</font></a>    "; 
+                                    ret += "<a href=\"event:action," + c.location.getContentID(c) + "," + Integer.toString(start_id) +"\"><font color='#0000FF'>"+ temp_array.get(k).getName() +"</font></a>    "; 
                                 }else if( strangers_personal_party_ind == 2){
                                     if(temp_array.get(k).get_personal()){
-                                        ret += "<a href=\"event:action," + c.location.get_content_id(c) + "," + String(start_id) + "," + c.location.get_content_id(c) + "\"><font color='#0000FF'>"+temp_array.get(k).get_name() +"</font></a>    "; 
+                                        ret += "<a href=\"event:action," + c.location.getContentID(c) + "," + Integer.toString(start_id) + "," + c.location.getContentID(c) + "\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                                     }else{
-                                        ret += "<a href=\"event:action," + c.location.get_content_id(c) + "," + String(start_id) +"\"><font color='#0000FF'>"+temp_array.get(k).get_name() +"</font></a>    "; 
+                                        ret += "<a href=\"event:action," + c.location.getContentID(c) + "," + Integer.toString(start_id) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                                     }
                                 }
-                                */
+                                
                             }
                         }
                     }
@@ -1063,7 +1074,7 @@ public class Body {
                 for(k=0;k<temp_array.size();k++){
                     //should check to see if the attack is already present in the return...
                     if(ret.indexOf(temp_array.get(k).getName()) < 0){
-                        //ret += "<a href=\"event:combat,"+ c.location.get_content_id(c) +","+ String(start_id) +"," + c.location.get_content_id(target) +"\">" + temp_array.get(k).get_name() + "</a>\n";//<font color='#0000FF'></font>
+                        //ret += "<a href=\"event:combat,"+ c.location.getContentID(c) +","+ String(start_id) +"," + c.location.getContentID(target) +"\">" + temp_array.get(k).get_name() + "</a>\n";//<font color='#0000FF'></font>
                         //TODO
                     }
                     
@@ -1145,7 +1156,7 @@ public class Body {
                 }
                 if(preg_tick.current_tick < preg_to_tick)preg_tick.current_tick = preg_to_tick;
             }
-            if(preg_tick != null)mom.apply_tick_effect(preg_tick);
+            if(preg_tick != null)mom.apply_TickEffect(preg_tick);
         }
     }
     

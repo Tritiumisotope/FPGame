@@ -1,10 +1,12 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Party {
-
+    private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
     public ArrayList<Character> members;//public var members:Array
+    
 
     public Party() {
         // constructor code

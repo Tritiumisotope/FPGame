@@ -179,17 +179,16 @@ public class Item {
         for (i=0;i<changeEffects.size();i++){//.length
             if (changeEffects.get(i) != null){//[]
                 if(changeEffects.get(i) instanceof Consequence){//[] and was is
-                    //useDesc += changeEffects[i].trigger(0, user);//[]
+                    useDesc += ((Consequence)changeEffects.get(i)).trigger(0, user);//[]
                     Consequence temp = (Consequence)changeEffects.get(i);
                     useDesc += temp.trigger(0,user);
                 }else{//It's a CharAction
                     CharAction temp = (CharAction)changeEffects.get(i);
                     temp.set_originator(user);
-                    //changeEffects[i].set_originator(user);//[]
-                    //temp.set_id(user.get_all_overworld_actions().length+possessionID);
-                    //TODO character get_all_overworld_actions
-                    //changeEffects[i].set_id(user.get_all_overworld_actions().length+possessionID);
-                    //useDesc += changeEffects[i].trigger(user, forceTags);
+                    ((CharAction)changeEffects.get(i)).set_originator(user);//[]
+                    temp.set_id(user.get_all_overworld_actions().size()+possessionID);
+                    ((CharAction)changeEffects.get(i)).set_id(user.get_all_overworld_actions().size()+possessionID);
+                    useDesc += ((CharAction)changeEffects.get(i)).trigger(user, forceTags);
                     if((useDesc.indexOf("</a>") >=0 || useDesc.indexOf("</dc0>") >=0) && numUses > 0)numUses++;
                 }
             }

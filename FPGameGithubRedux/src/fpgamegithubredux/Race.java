@@ -344,7 +344,9 @@ public class Race extends DynamicObject {
         stat_max[stat_max.length] = max;
         max_part[max_part.length] = pid;
     }
-    
+    public void apply_bonuses(Character c,BodyPart p){
+        apply_bonuses(c, p, false);
+    }
     public void apply_bonuses(Character c,BodyPart p,Boolean delay_effect){//default false
         int i= 0;
         for(i=0;i<bonus.length;i++){
@@ -360,7 +362,7 @@ public class Race extends DynamicObject {
                     tf.set_tick_consequence(Math.floor(0.5*FPGameGithub.T1_HOUR),consequence);
                     tf.set_tick_consequence(Math.floor(0.25*FPGameGithub.T1_HOUR),consequence);
                     
-                    c.apply_tick_effect(tf);
+                    c.apply_TickEffect(tf);
                 }else{
                     p.apply_effect(bonus_stat[i],bonus[i], c);
                 }
@@ -394,7 +396,7 @@ public class Race extends DynamicObject {
                     tf.set_tick_consequence(Math.floor(0.5*FPGameGithub.T1_HOUR),consequence);
                     tf.set_tick_consequence(Math.floor(0.25*FPGameGithub.T1_HOUR),consequence);
                     
-                    c.apply_tick_effect(tf);
+                    c.apply_TickEffect(tf);
                 }else{
                     Number out = -1*bonus[i].doubleValue();
                     p.apply_effect(bonus_stat[i],out, c);

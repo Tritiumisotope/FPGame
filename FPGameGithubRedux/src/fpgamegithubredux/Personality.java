@@ -511,7 +511,7 @@ public class Personality {
 			String ret = "";
 			Relationship temp_r;
 			int gossip_mod = 0;//was number
-			int i = 0;
+			int i;
 			if(gossip_step == -2){//c_self is the one gossiping... 
 				temp_r = relationships.get((int)Math.round(Math.random()*(relationships.size()-1)));
 				gossip_mod = temp_r.relationship_status().intValue();

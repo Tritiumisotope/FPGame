@@ -156,7 +156,9 @@ public class BodyPart extends DynamicObject {
     public void new_connect_slot(int slot_id){
         can_connect_to.add(slot_id);//can_connect_to[can_connect_to.size()] = slot_id;
     }
-    
+    public Boolean connect_to_part(BodyPart bp){
+        return connect_to_part(bp,null,null);
+    }
     public Boolean connect_to_part(BodyPart bp, Boolean good_on_my_end,Boolean force_connect){//default false, false
         Boolean ret = false;
         if(bp == this)return ret;

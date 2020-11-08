@@ -61,8 +61,8 @@ public class Consequence {//TODO get count of all below
         add_remove_status(status_id, -1);
     }
     public void add_remove_status(int status_id, int tick_count){//default -1 tickCount
-        remove_effect_ids.add(status_id); //remove_effect_ids[remove_effect_ids.length] = status_id;
-        advance_effect_by.add(tick_count); //advance_effect_by[advance_effect_by.length] = tick_count;
+        remove_effect_ids.add(status_id); //remove_effect_ids[remove_effect_ids.length] = status_id
+        advance_effect_by.add(tick_count); //advance_effect_by[advance_effect_by.length] = tick_count
     }
     
     public void set_change_skills(){
@@ -70,14 +70,14 @@ public class Consequence {//TODO get count of all below
     }
 
     public void add_char_effect(Character_template chare,Boolean start_fight){//default true
-        char_effect.add(chare); //char_effect[char_effect.length] = chare;
+        char_effect.add(chare); //char_effect[char_effect.length] = chare
         start_combat = start_fight;
     }
     public void add_char_list(ArrayList<Character_template> char_list){
         add_char_list(char_list,true);
     }
     public void add_char_list(ArrayList<Character_template> char_list,Boolean start_fight){//default true
-        char_effect.addAll(char_list); //char_effect[char_effect.length] = char_list;
+        char_effect.addAll(char_list); //char_effect[char_effect.length] = char_list
         start_combat = start_fight;
     }
     
@@ -125,14 +125,16 @@ public class Consequence {//TODO get count of all below
     public void add_change_effect(Object o){
         add_change_effect(o,1);
     }
+    public void add_change_effect(Object o, int stat_id){//default -1
+        change_effects.set(change_effects.size(), o);//change_effects[change_effects.length] = o
+        action_for_stat.set(action_for_stat.size(),stat_id);//action_for_stat[action_for_stat.length] = stat_id
+    }
     public void add_disrobe(int i){
-        add_disrobe(i, false);
+        add_disrobe(i,false);
     }
     public void add_disrobe(int i, Boolean target){//default false
-        //un_equip_slots[un_equip_slots.length] = i;
-        //un_equip_target[un_equip_target.length] = target;
-        un_equip_slots.set(un_equip_slots.size(),i);
-        un_equip_target.set(un_equip_target.size(), target);
+        un_equip_slots.set(un_equip_slots.size(),i);//un_equip_slots[un_equip_slots.length] = i
+        un_equip_target.set(un_equip_target.size(), target);//un_equip_target[un_equip_target.length] = target
     }
     
     public void apply_random_effect(){
@@ -149,12 +151,7 @@ public class Consequence {//TODO get count of all below
     public void set_never_change(){
         never_change = !never_change;
     }
-    public void add_change_effect(Object o, int stat_id){//default -1
-        //change_effects[change_effects.length] = o;
-        change_effects.set(change_effects.size(), o);
-        //action_for_stat[action_for_stat.length] = stat_id;
-        action_for_stat.set(action_for_stat.size(),stat_id);
-    }
+
     public String trigger(Number roll){
         return trigger(roll,null,null);
     }
@@ -212,27 +209,21 @@ public class Consequence {//TODO get count of all below
     public void addConsequence(int statID, Number conseq_amt,String desc,int require_roll,int show_changes,int temp, 
     int trigger_challenge, Boolean flip_target, TickEffect tf,int target_part_id/*Body.target_all_parts*/){
         //show_changes = 0, temp:int = 0, trigger_challenge:int = -1, flip_target:Boolean = false, tf:Tick_Effect = null, target_part_id:int = -1/*Body.target_all_parts*/
-        statEffected.set(statEffected.size(), statID);//statEffected[statEffected.length] = statID;
-        conseq.add(conseq_amt.doubleValue()); //conseq[conseq.length] = conseq_amt.doubleValue();
-        consequenceDescription.add(desc); //consequenceDescription[consequenceDescription.length] = desc;
+        statEffected.set(statEffected.size(), statID);//statEffected[statEffected.length] = statID
+        conseq.add(conseq_amt.doubleValue()); //conseq[conseq.length] = conseq_amt.doubleValue()
+        consequenceDescription.add(desc); //consequenceDescription[consequenceDescription.length] = desc
         roll_required.set(roll_required.size(), require_roll);
-        showEffects.add(show_changes); //showEffects[showEffects.length] = show_changes;
-        tempFlag.add(temp); //tempFlag[tempFlag.length] = temp;
-        consequenceChallenge.add(trigger_challenge); //consequenceChallenge[consequenceChallenge.length] = trigger_challenge;
-        consequenceTarget.add(flip_target); //consequenceTarget[consequenceTarget.length] = flip_target;
-        consequenceTickEffect.add(tf); //consequenceTickEffect[consequenceTickEffect.length] = tf;
-        targetPart.add(target_part_id); //targetPart[targetPart.length] = target_part_id;
+        showEffects.add(show_changes); //showEffects[showEffects.length] = show_changes
+        tempFlag.add(temp); //tempFlag[tempFlag.length] = temp
+        consequenceChallenge.add(trigger_challenge); //consequenceChallenge[consequenceChallenge.length] = trigger_challenge
+        consequenceTarget.add(flip_target); //consequenceTarget[consequenceTarget.length] = flip_target
+        consequenceTickEffect.add(tf); //consequenceTickEffect[consequenceTickEffect.length] = tf
+        targetPart.add(target_part_id); //targetPart[targetPart.length] = target_part_id
     }
     public Consequence copyConsequence(){
         Consequence ret = new Consequence();
         ret.statEffected = new ArrayList<>(this.statEffected);
         ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
-        /*
-        int i = 0;
-        for(i=0;i<this.consequenceDescription.size();i++){
-            ret.consequenceDescription[i] = this.consequenceDescription[i];
-        }
-        */
         ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
         
         ret.roll_required = new ArrayList<>(this.roll_required);

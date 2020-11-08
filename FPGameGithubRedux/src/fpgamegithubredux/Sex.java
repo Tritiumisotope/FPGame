@@ -226,7 +226,7 @@ public class Sex extends DynamicObject {
                     tf.set_tick_consequence(Math.floor(0.5*FPGameGithub.T1_HOUR),consequence);
                     tf.set_tick_consequence(Math.floor(0.25*FPGameGithub.T1_HOUR),consequence);
                     
-                    c.apply_tick_effect(tf);
+                    c.apply_TickEffect(tf);
                 }else{
                     c.apply_affect_by_id(i,bonus.get(i),0,null,Body.change_stats_total);					
                 }
@@ -253,7 +253,7 @@ public class Sex extends DynamicObject {
                     tf.set_tick_consequence(Math.floor(0.5*FPGameGithub.T1_HOUR),consequence);
                     tf.set_tick_consequence(Math.floor(0.25*FPGameGithub.T1_HOUR),consequence);
                     
-                    c.apply_tick_effect(tf);
+                    c.apply_TickEffect(tf);
                 }else{
                     Number temp = -1 * bonus.get(i).doubleValue();
                     c.apply_affect_by_id(i,temp,0,null,Body.change_stats_total );//-bonus.get(i)			
