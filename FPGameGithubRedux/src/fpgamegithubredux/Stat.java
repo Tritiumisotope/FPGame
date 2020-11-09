@@ -10,22 +10,22 @@ public class Stat {
     protected int statID;
     protected String name;
     
-    protected String[] stat_description;//public var stat_description:Array
-    protected int[] stat_description_requirement;//public var stat_description_requirement:Array
-    protected String[] short_description;//public var short_description:Array
-    protected int[] short_description_requirement;//public var short_description_requirement:Array
+    protected ArrayList<String> stat_description;//public var stat_description:Array
+    protected ArrayList<Integer> stat_description_requirement;//public var stat_description_requirement:Array
+    protected ArrayList<String> short_description;//public var short_description:Array
+    protected ArrayList<Integer> short_description_requirement;//public var short_description_requirement:Array
     
     public Boolean stat_desc_ttl_or_indiv;
     
-    protected int[] stat_desc_ttl_part_limit;//public var stat_desc_ttl_part_limit:Array;
-    protected String[] stat_up;//public var stat_up:Array
-    protected int[] stat_up_requirement;//public var stat_up_requirement:Array
-    protected String[] stat_up_operators;//public var stat_up_operators:Array
-    protected int[] stat_up_products;//public var stat_up_products:Array
-    protected String[] stat_down;//public var stat_down:Array
-    protected int[] stat_down_requirement;//public var stat_down_requirement:Array
-    protected String[] stat_down_operators;//public var stat_down_operators:Array
-    protected double[] stat_down_products;//public var stat_down_products:Array
+    protected ArrayList<Integer> stat_desc_ttl_part_limit;//public var stat_desc_ttl_part_limit:Array;
+    protected ArrayList<String> stat_up;//public var stat_up:Array
+    protected ArrayList<Integer> stat_up_requirement;//public var stat_up_requirement:Array
+    protected ArrayList<String> stat_up_operators;//public var stat_up_operators:Array
+    protected ArrayList<Integer> stat_up_products;//public var stat_up_products:Array
+    protected ArrayList<String> stat_down;//public var stat_down:Array
+    protected ArrayList<Integer> stat_down_requirement;//public var stat_down_requirement:Array
+    protected ArrayList<String> stat_down_operators;//public var stat_down_operators:Array
+    protected ArrayList<Double> stat_down_products;//public var stat_down_products:Array
     
     public Boolean age;
     public Boolean always_show;
@@ -41,16 +41,16 @@ public class Stat {
     protected Number tempStatValue;
     protected double statValue_from_equip;
 
-    protected String[] check_condition;//public var check_condition:Array
-    protected int[] check_against;//public var check_against:Array
-    protected int[] status_outcome;//public var status_outcome:Array
-    protected Boolean[] check_combat;//public var check_combat:Array
-    protected String[] incapac_text;//public var incapac_text:Array
-    protected Boolean[] check_total;//public var check_total:Array
+    protected ArrayList<String> check_condition;//public var check_condition:Array
+    protected ArrayList<Integer> check_against;//public var check_against:Array
+    protected ArrayList<Integer> status_outcome;//public var status_outcome:Array
+    protected ArrayList<Boolean> check_combat;//public var check_combat:Array
+    protected ArrayList<String> incapac_text;//public var incapac_text:Array
+    protected ArrayList<Boolean> check_total;//public var check_total:Array
 
     
-    //public var stat_calculation:Array;
-    protected ArrayList<String> stat_calculation;
+    
+    protected ArrayList<String> stat_calculation;//public var stat_calculation:Array;
     
     protected ArrayList<CharAction> stat_actions;//public var stat_actions:Array
     public Stat(){
@@ -69,18 +69,18 @@ public class Stat {
         max_stat_id = -1;
         min_stat_id = -1;
         
-        stat_description = null;
-        stat_description_requirement = null;
-        short_description  = null;
-        short_description_requirement  = null;
-        stat_up = null;
-        stat_up_requirement = null;
-        stat_up_operators = null;
-        stat_up_products = null;
-        stat_down = null;
-        stat_down_requirement = null;
-        stat_down_operators = null;
-        stat_down_products = null;
+        stat_description = new ArrayList<>();
+        stat_description_requirement = new ArrayList<>();
+        short_description  = new ArrayList<>();
+        short_description_requirement  = new ArrayList<>();
+        stat_up = new ArrayList<>();
+        stat_up_requirement = new ArrayList<>();
+        stat_up_operators = new ArrayList<>();
+        stat_up_products = new ArrayList<>();
+        stat_down = new ArrayList<>();
+        stat_down_requirement = new ArrayList<>();
+        stat_down_operators = new ArrayList<>();
+        stat_down_products = new ArrayList<>();
         
         
         tempStatValue = statValue = statValue_from_equip = 0;
@@ -88,17 +88,17 @@ public class Stat {
         stat_desc_ttl_or_indiv = false;
         always_show = false;
         
-        check_condition = null;
-        check_against = null;
-        status_outcome = null;
-        check_combat = null;
-        incapac_text = null;
-        check_total = null;
-        stat_actions = null;
+        check_condition = new ArrayList<>();
+        check_against = new ArrayList<>();
+        status_outcome = new ArrayList<>();
+        check_combat = new ArrayList<>();
+        incapac_text = new ArrayList<>();
+        check_total = new ArrayList<>();
+        stat_actions = new ArrayList<>();
         
-        //stat_desc_ttl_part_limit = new Array();
+        stat_desc_ttl_part_limit =  new ArrayList<>();
         
-        stat_calculation = null;
+        stat_calculation =  new ArrayList<>();
         
         rummage_inventory = false;
         rummage_body = false;
@@ -156,32 +156,32 @@ public class Stat {
     }
     public void add_combat_status_check(String operator, int versus, int outcome, String it, Boolean ct){
         //operator:String = ">=", versus:int = -1, outcome:int = status_confired_ok, it:String = "", ct:Boolean = false
-        check_condition[check_condition.length] = operator;
-        check_against[check_against.length] = versus;
-        status_outcome[status_outcome.length] = outcome;
-        check_combat[check_combat.length] = true;
-        incapac_text[incapac_text.length] = it;
-        check_total[check_total.length] = ct;
+        check_condition.add(operator); //check_condition[check_condition.length] = operator
+        check_against.add(versus); //check_against[check_against.length] = versus
+        status_outcome.add(outcome);//status_outcome[status_outcome.length] = outcome
+        check_combat.add(true);//check_combat[check_combat.length] = true
+        incapac_text.add(it); //incapac_text[incapac_text.length] = it
+        check_total.add(ct);//check_total[check_total.length] = ct
     }
     public void add_overworld_status_check(String operator, int versus, int outcome, String it){
         add_overworld_status_check(operator,versus,outcome,it, false);
     }
     public void add_overworld_status_check(String operator, int versus, int outcome, String it, Boolean ct){
         //operator:String = ">=", versus:int = -1, outcome:int = status_confired_ok, it:String = "", ct:Boolean = false
-        check_condition[check_condition.length] = operator;
-        check_against[check_against.length] = versus;
-        status_outcome[status_outcome.length] = outcome;
-        check_combat[check_combat.length] = false;
-        incapac_text[incapac_text.length] = it;
-        check_total[check_total.length] = ct;
+        check_condition.add(operator); //check_condition[check_condition.length] = operator
+        check_against.add(versus); //check_against[check_against.length] = versus
+        status_outcome.add(outcome);//status_outcome[status_outcome.length] = outcome
+        check_combat.add(true);//check_combat[check_combat.length] = true
+        incapac_text.add(it); //incapac_text[incapac_text.length] = it
+        check_total.add(ct);//check_total[check_total.length] = ct
     }
     
     public String get_overworld_status(Character c,BodyPart bp){
         String ret = "";
         int stat_out = check_overworld_status(c, bp);
-        for(int i=0 ;i<check_condition.length;i++){
-            if(!check_combat[i] && status_outcome[i] == stat_out){
-                ret = incapac_text[i];
+        for(int i=0 ;i<check_condition.size();i++){
+            if(!check_combat.get(i) && status_outcome.get(i) == stat_out){
+                ret = incapac_text.get(i);
                 break;
             }
         }
@@ -193,9 +193,9 @@ public class Stat {
 			String ret = "";
 			int stat_out= check_combat_status(c, bp);
 			int i = 0;
-			for(i=0;i<check_condition.length;i++){
-				if(check_combat[i] && status_outcome[i] == stat_out){
-					ret = incapac_text[i];
+			for(i=0;i<check_condition.size();i++){
+				if(check_combat.get(i) && status_outcome.get(i) == stat_out){
+					ret = incapac_text.get(i);
 					break;
 				}
 			}
@@ -206,32 +206,32 @@ public class Stat {
 			min_max_check(c, bp);
 			int ret = 1;
 			int i = 0;
-			for(i=0;i<check_condition.length;i++){
-				if(!check_combat[i]){
+			for(i=0;i<check_condition.size();i++){
+				if(!check_combat.get(i)){
 					int compare = -1;
 					double temp_stat_val;
-					if(check_total[i]){
+					if(check_total.get(i)){
 						temp_stat_val = c.getStat(statID);
 					}else{
 						temp_stat_val = get_stat_value(c);
 					}
-					if(check_against[i] < 0){
-						compare = -check_against[i] - 1;
+					if(check_against.get(i) < 0){
+						compare = -check_against.get(i) - 1;
 					}else{
-						if(bp != null && !check_total[i])compare = bp.get_stat(c, check_against[i]).intValue();
-						if(compare < 0 || check_total[i]) compare = (int)c.getStat(check_against[i]);
+						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
+						if(compare < 0 || check_total.get(i)) compare = (int)c.getStat(check_against.get(i));
 					}
 										
-					if(check_condition[i].equals(">")){
-						if(temp_stat_val > compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals(">=")){
-						if(temp_stat_val >= compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("=")){
-						if(temp_stat_val == compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("<=")){
-						if(temp_stat_val <= compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("<")){
-						if(temp_stat_val < compare && status_outcome[i] < ret)ret = status_outcome[i];
+					if(check_condition.get(i).equals(">")){
+						if(temp_stat_val > compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals(">=")){
+						if(temp_stat_val >= compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("=")){
+						if(temp_stat_val == compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("<=")){
+						if(temp_stat_val <= compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("<")){
+						if(temp_stat_val < compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
 					}
 				}
 			}
@@ -242,28 +242,28 @@ public class Stat {
 			min_max_check(c, bp);
 			int ret = 1;
 			int i = 0;
-			for(i=0;i<check_condition.length;i++){
-				if(check_combat[i]){
+			for(i=0;i<check_condition.size();i++){
+				if(check_combat.get(i)){
 					int compare = -1;
 					int temp_stat_val = (int)get_stat_value(c);
-					if(check_total[i]) temp_stat_val = (int)c.getStat(statID);
-					if(check_against[i] < 0){
-						compare = -check_against[i] - 1;
+					if(check_total.get(i)) temp_stat_val = (int)c.getStat(statID);
+					if(check_against.get(i) < 0){
+						compare = -check_against.get(i) - 1;
 					}else{
-						if(bp != null && !check_total[i])compare = bp.get_stat(c, check_against[i]).intValue();
-						if(compare < 0 || check_total[i]) compare = (int)c.getStat(check_against[i]);
+						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
+						if(compare < 0 || check_total.get(i)) compare = (int)c.getStat(check_against.get(i));
 					}
 					
-					if(check_condition[i].equals(">")){
-						if(temp_stat_val > compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals(">=")){
-						if(temp_stat_val >= compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("=")){
-						if(temp_stat_val == compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("<=")){
-						if(temp_stat_val <= compare && status_outcome[i] < ret)ret = status_outcome[i];
-					}else if(check_condition[i].equals("<")){
-						if(temp_stat_val < compare && status_outcome[i] < ret)ret = status_outcome[i];
+					if(check_condition.get(i).equals(">")){
+						if(temp_stat_val > compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals(">=")){
+						if(temp_stat_val >= compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("=")){
+						if(temp_stat_val == compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("<=")){
+						if(temp_stat_val <= compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
+					}else if(check_condition.get(i).equals("<")){
+						if(temp_stat_val < compare && status_outcome.get(i) < ret)ret = status_outcome.get(i);
 					}					
 				}
 			}
@@ -361,8 +361,8 @@ public class Stat {
             ArrayList<String> char_stack = new ArrayList<>(); // was array with new
             ArrayList<Number> num_stack = new ArrayList<>();//new Array();
             
-            for(count=0; count <= temp_calc.size(); count ++){//TODO this
-                
+            for(count=0; count < temp_calc.size(); count ++){//TODO this
+                System.out.println(temp_calc);
                 if(temp_calc.get(count) instanceof String || temp_calc.get(count) == null){//was is
                     String temp_char = "";
                     Number num1;
@@ -437,24 +437,24 @@ public class Stat {
     }
     public void new_description(String d, int i){
         //default 0
-        stat_description[stat_description.length] = d;
-        stat_description_requirement[stat_description_requirement.length] = i;
+        stat_description.add(d);//stat_description[stat_description.length] = d
+        stat_description_requirement.add(i); //stat_description_requirement[stat_description_requirement.length] = i;
     }
     
     public void new_short_description(String d,int i){
         //default 0
-        short_description[short_description.length] = d;
-        short_description_requirement[short_description_requirement.length] = i;
+        short_description.add(d);//short_description[short_description.length] = d
+        short_description_requirement.add(i); //short_description_requirement[short_description_requirement.length] = i
     }
     
     public String get_short_description(double stat_val){//was Number
         String ret = "";
         int max_good = -1;
         int i = 0;
-        for(i=0;i<short_description.length;i++){
-            if(short_description_requirement[i] <= stat_val && short_description_requirement[i] > max_good){
-                max_good = short_description_requirement[i];
-                ret = short_description[i];
+        for(i=0;i<short_description.size();i++){
+            if(short_description_requirement.get(i) <= stat_val && short_description_requirement.get(i) > max_good){
+                max_good = short_description_requirement.get(i);
+                ret = short_description.get(i);
             }
         }
         return ret;
@@ -464,20 +464,20 @@ public class Stat {
     }
     public void new_increase_description(String su, int i, String op, int pro){
         //su:String, i:int = 0, op:String = "", pro:Number = 0
-        stat_up[stat_up.length] = su;
-        stat_up_requirement[stat_up_requirement.length] = i;
-        stat_up_operators[stat_down_operators.length] = op;
-        stat_up_products[stat_down_products.length] = pro;
+        stat_up.add(su); //stat_up[stat_up.size()] = su
+        stat_up_requirement.add(i); //stat_up_requirement[stat_up_requirement.length] = i
+        stat_up_operators.add(op);//stat_up_operators[stat_down_operators.length] = op
+        stat_up_products.add(pro); //stat_up_products[stat_down_products.length] = pro
     }
     public void new_descrease_description(String sd){
         new_descrease_description(sd, 0, "", 0);
     }
     public void new_descrease_description(String sd, int i, String op, double pro){
         //sd:String, i:int = 0, op:String = "", pro:Number = 0
-        stat_down[stat_down.length] = sd;
-        stat_down_requirement[stat_down_requirement.length] = i;
-        stat_down_operators[stat_down_operators.length] = op;
-        stat_down_products[stat_down_products.length] = pro;
+        stat_down.add(sd); //stat_down[stat_down.size()] = sd
+        stat_down_requirement.add(i); //stat_down_requirement[stat_down_requirement.length] = i
+        stat_down_operators.add(op); //stat_down_operators[stat_down_operators.length] = op
+        stat_down_products.add(pro); //stat_down_products[stat_down_products.length] = pro
     }
     
     public String get_description(Character c,double current_value){
@@ -488,10 +488,10 @@ public class Stat {
         
         int i = 0;
         int req_met= -99;//was Number
-        for(i=0;i<stat_description.length;i++){
-            if(current_value >= stat_description_requirement[i] && stat_description_requirement[i] >= req_met){
-                if(!stat_description[i].equals(s))s = stat_description[i];
-                req_met = stat_description_requirement[i];
+        for(i=0;i<stat_description.size();i++){
+            if(current_value >= stat_description_requirement.get(i) && stat_description_requirement.get(i) >= req_met){
+                if(!stat_description.get(i).equals(s))s = stat_description.get(i);
+                req_met = stat_description_requirement.get(i);
             }
         }
         
@@ -509,12 +509,12 @@ public class Stat {
         int i = 0;
         
         if(change_amount.intValue() > 0){
-            for(i = 0;i<stat_up.length;i++){
-                if(Boolean.TRUE.equals(stat_op(i,c, stat_up_requirement[i], stat_up_operators[i],stat_up_products[i]))) ret = stat_up[i];
+            for(i = 0;i<stat_up.size();i++){
+                if(Boolean.TRUE.equals(stat_op(i,c, stat_up_requirement.get(i), stat_up_operators.get(i),stat_up_products.get(i)))) ret = stat_up.get(i);
             }
         }else if(change_amount.intValue() < 0){
-            for(i = 0;i<stat_down.length;i++){
-                if(Boolean.TRUE.equals(stat_op(i,c, stat_down_requirement[i], stat_down_operators[i],stat_down_products[i]))) ret = stat_down[i];
+            for(i = 0;i<stat_down.size();i++){
+                if(Boolean.TRUE.equals(stat_op(i,c, stat_down_requirement.get(i), stat_down_operators.get(i),stat_down_products.get(i)))) ret = stat_down.get(i);
             }
         }
         
@@ -536,12 +536,12 @@ public class Stat {
         setStatValue(get_stat_value(null, temp_flag, false, true)+change_amount,temp_flag);
         min_max_check(c, bp);
         if(change_amount > 0){
-            for(i = 0;i<stat_up.length;i++){
-                if(c!= null && stat_op(i,c, stat_up_requirement[i], stat_up_operators[i],stat_up_products[i])) s = stat_up[i];
+            for(i = 0;i<stat_up.size();i++){
+                if(c!= null && stat_op(i,c, stat_up_requirement.get(i), stat_up_operators.get(i),stat_up_products.get(i))) s = stat_up.get(i);
             }
         }else if(change_amount < 0){
-            for(i = 0;i<stat_down.length;i++){
-                if(c!= null && stat_op(i,c, stat_down_requirement[i], stat_down_operators[i],stat_down_products[i])) s = stat_down[i];
+            for(i = 0;i<stat_down.size();i++){
+                if(c!= null && stat_op(i,c, stat_down_requirement.get(i), stat_down_operators.get(i),stat_down_products.get(i))) s = stat_down.get(i);
             }
         }
         double statValRound = get_stat_value(c);
@@ -587,7 +587,7 @@ public class Stat {
     public void set_stat_description_show(){
         set_stat_description_show(null);
     }
-    public void set_stat_description_show(int[] parts_to_check){//def null
+    public void set_stat_description_show(ArrayList<Integer> parts_to_check){//def null
         stat_desc_ttl_or_indiv = !stat_desc_ttl_or_indiv;
         if(parts_to_check != null)stat_desc_ttl_part_limit = parts_to_check;
     }

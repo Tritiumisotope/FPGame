@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Consequence {//TODO get count of all below
     protected static int amt_from_roll_const = -999999;
@@ -46,9 +47,43 @@ public class Consequence {//TODO get count of all below
 
     public Consequence(){
         statEffected = new ArrayList<>();
+        conseq = new ArrayList<>();
         consequenceDescription = new ArrayList<>();
         effectAmount = new ArrayList<>();
         roll_required = new ArrayList<>();
+        showEffects = new ArrayList<>();
+        tempFlag = new ArrayList<>();
+        consequenceChallenge = new ArrayList<>();
+        consequenceTarget = new ArrayList<>();
+        consequenceTickEffect = new ArrayList<>();
+
+        amt_by_roll = false;
+        amt_formula = null;
+        random_effect = false;
+        change_on_success = false;
+        always_change = false;
+        never_change = false;
+
+        change_effects = new ArrayList<>();
+        action_for_stat = new ArrayList<>();
+        xp_reward = 0;
+        un_equip_slots = new ArrayList<>();
+        un_equip_target = new ArrayList<>();
+        targetPart = new ArrayList<>();
+        impregnate = 0;
+        consume = 0;
+        extract = 0;
+        damage_type_id = -1;
+        make_party = false;
+        remove_party = false;
+        max_damage = 0;
+        change_skills = false;
+        remove_effect_ids = new ArrayList<>();
+        advance_effect_by = new ArrayList<>();
+        interupt_chal = null;
+        replace_action = null;
+        char_effect = new ArrayList<>();	
+        start_combat = false;
     }
     public void set_replace_action(CharAction a){
         replace_action = a;
@@ -90,12 +125,9 @@ public class Consequence {//TODO get count of all below
     }
     public void amt_by_roll_flag(String[] a){///was array, def null
         amt_by_roll = !amt_by_roll;
-        ArrayList<String> dia1 = new ArrayList<>();
-        String[] first = a;//TODO check if can be just thrown arrays
-        for(int i =0;i<first.length;i++){
-        dia1.add(first[i]);
-        }
+        
         if(a != null){
+            ArrayList<String> dia1 = new ArrayList<>(Arrays.asList(a));//TODO check if can be just thrown arrays
             amt_formula = dia1;//was a
         }else{
             amt_formula = null;
@@ -126,15 +158,15 @@ public class Consequence {//TODO get count of all below
         add_change_effect(o,1);
     }
     public void add_change_effect(Object o, int stat_id){//default -1
-        change_effects.set(change_effects.size(), o);//change_effects[change_effects.length] = o
-        action_for_stat.set(action_for_stat.size(),stat_id);//action_for_stat[action_for_stat.length] = stat_id
+        change_effects.add(o);//change_effects.set(change_effects.size(), o);//change_effects[change_effects.length] = o
+        action_for_stat.add(stat_id); //action_for_stat.set(action_for_stat.size(),stat_id);//action_for_stat[action_for_stat.length] = stat_id
     }
     public void add_disrobe(int i){
         add_disrobe(i,false);
     }
     public void add_disrobe(int i, Boolean target){//default false
-        un_equip_slots.set(un_equip_slots.size(),i);//un_equip_slots[un_equip_slots.length] = i
-        un_equip_target.set(un_equip_target.size(), target);//un_equip_target[un_equip_target.length] = target
+        un_equip_slots.add(i);//un_equip_slots.set(un_equip_slots.size(),i);//un_equip_slots[un_equip_slots.length] = i
+        un_equip_target.add(target);//un_equip_target.set(un_equip_target.size(), target);//un_equip_target[un_equip_target.length] = target
     }
     
     public void apply_random_effect(){
@@ -209,10 +241,10 @@ public class Consequence {//TODO get count of all below
     public void addConsequence(int statID, Number conseq_amt,String desc,int require_roll,int show_changes,int temp, 
     int trigger_challenge, Boolean flip_target, TickEffect tf,int target_part_id/*Body.target_all_parts*/){
         //show_changes = 0, temp:int = 0, trigger_challenge:int = -1, flip_target:Boolean = false, tf:Tick_Effect = null, target_part_id:int = -1/*Body.target_all_parts*/
-        statEffected.set(statEffected.size(), statID);//statEffected[statEffected.length] = statID
+        statEffected.add(statID);//statEffected.set(statEffected.size(), statID);//statEffected[statEffected.length] = statID
         conseq.add(conseq_amt.doubleValue()); //conseq[conseq.length] = conseq_amt.doubleValue()
         consequenceDescription.add(desc); //consequenceDescription[consequenceDescription.length] = desc
-        roll_required.set(roll_required.size(), require_roll);
+        roll_required.add(require_roll);//roll_required.set(roll_required.size(), require_roll)
         showEffects.add(show_changes); //showEffects[showEffects.length] = show_changes
         tempFlag.add(temp); //tempFlag[tempFlag.length] = temp
         consequenceChallenge.add(trigger_challenge); //consequenceChallenge[consequenceChallenge.length] = trigger_challenge

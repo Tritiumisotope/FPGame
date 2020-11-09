@@ -33,7 +33,7 @@ public class Room extends StaticObject{
 
     public String custom_name;
 		
-	//public Combat_manager cm = null
+	public Combat_manager cm = null;
 
     protected int lastAreaTick;
 
@@ -69,8 +69,15 @@ public class Room extends StaticObject{
         addAction(tempAction);
     }
     public Room(String d){
+        exits = new ArrayList<>();
+        exit_names = new ArrayList<>();
         contents = new ArrayList<>();
+        static_contents = new ArrayList<>();
+
         actions = new ArrayList<>();
+        action_max_times = new ArrayList<>();
+        action_current_num_times = new ArrayList<>();
+        exit_actions = new ArrayList<>();
         description = d;
 
         CharAction tempAction = new CharAction();
@@ -533,6 +540,14 @@ public class Room extends StaticObject{
 
         return ret;
     }//dummy version, commented rest in
+    public void remove_static_contents(int i){
+        //static_contents = static_contents.slice(0, i).concat(static_contents.slice(i+1, static_contents.length))
+        static_contents.remove(i);
+
+        for(int count=0;count<static_contents.size();count++){
+            static_contents.get(count).set_id(count);
+        }
+    }
     public int new_exit(Room e,String d){// default d = null
         int i = 0;
         int k = 0;

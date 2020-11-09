@@ -2,6 +2,7 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class Body {
 
@@ -23,7 +24,7 @@ public class Body {
     //TODO verify if other parts NULL!!!!
     
     public Body(){
-        //parts = new Array()
+        parts = new ArrayList<>();
         //FPalaceHelper.34view_test_img
     }
     public Sex get_sex(){
@@ -454,7 +455,7 @@ public class Body {
             }
             c.equip_state = 0;
         }
-        temp_array.set(0,p); //temp_array[0] = p;
+        temp_array.add(p);//this is the first element anyway//temp_array.set(0,p) //temp_array[0] = p
         i = 0;
         for(i=0;i<parts.size();i++){
             if(parts.get(i) != null){
@@ -463,23 +464,26 @@ public class Body {
                     name_in_use++;
                 }
             }
-            if(!added && parts.get(i - 1) != null && parts.get(i) != null){
-                if(p.get_part_id() >= parts.get(i - 1).get_part_id()
-                   && p.get_part_id() < parts.get(i).get_part_id() ){
-                    //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
-                    ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
-                    temp_parts.addAll(temp_array);
-                    temp_parts.addAll(parts.subList(i,parts.size()));
-                    parts = new ArrayList<>(temp_parts);
-                    i++;
-                    added = true;
-                }
-            }else if(!added && parts.get(i - 1) == null){
-                if(p.get_part_id() < parts.get(i).get_part_id()){
-                    //parts = temp_array.concat(parts);
-                    temp_array.addAll(parts);
-                    parts = new ArrayList<>(temp_array);
-                    added = true;
+            if(i>0){
+                if(!added && parts.get(i - 1) != null && parts.get(i) != null){
+                    if(p.get_part_id() >= parts.get(i - 1).get_part_id()
+                    && p.get_part_id() < parts.get(i).get_part_id() ){
+                        //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
+                        ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
+                        temp_parts.addAll(temp_array);
+                        temp_parts.addAll(parts.subList(i,parts.size()));
+                        parts = new ArrayList<>(temp_parts);
+                        i++;
+                        added = true;
+                    }
+                
+                }else if(!added && parts.get(i - 1) == null){
+                    if(p.get_part_id() < parts.get(i).get_part_id()){
+                        //parts = temp_array.concat(parts);
+                        temp_array.addAll(parts);
+                        parts = new ArrayList<>(temp_array);
+                        added = true;
+                    }
                 }
             }
         }
@@ -526,7 +530,8 @@ public class Body {
         if(!added)parts.add(p);//parts[parts.size()] = p;
         
         //go through the equipment and see if any of it should be covering/equiped on the new part
-        if(!(p.covered_by.get(0) != null || p.equip.get(0) != null)){
+        //made equivalent evalution below
+        if(p.covered_by.size()==0 && p.equip.size()==0){//if(!(p.covered_by.get(0) != null || p.equip.get(0) != null)){
             i = 0;
             for(i=0;i<equip_array.size();i++){
                 temp_e = (Equipment)equip_array.get(i);
@@ -989,9 +994,9 @@ public class Body {
         int i = 0;
         for(i=0;i<parts.size();i++){
             int count = 0;
-            for(count=0;count<parts.get(i).race.max_part.length;count++){
-                if(parts.get(i).race.max_part[count] == parts.get(i).part_id && parts.get(i).race.stat_max_id[count] == stat_id && parts.get(i).get_stat(null, stat_id,0).doubleValue() > -1){
-                    ret = ret.doubleValue() + parts.get(i).race.stat_max[count].doubleValue();//ret += parts.get(i).race.stat_max[count].doubleValue()
+            for(count=0;count<parts.get(i).race.max_part.size();count++){
+                if(parts.get(i).race.max_part.get(count) == parts.get(i).part_id && parts.get(i).race.stat_max_id.get(count) == stat_id && parts.get(i).get_stat(null, stat_id,0).doubleValue() > -1){
+                    ret = ret.doubleValue() + parts.get(i).race.stat_max.get(count).doubleValue();//ret += parts.get(i).race.stat_max[count].doubleValue()
                 }
             }
         }
@@ -1410,40 +1415,42 @@ public class Body {
         
         return return_sprite;
     }
-    
-    public function sanitize(s:String, c:Character, c_self:Character):String{
+    */
+    public String sanitize(String s, Character c, Character c_self){
         String ret = s;
         int i = 0;
         for(i=0;i<parts.size();i++){
-            var part_count:int = part_count_by_id(parts.get(i).get_part_id());
+            int part_count = part_count_by_id(parts.get(i).get_part_id());
             
             while(ret.indexOf("</pd"+parts.get(i).get_part_id()+">") >= 0){
-                if(part_count > 1)trace("(Body.sanitize)Should be outputing multiple descriptions... just giving the first one for now. ");
+                if(part_count > 1)LOGGER.info("(Body.sanitize)Should be outputing multiple descriptions... just giving the first one for now. ");
                 ret = ret.replace("</pd"+parts.get(i).get_part_id()+">", parts.get(i).appearance(0,c));
             }
             while(ret.indexOf("</p"+parts.get(i).get_part_id()+"rn>") >= 0){
-                if(part_count > 1)trace("(Body.sanitize)Should be outputing multiple descriptions... just giving the first one for now. ");
-                ret = ret.replace("</p"+parts.get(i).get_part_id()+"rn>", parts.get(i).race.get_name());
+                if(part_count > 1)LOGGER.info("(Body.sanitize)Should be outputing multiple descriptions... just giving the first one for now. ");
+                ret = ret.replace("</p"+parts.get(i).get_part_id()+"rn>", parts.get(i).race.getName());
             }
             
-            var j:int = 0;
-            for(j;j<parts.get(i).stat_id.length;j++){
-                while(ret.indexOf("</sd"+parts.get(i).stat_id[j]+">") >= 0){
+            int j = 0;
+            for(j=0;j<parts.get(i).stat_id.size();j++){
+                while(ret.indexOf("</sd"+parts.get(i).stat_id.get(j)+">") >= 0){
                     //should be checking if this stat is shared across multiple parts... just getting the total
-                    ret = ret.replace("</sd"+parts.get(i).stat_id[j]+">", parts.get(i).stat_description[j].get_short_description(c_self.get_stat(parts.get(i).stat_id[j])));
+                    ret = ret.replace("</sd"+parts.get(i).stat_id.get(j)+">", parts.get(i).stat_description.get(j).get_short_description(c_self.get_stat(parts.get(i).stat_id.get(j)).doubleValue()));
                 }
             }
             
             j = 0;
-            for(j;j<parts.get(i).stat_id.length;j++){
-                while(ret.indexOf("</s"+parts.get(i).stat_id[j]+">") >= 0){
+            for(j=0;j<parts.get(i).stat_id.size();j++){
+                while(ret.indexOf("</s"+parts.get(i).stat_id.get(j)+">") >= 0){
                     //should be checking if this stat is shared across multiple parts... just getting the total
-                    ret = ret.replace("</s"+parts.get(i).stat_id[j]+">", String(c_self.get_stat(parts.get(i).stat_id[j]).toFixed(parts.get(i).stat_description[j].show_decimals)));
+                    //ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">", String(c_self.get_stat(parts.get(i).stat_id.get(j)).toFixed(parts.get(i).stat_description.get(j).show_decimals)));
+                    //TODO toFixed
                 }
             }
         }
-        
-        var myPattern:RegExp = /(<\/2pd[0-9]*>)/g;
+        /*TODO RegEx
+        Pattern myPattern = Pattern.compile("(<\/2pd[0-9]*>)");
+        //var myPattern:RegExp = /(<\/2pd[0-9]*>)/g;
         ret = ret.replace(myPattern, target_change);
         myPattern = /(<\/2p[0-9]*rn>)/g;
         ret = ret.replace(myPattern, target_change);
@@ -1451,13 +1458,15 @@ public class Body {
         ret = ret.replace(myPattern, target_change);
         myPattern = /(<\/2sd[0-9]*>)/g;
         ret = ret.replace(myPattern, target_change);
-        function target_change():String {
-            return arguments[0].substr(0,2).concat(arguments[0].substr(3,arguments[0].length));
-        }
+        */
         
         return ret;
     }
-    
+    /*TODO For above
+    private String target_change(){
+        return arguments[0].substr(0,2).concat(arguments[0].substr(3,arguments.get(0).length));
+    }*/
+    /*
     public function clone(b:Body, c:Character):void{
         int i = 0;
         for (i;i<b.parts.size();i++){

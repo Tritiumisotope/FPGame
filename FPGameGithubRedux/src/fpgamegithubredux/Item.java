@@ -150,9 +150,6 @@ public class Item {
             effects[type] += multiplier;
         }			
         */
-        System.out.println("test");
-        System.out.println(effects==null);
-        System.out.println(type);
         while(effects.size()<=type){//TODO oh fuck...null-fill!
             this.effects.add(null);
         }
@@ -174,7 +171,7 @@ public class Item {
         int i = 0;
         String useDesc= getUseDescription();
         for (i=0;i<effects.size();i++){//.length
-            //if (effects[i] != null) useDesc+= "\n" + user.apply_affect_by_id(i,effects[i], 0, null, Body.change_stats_total);
+            if (effects.get(i) != null) useDesc+= "\n" + user.apply_affect_by_id(i,effects.get(i), 0, null, Body.change_stats_total);
         }
         for (i=0;i<changeEffects.size();i++){//.length
             if (changeEffects.get(i) != null){//[]
@@ -196,9 +193,9 @@ public class Item {
         
         if(statActionAdd.size() > 0){//.length
             for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){//.length
-                //user.addStatAction(statActionAdd[i*2], statActionAdd[i*2+1]);
-                //user.addStatAction(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
-                //Character TODO
+                //user.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1))
+                user.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
+                //homemade classes...YES
             }
         }
         if(numUses > 0)numUses--;
@@ -555,7 +552,10 @@ public class Item {
     public String getDroppedDescription(){
         return droppedDescription;
     }
-    public String tick(Room currentRoom, Character character){
+    public String tick(Room currentRoom){
+        return tick(currentRoom,null);
+    }
+    public String tick(Room currentRoom, Character character){//def character= null
         String desc = "";
         tickCount++;
         int spread = (int)Math.round(Math.random());

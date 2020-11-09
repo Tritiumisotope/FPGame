@@ -50,12 +50,12 @@ public class Sex extends DynamicObject {
     public void set_default_orient(Trait[] attract,Trait[] disgust){
         ArrayList<Trait> dia1 = new ArrayList<>();
         Trait[] first = attract;
-        for(int i=0;1<first.length;i++){
+        for(int i=0;i<first.length;i++){
         dia1.add(first[i]);
         }
         ArrayList<Trait> dia2 = new ArrayList<>();
         Trait[] second = disgust;
-        for(int i=0;1<second.length;i++){
+        for(int i=0;i<second.length;i++){
         dia2.add(second[i]);
         }
         default_orient.set(0,dia1);
@@ -203,7 +203,9 @@ public class Sex extends DynamicObject {
     }
     
     public void set_bonus(int k, Number i){//i was Number
-
+        while(bonus.size()<=k){//TODO beat null_fill
+            bonus.add(null);
+        }
         bonus.set(k,i);//bonus[k] = i
         //TODO verify in bounds?
     }
@@ -213,7 +215,7 @@ public class Sex extends DynamicObject {
     public void apply_bonuses(Character c, Boolean delay_effect){//default false
         int i= 0;
         for(i=0;i<bonus.size();i++){
-            if (bonus.get(i)!=(Number)0){//TODO check if this needs to be an ArrayList
+            if (bonus.get(i)!=(Number)0&&bonus.get(i)!=null){//TODO check if this needs to be an ArrayList, and if added null makes sense
                 if(delay_effect){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);
@@ -228,6 +230,9 @@ public class Sex extends DynamicObject {
                     
                     c.apply_TickEffect(tf);
                 }else{
+                    while(i >=bonus.size()){
+                        bonus.add(null);
+                    }
                     c.apply_affect_by_id(i,bonus.get(i),0,null,Body.change_stats_total);					
                 }
             }
@@ -240,7 +245,7 @@ public class Sex extends DynamicObject {
     public void reverse_bonuses(Character c, Boolean delay_effect){//default false
         int i = 0;
         for(i=0;i<bonus.size();i++){
-            if (bonus.get(i) != (Number)0){//TODO check if need arraylist
+            if (bonus.get(i) != (Number)0 && bonus.get(i) != null){//TODO check if need arraylist
                 if(delay_effect){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);

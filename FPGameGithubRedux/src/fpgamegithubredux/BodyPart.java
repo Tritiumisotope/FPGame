@@ -60,7 +60,7 @@ public class BodyPart extends DynamicObject {
     
     protected Boolean mirror_display;
     
-    public void Body_part(){
+    public BodyPart(){
         name = "";
         pair_name = "";
         description = "";
@@ -154,15 +154,21 @@ public class BodyPart extends DynamicObject {
     }
     
     public void new_connect_slot(int slot_id){
-        can_connect_to.add(slot_id);//can_connect_to[can_connect_to.size()] = slot_id;
+        can_connect_to.add(slot_id);//can_connect_to[can_connect_to.size()] = slot_id
     }
     public Boolean connect_to_part(BodyPart bp){
-        return connect_to_part(bp,null,null);
+        return connect_to_part(bp,false,false);
     }
     public Boolean connect_to_part(BodyPart bp, Boolean good_on_my_end,Boolean force_connect){//default false, false
         Boolean ret = false;
         if(bp == this)return ret;
         for(int i=0;i<can_connect_to.size();i++){
+            while(connected_to.size()<=i){
+                connected_to.add(null);
+            }
+            while(can_connect_to.size()<=i){//TODO these null fills
+                can_connect_to.add(null);
+            }
             if(bp.get_part_id() == can_connect_to.get(i) && (connected_to.get(i) == null || force_connect)){//[]
                 if(good_on_my_end){
                     ret = true;
@@ -488,8 +494,8 @@ public String appearance(int i, Character c){//default 0, null
         //remove the racial stats if we already had a race
         if(race != null){
              int i = 0;
-            for(i=0;i<race.stats.length;i++){
-                remove_stat(race.stats[i].get_id());
+            for(i=0;i<race.stats.size();i++){
+                remove_stat(race.stats.get(i).get_id());
             }
         }
         
@@ -497,9 +503,9 @@ public String appearance(int i, Character c){//default 0, null
         if(race == null) return;
         //add the new racial stats (if there are any)
         int i = 0;
-        for(i=0;i<race.stats.length;i++){
-            Stat c_stat = new Stat(race.stats[i].get_id());
-            c_stat.statCopy(race.stats[i]);
+        for(i=0;i<race.stats.size();i++){
+            Stat c_stat = new Stat(race.stats.get(i).get_id());
+            c_stat.statCopy(race.stats.get(i));
             new_stat(c_stat.get_id(),c_stat);			
         }
     }
@@ -510,10 +516,10 @@ public String appearance(int i, Character c){//default 0, null
     public void new_stat(int id, Stat s, Number c){//default c = 0
         if(race != null){
             int count = 0;
-            for(count=0;count<race.max_part.length;count++){
-                if(race.max_part[count] == part_id && race.stat_max_id[count] == id){
-                    if(c.doubleValue() > race.stat_max[count].doubleValue()){
-                        c = race.stat_max[count];
+            for(count=0;count<race.max_part.size();count++){
+                if(race.max_part.get(count) == part_id && race.stat_max_id.get(count) == id){
+                    if(c.doubleValue() > race.stat_max.get(count).doubleValue()){
+                        c = race.stat_max.get(count);
                         break;
                     }
                 }
@@ -620,7 +626,7 @@ public String appearance(int i, Character c){//default 0, null
                      int j = 0;
                      int parts_count = 0;
                      
-                    if(stat_description.get(i).stat_desc_ttl_part_limit.length > 0){
+                    if(stat_description.get(i).stat_desc_ttl_part_limit.size() > 0){
                          Boolean show_desc = false;
                          Number stat_total = 0;
                         for (j=0;j<c.body.parts.size();j++){
@@ -632,15 +638,15 @@ public String appearance(int i, Character c){//default 0, null
                                     show_desc = true;
                                     stat_total = stat_total.doubleValue() + part_check;//stat_total += part_check
                                     stat_total = stat_total.doubleValue() + part_check;
-                                    for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.length;k++){
-                                        if(stat_description.get(i).stat_desc_ttl_part_limit[k] == part_id){
+                                    for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.size();k++){
+                                        if(stat_description.get(i).stat_desc_ttl_part_limit.get(k) == part_id){
                                             found_array.set(k,part_check);//found_array[k] = part_check
                                             break;
                                         }
                                     }
                                 }else if(show_desc){
-                                    for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.length;k++){
-                                        if(stat_description.get(i).stat_desc_ttl_part_limit[k] == p.part_id){
+                                    for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.size();k++){
+                                        if(stat_description.get(i).stat_desc_ttl_part_limit.get(k) == p.part_id){
                                             if(found_array.get(k) != null && found_array.get(k) < part_check){
                                                 //stat_total -= found_array.get(k);
                                                 stat_total = stat_total.doubleValue() - found_array.get(k);
@@ -655,7 +661,7 @@ public String appearance(int i, Character c){//default 0, null
                                             break;
                                         }
                                     }
-                                    if(k<stat_description.get(i).stat_desc_ttl_part_limit.length)stat_total = stat_total.doubleValue() + part_check;
+                                    if(k<stat_description.get(i).stat_desc_ttl_part_limit.size())stat_total = stat_total.doubleValue() + part_check;
                                 }else if(parts_count > 0){
                                     break;
                                 }
@@ -717,10 +723,10 @@ public String appearance(int i, Character c){//default 0, null
             if(i == stat_id.get(j)){
                 if(race != null && temp == 0){
                     int count = 0;
-                    for(count = 0;count<race.max_part.length;count++){
-                        if(race.max_part[count] == part_id && race.stat_max_id[count] == i){
-                            if(stat_description.get(j).statValue.intValue() + k.intValue() > race.stat_max[count].intValue()){
-                                k = race.stat_max[count].intValue() - stat_description.get(j).statValue.intValue();
+                    for(count = 0;count<race.max_part.size();count++){
+                        if(race.max_part.get(count) == part_id && race.stat_max_id.get(count) == i){
+                            if(stat_description.get(j).statValue.intValue() + k.intValue() > race.stat_max.get(count).intValue()){
+                                k = race.stat_max.get(count).intValue() - stat_description.get(j).statValue.intValue();
                                 break;
                             }
                         }
@@ -862,10 +868,10 @@ public String appearance(int i, Character c){//default 0, null
                 stat_description.get(i).statValue.doubleValue()/2;
                 if(race != null){
                     int count = 0;
-                    for(count=0;count<race.max_part.length;count++){
-                        if(race.max_part[count] == part_id && race.stat_max_id[count] == stat_description.get(i).get_id()){
-                            if(new_val.doubleValue() > race.stat_max[count].doubleValue()){
-                                new_val = race.stat_max[count];
+                    for(count=0;count<race.max_part.size();count++){
+                        if(race.max_part.get(count) == part_id && race.stat_max_id.get(count) == stat_description.get(i).get_id()){
+                            if(new_val.doubleValue() > race.stat_max.get(count).doubleValue()){
+                                new_val = race.stat_max.get(count);
                                 break;
                             }
                         }

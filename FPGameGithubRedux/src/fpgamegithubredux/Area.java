@@ -53,7 +53,7 @@ public class Area extends StaticObject{
         legend = new ArrayList<>();//new Array()
         legendFloor = new ArrayList<>();//legend_floor = null;//new Array()
         connectRooms = new ArrayList<>();//new Array()
-        //world = null
+        world = null;
         playerDiscovered = false;
         mapColor = new Color(255,255,255);
         tempOffset = new int[3];//temp_offset = null;//new Array()
@@ -68,12 +68,12 @@ public class Area extends StaticObject{
         spawnCreatures = new ArrayList<>();//new Array()
         npcSpawnThreshold = -1;
         
-        //weathers = null;//new Array()
+        weathers = new ArrayList<>();//weathers = null;//new Array()
         current_weather = 0;
         current_weather_length = 0;
         totalActionsTaken = FPGameGithub.T1_DAY/4 - 1;
         
-        //conversations = null;//new Array()
+        conversations = new ArrayList<>();//conversations = null;//new Array()
         
         backgroundImageID = -1;
         moveTimeMod = 1;
@@ -201,11 +201,11 @@ public class Area extends StaticObject{
             //rooms[0] = null;//new Array()
             //rooms[0][0] = null;//new Array()
             //rooms[0][0][0] = r
-            ArrayList<Room> oneDRoom = new ArrayList<Room>();
+            ArrayList<Room> oneDRoom = new ArrayList<>();
             oneDRoom.add(r);
-            ArrayList<ArrayList<Room>> twoDRoom = new ArrayList<ArrayList<Room>>();
+            ArrayList<ArrayList<Room>> twoDRoom = new ArrayList<>();
             twoDRoom.add(oneDRoom);
-            rooms = new ArrayList<ArrayList<ArrayList<Room>>>();
+            rooms = new ArrayList<>();
             rooms.add(twoDRoom);//TODO figure out if this stupid shit works
             if(r.exits.size() > 0){
                 
@@ -396,7 +396,7 @@ public class Area extends StaticObject{
                 for(x=0;x<rooms.size();x++){//.length
                     if(rooms.get(x) != null){ //[]
                         for(int y=0;y<rooms.get(x).size();y++){
-                            if(rooms.get(x).get(y) != null)rooms.get(x).get(y).add(0,null);//if(rooms.get(x).get(y) != null)rooms.get(x].get(y).unshift(null)//TODO learn unshift
+                            if(rooms.get(x).get(y) != null)rooms.get(x).get(y).add(0,null);//if(rooms.get(x).get(y) != null)rooms.get(x].get(y).unshift(null)
                             //from https://stackoverflow.com/questions/8452672/java-howto-arraylist-push-pop-shift-and-unshift
                             if(rooms.get(x).get(y) != null){
                                 rooms.get(x).get(y).add(0,null);
@@ -1793,7 +1793,7 @@ public class Area extends StaticObject{
         //s was "Custom Mark"
         String ret = "";
         
-        if(get_legend_id(s,find_room(c.location)[2])!="#"){
+        if(!get_legend_id(s,find_room(c.location)[2]).equals("#")){
             ret = "Custom marker created.";
             c.location.set_custom_name(s);
         }else{
@@ -2010,15 +2010,15 @@ public class Area extends StaticObject{
         return new Room();//room_list[room_num];//TODO
         
     }
-    public Room[] get_edge_rooms(){
+    public ArrayList<Room> get_edge_rooms(){
         return get_edge_rooms(0);
     }
-    public Room[] get_edge_rooms(int indent){
+    public ArrayList<Room> get_edge_rooms(int indent){
         return get_edge_rooms(0, false);
     }
-    public Room[] get_edge_rooms(int indent, Boolean skip_area_check){
+    public ArrayList<Room> get_edge_rooms(int indent, Boolean skip_area_check){
         //default 0, false
-        Room[] list = null;//var list:Array = null//new Array()
+        ArrayList<Room> list = null;//var list:Array = null//new Array()
         int x = 0;
         int y = 0;
         int z = baseFloorZ;
@@ -2037,9 +2037,9 @@ public class Area extends StaticObject{
                         
                         if(rooms.get(x + temp).get(y).get(z) != null && (!rooms.get(x + temp).get(y).get(z).attached_to_other_area() || skip_area_check)){
                             if(rooms.get(x + temp).get(y).get(z).template != null){
-                                if(!rooms.get(x + temp).get(y).get(z).template.get_no_area_exit())list[list.length] = rooms.get(x + temp).get(y).get(z);
+                                if(!rooms.get(x + temp).get(y).get(z).template.get_no_area_exit())list.add(rooms.get(x + temp).get(y).get(z));//list[list.length] = rooms.get(x + temp).get(y).get(z)
                             }else{
-                                list[list.length] = rooms.get(x + temp).get(y).get(z);
+                                list.add(rooms.get(x + temp).get(y).get(z));//list[list.length] = rooms.get(x + temp).get(y).get(z)
                             }
                         }	
                         						
@@ -2050,9 +2050,9 @@ public class Area extends StaticObject{
                     
                     if(rooms.get(x).get(0 + indent).get(z) != null  && (!rooms.get(x).get(0 + indent).get(z).attached_to_other_area() || skip_area_check)){
                         if(rooms.get(x).get(0 + indent).get(z).template != null){
-                            if(!rooms.get(x).get(0 + indent).get(z).template.get_no_area_exit())list[list.length] = rooms.get(x).get(0 + indent).get(z);
+                            if(!rooms.get(x).get(0 + indent).get(z).template.get_no_area_exit())list.add(rooms.get(x).get(0 + indent).get(z));//list[list.length] = rooms.get(x).get(0 + indent).get(z)
                         }else{
-                            list[list.length] = rooms.get(x).get(0 + indent).get(z);
+                            list.add(rooms.get(x).get(0 + indent).get(z));//list[list.length] = rooms.get(x).get(0 + indent).get(z)
                         }  
                     }
                     
@@ -2061,9 +2061,9 @@ public class Area extends StaticObject{
                     
                     if(rooms.get(x).get(max_y - indent).get(z) != null && (!rooms.get(x).get(max_y - indent).get(z).attached_to_other_area() || skip_area_check)){
                         if(rooms.get(x).get(max_y - indent).get(z).template != null){
-                            if(!rooms.get(x).get(max_y - indent).get(z).template.get_no_area_exit())list[list.length] = rooms.get(x).get(max_y - indent).get(z);
+                            if(!rooms.get(x).get(max_y - indent).get(z).template.get_no_area_exit())list.add(rooms.get(x).get(max_y - indent).get(z));//list[list.length] = rooms.get(x).get(max_y - indent).get(z)
                         }else{
-                            list[list.length] = rooms.get(x).get(max_y - indent).get(z);
+                            list.add(rooms.get(x).get(max_y - indent).get(z));//list[list.length] = rooms.get(x).get(max_y - indent).get(z)
                         }
                     }
                     
@@ -2072,7 +2072,7 @@ public class Area extends StaticObject{
         }
         
         if(list == null){//was 0 in brackets
-            list = new Room[0];
+            list = new ArrayList<>();
             if(indent>0){
                 if(indent>1){
                     LOGGER.info("Area being naughty in get_edge_rooms...");
@@ -2090,12 +2090,12 @@ public class Area extends StaticObject{
     }
     public Room get_edge_room(Boolean skip_area_check){
         //was false
-        Room[] list = get_edge_rooms(0,skip_area_check);//var list:Array = get_edge_rooms(0,skip_area_check)
+        ArrayList<Room> list = get_edge_rooms(0,skip_area_check);//var list:Array = get_edge_rooms(0,skip_area_check)
         int room_num;
         
-        room_num = (int)Math.round(Math.random()*(list.length-1));
+        room_num = (int)Math.round(Math.random()*(list.size()-1));
         
-        if(list[room_num] != null)return list[room_num];
+        if(list.get(room_num) != null)return list.get(room_num);
         LOGGER.info("(Area.get_edge_room)If you thought you were getting an edge room, you're probably wrong");
         return get_random_room();
     }
@@ -2145,58 +2145,64 @@ public class Area extends StaticObject{
         int i = 0;
         
         for(i=0;i<room_list.size();i++){
-            /*
+            ///*TODO combat manager
             if(room_list.get(i)!= null){
                 String tick_happenings = "";
                 //room_list[i].last_area_tick = totalActionsTaken;
-                if(room_list[i].cm != null){
-                    if(!room_list[i].cm.active_combat()){
-                        room_list[i].cm = null;
-                    }else if(room_list[i].cm.get_init(c) == -1){//see if the player is one of the participants... if not, have the fight proceed.
-                        var temp_cm:Combat_manager = room_list[i].cm;
-                        tick_happenings += temp_cm.fire_combat_round();
+                if(room_list.get(i).cm != null){
+                    /*
+                    if(!room_list.get(i).cm.active_combat()){
+                        room_list.get(i).cm = null;
+                    }else if(room_list.get(i).cm.get_init(c) == -1){//see if the player is one of the participants... if not, have the fight proceed.
+                        Combat_manager temp_cm = room_list.get(i).cm;
+                        //tick_happenings += temp_cm.fire_combat_round();
+                        //TODO
                     }
+                    */
                 }
-                if(room_list[i].contents != null){
+                if(room_list.get(i).contents != null){
                     q = 0;
-                    for(q;q<room_list[i].contents.length;q++){
-                        if (room_list[i].contents[q] is Character){
-                            var temp:Character;
-                            temp = room_list[i].contents[q];
+                    for(q=0;q<room_list.get(i).contents.size();q++){
+                        if (room_list.get(i).contents.get(q) instanceof Character){
+                            Character temp;
+                            temp = (Character)room_list.get(i).contents.get(q);
                             if(temp != c){
                                 npc_count++;
-                                var already_busy:Boolean = false;
-                                if(room_list[i].cm != null){
-                                    if(room_list[i].cm.get_init(temp) >= 0){
+                                Boolean already_busy = false;
+                                if(room_list.get(i).cm != null){
+                                    /*
+                                    if(room_list.get(i).cm.get_init(temp) >= 0){
                                         already_busy = true;
                                     }
+                                    */
                                 }
                                 if(!temp.ai_already_moved && !already_busy){
-                                    tick_happenings += temp.tick();
+                                    //tick_happenings += temp.tick();
+                                    //TODO
                                 }
                                 temp.ai_already_moved = !temp.ai_already_moved;//should only be doing this if moving into room[i+n]
                             }
                             
-                        }else if(room_list[i].contents[q] is Item){
-                            var temp_i:Item = room_list[i].contents[q];
-                            temp_i.tick(room_list[i]);
+                        }else if(room_list.get(i).contents.get(q) instanceof Item){
+                            Item temp_i = (Item)room_list.get(i).contents.get(q);
+                            temp_i.tick(room_list.get(i));
                         }
                     }
                     q = 0;
                     
-                    for(q=0;q<room_list[i].static_contents.length;q++){
-                        if(room_list[i].static_contents[q] is Container){
+                    for(q=0;q<room_list.get(i).static_contents.size();q++){
+                        if(room_list.get(i).static_contents.get(q) instanceof Container){
                             //need to clean up bodies
-                            //Container temp_cont = room_list[i].static_contents[q];
-                            if(totalActionsTaken%FPGameGithub.T1_DAY == 0 && temp_cont.name == "Body"){
+                            Container temp_cont = (Container)room_list.get(i).static_contents.get(q);
+                            if(totalActionsTaken%FPGameGithub.T1_DAY == 0 && temp_cont.name.equals("Body")){
                                 tick_happenings += "A body deteriorates into the ground.\n";
                                 //doesn't drop gold, but that makes sense... whoever took the body took the gold
                                 int z = 0;
-                                //for(z=0;z<temp_cont.contents.length;z++){
-                                    //room_list[i].new_content(temp_cont.contents.get(z));
-                                //}
+                                for(z=0;z<temp_cont.contents.size();z++){
+                                    room_list.get(i).newContent(temp_cont.contents.get(z));
+                                }
                                 
-                                room_list[i].remove_static_contents(q);
+                                room_list.get(i).remove_static_contents(q);
                                 
                                 //only clean up the oldest one
                                 break;
@@ -2206,9 +2212,9 @@ public class Area extends StaticObject{
                     
                 }
                 
-                //room_list[i].set_last_tick(tick_happenings);
+                room_list.get(i).setLastTick(tick_happenings);
             }
-            */
+            
         }
         String npcCntOut = "(Area)Ticking area with NPC count: {}" + npc_count;
         LOGGER.info(npcCntOut);//was a LOGGER.info

@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 
 import java.util.ArrayList;
 //import java.util.Arrays
+import java.util.Arrays;
 
 public class FPalaceHelper{
         
@@ -4344,8 +4345,8 @@ public class FPalaceHelper{
 			st.setName("Height");
 			st.set_min(-2);
 			st.set_always_show();
-			int[] parts_to_show = {head_slot, torso_slot, hips_slot, legs_slot, feet_slot, barrel_slot};//was array with non curly 
-			st.set_stat_description_show(parts_to_show);//show this as a total in appearance instead of individually
+			Integer[] parts_to_show = {head_slot, torso_slot, hips_slot, legs_slot, feet_slot, barrel_slot};//was array with non curly 
+			st.set_stat_description_show(new ArrayList<Integer>(Arrays.asList(parts_to_show)));//show this as a total in appearance instead of individually
 			st.new_description("</pronoun> is only </"+FPalaceHelper.height_id+"> inches tall. \n\n",0);
 			st.new_description("</pronoun> is under 2' tall. ",12);
 			st.new_description("</pronoun> is under 3' tall. ",24);
@@ -4925,7 +4926,6 @@ public class FPalaceHelper{
         }
         public JLabel loadIMG(String i) {
             //String listingFolder = MainGUIPanel.class.getProtectionDomain().getCodeSource().getLocation().getPath()
-            //System.out.println(i)
             URL url = FPalaceHelper.class.getResource(i);//imageURL[unknown_img])
             ImageIcon ii = new ImageIcon(url); 
             return new JLabel(ii);

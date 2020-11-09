@@ -289,9 +289,9 @@ public class Personality {
 						//TODO
 						if(temp_rel.get_introduced()){
 							if(c_self.get_surname().equals("") || check_relationship(c, c_self) > Personality.friends){
-								//ret = c_self.get_name();
+								ret = c_self.getName();
 							}else{
-								//ret = c_self.get_name() + " " + c_self.get_surname();
+								ret = c_self.getName() + " " + c_self.get_surname();
 							}
 						}else{
 							ret = c_self.get_short_description(c);				

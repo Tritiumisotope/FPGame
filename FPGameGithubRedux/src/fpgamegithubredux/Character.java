@@ -84,7 +84,7 @@ public class Character extends DynamicObject {
         this("Jeff");
     }
     public Character(String newName){
-        setName(newName);
+        setName(set_surname(newName,true));
         //setSex(newSex)
         //sex = new Sex()
         possessions = new ArrayList<>();
@@ -126,11 +126,11 @@ public class Character extends DynamicObject {
 			
         new_stat(FPalaceHelper.weight_id, FPalaceHelper.stat_weight(), 0);
         new_stat(FPalaceHelper.max_weight_id, FPalaceHelper.stat_max_weight(), 0);
-        
+        */
         body = new Body();
         sex = new Sex();
-        cclass = new Array();
-        
+        cclass = new ArrayList<>();
+        /*
         skills = new Skill_set();
         
         challenge_output = "";
@@ -434,50 +434,90 @@ public class Character extends DynamicObject {
         return sex;
     }
     /*
-    public function fire_action(i:int, k:int, j:String = null):String{
-        var ret:String = "";
+        //Dummy test version
+        public String fireAction(int contendID, int actionID){
+            String ret = "";
+            if(location != null){
+                CharAction tempAction;
+                if(contendID < 0){
+                    tempAction = location.getAction(actionID);
+                    ret = sanitize(tempAction.trigger(this));
+                }else{
+                    Character tempChar = (Character)location.getContent(contendID);
+                    tempAction = tempChar.getAllOverworldActions().get(actionID);
+                    ret = sanitize(tempAction.trigger(this));
+                }
+            }
+    
+            return sanitize(ret);
+        }
+    */
+    
+    public String fireAction(int i, int k){
+        return fireAction(i,k,null);
+    }
+    public String fireAction(int i, int k, String j){//def null
+        System.out.println("New old fire_action");
+        System.out.println("Player/Caller name is: " + this.name);
+        String ret = "";
         if(location == null) return ret;
-        var temp_action:Action;
+        CharAction temp_action = new CharAction();
         if (i < 0){
             if(i == -1){
-                temp_action = location.get_action(k);//location.actions[k];
+                temp_action = location.getAction(k);//location.actions[k];
                 ret = sanitize(temp_action.trigger(this), null);
             }else{
-                temp_action = location.static_contents[-i-2].get_action(k,location);
+                System.out.println("Temporary removal, problem?");
+                //temp_action = location.static_contents.get(-i-2).get_action(k,location);
+                //TODO it was written like this in original but static objects dont have a get_action?!
                 ret = sanitize(temp_action.trigger(this), null);
             }
         }else{
-            if(location.contents[i] != null && location.contents[i] is Character){
-                temp_action = location.contents[i].get_action(k);
+            if(location.contents.get(i) != null && location.contents.get(i) instanceof Character){
+                temp_action = ((Character)location.contents.get(i)).get_action(k);
                 if(temp_action != null){
                     if(temp_action.get_bury()){
-                        location.remove_static_contents(int(j));
+                        location.remove_static_contents(Integer.parseInt((j)));
                         j = null;
                     }
                         
                     if(j!=null){
-                        if(int(j) == -1 && party != null){
+                        if(Integer.parseInt(j) == -1 && party != null){
                             ret = "choose target:\n";
-                            var member_count:int = 0;
-                            for(member_count;member_count<party.members.length;member_count++){
+                            int member_count = 0;
+                            for(member_count=0;member_count<party.members.size();member_count++){
                                  if(temp_action.auto_trigger_id > -1){
-                                    ret += "<a href=\"event:challenge,"+ String(i) +","+ String(k) +"," + temp_action.auto_trigger_id +"," + location.get_content_id(party.members[member_count]) + "\"><font color='#0000FF'>"+party.members[member_count].get_name() +"</font></a>    ";
+                                    ret += "<a href=\"event:challenge,"+ Integer.toString(i) +","+ Integer.toString(k) +"," + temp_action.auto_trigger_id +"," + location.getContentID(party.members.get(member_count)) + "\"><font color='#0000FF'>"+party.members.get(member_count).getName() +"</font></a>    ";
                                  }else{
-                                     ret += "<a href=\"event:action," + String(i) + "," + String(k) + ","+location.get_content_id(party.members[member_count])+"\"><font color='#0000FF'>"+party.members[member_count].get_name() +"</font></a>    "; 
+                                     ret += "<a href=\"event:action," + Integer.toString(i) + "," + Integer.toString(k) + ","+location.getContentID(party.members.get(member_count))+"\"><font color='#0000FF'>"+party.members.get(member_count).getName() +"</font></a>    "; 
                                  }
                             }
                         }else{
-                            ret = (location.get_content(int(j)) as Character).sanitize(temp_action.trigger(location.get_content(int(j)) as Character),this);
+                            ret = ((Character)location.getContent(Integer.parseInt(j)) ).sanitize(temp_action.trigger((Character)location.getContent(Integer.parseInt(j))),this);
                         }
                     }else{
+                        System.out.println("fire action j is null return: "+ret);
+
                         ret = sanitize(temp_action.trigger(this), null);
                     }
                 }
             }
         }
+        LOGGER.info("FireAction return: " + ret);
+        LOGGER.info("Which, sanitized, is: " + sanitize(ret));
         return sanitize(ret);
     }
-    
+        
+    //dummy
+    public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
+        System.out.println("Dummy fire challenge called!");
+        String ret = "";
+            if(contentID<0){
+                ret = location.fireChallenge(actionID, challengeID, this);//TODO THIS?!
+            }
+        return ret;
+    }
+    /*
     public function fire_challenge(i:int, k:int, j:int, l:String = null, m:Array = null):String{
         var ret:String = "";
         if (i == -1){	
@@ -569,8 +609,8 @@ public class Character extends DynamicObject {
         return agg;
     }
     */
-    public ArrayList<Object> get_all_overworld_actions(){
-        ArrayList<Object> ret = new ArrayList<>();
+    public ArrayList<CharAction> get_all_overworld_actions(){
+        ArrayList<CharAction> ret = new ArrayList<>();
         ret.addAll(actions);//ret = ret.concat(actions)
         ret.addAll(skills.get_skill_actions(this));//ret = ret.concat(skills.get_skill_actions(this))
         ret.addAll(body.get_actions_array(this));//ret = ret.concat(body.get_actions_array(this))
@@ -742,43 +782,7 @@ public class Character extends DynamicObject {
          return sanitize(s, c);
     }
     
-    public function sanitize(s:String, c:Character = null):String{
-        s = body.sanitize(s, c, this);
-        
-        var sex_to_use:Sex = sex;
-        if(c != null){
-            sex_to_use = c.determine_sex(this);
-        }
-        
-        while(s.indexOf("</noun>") >= 0){
-             s = s.replace("</noun>",sex_to_use.get_noun());
-         }
-         while(s.indexOf("</pronoun>") >= 0){
-             s = s.replace("</pronoun>",sex_to_use.get_pronoun());
-         }
-         
-         while(s.indexOf("</objnoun>") >= 0){
-             s = s.replace("</objnoun>",sex_to_use.get_objnoun());
-         }
-         
-         s = replace_name(s, c);
-         
-         while(s.indexOf("</n2>") >= 0){
-             s = s.replace("</n2>","</n>");
-         }
-         while(s.indexOf("</noun2>") >= 0){
-             s = s.replace("</noun2>","</noun>");
-         }
-         while(s.indexOf("</pronoun2>") >= 0){
-             s = s.replace("</pronoun2>","</pronoun>");
-         }
-         
-         while(s.indexOf("</objnoun2>") >= 0){
-             s = s.replace("</objnoun2>","</objnoun>");
-         }
-         
-         return s;
-    }
+
     */
     public void add_action(CharAction a){	
         int i= 0;
@@ -793,23 +797,21 @@ public class Character extends DynamicObject {
         actions.add(a); //actions[actions.length] = a
         a.set_originator(this);
     }
-    /*
-    public function add_stat_action(id:int, a:Action):void{
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat_id[i] == id)stat[i].add_stat_action(a);
+    
+    public void add_stat_action(int id,CharAction a){
+        for(int i=0;i<stats.size();i++){
+            if(statID.get(i) == id)stats.get(i).new_stat_action(a);//TODO add_stat_action didn't ever exist?!
         }
         body.add_stat_action(id, a);
     }
     
-    public function remove_stat_action(id:int, a:Action):void{
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat_id[i] == id)stat[i].remove_stat_action(a);
+    public void remove_stat_action(int id,CharAction a){
+        for(int i = 0;i<stats.size();i++){
+            if(statID.get(i) == id)stats.get(i).remove_stat_action(a);
         }
         body.remove_stat_action(id, a);
     }
-    */
+    
     public ArrayList<Object> get_stat_actions(int id){
         ArrayList<Object> ret = new ArrayList<>();
         int i = 0;
@@ -964,11 +966,19 @@ public class Character extends DynamicObject {
 			}
 			return ret;
         }
-        public function new_location(r:Room, skip_check:Boolean = false, is_player:Boolean = false, ignore_party:Boolean = false):String{
-			var ret:String = "";
-			var init_r:Room = null;
+        */
+        public String new_location(Room r,Boolean skip_check){
+            return new_location(r, skip_check,false, false);
+        }
+        public String new_location(Room r,Boolean skip_check,Boolean is_player){
+            return new_location(r, skip_check, is_player,false);
+        }
+        public String new_location(Room r,Boolean skip_check,Boolean is_player,Boolean ignore_party){
+            //def false, false, false
+            String ret = "";
+		    Room init_r = null;
 			if(location == null)skip_check = true;
-			var move_flag:Boolean = true;
+			Boolean move_flag = true;
 			if(this.party != null){
 				if(this.party.get_leader() != this){
 					if(party.get_leader().location == location || party.get_leader().location == r){
@@ -980,37 +990,37 @@ public class Character extends DynamicObject {
 			
 			if(move_flag){
 				if(location != null){
-					location.remove_content(this);
+					location.removeContent(this);
 					init_r = location;
 				}
 				location = r;
 				if(r != null){
-					r.new_content(this,init_r);
+					r.newContent(this,init_r);
 					if(location.area != null){
-						if((init_r != null && location.area != init_r.area) || init_r == null)personality.advance_objectives(Quest.area_action, [location.area.id], this);
+						if((init_r != null && location.area != init_r.area) || init_r == null)personality.advance_objectives(Quest.area_action,  new ArrayList<Object>(Arrays.asList(new int[]{location.area.id})), this);
 					}
-					personality.advance_objectives(Quest.room_action, [location], this);
+					personality.advance_objectives(Quest.room_action, new ArrayList<Object>(Arrays.asList(new Room[]{location})), this);
 				}
 				status = " is standing here";							
 			}
 			
 			if(this.party != null && !ignore_party){
 				if(this.party.get_leader() == this){
-					var k:int = 1;
+					int k = 1;
 					move_flag = true;
-					for(k;k<this.party.members.length;k++){
-						if(this.party.members[k].location == init_r){
-							ret += this.party.members[k].new_location(r, skip_check, is_player);
-							if(this.party.members[k].location != location){
+					for(k=1;k<this.party.members.size();k++){
+						if(this.party.members.get(k).location == init_r){
+							ret += this.party.members.get(k).new_location(r, skip_check, is_player);
+							if(this.party.members.get(k).location != location){
 								move_flag = false;
 							}
 						}
 					}
 					if(!move_flag){
 						k = 0;
-						for(k;k<this.party.members.length;k++){
-							if(this.party.members[k].location != init_r){
-								this.party.members[k].new_location(init_r, true, is_player, true);
+						for(k=0;k<this.party.members.size();k++){
+							if(this.party.members.get(k).location != init_r){
+								this.party.members.get(k).new_location(init_r, true, is_player, true);
 							}
 						}
 						ret += "the party stops.\n";
@@ -1019,7 +1029,7 @@ public class Character extends DynamicObject {
 			}
 			return ret;
 		}
-		
+		/*
 		public function go_to_new_location(i:int,is_player:int = 0,no_look:int = 0):String{	
 			var ret:String = "";
 			var look_flag:Boolean = true;
@@ -1308,6 +1318,7 @@ public class Character extends DynamicObject {
         String s = "";
         Boolean found = false;
         int count = 0;
+        
         if (k.intValue() == 0) i = -1;
         if(effect_type > -1){
             //replaced by belowk *= sex.get_damage_mod(effect_type)
@@ -1813,16 +1824,16 @@ public class Character extends DynamicObject {
     public String use_item(int inventoryID, int useCase, int j, int num_to_move){
         int party_id = 0;
         int count;
-        /*
+        
         if(party != null){
-            for(count=0;count<party.members.length;count++){
-                if(party.members[count] == this){
+            for(count=0;count<party.members.size();count++){
+                if(party.members.get(count) == this){
                     party_id = count;
                     break;
                 }
             }
         }
-        */
+        
         String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
         
         
@@ -1834,19 +1845,19 @@ public class Character extends DynamicObject {
         String item_desc = get_item_description(item);
         
         if(useCase == -1){
-            /*if(party != null){
-                if( item.getUseDescription() != ""){
+            if(party != null){
+                if(!item.getUseDescription().equals("")){
                     return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + inventoryID +",3,"+party_id+"\">give</a>?";
                 }else{
                     return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID+",1,"+party_id+"\">drop</a>, <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>, or <a href=\"event:use_item," + inventoryID +",3,"+party_id+"\">give</a>?";
                 }
-            }else{*/
-                if( item.getUseDescription() != ""){
+            }else{
+                if(!item.getUseDescription().equals("")){
                     return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",0,"+party_id+"\">use</a>, <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>?";
                 }else{
                     return item_desc + "<br>Would you like to <a href=\"event:use_item," + inventoryID +",1,"+party_id+"\">drop</a>, or <a href=\"event:use_item," + inventoryID +",2,"+party_id+"\">throw away</a>?";
                 }
-            //}
+            }
         }
         
         
@@ -1897,6 +1908,8 @@ public class Character extends DynamicObject {
                 }
                 			
             }
+            System.out.println("Use Case 0.");
+            System.out.println(ret);
             return ret;
         }else if(useCase == 1){
             if(found_num > 1 && num_to_move == -1){
@@ -1992,7 +2005,7 @@ public class Character extends DynamicObject {
         return "";
     }
 	/*	
-		public function add_to_possessions(i:Item):void{
+	public function add_to_possessions(i:Item):void{
 			if (i != null){
 				if (i.get_name().toLowerCase() == "gold"){
 					set_gold(i.get_value(null, null));
@@ -2003,6 +2016,20 @@ public class Character extends DynamicObject {
 			}
 		}
     *///same down to here, line 1857 in original
+    public void addToPossessions(Item newItem){
+        if(newItem != null){
+            LOGGER.info("valid item passed is:" + newItem.getDroppedDescription());
+            if(newItem.getDroppedDescription().equalsIgnoreCase("gold")){
+                gold += newItem.value;
+                if(gold < 0)gold = 0;
+            }else{
+                possessions.add(newItem);
+            }
+        }
+        String msg = possessions.get(possessions.size()-1).getDroppedDescription();
+        LOGGER.info(msg);
+    }
+    //TODO make sure these are equivalent
     public int get_gold(){
         return gold;
     }
@@ -2025,7 +2052,7 @@ public class Character extends DynamicObject {
     
     public String set_xp(int i){//was uint
         String s = "";
-        //s += get_name() + " gains " + i + " experience points.\n";
+        s += getName() + " gains " + i + " experience points.\n";
         xp += i;
         while(xp >= nxt_lvl_xp){
             s += level_up();
@@ -2163,47 +2190,9 @@ public class Character extends DynamicObject {
     public int get_skill_rank_by_id(int skill_id){//dummy
         return skills.get_skill_ranks(skill_id);
     }
-    //Dummy test version
-    public String fireAction(int contendID, int actionID){
-        String ret = "";
-        if(location != null){
-            CharAction tempAction;
-            if(contendID < 0){
-                tempAction = location.getAction(actionID);
-                ret = sanitize(tempAction.trigger(this));
-            }else{
-                Character tempChar = (Character)location.getContent(contendID);
-                tempAction = tempChar.getAllOverworldActions().get(actionID);
-                ret = sanitize(tempAction.trigger(this));
-            }
-        }
 
-        return ret;
-    }
-    //dummy
-    public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
-        String ret = "";
-            if(contentID<0){
-                ret = location.fireChallenge(actionID, challengeID, this);//TODO THIS?!
-            }
-        return ret;
-    }
 
-    public String inventory(){//dummy
-        String returnString = "";
-        if(possessions.isEmpty()){
-            returnString = "</n>\'s Inventory contains nothing.";
-        }else{
-            returnString = "</n>\'s Inventory contains: ";
-            for(Item o : possessions){
-                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getName()+ "</a>,";
-            }
-        }
 
-        if(returnString.charAt(returnString.length()-1) == ',')returnString = returnString.substring(0, returnString.length()-1);
-
-        return sanitize(returnString);
-    }
 
     public String pickUp(int contentID){//ignore
         String ret = "";
@@ -2213,7 +2202,6 @@ public class Character extends DynamicObject {
             addToPossessions(newItem);
             ret += sanitize("</n> got " + newItem.getName() + ".<br>") + look();
         }
-
         return ret;
     }
 
@@ -2229,12 +2217,87 @@ public class Character extends DynamicObject {
     public String showAllSkills(){//ignore
         return "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
     }
-
-    public String sanitize(String stringToSanitize){//dummy, ignore
-        return stringToSanitize.replace("</n>", name);
+    public String sanitize(String stringToSanitize){
+        return sanitize(stringToSanitize,null); //this instead of null?
     }
-
-
+    public String sanitize(String stringToSanitize, Character callCharacter){//dummy, ignore
+        Sex sex_to_use = sex;
+        System.out.println("Character sanitize called!");
+        System.out.println("Call Character: " + callCharacter);
+        System.out.println("Initial: " + stringToSanitize);
+        stringToSanitize = body.sanitize(stringToSanitize, callCharacter, this);
+        if(callCharacter != null){
+        sex_to_use = callCharacter.determine_sex(this);
+        }
+        while(stringToSanitize.indexOf("</noun>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</noun>",sex_to_use.get_noun());
+        }
+        while(stringToSanitize.indexOf("</pronoun>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</pronoun>",sex_to_use.get_pronoun());
+        }
+        
+        while(stringToSanitize.indexOf("</objnoun>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</objnoun>",sex_to_use.get_objnoun());
+        }
+        stringToSanitize = replace_name(stringToSanitize, callCharacter);
+        System.out.println();
+        System.out.println("replace_name result: " + stringToSanitize);
+        while(stringToSanitize.indexOf("</n2>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</n2>","</n>");
+        }
+        while(stringToSanitize.indexOf("</noun2>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</noun2>","</noun>");
+        }
+        while(stringToSanitize.indexOf("</pronoun2>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</pronoun2>","</pronoun>");
+        }
+        
+        while(stringToSanitize.indexOf("</objnoun2>") >= 0){
+            stringToSanitize = stringToSanitize.replace("</objnoun2>","</objnoun>");
+        }
+        
+        System.out.println("Return value from character sanitize: "+ stringToSanitize);
+        return stringToSanitize;
+    }
+    /*
+    public function sanitize(s:String, c:Character = null):String{
+        s = body.sanitize(s, c, this);
+        
+        var sex_to_use:Sex = sex;
+        if(c != null){
+            sex_to_use = c.determine_sex(this);
+        }
+        
+        while(s.indexOf("</noun>") >= 0){
+             s = s.replace("</noun>",sex_to_use.get_noun());
+         }
+         while(s.indexOf("</pronoun>") >= 0){
+             s = s.replace("</pronoun>",sex_to_use.get_pronoun());
+         }
+         
+         while(s.indexOf("</objnoun>") >= 0){
+             s = s.replace("</objnoun>",sex_to_use.get_objnoun());
+         }
+         
+         s = replace_name(s, c);
+         
+         while(s.indexOf("</n2>") >= 0){
+             s = s.replace("</n2>","</n>");
+         }
+         while(s.indexOf("</noun2>") >= 0){
+             s = s.replace("</noun2>","</noun>");
+         }
+         while(s.indexOf("</pronoun2>") >= 0){
+             s = s.replace("</pronoun2>","</pronoun>");
+         }
+         
+         while(s.indexOf("</objnoun2>") >= 0){
+             s = s.replace("</objnoun2>","</objnoun>");
+         }
+         
+         return s;
+    }
+    */
     
     public String getPersonalActions(){//ignore
         return "";
@@ -2248,20 +2311,7 @@ public class Character extends DynamicObject {
         return ret;
     }    
 
-    public void addToPossessions(Item newItem){//early dummy, ignore
-        if(newItem != null){
-            LOGGER.info("valid item passed is:" + newItem.getDroppedDescription());
-            if(newItem.getDroppedDescription().equalsIgnoreCase("gold")){
-                gold += newItem.value;
-                if(gold < 0)gold = 0;
-            }else{
-                possessions.add(newItem);
-            }
-        }
-        String msg = possessions.get(possessions.size()-1).getDroppedDescription();
-        LOGGER.info(msg);
-    }
-    //TODO remove demo version
+
     public String getStatus(){return getStatus(null);}
     public String getStatus(Character lookingCharacter){
         String ret = name;
@@ -2496,7 +2546,23 @@ public class Character extends DynamicObject {
         }
         return "";
     }
-    
+    */
+    public String inventory(){//dummy
+        String returnString = "";
+        System.out.println("In inventory");
+        if(possessions.isEmpty()){
+            returnString = "</n>\'s Inventory contains nothing.";
+        }else{
+            returnString = "</n>\'s Inventory contains: ";
+            for(Item o : possessions){
+                returnString += "<a href=\"event:use_item," + possessions.indexOf(o) +"\">" + o.getName()+ "</a>,";
+            }
+        }
+        if(returnString.charAt(returnString.length()-1) == ',')returnString = returnString.substring(0, returnString.length()-1);
+        System.out.println("Leaving inventory");
+        return sanitize(returnString);
+    }
+    /*
     public function inventory():String{
         var s:String = "";
         var party_id:int = 0;
@@ -2715,30 +2781,30 @@ public class Character extends DynamicObject {
         */
         return ret;
     }
-    /*
-    public function get_action(i:int):Action{
-        if(i< actions.length){
-            return actions[i];
+    
+    public CharAction get_action(int i){
+        if(i< actions.size()){
+            return actions.get(i);
         }else{
-            var temp_array:Array = get_all_overworld_actions();
-            var temp:Action = temp_array[i];
+            ArrayList<CharAction> temp_array = get_all_overworld_actions();
+            CharAction temp = temp_array.get(i);
             if(temp != null){
                 temp.set_originator(this);
                 temp.set_id(i);
             }else{
-                i = i - temp_array.length;
-                if(this.possessions[i] != null){
-                    if(this.possessions[i].change_effects[0] is Action){
-                        temp = this.possessions[i].change_effects[0];
-                        if(this.possessions[i].num_uses>0)this.possessions[i].num_uses--;
-                        if(this.possessions[i].num_uses==0)drop(i);
+                i = i - temp_array.size();
+                if(this.possessions.get(i) != null){
+                    if(this.possessions.get(i).changeEffects.get(0) instanceof CharAction){
+                        temp = (CharAction)this.possessions.get(i).changeEffects.get(0);
+                        if(this.possessions.get(i).numUses>0)this.possessions.get(i).numUses--;
+                        if(this.possessions.get(i).numUses==0)drop(i);
                     }
                 }
             }
             return temp;
         }
     }
-    
+    /*
     public function show_combat_options(o:Character):String{
         var s:String = "";
         var new_attack_id:int = 0;

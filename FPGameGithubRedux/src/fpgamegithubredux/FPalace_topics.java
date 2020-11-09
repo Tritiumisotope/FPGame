@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FPalace_topics {
 
@@ -22,8 +23,8 @@ public class FPalace_topics {
             
 			ct.set_no_mention();
 			/*
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			dia1.add(Character.relations_affect_id);
 			dia2.add(5);*///TODO holy fuck this is hacky
 			ct.add_dialog("You ask </n2> about the area you're in.", Character.relations_affect_id, 5,false, Conversation_topic.ask_topic);
@@ -74,16 +75,8 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "it's hard not to listen to </n2>, every word interesting. ",-1);
 			a.addChallenge(challenge,consequence);
 			
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.attraction_id};
-			for(int i : first){
-				dia1.add(first[i]);
-			}
-			int[] second = {5, 5};
-			for(int i : second){
-				dia2.add(second[i]);
-			}//TODO unhack this shit
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.attraction_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5, 5));
 			ct.add_action(a, dia1, dia2,false, Conversation_topic.ask_topic);
 			ct.add_action(a, dia1, dia2,false, Conversation_topic.telling_topic);
 			
@@ -120,11 +113,7 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> eats up your every word. ",0,0,0,-1,true);
 			a.addChallenge(challenge,consequence);
 			
-			ArrayList<Integer> dia3 = new ArrayList<>();
-			int[] third = {FPalaceHelper.int_id, Character.attraction_id};
-			for(int i: third){
-				dia3.add(third[i]);
-			}
+			ArrayList<Integer> dia3 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.attraction_id));
 			ct.add_action(a,dia3, dia2,Boolean.FALSE, Conversation_topic.being_told_topic);
 			//TODO make sure this will always be the same as the earlier two add_actions
 			return ct;
@@ -392,16 +381,8 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "",0,0,0,2);//ok, you can have a blow job
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> turns the situation around, forcing you down to </noun2> groin! ",-1,0,0,6);//HA! I want one and you ain't stoping me!
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = {5,20,20};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5,20,20));
 			ct.add_action(a,  dia1, dia2, false, Conversation_topic.ask_topic);
 			ct.add_action(a,  dia1, dia2, false, Conversation_topic.telling_topic);
 			
@@ -823,16 +804,8 @@ public class FPalace_topics {
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "\n\n</c6>\n</c10>\n",0,0,0,-1,true);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = {5, 25, 20};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5, 25, 20));
 			ct.add_action(a,  dia1, dia2, false, Conversation_topic.ask_topic);
 			ct.add_action(a, dia1, dia2, false, Conversation_topic.telling_topic);
 			
@@ -1229,16 +1202,8 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "You can't help but orgasm quickly. ",-1,0,0,-1);
 			consequence.addConsequence(FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "",-1,0,0,-1);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = {5, 30,40};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5, 30,40));
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			
@@ -1732,17 +1697,8 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "You find yourself climaxing quickly as your grind your lips against </n2>s. </n2> looks disappointed. ",-1,0,0,-1,true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "",0);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = {5, 50, 50};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
-			
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id, FPalaceHelper.lust_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5, 50, 50));
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			
@@ -1989,16 +1945,8 @@ public class FPalace_topics {
 			consequence.addConsequence(0,0, "",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
 			
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = new int[]{5, 0};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(5, 0));
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.ask_topic);
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.being_told_topic);
@@ -2057,16 +2005,8 @@ public class FPalace_topics {
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(q,1);
 			a.addChallenge(challenge,qconsequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
-			int[] first = {Character.relations_affect_id,FPalaceHelper.int_id};
-			for(int i : first){
-			dia1.add(first[i]);
-			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
-			int[] second = {0,5};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList(Character.relations_affect_id,FPalaceHelper.int_id));
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList(0,5));
 			ct.add_action(a, dia1, dia2, false, Conversation_topic.telling_topic);
 			ct.add_action(a, dia1, dia2, false, Conversation_topic.ask_topic);
 									
@@ -2116,11 +2056,7 @@ public class FPalace_topics {
 			qconsequence.set_change_on_success();
 			qconsequence.set_quest(q,1);
 			a.addChallenge(challenge,qconsequence);
-			dia2 = new ArrayList<>();
-			second = new int[]{25,0};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			dia2 = new ArrayList<>(Arrays.asList(25,0));
 			ct.add_action(a,dia1, dia2, false, Conversation_topic.ask_topic);
 			
 			//need a 'party leave' action
@@ -2148,20 +2084,9 @@ public class FPalace_topics {
 			consequence.addConsequence(Character.relations_affect_id,3, "</n2> appologizes profusely, explaining </pronoun2> doesn't entirely know either.",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-1, "</n2> laughs at you for not knowing.",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			dia1 = new ArrayList<>();
-			first = new int[] {Character.relations_affect_id};
-			for(int i : first){
-				dia1.add(first[i]);
-			}
-
-			dia2 = new ArrayList<>();
-			second = new int[] {-10};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			dia1 = new ArrayList<>(Arrays.asList(Character.relations_affect_id));
+			dia2 = new ArrayList<>(Arrays.asList(-10));
 			ct.add_action(a, dia1, dia2, true, Conversation_topic.ask_topic);
-			
-			
 			return ct;
 		}
 		
@@ -2200,12 +2125,12 @@ public class FPalace_topics {
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,0, "All of our previous excursions to the mainland have ended poorly. I can only hope they find the ring.",0);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2250,12 +2175,12 @@ public class FPalace_topics {
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.lust_id,0, "\"Why are we here? That's a secret.\" </pronoun2> says with a smile.",0);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2492,12 +2417,12 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,-50, "</n2> sends a tendril to your chest, and you can feel the goop flex throughout. It isn't long before you find yourself coming to a climax. ",0);
 			consequence.set_consume(-FPalaceHelper.milk_volume_id);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2526,12 +2451,12 @@ public class FPalace_topics {
 			consequence.addConsequence(Character.relations_affect_id,10, "</n2> tells you about the strange protestors outside the goo empress' palace. It's a very strange but intriguing story. ",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "It's almost impossible to believes </n2>s tale of protestors hacking people to pieces. ",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 5};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2632,12 +2557,12 @@ public class FPalace_topics {
 			iconsequence.addConsequence(Character.relations_affect_id, 1, "You greedily grab the gold, and both of you share a smile.",0,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(5),0);
 			a.addChallenge(challenge,iconsequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 15};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2780,12 +2705,12 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,5, "</n2> smiles as you ask, and you see </objnoun2> reach into </noun2> inventory. ",0,0,0,4,true);
 			consequence.addConsequence(0,0, "</n2> looks at you for a moment before shaking <noun2> head. \"I don't know anything about that.\" </pronoun2> says explicitly. ",-1);
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -2989,12 +2914,12 @@ public class FPalace_topics {
 			iconsequence.add_item_use(cola_item,0,false);
 			//iconsequence.add_item_use(cola_item,0,false);
 			a.addChallenge(challenge,iconsequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = {5,0};
 			for(int i : second){
 			dia1.add(second[i]);
@@ -3596,12 +3521,12 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "</n2>s smile becomes a grin as </pronoun2> motions to </noun2> groin. ",0);
 	
 			a.addChallenge(challenge,consequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 10};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -3686,12 +3611,12 @@ public class FPalace_topics {
 			consequence.addConsequence(FPalaceHelper.lust_id,10, "</n2> begins to massage your ass with </noun2> groin as </pronoun2> mounts you. ",-1);
 	
 			a.addChallenge(challenge,consequence);			
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, -1};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -3749,12 +3674,12 @@ public class FPalace_topics {
 			iconsequence.addConsequence(Character.relations_affect_id, -1, "</n2> appologizes as </pronoun2> points out you don't have enough. ",-1,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(-5),0);			
 			a.addChallenge(challenge,iconsequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);
@@ -3838,12 +3763,12 @@ public class FPalace_topics {
 			iconsequence.addConsequence(Character.relations_affect_id, -1, "</n2> appologizes as </pronoun2> points out you don't have enough. ",-1,0,0,-1, true);
 			iconsequence.add_item_reward(FPalace_items.gold(-5),0);			
 			a.addChallenge(challenge,iconsequence);
-			ArrayList<Integer> dia1 = new ArrayList<>();
+			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
 			dia1.add(first[i]);
 			}
-			ArrayList<Integer> dia2 = new ArrayList<>();
+			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
 			dia2.add(second[i]);

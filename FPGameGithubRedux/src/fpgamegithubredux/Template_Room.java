@@ -343,20 +343,19 @@ public class Template_Room extends StaticObject {
             if (Math.random() <= characters_chance.get(k).doubleValue() && characters.get(k) != null){
                 if(characters.get(k) instanceof Character_template){
                     clonech1 = characters.get(k).gen_char(level_adjust, r);
-                }else{
+                }else{//TODO what would these elses be?
                     //int rand_char = Math.round(Math.random()*(characters.get(k).size()-1));
                     //clonech1 = characters.get(k).get(rand_char).gen_char(level_adjust, r);
-                }//TODO array of arrays?
-                //clonech1.new_location(r, true);
-                //TODO
+                }//TODO array of arrays? is this still necessary whem characters are added sequentially?
+                clonech1.new_location(r, true);
                 family_array.add(clonech1);//family_array[family_array.length] = clonech1
             }
         }
         
         for(k=1;k<family_array.size();k++){//Looking for a male/female pair
             if(family_array.get(k).sex != family_array.get(0).sex){
-                //family_array.get(k).impregnate(family_array.get(0),true);
-                //family_array.get(0).impregnate(family_array.get(k),true);
+                family_array.get(k).impregnate(family_array.get(0),true);
+                family_array.get(0).impregnate(family_array.get(k),true);
                 family_array.get(k).surname = family_array.get(0).surname;
                 family_array.get(k).personality.new_relationship(family_array.get(0), family_array.get(k), Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
                 family_array.get(0).personality.new_relationship(family_array.get(k), family_array.get(0), Relationship.initial_reaction_change, Personality.true_love, Relationship.married_type);
@@ -370,16 +369,16 @@ public class Template_Room extends StaticObject {
                 parties.get(k).copyParty();
                 int i = 0;
                 /*TODO Array of arrays?
-                for(i=0;i<parties[k].length;i++){
+                for(i=0;i<parties[.get(k).length;i++){
                     clonech1 = parties[k][i].gen_char(level_adjust, r);
                     clone_pty.add_member(clonech1);
                     clonech1.set_party(clone_pty);
                 }
-                i = 0;
-                for(i;i<clone_pty.members.length;i++){
-                    clone_pty.members[i].new_location(r, true);
-                }
                 */
+                for(i=0;i<clone_pty.members.size();i++){
+                    clone_pty.members.get(i).new_location(r, true);
+                }
+                
             }
             
         }

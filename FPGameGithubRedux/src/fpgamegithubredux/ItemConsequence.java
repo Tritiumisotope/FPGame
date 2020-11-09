@@ -149,7 +149,6 @@ public class ItemConsequence extends Consequence {
             }
         }
         
-        i = 0;
         for(i=0;i<item_use.size();i++){
             if(c!= null && ((r.intValue() >= item_use_roll.get(i) && item_use_roll.get(i) >= 0) || (r.intValue() <= item_use_roll.get(i) && item_use_roll.get(i) < 0))){
                 //trace("(Item_Consequence.trigger)Should be using an item. ");
@@ -158,9 +157,9 @@ public class ItemConsequence extends Consequence {
                     for(k=0;k<c.possessions.size();k++){
                         if(c.possessions.get(k).name == item_use.get(i).name){
                             if(item_reward_target.get(i)){
-                                //ret += c.sanitize(c.possessions.get(k).useItem(c,k),c);							
+                                ret += c.sanitize(c.possessions.get(k).useItem(c,k),c);							
                             }else{
-                                //ret += c2.sanitize(c.possessions.get(k).useItem(c2,k),c);							
+                                ret += c2.sanitize(c.possessions.get(k).useItem(c2,k),c);							
                             }							
                             if(!c.possessions.get(k).stillUsable()) c.drop(k);
                             break;
@@ -170,9 +169,9 @@ public class ItemConsequence extends Consequence {
                     for(k=0;k<c2.possessions.size();k++){
                         if(c2.possessions.get(k).name == item_use.get(i).name){
                             if(item_reward_target.get(i)){
-                                //ret += c.sanitize(c2.possessions.get(k).useItem(c,k),c);							
+                                ret += c.sanitize(c2.possessions.get(k).useItem(c,k),c);							
                             }else{
-                                //ret += c2.sanitize(c2.possessions.get(k).useItem(c2,k),c);							
+                                ret += c2.sanitize(c2.possessions.get(k).useItem(c2,k),c);							
                             }							
                             if(!c2.possessions.get(k).stillUsable()) c2.drop(k);
                             break;
@@ -196,8 +195,7 @@ public class ItemConsequence extends Consequence {
         ret.statEffected = new ArrayList<>(this.statEffected);
         ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
         /*
-        int i = 0;
-        for(i=0;i<this.consequenceDescription.size();i++){
+        for(int i=0;i<this.consequenceDescription.size();i++){
             ret.consequenceDescription[i] = this.consequenceDescription[i];
         }
         */

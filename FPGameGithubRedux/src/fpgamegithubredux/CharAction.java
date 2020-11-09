@@ -53,9 +53,20 @@ public class CharAction {
 
     public CharAction(){
         name = "";
-        dialogue = "";
         challenges = new ArrayList<>();
+        dialogue = "";
+        status_change = "";
+        auto_trigger_id = -1;
         consequences = new ArrayList<>();
+        requirement = new ArrayList<>();
+        requirement_amount = new ArrayList<>();
+        requirement_remove = new ArrayList<>();
+        item_req = null;
+        blowback = -1;
+        blowback_amount = 0;
+        cclass_origin = "";
+        cclass_level = 0;
+        delayed_trigger = false;
     }
     public void set_consume_action(){
         consume_action = !consume_action;

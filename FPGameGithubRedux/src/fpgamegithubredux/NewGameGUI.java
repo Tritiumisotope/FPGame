@@ -88,10 +88,14 @@ public class NewGameGUI implements ActionListener {
                     if ("event:new_player,1".equals(result)) {
                         LOGGER.info("Male");
                         newPlayer.setSexDemo(0);
+                        newPlayer.set_sex(FPalaceHelper.sex_male());
+                        sex_flag = 1;
                         setName();
                     } else if ("event:new_player,2".equals(result)) {
                         LOGGER.info("Female");
                         newPlayer.setSexDemo(1);
+                        newPlayer.set_sex(FPalaceHelper.sex_female());
+                        sex_flag = 2;
                         setName();
                     } else {
                         String msg = "(newGameGui.java) got unexpected result: " + result;
@@ -295,8 +299,24 @@ public class NewGameGUI implements ActionListener {
     }
     private void afterName(){
         textField.removeHyperlinkListener(hlListen);
-        textField.setText("You are " + newPlayer.name+", a "+newPlayer.sex);
+        textField.setText("You are " + newPlayer.name+", a "+newPlayer.sex.name);
         //newPlayer = new Character(name, sex, fitness);
+
+        Race race = FPalace_races.race_human();
+
+        newPlayer.new_body_part(FPalaceHelper.new_hair(race,1/*hair length*/,hair_flag));
+        newPlayer.new_body_part(FPalaceHelper.new_head(race));
+        newPlayer.new_body_part(FPalaceHelper.new_eyes(race,(int)(eye_flag-9.9)));//TODO why double?!
+        newPlayer.new_body_part(FPalaceHelper.new_torso(race));
+        newPlayer.new_body_part(FPalaceHelper.new_left_arms(race));
+        newPlayer.new_body_part(FPalaceHelper.new_left_hands(race));
+        newPlayer.new_body_part(FPalaceHelper.new_right_arms(race));
+        newPlayer.new_body_part(FPalaceHelper.new_right_hands(race));
+        newPlayer.new_body_part(FPalaceHelper.new_hips(race));
+        newPlayer.new_body_part(FPalaceHelper.new_left_legs(race));
+        newPlayer.new_body_part(FPalaceHelper.new_left_feet(race));
+        newPlayer.new_body_part(FPalaceHelper.new_right_legs(race));
+        newPlayer.new_body_part(FPalaceHelper.new_right_feet(race));
         Room tempRoom = new Room();
 
         Item tempItem = new Item();

@@ -54,9 +54,9 @@ public class TickEffect {
         end_tick = -1;
         current_tick = 0;
         status_id = -1;
-        tick_count=null;
-        tick_consequence=null;
-        tick_challenge =null;
+        tick_count=new ArrayList<>();
+        tick_consequence=new ArrayList<>();
+        tick_challenge =new ArrayList<>();
     }
     
     public void set_end_consequence(Consequence c){

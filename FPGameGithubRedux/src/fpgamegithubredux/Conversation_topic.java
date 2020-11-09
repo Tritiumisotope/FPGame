@@ -47,7 +47,7 @@ public class Conversation_topic {
     }
     
     public void add_topic_reference_by_name(String ref_name){
-        ct_ref_names.set(ct_ref_names.size(),ref_name);//ct_ref_names[ct_ref_names.length] = ref_name
+        ct_ref_names.add(ref_name);//ct_ref_names.set(ct_ref_names.size(),ref_name);//ct_ref_names[ct_ref_names.length] = ref_name
     }
     
     public void set_no_spread(){

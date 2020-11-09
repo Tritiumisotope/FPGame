@@ -26,6 +26,8 @@ public class DynamicObject {
 		public String replace_name(String s, Character c){
 			String ret= s;
 			String repl_name= name;
+
+			System.out.println("replace_name method var name in dynobj: "+this.name);
 			if(c != null && this instanceof Character){//was in
 				Character temp_char = (Character)this;
 				repl_name = temp_char.personality.get_name(c, temp_char);
