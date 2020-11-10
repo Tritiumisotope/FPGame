@@ -37,8 +37,8 @@ public class World {
     public void set_settings(ArrayList<Object> settings_array){
         settings = settings_array;
     }
-    /*
-    public ArrayList<String> add_exit_to_piece(ArrayList<String> map_piece,String exit_name){//TODO fixed size	array
+    /*TODO make this work?
+    public String[] add_exit_to_piece(String[] map_piece,String exit_name){//TODO fixed size	array
         if(exit_name == "North"){
             map_piece[1] = "|";
         }else if(exit_name == "East"){
@@ -61,60 +61,63 @@ public class World {
         
         return map_piece;
     }
-    /*
-    public function get_map(character_area:Area = null):String{
-        var ret:String = "";
+    
+    public String get_map(){
+        return get_map(null);
+    }
+    public String get_map(Area character_area){//def null
+        String ret = "";
         
-        var map_pieces:Array = new Array();
-        var map:Array = make_integer_map();
+        ArrayList<String[]> map_pieces = new ArrayList<>();//Array
+        ArrayList<ArrayList<Integer>> map = make_integer_map();
         
-        var i:int = 0;
-        for(i;i<links.length;i++){
-            if(links[i][2] == false){
-                if(areas[links[i][0]].get_player_discovered()){
-                    if(map_pieces[links[i][0]] != null){
-                        map_pieces[links[i][0]] = add_exit_to_piece(map_pieces[links[i][0]], links[i][3]);
+        int i;
+        for(i=0;i<links.size();i++){
+            if((Boolean)links.get(i).get(2) == false){
+                if(areas.get((Integer)links.get(i).get(0)).get_player_discovered()){
+                    if(map_pieces.get((Integer)links.get(i).get(0)) != null){
+                        map_pieces.set((Integer)links.get(i).get(0), add_exit_to_piece(map_pieces.get((Integer)links.get(i).get(0)), (String)links.get(i).get(3)));
                     }else{
-                        if(character_area == areas[links[i][0]]){
-                            map_pieces[links[i][0]] = new Array(" "," "," ","\n"," ","<colour="+areas[links[i][0]].get_map_colour()+">P"," ","\n"," "," "," ");
+                        if(character_area == areas.get((Integer)links.get(i).get(0))){
+                            map_pieces.set((Integer)links.get(i).get(0), new String[]{" "," "," ","\n"," ","<colour="+areas.get((Integer)links.get(i).get(0)).get_map_colour()+">P"," ","\n"," "," "," "});
                         }else{
-                            map_pieces[links[i][0]] = new Array(" "," "," ","\n"," ","<a href=\"event:show_map," + links[i][0] +"\" colour="+areas[links[i][0]].get_map_colour()+">O</a>"," ","\n"," "," "," ");								
+                            map_pieces.set((Integer)links.get(i).get(0), new String[]{" "," "," ","\n"," ","<a href=\"event:show_map," + (Integer)links.get(i).get(0) +"\" colour="+areas.get((Integer)links.get(i).get(0)).get_map_colour()+">O</a>"," ","\n"," "," "," "});								
                         }
-                        map_pieces[links[i][0]] = add_exit_to_piece(map_pieces[links[i][0]], links[i][3]);
+                        map_pieces.set((Integer)links.get(i).get(0), add_exit_to_piece(map_pieces.get((Integer)links.get(i).get(0)), (String)links.get(i).get(3)));
                     }
                 }
-                if(areas[links[i][1]].get_player_discovered()){
-                    if(map_pieces[links[i][1]] != null){
-                        map_pieces[links[i][1]] = add_exit_to_piece(map_pieces[links[i][1]], links[i][4]);
+                if(areas.get((Integer)links.get(i).get(1)).get_player_discovered()){
+                    if(map_pieces.get((Integer)links.get(i).get(1)) != null){
+                        map_pieces.set((Integer)links.get(i).get(1), add_exit_to_piece(map_pieces.get((Integer)links.get(i).get(1)), (String)links.get(i).get(4)));
                     }else{
-                        if(character_area == areas[links[i][1]]){
-                            map_pieces[links[i][1]] = new Array(" "," "," ","\n"," ","<colour="+areas[links[i][1]].get_map_colour()+">P"," ","\n"," "," "," ");
+                        if(character_area == areas.get((Integer)links.get(i).get(1))){
+                            map_pieces.set((Integer)links.get(i).get(1), new String[]{" "," "," ","\n"," ","<colour="+areas.get((Integer)links.get(i).get(1)).get_map_colour()+">P"," ","\n"," "," "," "});
                         }else{
-                            map_pieces[links[i][1]] = new Array(" "," "," ","\n"," ","<a href=\"event:show_map," + links[i][1] +"\" colour="+areas[links[i][1]].get_map_colour()+">O</a>"," ","\n"," "," "," ");
+                            map_pieces.set((Integer)links.get(i).get(1), new String[]{" "," "," ","\n"," ","<a href=\"event:show_map," + (Integer)links.get(i).get(1) +"\" colour="+areas.get((Integer)links.get(i).get(1)).get_map_colour()+">O</a>"," ","\n"," "," "," "});
                         }
-                        map_pieces[links[i][1]] = add_exit_to_piece(map_pieces[links[i][1]], links[i][4])
+                        map_pieces.set((Integer)links.get(i).get(1), add_exit_to_piece(map_pieces.get((Integer)links.get(i).get(1)), (String)links.get(i).get(4)));
+                    }
+                }
+            }
+        }
+        
+
+        for(i = 0;i<map.size();i++){
+            if(map.get(i) != null){
+                int j = 0;
+                for(j=0;j<map.get(i).size();j++){
+                    if(map.get(i).get(j) != null){
+                        map.get(i).set(j,map_pieces.get(map.get(i).get(j)));//map[i][j] = map_pieces[map[i][j]];
                     }
                 }
             }
         }
         
         i = 0;
-        for(i;i<map.size();i++){
-            if(map[i] != null){
-                var j:int = 0;
-                for(j;j<map[i].length;j++){
-                    if(map[i][j] != null){
-                        map[i][j] = map_pieces[map[i][j]];
-                    }
-                }
-            }
-        }
-        
-        i = 0;
         
         for(i;i<map.size();i++){
             if(map[i] != null){
-                var line_count:int = 0;
+                int line_count = 0;
                 for(line_count;line_count<3;line_count++){
                     j = 0;
                     for(j;j<map[i].length;j++){
@@ -228,7 +231,7 @@ public class World {
                     }else{
                         if(map.get(x).get(y) != null && map.get(x).get(y) != (Integer)links.get(i).get(0))LOGGER.info("(World.make_integer_map1.1)Overwriting an area...");
                         map.get(x).set(y, (Integer)links.get(i).get(0));//map.get(x).get(y) = links.get(i).get(0);
-                        map.get(x+temp[0]).set(y+temp[1],(Integer)links.get(i).get(1));//map.get(x+temp[0])[y+temp[1]] = links[i][1];
+                        map.get(x+temp[0]).set(y+temp[1],(Integer)links.get(i).get(1));//map.get(x+temp[0])[y+temp[1]] = links.get(i)[1];
                     }
                 }else if(found){
                     int[] temp = areas.get((Integer)links.get(i).get(0)).get_offset_by_name((String)links.get(i).get(3));
@@ -614,10 +617,10 @@ public class World {
         for(i=0;i<links.size();i++){
             if(((Integer)links.get(i).get(0) == area_id || (Integer)links.get(i).get(1) == area_id) && (Boolean)links.get(i).get(2) == false){
                 if((Integer)links.get(i).get(0) == area_id){
-                    //existing_exits[existing_exits.length] = links[i][3];
+                    //existing_exits[existing_exits.length] = (String)links.get(i).get(3);
                     existing_exits.add((String)links.get(i).get(3));
                 }else{
-                    //existing_exits[existing_exits.length] = links[i][4];
+                    //existing_exits[existing_exits.length] = (String)links.get(i).get(4);
                     existing_exits.add((String)links.get(i).get(4));
                 }
             }
