@@ -2856,7 +2856,7 @@ public class FPalace_topics {
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Becoming like Heidi");
-			/*
+			
 			Item cola_item = FPalace_items.futa_cola();
             Quest get_futa_cola_quest= new Quest();
 			get_futa_cola_quest.set_name("Helping out Lucy");
@@ -2925,27 +2925,27 @@ public class FPalace_topics {
 			dia1.add(second[i]);
 			}
 			ct.add_action(a, dia1, dia2,false, Conversation_topic.being_told_topic);
-			*/
+			
 			return ct;
 			
 		}
-		/*
+		
 		public static Conversation_topic clearing_the_field(Quest farm_quest){
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Clearing the fields");
             Character temp_char = FPalace_npcs.goo_slime().gen_char();
-            */
-            //Quest murder_slime_quest = new Quest();
-            /*TODO Quest
+            
+            Quest murder_slime_quest = new Quest();
+            
 			murder_slime_quest.set_name("Clearing the fields");
-			murder_slime_quest.new_objective("Kill 5 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,[temp_char]);
-			murder_slime_quest.new_objective("Kill 4 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,[temp_char]);
-			murder_slime_quest.new_objective("Kill 3 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,[temp_char]);
-			murder_slime_quest.new_objective("Kill 2 more slimes in the fields of Freedom Farms for John. ",Quest.kill_action,[temp_char]);
-			murder_slime_quest.new_objective("Kill just 1 more slime in the fields of Freedom Farms for John. ",Quest.kill_action,[temp_char]);
+			murder_slime_quest.new_objective("Kill 5 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,temp_char);
+			murder_slime_quest.new_objective("Kill 4 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,temp_char);
+			murder_slime_quest.new_objective("Kill 3 slimes in the fields of Freedom Farms for John. ",Quest.kill_action,temp_char);
+			murder_slime_quest.new_objective("Kill 2 more slimes in the fields of Freedom Farms for John. ",Quest.kill_action,temp_char);
+			murder_slime_quest.new_objective("Kill just 1 more slime in the fields of Freedom Farms for John. ",Quest.kill_action,temp_char);
 			murder_slime_quest.new_objective("Talk to John. ",Quest.talk_action,null);
-			murder_slime_quest.add_end_reward([50,FPalace_items.gold(10)]);
+			murder_slime_quest.add_end_reward(new ArrayList<>(Arrays.asList(50,FPalace_items.gold(10))));
 			murder_slime_quest.set_end_step(6);
 			
 			CharAction a = new CharAction();
@@ -2976,22 +2976,21 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-            */
-            /*
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+
 			return ct;			
 		}
-        */
-        /*
-		public static Conversation_topic delivery_to_nunnery(farm_quest:Quest){
+        
+        
+		public static Conversation_topic delivery_to_nunnery(Quest farm_quest){
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Making a Delivery");
-			var nunnery_quest:Quest = new Quest();
+			Quest nunnery_quest= new Quest();
 			nunnery_quest.set_name("Making a Delivery");
 			nunnery_quest.new_objective("Deliver Johns package to the Nunnery in the mountains. ",Quest.talk_action,null);
 			nunnery_quest.new_objective("Talk to John. ",Quest.talk_action,null);
-			nunnery_quest.add_end_reward([100,FPalace_items.gold(20)]);
+			nunnery_quest.add_end_reward(new ArrayList<>(Arrays.asList(100,FPalace_items.gold(20))));
 			nunnery_quest.set_end_step(2);
 			
 			CharAction a = new CharAction();
@@ -3057,16 +3056,16 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, Personality.like],false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, Personality.like)),false, Conversation_topic.being_told_topic);
 
 			return ct;			
 		}
-		*/
+		
 		public static Conversation_topic nunnery_recieve_delivery(){
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Making a Delivery");
-            //Quest nunnery_quest = new Quest();
+            Quest nunnery_quest = new Quest();
             /*
 			nunnery_quest.set_name("Making a Delivery");
 			nunnery_quest.new_objective("Deliver Johns package to the Nunnery in the mountains. ",Quest.talk_action,null);
@@ -3234,8 +3233,8 @@ public class FPalace_topics {
             //Quest sleeping_with_amazons_quest = new Quest();
             /*TODO Quest
 			sleeping_with_amazons_quest.set_name("Calming the girls down");
-			sleeping_with_amazons_quest.new_objective("Incapacitate 2 Amazons in the Palace for Vivian. ",Quest.incapacitate_action,[temp_char]);
-			sleeping_with_amazons_quest.new_objective("Incapacitate an Amazon in the Palace for Vivian. ",Quest.incapacitate_action,[temp_char]);
+			sleeping_with_amazons_quest.new_objective("Incapacitate 2 Amazons in the Palace for Vivian. ",Quest.incapacitate_action,temp_char);
+			sleeping_with_amazons_quest.new_objective("Incapacitate an Amazon in the Palace for Vivian. ",Quest.incapacitate_action,temp_char);
 			sleeping_with_amazons_quest.new_objective("Talk to Vivian. ",Quest.talk_action,null);
 			sleeping_with_amazons_quest.add_end_reward([50]);
 			sleeping_with_amazons_quest.set_end_step(3);
@@ -3276,17 +3275,16 @@ public class FPalace_topics {
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Potion Ingredients");
-			/*
+			
 			Item temp_item = FPalace_items.floppy_cucumber();
 			Item temp_item2 = FPalace_items.dickweed();
 			Item temp_item3 = FPalace_items.Stubby_twig();
 			Item temp_item4 = FPalace_items.round_apple();
 			
-			
-            //Quest gathering_quest = new Quest();
-            TODO Quest
+			/*
+            Quest gathering_quest = new Quest();
 			gathering_quest.set_name("Gathering Ingredients for a Hermit");
-			gathering_quest.new_objective("Get a floppy cucumber for the Hermit. ",Quest.pick_up_action,[temp_item]);
+			gathering_quest.new_objective("Get a floppy cucumber for the Hermit. ",Quest.pick_up_action,temp_item);
 			gathering_quest.new_objective("Give the cucumber to the Hermit. ",Quest.talk_action,null);
 			gathering_quest.new_objective("Get some dickweed for the Hermit. ",Quest.pick_up_action,[temp_item2]);
 			gathering_quest.new_objective("Give the dickweed to the Hermit. ",Quest.talk_action,null);

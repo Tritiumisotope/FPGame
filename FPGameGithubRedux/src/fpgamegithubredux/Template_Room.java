@@ -41,6 +41,9 @@ public class Template_Room extends StaticObject {
     protected ArrayList<CharAction> exit_actions;//public var exit_actions:Array
     protected ArrayList<Challenge> exit_challenges;//public var exit_challenges:Array
     protected ArrayList<Consequence> exit_consequences;//public var exit_consequences:Array
+    public Template_Room(){
+        this(null,-1,null,null,null,null,null,null,null);
+    }
     public Template_Room(String d){
         this(d,-1,null,null,null,null,null,null,null);
     }

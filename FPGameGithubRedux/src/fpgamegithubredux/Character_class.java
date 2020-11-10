@@ -52,7 +52,9 @@ public class Character_class extends DynamicObject {
         attacks.add(a); //attacks[attacks.size()] = a
         attack_lvl_req.add(lr); //attack_lvl_req[attack_lvl_req.length] = lr
     }
-    
+    public void add_action(CharAction a){
+        add_action(a,0);
+    }
     public void add_action(CharAction a,int lr){//def 0
         if(a.get_cclass_origin().equals(name) && a.get_cclass_level() == lr){
             return;

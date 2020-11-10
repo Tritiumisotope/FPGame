@@ -82,10 +82,10 @@ public class Quest {
     }
     
     
-    public void new_objective(String s,int action_type,ArrayList<ArrayList<Object>> action_target){
+    public void new_objective(String s,int action_type,Object action_target){
         new_objective(s,action_type,action_target,-1,-1);
     }
-    public void new_objective(String s,int action_type,ArrayList<ArrayList<Object>> action_target,int go_to_objective,int ticks_to_complete){
+    public void new_objective(String s,int action_type,Object action_target,int go_to_objective,int ticks_to_complete){
         //default -1,-1
         objectives.add(s);//objectives[objectives.length] = s
         objective_actions.add(action_type);//objective_actions[objective_actions.length] = action_type

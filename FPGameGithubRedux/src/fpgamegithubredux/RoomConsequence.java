@@ -58,6 +58,9 @@ public class RoomConsequence extends Consequence{
 		public void add_room_effect(Room r1){
 			add_room_effect(r1,null,null,null);
 		}
+		public void add_room_effect(Room r1,Room r2){
+			add_room_effect(r1,r2,null,null);
+		}
 		public void add_room_effect(Room r1,Room r2, String s, String s2){
             //default null,null,null,null
 			if(r1 == null) r1 = new Room("temp");

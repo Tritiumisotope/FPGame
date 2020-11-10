@@ -908,7 +908,9 @@ public class FPalaceHelper{
 			p.set_race(r);
 			return p;
 		}
-		
+		public static BodyPart new_hair(Race r){
+			return new_hair(r,1,5.9);
+		}
 		public static BodyPart new_hair(Race r, int s1, double s2){
             // s1 = 1, s2 = 5.9
 			BodyPart p = new BodyPart();
@@ -943,7 +945,9 @@ public class FPalaceHelper{
 			p.set_race(r);
 			return p;
 		}
-		
+		public static BodyPart new_eyes(Race r){
+			return new_eyes(r,0);
+		}
 		public static BodyPart new_eyes(Race r, int s1){
             // s1 = 0
 			BodyPart p = new BodyPart();
@@ -2096,6 +2100,9 @@ public class FPalaceHelper{
 		}
 		public static BodyPart new_vagina(Race r){
 			return new_vagina(r, 3,7,0.5);
+		}
+		public static BodyPart new_vagina(Race r, int s1, int s2){
+			return new_vagina(r, s1,s2,0.5);
 		}
 		public static BodyPart new_vagina(Race r, int s1, int s2, double s3){
             //Race r,s1= 3, s2 = 7, s3 = 0.5

@@ -941,7 +941,9 @@ public class Area extends StaticObject{
         }
         return ret_array;
     }
-
+    public void random_area(int num_rooms){
+        random_area(num_rooms,null);
+    }
     public void random_area(int num_rooms, Template_Room tr){
         //num+rooms = 10, tr= null
         int i;
@@ -1979,7 +1981,9 @@ public class Area extends StaticObject{
         
         return temp_map;
     }
-    
+    public void add_room(Room e){
+        add_room(e,-1);
+    }
     public void add_room(Room e,int max_num_room){
         //max_num_room was -1
         e.area = this;
@@ -2101,19 +2105,28 @@ public class Area extends StaticObject{
         LOGGER.info("(Area.get_edge_room)If you thought you were getting an edge room, you're probably wrong");
         return get_random_room();
     }
-
+    public void add_room_template(Template_Room tr){
+        add_room_template(tr,null);
+    }
     public void add_room_template(Template_Room tr,ArrayList<Integer> min_max_floor){//def null
         //min_max_floor was null
         templateRooms.add(tr); //template_rooms[template_rooms.length] = tr
         templateFloorRange.add(min_max_floor); //template_floor_range[template_floor_range.length] = min_max_floor
     }
-    
+    public void set_filler_template(Template_Room ft){
+        set_filler_template(ft,0,null);
+    }
+    public void set_filler_template(Template_Room ft,int type){
+        set_filler_template(ft,type,null);
+    }
     public void set_filler_template(Template_Room ft,int type,ArrayList<Integer> min_max_floor){//def 0, null
         fillerTemplate.add(ft); //filler_template[filler_template.length] = ft
         fillerType.add(type); //filler_type[filler_type.length] = type
         fillerFloorRange.add(min_max_floor);//filler_floor_range[filler_floor_range.length] = min_max_floor
     }
-    
+    public void set_dynamicBuildTemplate(Template_Room tr){
+        set_dynamicBuildTemplate(tr,null);
+    }
     public void set_dynamicBuildTemplate(Template_Room tr,ArrayList<Integer> min_max_floor){//def null
         dynamicBuildTemplate.add(tr); //dynamicBuildTemplate[dynamicBuildTemplate.length] = tr
         dynamicBuildFloorRange.add(min_max_floor); //dynamicBuildFloorRange[dynamicBuildFloorRange.length] = min_max_floor

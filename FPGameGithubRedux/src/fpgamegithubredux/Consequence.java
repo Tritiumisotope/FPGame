@@ -104,6 +104,9 @@ public class Consequence {//TODO get count of all below
         change_skills = !change_skills;
     }
 
+    public void add_char_effect(Character_template chare){
+        add_char_effect(chare,true);
+    }
     public void add_char_effect(Character_template chare,Boolean start_fight){//default true
         char_effect.add(chare); //char_effect[char_effect.length] = chare
         start_combat = start_fight;

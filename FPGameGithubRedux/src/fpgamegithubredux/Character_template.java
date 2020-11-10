@@ -169,11 +169,11 @@ public class Character_template {
 		public Character_template copyCharTemp(){
 			Character_template ret = new Character_template();
 			Character temp_char = new Character();
-			//temp_char.clone(this.char_to_clone);
+			//temp_char.copyCharacter(this.char_to_clone);
 			ret.set_char_to_clone(temp_char);
 			int i = 0;
 			for(i=0;i<stats.size();i++){
-				//ret.set_stat_jiggle(stats.get(i),mins.get(i),maxs.get(i));			
+				ret.set_stat_jiggle(stats.get(i),mins.get(i),maxs.get(i));			
 			}
 			
 			return ret;

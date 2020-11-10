@@ -267,6 +267,9 @@ public class Item {
         }
         return desc;
     }
+    public String getDescription(Character owner, ArrayList<Integer>  identEfficacy){
+        return getDescription(owner, identEfficacy,false);//TODO make sure children have this overridden
+    }
     public String getDescription(Character owner, ArrayList<Integer>  identEfficacy, Boolean keepTags){
         int identChance = 0;
         String desc = getName() + "\n";

@@ -377,7 +377,10 @@ public class Equipment extends Item {
 			
 			return s;					
 		}
-		
+		@Override
+		public String getDescription(Character c,ArrayList<Integer> ident_effectiveness){
+			return getDescription(c, ident_effectiveness,false);
+		}
 		@Override 
 		public String getDescription(Character c,ArrayList<Integer> ident_effectiveness,Boolean keep_tags){
 			//def null false

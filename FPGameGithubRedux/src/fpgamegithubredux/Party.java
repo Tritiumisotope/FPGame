@@ -8,6 +8,10 @@ public class Party {
     public ArrayList<Character> members;//public var members:Array
     
 
+    public Party(ArrayList<Character> newMems) {
+        // constructor code
+        members = newMems;
+    }
     public Party() {
         // constructor code
         members = new ArrayList<>();

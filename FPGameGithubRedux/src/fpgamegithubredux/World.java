@@ -99,7 +99,7 @@ public class World {
         }
         
         i = 0;
-        for(i;i<map.length;i++){
+        for(i;i<map.size();i++){
             if(map[i] != null){
                 var j:int = 0;
                 for(j;j<map[i].length;j++){
@@ -112,7 +112,7 @@ public class World {
         
         i = 0;
         
-        for(i;i<map.length;i++){
+        for(i;i<map.size();i++){
             if(map[i] != null){
                 var line_count:int = 0;
                 for(line_count;line_count<3;line_count++){
@@ -322,7 +322,12 @@ public class World {
         a.remove_empty_edges();
         a.check_connections();
     }
-    
+    public void connect_areas(int i,int k,Room r1,Room r2){
+        connect_areas(i, k, r1, r2,false,false);
+    }
+    public void connect_areas(int i,int k,Room r1,Room r2,Boolean sub_area_flag){
+        connect_areas(i, k, r1, r2, sub_area_flag,false);
+    }
     public void connect_areas(int i,int k,Room r1,Room r2,Boolean sub_area_flag,Boolean stay_in_edges){
         //def r1=null, r2=null, sub_area_flag=false, stay_in_edges = false
         Room temp_room1 = null;
@@ -1253,47 +1258,48 @@ public class World {
         
         return room_count;
     }
-    /*
-    public function map_gen():void{
+    
+    public void map_gen(){
         //make the oceans...
-        var map:Array = make_integer_map();
-        var max_x:int = map.length;
-        var x:int = 0;
-        var max_y:int = 0;
-        var gen_count:int = 0;
-        for(x;x<map.length;x++){
-            if(map.get(x).length > max_y)max_y = map.get(x).length;
+        ArrayList<ArrayList<Integer>> map = make_integer_map();
+        int max_x = map.size();
+        int x = 0;
+        int max_y = 0;
+        int gen_count = 0;
+        for(x=0;x<map.size();x++){
+            if(map.get(x).size() > max_y)max_y = map.get(x).size();
         }
         
         x = 0;
-        for(x;x<map.length;x++){
-            var y:int = 0;
-            for(y;y<max_y;y++){
-                if(map.get(x)[y] == null)gen_count++;
+        for(x=0;x<map.size();x++){
+            int y = 0;
+            for(y=0;y<max_y;y++){
+                if(map.get(x).get(y) == null)gen_count++;
             }
         }
         
         gen_count++;
         
         while(gen_count>0){
-            var temp_ocean:Area = FPalace_content.area_ocean();
+            //TODO FPalace_content
+            Area temp_ocean = FPalace_content.area_ocean();
             temp_ocean.filler_area();				
             
             map = make_integer_map();
             //connect to surrounding areas...
-            var placed:Boolean = false;
+            Boolean placed = false;
             x = 0;
-            for(x;x<=max_x;x++){
-                if(map.get(x) == null)map.get(x) = new Array();
-                y = 0;
-                for(y;y<max_y;y++){
-                    if(map.get(x)[y] == null && (map.get(x)[y-1] !=null || map.get(x)[y+1] != null)){
-                        if(map.get(x)[y-1] !=null){
+            for(x=0;x<=max_x;x++){
+                if(map.get(x) == null)map.set(x, new ArrayList<>());//map.get(x) = new Array();
+                int y = 0;
+                for(y=0;y<max_y;y++){
+                    if(map.get(x).get(y) == null && (map.get(x).get(y-1) !=null || map.get(x).get(y+1) != null)){
+                        if(map.get(x).get(y-1) !=null){
                             add_area(temp_ocean);
-                            connect_areas(areas.length - 1,map.get(x)[y-1],null,null,false,true);
+                            connect_areas(areas.size()- 1,map.get(x).get(y-1),null,null,false,true);
                         }else{
                             add_area(temp_ocean);
-                            connect_areas(areas.length - 1,map.get(x)[y+1],null,null,false,true);
+                            connect_areas(areas.size()- 1,map.get(x).get(y+1),null,null,false,true);
                         }
                         placed = true;
                         break;
@@ -1306,18 +1312,18 @@ public class World {
                 map = make_integer_map();
                 placed = false;
                 x = 0;
-                for(x;x<map.length;x++){
-                    y = 0;
-                    for(y;y<max_y;y++){
-                        if(map.get(x)[y] == areas.length - 1){
-                            if(map[x-1] != null && map[x-1][y-1] != null)ocean_connect(map, temp_ocean, x, y, x-1, y-1);
-                            if(map[x-1] != null && map[x-1][y] != null)connect_areas(areas.length - 1,map[x-1][y],null,null,false,true);
-                            if(map[x-1] != null && map[x-1][y+1] != null)ocean_connect(map, temp_ocean, x, y, x-1, y+1);										
-                            if(map.get(x)[y-1] != null)connect_areas(areas.length - 1,map.get(x)[y-1],null,null,false,true);
-                            if(map.get(x)[y+1] != null)connect_areas(areas.length - 1,map.get(x)[y+1],null,null,false,true);
-                            if(map[x+1] != null && map[x+1][y-1] != null)ocean_connect(map, temp_ocean, x, y, x+1, y-1);
-                            if(map[x+1] != null && map[x+1][y] != null)connect_areas(areas.length - 1,map[x+1][y],null,null,false,true);
-                            if(map[x+1] != null && map[x+1][y+1] != null)ocean_connect(map, temp_ocean, x, y, x+1, y+1);
+                for(x=0;x<map.size();x++){
+                    int y = 0;
+                    for(y=0;y<max_y;y++){
+                        if(map.get(x).get(y) == areas.size()- 1){
+                            if(map.get(x-1) != null && map.get(x-1).get(y-1) != null)ocean_connect(map, temp_ocean, x, y, x-1, y-1);
+                            if(map.get(x-1) != null && map.get(x-1).get(y) != null)connect_areas(areas.size()- 1,map.get(x-1).get(y),null,null,false,true);
+                            if(map.get(x-1) != null && map.get(x-1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x-1, y+1);										
+                            if(map.get(x).get(y-1) != null)connect_areas(areas.size()- 1,map.get(x).get(y-1),null,null,false,true);
+                            if(map.get(x).get(y+1) != null)connect_areas(areas.size()- 1,map.get(x).get(y+1),null,null,false,true);
+                            if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x+1, y-1);
+                            if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)connect_areas(areas.size()- 1,map.get(x+1).get(y+1),null,null,false,true);
+                            if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x+1, y+1);
                             
                             placed = true;
                             break;
@@ -1326,22 +1332,22 @@ public class World {
                     if(placed)break;
                 }					
             }else{
-                var rand:Number = Math.random();
-                if(map[0][0] != null && rand >= 0.75){
+                Number rand = Math.random();
+                if(map.get(0).get(0) != null && rand.doubleValue() >= 0.75){
                     add_area(temp_ocean);
-                    connect_areas(areas.length - 1,map[0][0],null,null,false,true);
+                    connect_areas(areas.size()- 1,map.get(0).get(0),null,null,false,true);
                     placed = true;
-                }else if(map[map.length-2][max_y-1] != null && rand >= 0.5){
+                }else if(map.get(map.size()-2).get(max_y-1) != null && rand.doubleValue() >= 0.5){
                     add_area(temp_ocean);
-                    connect_areas(areas.length - 1,map[map.length-2][max_y-1],null,null,false,true);
+                    connect_areas(areas.size()- 1,map.get(map.size()-2).get(max_y-1),null,null,false,true);
                     placed = true;
-                }else if(map[0][max_y-1] != null && rand >= 0.25){
+                }else if(map.get(0).get(max_y-1) != null && rand.doubleValue() >= 0.25){
                     add_area(temp_ocean);
-                    connect_areas(areas.length - 1,map[0][max_y-1],null,null,false,true);
+                    connect_areas(areas.size()- 1,map.get(0).get(max_y-1),null,null,false,true);
                     placed = true;
-                }else if(map[map.length-2][0] != null){
+                }else if(map.get(map.size()-2).get(0) != null){
                     add_area(temp_ocean);
-                    connect_areas(areas.length - 1,map[map.length-2][0],null,null,false,true);
+                    connect_areas(areas.size()- 1,map.get(map.size()-2).get(0),null,null,false,true);
                     placed = true;
                 }
                 
@@ -1349,32 +1355,32 @@ public class World {
                     map = make_integer_map();
                     
                     x = 0;
-                    for(x;x<map.length;x++){
-                        if(map.get(x).length > max_y)max_y = map.get(x).length;
+                    for(x=0;x<map.size();x++){
+                        if(map.get(x).size() > max_y)max_y = map.get(x).size();
                     }
                     
                     x = 0;
-                    for(x;x<map.length;x++){
-                        y = 0;
-                        for(y;y<max_y;y++){
-                            if(map.get(x)[y] == null)gen_count++;
+                    for(x=0;x<map.size();x++){
+                        int y = 0;
+                        for(y=0;y<max_y;y++){
+                            if(map.get(x).get(y) == null)gen_count++;
                         }
                     }
                     
                     placed = false;
                     x = 0;
-                    for(x;x<map.length;x++){
-                        y = 0;
-                        for(y;y<max_y;y++){
-                            if(map.get(x)[y] == areas.length - 1){
-                                if(map[x-1] != null && map[x-1][y-1] != null)ocean_connect(map, temp_ocean, x, y, x-1, y-1);
-                                if(map[x-1] != null && map[x-1][y] != null)connect_areas(areas.length - 1,map[x-1][y],null,null,false,true);
-                                if(map[x-1] != null && map[x-1][y+1] != null)ocean_connect(map, temp_ocean, x, y, x-1, y+1);										
-                                if(map.get(x)[y-1] != null)connect_areas(areas.length - 1,map.get(x)[y-1],null,null,false,true);
-                                if(map.get(x)[y+1] != null)connect_areas(areas.length - 1,map.get(x)[y+1],null,null,false,true);
-                                if(map[x+1] != null && map[x+1][y-1] != null)ocean_connect(map, temp_ocean, x, y, x+1, y-1);
-                                if(map[x+1] != null && map[x+1][y] != null)connect_areas(areas.length - 1,map[x+1][y],null,null,false,true);
-                                if(map[x+1] != null && map[x+1][y+1] != null)ocean_connect(map, temp_ocean, x, y, x+1, y+1);
+                    for(x=0;x<map.size();x++){
+                        int y = 0;
+                        for(y=0;y<max_y;y++){
+                            if(map.get(x).get(y) == areas.size()- 1){
+                                if(map.get(x-1) != null && map.get(x-1).get(y-1) != null)ocean_connect(map, temp_ocean, x, y, x-1, y-1);
+                                if(map.get(x-1) != null && map.get(x-1).get(y) != null)connect_areas(areas.size()- 1,map.get(x-1).get(y),null,null,false,true);
+                                if(map.get(x-1) != null && map.get(x-1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x-1, y+1);										
+                                if(map.get(x).get(y-1) != null)connect_areas(areas.size()- 1,map.get(x).get(y-1),null,null,false,true);
+                                if(map.get(x).get(y+1) != null)connect_areas(areas.size()- 1,map.get(x).get(y+1),null,null,false,true);
+                                if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x+1, y-1);
+                                if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)connect_areas(areas.size()- 1,map.get(x+1).get(y+1),null,null,false,true);
+                                if(map.get(x+1) != null && map.get(x+1).get(y+1) != null)ocean_connect(map, temp_ocean, x, y, x+1, y+1);
                                 
                                 placed = true;
                                 break;
@@ -1390,7 +1396,7 @@ public class World {
             gen_count--;				
         }
     }
-    */
+    
     protected void finalizeThis(){
         int i = 0;
         for (i=0;i<areas.size();i++){
@@ -1486,7 +1492,9 @@ public class World {
         
         return ret;
     }
-    
+    public void tick(){
+        tick(null,null);
+    }
     public void tick(Area a,Character c){//def null, null
         if(a != null){
             a.tick(c);

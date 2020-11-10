@@ -29,7 +29,9 @@ public class Container extends StaticObject {
     public void set_name(String n){
         name = n;			
     }
-    
+    public void set_bury(){
+        set_bury("","",null);
+    }
     public void set_bury(String s , String b, CharAction ba){//def "","",null
         if(s.equals("")){
             bury = "Bury";

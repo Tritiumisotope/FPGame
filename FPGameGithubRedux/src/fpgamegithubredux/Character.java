@@ -36,7 +36,7 @@ public class Character extends DynamicObject {
 
     public Body body;
     protected Sex sex;//public var sex:Sex
-    protected ArrayList<Character_class> cclass;//public var cclass:Array
+    protected ArrayList<Object> cclass;//public var cclass:Array
 
     public Skill_set skills;
 
@@ -407,7 +407,7 @@ public class Character extends DynamicObject {
         var cost:int = skills.get_skill_cost(this, skill_id, change_amount);
         xp = xp - cost;
         ret += skills.set_skill_value(this, skill_id, change_amount);
-        set_busy();
+        setBusy();
         return ret;
     }
     
@@ -567,18 +567,18 @@ public class Character extends DynamicObject {
         stat[stat.length] = s;
     }
     */
-    /*
-    public function set_party(p:Party):void{
-        personality.advance_objectives(Quest.party_action, [p], this);
+    
+    public void set_party(Party p){
+        personality.advance_objectives(Quest.party_action,new ArrayList<Object>(Arrays.asList(p)), this);
         party = p;
     }
     
-    public function get_party():Party{
+    public Party get_party(){
         return party;
     }
-    
+    /*
     public function talk(c:Character, topic:int = -1, topic_step:int = 0, challenge_num:int = -1, dynamic_choice:Array = null):String{
-        set_busy();
+        setBusy();
         return personality.talk(c, this, topic, topic_step, challenge_num, dynamic_choice);			
     }
     */
@@ -626,12 +626,12 @@ public class Character extends DynamicObject {
             if(temp_array[i] != null && temp_array[i].attack_type == type_name){
                 if(ret.indexOf(">"+temp_array[i].get_name() +"<") >= 0)continue;
                 if(temp_array[i].get_party_use() && party != null){
-                    ret += "<a href=\"event:action," + location.get_content_id(this) + "," + String(i) + ",-1\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
+                    ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
                 }else{
                     if(init_char == this){
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," + String(i) +"\"><font color='#0000FF'>"+ temp_array[i].get_name() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) +"\"><font color='#0000FF'>"+ temp_array[i].get_name() +"</font></a>    "; 
                     }else{
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," + String(i) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
                     }
                 }
             }
@@ -889,7 +889,7 @@ public class Character extends DynamicObject {
                 var w:Weapon = body.parts[i].get_hold();
                 for(j;j<w.stat_req.length;j++){
                     if(w.stat_min[j] > get_stat(w.stat_req[j])){
-                        set_challenge_output("<b></n>s change has caused </noun> " + w.get_name() + " to fall from </noun> " + body.parts[i].get_name() + "!</b> ");
+                        set_challenge_output("<b></n>s change has caused </noun> " + w.getName() + " to fall from </noun> " + body.parts[i].get_name() + "!</b> ");
                         if(location!= null){
                             unhold(w);
                             var k:int = 0;
@@ -911,11 +911,11 @@ public class Character extends DynamicObject {
                     if(e != null){
                         var count:int = 0;					
                         for (count;count<e.stat_req.length;count++){
-                            if( e.stat_min[count] > get_stat(e.stat_req[count]) || get_stat(e.stat_req[count]) > e.stat_max[count]) {
+                            if( e.stat_min[count] > get_stat(e.stat_req.get(count)) || get_stat(e.stat_req.get(count)) > e.stat_max.get(count)) {
                                 //Need to figure out what happened... did we outgrow the garment, or shrink below it's requirement?
                                 k = 0;
-                                if(get_stat(e.stat_req[count]) > e.stat_max[count]){						
-                                    set_challenge_output("<b></n>s change has torn </noun> " + e.get_name() + " to shreds! </b>")
+                                if(get_stat(e.stat_req.get(count)) > e.stat_max.get(count)){						
+                                    set_challenge_output("<b></n>s change has torn </noun> " + e.getName() + " to shreds! </b>")
                                     unequip(e);
                                     for(k;k<possessions.length;k++){
                                         if(possessions[k] == e){
@@ -924,7 +924,7 @@ public class Character extends DynamicObject {
                                         }
                                     }
                                 }else{
-                                    set_challenge_output("<b></n>s change has caused </noun> " + e.get_name() + " to fall from </noun> " + body.parts[i].get_name() + "! </b>")
+                                    set_challenge_output("<b></n>s change has caused </noun> " + e.getName() + " to fall from </noun> " + body.parts[i].get_name() + "! </b>")
                                     unequip(e);
                                     if(location!= null){
                                         for(k;k<possessions.length;k++){
@@ -967,6 +967,9 @@ public class Character extends DynamicObject {
 			return ret;
         }
         */
+        public String new_location(Room r){
+            return new_location(r,false,false,false);
+        }
         public String new_location(Room r,Boolean skip_check){
             return new_location(r, skip_check,false, false);
         }
@@ -1039,7 +1042,7 @@ public class Character extends DynamicObject {
 					if(location.area != null){
 						set_busy(location.area.move_time_mod);
 					}else{
-						set_busy();
+						setBusy();
 					}
 					var s:Room = location.get_exit(i);
 					if (s != null){
@@ -1424,66 +1427,69 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-    /*
-		public function equip(e:Equipment, k:int = -1, j:int = -1, no_back_string:Boolean = false):String{
-			var party_id:int = 0;
-			var count:int;
+    public String equip(Equipment e,int k){
+        return equip(e, k,-1,false);
+    }
+	public String equip(Equipment e,int k,int j,Boolean no_back_string){
+        //def -1, -1, false
+			int party_id = 0;
+			int count;
 			if(party != null){
 				count = 0;
-				for(count;count<party.members.length;count++){
-					if(party.members[count] == this){
+				for(count=0;count<party.members.size();count++){
+					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
 				}
 			}
-			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
-			var i:int = -1;
-			for(i;i<possessions.length;i++){
-				if(possessions[i] == e) break;
+			int i = -1;
+			for(i=-1;i<possessions.size();i++){
+				if(possessions.get(i) == e) break;
 			}
 			
-			var char_for_chal:Character = this;
-			var equip_ident:int = 0;
+			Character char_for_chal = this;
+			int equip_ident = 0;
 			char_for_chal = this;
 			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.equipment_effects_id);
-			var equip_ident_challenge:Challenge = new Challenge(true);
+			Challenge equip_ident_challenge = new Challenge(true);
 			equip_ident_challenge.set_attack_stat(FPalace_skills.equipment_effects_id);
-			equip_ident_challenge.set_defense_stat(-1,e.get_identify_difficulty());
-			equip_ident_challenge.set_variability(5);
+			equip_ident_challenge.set_defense_stat(-1,e.getIdentifyDifficulty());
+			equip_ident_challenge.setVariability(5);
 			
-			var result:int = equip_ident_challenge.roll(char_for_chal);
+			int result = equip_ident_challenge.roll(char_for_chal);
 
 			if(result >= 0){
-				equip_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.equipment_effects_id)/e.get_identify_difficulty());
+				equip_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.equipment_effects_id)/e.getIdentifyDifficulty());
 			}
 			
-			var weight_ident:int = 0;
+			int weight_ident = 0;
 			char_for_chal = this;
 			
 			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
 				
-			var weight_challenge:Challenge = new Challenge(true);
+			Challenge weight_challenge = new Challenge(true);
 			weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
-			weight_challenge.set_defense_stat(-1,e.get_identify_difficulty());
-			weight_challenge.set_variability(5);
+			weight_challenge.set_defense_stat(-1,e.getIdentifyDifficulty());
+			weight_challenge.setVariability(5);
 			
 			result = weight_challenge.roll(char_for_chal);
 
 			if(result >= 0){
-				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/e.get_identify_difficulty());
+				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/e.getIdentifyDifficulty());
 			}
 			
-			var ret:String = e.get_description(this, [equip_ident, weight_ident]);
+			String ret = e.getDescription(this, new ArrayList<>(Arrays.asList(equip_ident, weight_ident)));
 			
 			if(k == -1){
-				var attach_option:Boolean = false;
-				if(e.upgrade_slot_ids.length > 0){
+				Boolean attach_option = false;
+				if(e.upgrade_slot_ids.size() > 0){
 					count = 0;
-					for(count;count<e.upgrade_slot_ids.length;count++){
-						if(e.upgrade_items[count] == null){
+					for(count=0;count<e.upgrade_slot_ids.size();count++){
+						if(e.upgrade_items.get(count) == null){
 							attach_option = true;
 							break;
 						}
@@ -1491,100 +1497,100 @@ public class Character extends DynamicObject {
 				}
 				if(attach_option){
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + String(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}else{
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + String(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:equip," + String(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + String(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}
 			}
 			
 			if(k == 0){
-				var slot_array:Array = e.get_equip_slots();
+				ArrayList<Integer> slot_array = e.get_equip_slots();
 				count = 0;
-				for(count;count<slot_array.length;count++){
-					if(!body.has_part(slot_array[count])) return sanitize("</n> can't equip that!", null) + back_string;
+				for(count=0;count<slot_array.size();count++){
+					if(!body.has_part(slot_array.get(count))) return sanitize("</n> can't equip that!", null) + back_string;
 				}
 				
 				count = 0;
-				for (count;count<e.stat_req.length;count++){
-					if(get_stat(e.stat_req[count]) > e.stat_max[count])return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req[count]) + " is too large to equip that!", null) + back_string;
-					if(e.stat_min[count] > get_stat(e.stat_req[count]))return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req[count]) + " is too small to equip that!", null) + back_string;
+				for (count=0;count<e.stat_req.size();count++){
+					if(get_stat(e.stat_req.get(count)).intValue() > e.stat_max.get(count))return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req.get(count)) + " is too large to equip that!", null) + back_string;
+					if(e.stat_min.get(count) > get_stat(e.stat_req.get(count)).intValue())return sanitize("</n>s " +FPalaceHelper.get_stat_name_by_id(e.stat_req.get(count)) + " is too small to equip that!", null) + back_string;
 				}
 				
 				ret = body.equip(e,this);
 				drop(i);
-				set_busy();
-				personality.advance_objectives(Quest.equip_action, [e], this);
-				return sanitize("</n> equips the " + e.get_name() + "\n" + ret, null) + back_string;
+				setBusy();
+				personality.advance_objectives(Quest.equip_action, new ArrayList<>(Arrays.asList(e)), this);
+				return sanitize("</n> equips the " + e.getName() + "\n" + ret, null) + back_string;
 			}else if(k == 1){
 				drop(i);
-				location.new_content(e);
-				set_busy();
-				return "You place the " + e.get_name() + " on the ground here." + back_string;
+				location.newContent(e);
+				setBusy();
+				return "You place the " + e.getName() + " on the ground here." + back_string;
 			}else if( k == 2){
 				drop(i);
-				set_busy();
-				return "You throw away the " + e.get_name() + " never to see it again." + back_string;
+				setBusy();
+				return "You throw away the " + e.getName() + " never to see it again." + back_string;
 			}else if( k == 3 && j == -1){
-				var s:String = "Who do you want to give it to?\n";
+				String s = "Who do you want to give it to?\n";
 				count = 0;
-				for(count;count<party.members.length;count++){
+				for(count=0;count<party.members.size();count++){
 					if(party_id != count){
-						s += " <a href=\"event:equip," + String(i) +","+party_id+",3,"+count+"\">"+ party.members[count].get_name() +"</a>\n";
+						s += " <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,"+count+"\">"+ party.members.get(count).getName() +"</a>\n";
 					}
 				}
 				return s + back_string;
 			}else if(k == 3 && j >= 0){
 				drop(i);
-				party.members[j].add_to_possessions(e);
-				set_busy();
+				party.members.get(j).addToPossessions(e);
+				setBusy();
 				return "Gave item" + back_string;
 			}else if(k == 4){
-				s = "";
+				String s = "";
 				if(j == -1){
 					s += "Choose a mod:\n";
-					var avail_mods:Array = new Array();
+					ArrayList<Integer> avail_mods= new ArrayList<>();
 					count = 0;
-					for(count;count<e.upgrade_slot_ids.length;count++){
-						if(e.upgrade_items[count] == null){
-							avail_mods[avail_mods.length] = e.upgrade_slot_ids[count];
+					for(count=0;count<e.upgrade_slot_ids.size();count++){
+						if(e.upgrade_items.get(count) == null){
+							avail_mods.add(e.upgrade_slot_ids.get(count));//avail_mods[avail_mods.length] = e.upgrade_slot_ids[count];
 						}
 					}
 					
 					count = 0;
-					for(count;count<possessions.length;count++){
-						if(possessions[count] is Upgrade_Item){
-							var count2:int = 0;
-							for(count2;count2< avail_mods.length;count2++){
-								if(possessions[count].upgrade_type_id == avail_mods[count2]){
-									 s += " <a href=\"event:equip," + String(i) +","+party_id+",4,"+count+"\">"+ possessions[count].get_name() +"</a>";
+					for(count=0;count<possessions.size();count++){
+						if(possessions.get(count) instanceof Upgrade_Item){
+							int count2 = 0;
+							for(count2=0;count2< avail_mods.size();count2++){
+								if(((Upgrade_Item)possessions.get(count)).upgrade_type_id == avail_mods.get(count2)){
+									 s += " <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,"+count+"\">"+ possessions.get(count).getName() +"</a>";
 								}
 							}
 						}
 					}
 				}else{
-					s += e.attach_upgrade_item(possessions[j],this);					
+					s += e.attach_upgrade_item(((Upgrade_Item)possessions.get(j)),this);					
 				}
 				
 				return sanitize(s) + back_string;
 			}
 			return "";
 		}
-		
+		/*
 		public function unequip(e:Equipment):String{
-			set_busy();
+			setBusy();
 			var party_id:int = 0;
 			var count:int;
 			if(party != null){
 				count = 0;
-				for(count;count<party.members.length;count++){
-					if(party.members[count] == this){
+				for(count;count<party.members.size();count++){
+					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
@@ -1594,65 +1600,69 @@ public class Character extends DynamicObject {
 			personality.advance_objectives(Quest.unequip_action, [e], this);
 			return sanitize(body.unequip(e,this) + back_string, null);
 		}
-		
-		public function hold(w:Weapon, k:int = -1, j:int = -1, no_back_string:Boolean = false):String{
-			var party_id:int = 0;
-			var count:int;
+        */
+        public String hold(Weapon w,int k){
+            return hold(w, k,-1,false);
+        }
+		public String hold(Weapon w,int k,int j,Boolean no_back_string){
+            //def k = -1, j = -1, no_back = false
+            int party_id = 0;
+			int count;
 			if(party != null){
 				count = 0;
-				for(count;count<party.members.length;count++){
-					if(party.members[count] == this){
+				for(count=0;count<party.members.size();count++){
+					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
 				}
 			}
-			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
-			var i:int = -1;
-			for(i;i<possessions.length;i++){
-				if(possessions[i] == w) break;
+			int i = -1;
+			for(i=-1;i<possessions.size();i++){
+				if(possessions.get(i) == w) break;
 			}
 			
-			var weapon_ident:int = 0;
-			var char_for_chal:Character = this;
+			int weapon_ident = 0;
+			Character char_for_chal = this;
 			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weapon_effects_id);
-			var weapon_ident_challenge:Challenge = new Challenge(true);
+			Challenge weapon_ident_challenge = new Challenge(true);
 			weapon_ident_challenge.set_attack_stat(FPalace_skills.weapon_effects_id);
-			weapon_ident_challenge.set_defense_stat(-1,w.get_identify_difficulty());
-			weapon_ident_challenge.set_variability(5);
+			weapon_ident_challenge.set_defense_stat(-1,w.getIdentifyDifficulty());
+			weapon_ident_challenge.setVariability(5);
 			
-			var result:int = weapon_ident_challenge.roll(char_for_chal);
+			int result = weapon_ident_challenge.roll(char_for_chal);
 
 			if(result >= 0){
-				weapon_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.weapon_effects_id)/w.get_identify_difficulty());
+				weapon_ident += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.weapon_effects_id)/w.getIdentifyDifficulty());
 			}
 			
-			var weight_ident:int = 0;
+			int weight_ident = 0;
 			char_for_chal = this;
 			
 			if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.weighing_id);
 				
-			var weight_challenge:Challenge = new Challenge(true);
+			Challenge weight_challenge = new Challenge(true);
 			weight_challenge.set_attack_stat(FPalace_skills.weighing_id);
-			weight_challenge.set_defense_stat(-1,w.get_identify_difficulty());
-			weight_challenge.set_variability(5);
+			weight_challenge.set_defense_stat(-1,w.getIdentifyDifficulty());
+			weight_challenge.setVariability(5);
 			
 			result = weight_challenge.roll(char_for_chal);
 
 			if(result >= 0){
-				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/w.get_identify_difficulty());
+				weight_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.weighing_id) + result)/w.getIdentifyDifficulty());
 			}
 						
-			var ret:String = w.get_description(this, [weapon_ident, weight_ident]);
+			String ret = w.getDescription(this, new ArrayList<>(Arrays.asList(weapon_ident, weight_ident)));
 			
 			if(k == -1){
-				var attach_option:Boolean = false;
-				if(w.upgrade_slot_ids.length > 0){
+				Boolean attach_option = false;
+				if(w.upgrade_slot_ids.size() > 0){
 					count = 0;
-					for(count;count<w.upgrade_slot_ids.length;count++){
-						if(w.upgrade_items[count] == null){
+					for(count=0;count<w.upgrade_slot_ids.size();count++){
+						if(w.upgrade_items.get(count) == null){
 							attach_option = true;
 							break;
 						}
@@ -1660,92 +1670,92 @@ public class Character extends DynamicObject {
 				}
 				if(attach_option){
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + String(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}else{
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + String(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:hold," + String(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + String(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + String(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}
 			}
 			
 			if(k == 0){
-				set_busy();
+				setBusy();
 				if(body.hold(w,this)> 0){
 					drop(i);
-					personality.advance_objectives(Quest.hold_action, [w], this);
-					return sanitize("</n> holds the " + w.get_name() + back_string, null);
+					personality.advance_objectives(Quest.hold_action, new ArrayList<>(Arrays.asList(w)), this);
+					return sanitize("</n> holds the " + w.getName() + back_string, null);
 				}else{
 					return sanitize("</n> can't hold that!" + back_string, null);
 				}
 			}else if(k == 1){
 				drop(i);
-				location.new_content(w);
-				set_busy();
-				return "You place the " + w.get_name() + " on the ground here." + back_string;
+				location.newContent(w);
+				setBusy();
+				return "You place the " + w.getName() + " on the ground here." + back_string;
 			}else if( k == 2){
 				drop(i);
-				set_busy();
-				return "You throw away the " + w.get_name() + " never to see it again." + back_string;
+				setBusy();
+				return "You throw away the " + w.getName() + " never to see it again." + back_string;
 			}else if( k == 3 && j == -1){
-				var s:String = "Who do you want to give it to?\n";
+				String s = "Who do you want to give it to?\n";
 				count = 0;
-				for(count;count<party.members.length;count++){
+				for(count=0;count<party.members.size();count++){
 					if(party_id != count){
-						s += " <a href=\"event:hold," + String(i) +","+party_id+",3,"+count+"\">"+ party.members[count].get_name() +"</a>";
+						s += " <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,"+count+"\">"+ party.members.get(count).getName() +"</a>";
 					}
 				}
 				return s + back_string;
 			}else if(k == 3 && j >= 0){
 				drop(i);
-				party.members[j].add_to_possessions(w);
-				set_busy();
+				party.members.get(j).addToPossessions(w);
+				setBusy();
 				return "Gave item" + back_string;
 			}else if(k == 4){
-				s = "";
+				String s = "";
 				if(j == -1){
 					s += "Choose a mod:\n";
-					var avail_mods:Array = new Array();
+					ArrayList<Integer> avail_mods = new ArrayList<>();
 					count = 0;
-					for(count;count<w.upgrade_slot_ids.length;count++){
-						if(w.upgrade_items[count] == null){
-							avail_mods[avail_mods.length] = w.upgrade_slot_ids[count];
+					for(count=0;count<w.upgrade_slot_ids.size();count++){
+						if(w.upgrade_items.get(count) == null){
+							avail_mods.add(w.upgrade_slot_ids.get(count));//avail_mods[avail_mods.length] = w.upgrade_slot_ids[count];
 						}
 					}
 					
 					count = 0;
-					for(count;count<possessions.length;count++){
-						if(possessions[count] is Upgrade_Item){
-							var count2:int = 0;
-							for(count2;count2< avail_mods.length;count2++){
-								if(possessions[count].upgrade_type_id == avail_mods[count2]){
-									 s += " <a href=\"event:hold," + String(i) +","+party_id+",4,"+count+"\">"+ possessions[count].get_name() +"</a>";
+					for(count=0;count<possessions.size();count++){
+						if(possessions.get(count) instanceof Upgrade_Item){
+							int count2 = 0;
+							for(count2=0;count2< avail_mods.size();count2++){
+								if(((Upgrade_Item)possessions.get(count)).upgrade_type_id == avail_mods.get(count2)){
+									 s += " <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,"+count+"\">"+ possessions.get(count).getName() +"</a>";
 								}
 							}
 						}
 					}
 				}else{
-					s += w.attach_upgrade_item(possessions[j], this);
+					s += w.attach_upgrade_item((Upgrade_Item)possessions.get(j), this);
 				}
 				
 				return sanitize(s) + back_string;
 			}
 			return "";
 		}
-		
+		/*
 		public function unhold(w:Weapon):String{
-			set_busy();
+			setBusy();
 			
 			var party_id:int = 0;
 			var count:int;
 			if(party != null){
 				count = 0;
-				for(count;count<party.members.length;count++){
-					if(party.members[count] == this){
+				for(count;count<party.members.size();count++){
+					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
@@ -1962,9 +1972,9 @@ public class Character extends DynamicObject {
             String s = "Who do you want to give it to?<br>";
             /*
             count = 0;
-            for(count;count<party.members.length;count++){
+            for(count;count<party.members.size();count++){
                 if(party_id != count){
-                    s += " <a href=\"event:use_item," + String(i) +",3,"+party_id+","+count+"\">"+ party.members[count].get_name() +"</a>";
+                    s += " <a href=\"event:use_item," +Integer.toString(i) +",3,"+party_id+","+count+"\">"+ party.members.get(count).get_name() +"</a>";
                 }
             }
             */
@@ -1972,9 +1982,9 @@ public class Character extends DynamicObject {
         }else if(useCase == 3 && j >= 0){
             /*
             if(found_num > 1 && num_to_move == -1){
-                ret += "How many would you like to give?<br><a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+",1\">x1</a>";
-                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
-                ret += "\t<a href=\"event:use_item," + String(i) +",3,"+party_id+","+j+","+found_num+"\">x"+found_num+"</a>";
+                ret += "How many would you like to give?<br><a href=\"event:use_item," +Integer.toString(i) +",3,"+party_id+","+j+",1\">x1</a>";
+                if(Math.floor(found_num/2) > 1)ret += "\t<a href=\"event:use_item," +Integer.toString(i) +",3,"+party_id+","+j+","+Math.floor(found_num/2)+"\">x"+Math.floor(found_num/2)+"</a>";
+                ret += "\t<a href=\"event:use_item," +Integer.toString(i) +",3,"+party_id+","+j+","+found_num+"\">x"+found_num+"</a>";
                 return ret;
             }else{
                 if(num_to_move > 1){
@@ -1996,7 +2006,7 @@ public class Character extends DynamicObject {
                     drop(i);
                     party.members[j].add_to_possessions(item);
                 }
-                set_busy();
+                setBusy();
                 return "Gave item" + back_string;
             }
             */
@@ -2158,11 +2168,11 @@ public class Character extends DynamicObject {
         return ret;
     }
     public String newLocation(Room newRoom){
-        //dummy
+        //TODO dummy out
         return "";
     }
     public void drop(int item){
-        //dummy
+        //TODO dummy out
         possessions.remove(item);
     }
     public String look(){return look(-1, 0);}
@@ -2356,7 +2366,7 @@ public class Character extends DynamicObject {
 				if(party != null && party.members != null){
 					if(party.get_leader() == this){
 						var i:int = 0;
-						for(i;i<party.members.length;i++){
+						for(i;i<party.members.size();i++){
 							if(party.members[i] != null && party.members[i] != this){
 								ret = party.members[i].sanitize(party.members[i].get_challenge_output(), this) + ret;
 							}
@@ -2379,7 +2389,7 @@ public class Character extends DynamicObject {
 				
 				if(temp_cont.bury_action == null && temp_cont.bury != ""){
 					var count:int = 0;
-					for (count;count<actions.length;count++){
+					for (count;count<actions.size();count++){
 						if(actions[count] != null && location != null){
 							if(actions[count].get_name() != "" && actions[count].get_bury()){
 								ret += "\n<a href=\"event:action," + location.get_content_id(this) + "," + String(count)+","+String(i)+"\"><font color='#0000FF'>"+ actions[count].get_name() +"</font></a>";
@@ -2389,7 +2399,7 @@ public class Character extends DynamicObject {
 				}
 			}
 					
-			set_busy();
+			setBusy();
 			return ret;
 	}
     public function get_status(c:Character = null):String{
@@ -2475,7 +2485,7 @@ public class Character extends DynamicObject {
     }
     
     public function open(i:int):String{
-        set_busy();
+        setBusy();
         return location.open(i);
     }
     
@@ -2569,7 +2579,7 @@ public class Character extends DynamicObject {
         var i:int;
         if(party != null){
             i = 0;
-            for(i;i<party.members.length;i++){
+            for(i;i<party.members.size();i++){
                 if(party.members[i] == this){
                     party_id = i;
                     break;
@@ -2600,13 +2610,13 @@ public class Character extends DynamicObject {
                 if(item_count > 1) s += item_count + "x";
                 if(possessions[i] is Equipment){
                     var e:Equipment = possessions[i];
-                    s += "<a href=\"event:equip," + String(i) +","+party_id+",-1,-1\">" + e.get_name() + "</a>, ";
+                    s += "<a href=\"event:equip," +Integer.toString(i) +","+party_id+",-1,-1\">" + e.getName() + "</a>, ";
                 }else if(possessions[i] is Weapon){
                     var w:Weapon = possessions[i];
-                    s += "<a href=\"event:hold," + String(i) +","+party_id+",-1,-1\">" + w.get_name() + "</a>, ";
+                    s += "<a href=\"event:hold," +Integer.toString(i) +","+party_id+",-1,-1\">" + w.getName() + "</a>, ";
                 }else if (possessions[i] is Item){
                     var temp:Item = possessions[i];
-                    s += "<a href=\"event:use_item," + String(i) +",-1,"+party_id+"\">" + temp.get_name() + "</a>, ";
+                    s += "<a href=\"event:use_item," +Integer.toString(i) +",-1,"+party_id+"\">" + temp.get_name() + "</a>, ";
                 }
             }
         }
@@ -2660,12 +2670,12 @@ public class Character extends DynamicObject {
                 found = true;
                 //need to be able to unhold...
                 if(body.parts[i].hold.get_num_hold() == 1 ){
-                    s+= "<a href=\"event:unhold," + String(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +"), ";
+                    s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +"), ";
                 }else{
                     //need to deal with weapons that get held in multiple hands.
                     if(hand_hold == 0){
                         hand_hold = body.parts[i].hold.get_num_hold();
-                        s+= "<a href=\"event:unhold," + String(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +", ";
+                        s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +", ";
                     }else{
                         s+= body.parts[i].get_name() + " ";
                     }
@@ -2723,40 +2733,40 @@ public class Character extends DynamicObject {
             }
         }
     }
-    
-    public function set_character_class(c:Character_class):String{
-        var ret:String = "";
-        if(c != null && c.get_name() != "") ret += "</n> has begun to follow the path of the " + c.get_name() + ". ";
-        personality.advance_objectives(Quest.class_action, [c], this);
-        var found:Boolean = false;
-        var i:int = 0;
-        for(i;i<Math.ceil(cclass.length/3);i++){
-            cclass[i*3 + 2] = false;
-            if(cclass[i*3] == c || cclass[i*3].get_name() == c.get_name()){
-                cclass[i*3 + 2] = true;
-                lvl = cclass[i*3 + 1];
+    */
+    public String set_character_class(Character_class c){
+        String ret = "";
+        if(c != null && c.getName() != "") ret += "</n> has begun to follow the path of the " + c.getName() + ". ";
+        personality.advance_objectives(Quest.class_action,new ArrayList<>(Arrays.asList(c)), this);
+        Boolean found = false;
+        int i = 0;
+        for(i=0;i<Math.ceil(cclass.size()/3);i++){
+            cclass.set(i*3 + 2, false);//cclass[i*3 + 2] = false;
+            if((Character_class)cclass.get(i*3) == c || ((Character_class)cclass.get(i*3)).getName() == c.getName()){
+                cclass.set(i*3 + 2, true);//cclass[i*3 + 2] = true;
+                lvl = (Integer)cclass.get(i*3 + 1);
                 found = true;
             }
         }
         if(!found){
-            cclass[cclass.length] = c;
-            cclass[cclass.length] = 1;
+            cclass.add(c);//cclass[cclass.length] = c;
+            cclass.add(i);//cclass[cclass.length] = 1;
             lvl = 1;
-            cclass[cclass.length] = true;
+            cclass.add(true);//cclass[cclass.length] = true;
             //need to add the actions with no requirements...
             i = 0;
-            for(i;i<c.actions.length;i++){
-                var j:int = 0;
+            for(i=0;i<c.actions.size();i++){
+                int j = 0;
                 found = false;
-                for(j;j<actions.length;j++){
-                    if(c.actions[i] == actions[j]){
+                for(j=0;j<actions.size();j++){
+                    if(c.actions.get(i) == actions.get(j)){
                         found = true;
-                        break
+                        break;
                     }
                 }
-                if(!found && c.action_lvl_req[i] <= 1){
-                    add_action(c.actions[i]);
-                    if(c.actions[i].name != "")ret += "<\n> learns " + c.actions[i].name;
+                if(!found && c.action_lvl_req.get(i) <= 1){
+                    add_action(c.actions.get(i));
+                    if(c.actions.get(i).name != "")ret += "<\n> learns " + c.actions.get(i).name;
                 }
             }
         }
@@ -2764,11 +2774,11 @@ public class Character extends DynamicObject {
         nxt_lvl_xp = 100;
         
         i = 1;
-        for(i;i<lvl;i++)nxt_lvl_xp = nxt_lvl_xp * 3;
+        for(i=1;i<lvl;i++)nxt_lvl_xp = nxt_lvl_xp * 3;
         
         return ret;
     }
-    */
+    
     public Character_class get_current_class(){
         Character_class ret = null;
         /*TODO make sense!
@@ -2814,9 +2824,9 @@ public class Character extends DynamicObject {
         var i:int = 0;
         for (i;i<attack_array.length;i++){
             if(attack_array[i]!=null && o!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+ String(i) +"," + location.get_content_id(o) +"\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +"," + location.get_content_id(o) +"\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
             }else if(attack_array[i]!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+ String(i) +",-1\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +",-1\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
             }
         }
         
@@ -3124,8 +3134,8 @@ public class Character extends DynamicObject {
             temp_equip = possessions[int(i)];
             ret = "What aspect of the "+ temp_equip.get_name()+ " should be modified:\n";
             for(count;count<temp_equip.stat_req.length;count++){
-                if(temp_equip.stat_req[count] != null){
-                    ret += "Modify " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req[count]) + "\t<font color='#00FF00'><a href=\"event:sew,"+i+","+(count+1)+"\">Up</a>\t<a href=\"event:sew,"+i+","+(-(count+1))+"\">Down</a></font>\n";
+                if(temp_equip.stat_req.get(count) != null){
+                    ret += "Modify " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(count)) + "\t<font color='#00FF00'><a href=\"event:sew,"+i+","+(count+1)+"\">Up</a>\t<a href=\"event:sew,"+i+","+(-(count+1))+"\">Down</a></font>\n";
                 }
             }
             ret += "\n\n<a href=\"event:sew\"><font color='#0000FF'>back</font></a>";
@@ -3400,9 +3410,9 @@ public class Character extends DynamicObject {
                     //Change the equipment to fit the crafting character
                     count = 0;
                     for(count;count<temp_equip.stat_req.length;count++){
-                        var temp_stat:Number = get_stat(temp_equip.stat_req[count]);
-                        if(temp_stat > temp_equip.stat_max[count]){
-                            temp_equip.stat_max[count] = temp_stat + 2;
+                        var temp_stat:Number = get_stat(temp_equip.stat_req.get(count));
+                        if(temp_stat > temp_equip.stat_max.get(count)){
+                            temp_equip.stat_max.get(count) = temp_stat + 2;
                         }
                         if(temp_stat < temp_equip.stat_min[count] && temp_stat > 2){
                             temp_equip.stat_min[count] = temp_stat - 2;
@@ -3714,8 +3724,8 @@ public class Character extends DynamicObject {
         var s:String = "";
         var buy_from:Character = location.get_content(i) as Character;
         if( buy_from == null) return s;
-        set_busy();
-        if (!buy_from.busy)buy_from.set_busy();
+        setBusy();
+        if (!buy_from.busy)buy_from.setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
             s += "\n\n<font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
@@ -3791,8 +3801,8 @@ public class Character extends DynamicObject {
         var s:String = "";
         var sell_to:Character = location.get_content(i) as Character;
         if( sell_to == null) return s;
-        if (!sell_to.busy)sell_to.set_busy();
-        set_busy();
+        if (!sell_to.busy)sell_to.setBusy();
+        setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
             s += "\n\n<font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
@@ -3854,7 +3864,7 @@ public class Character extends DynamicObject {
         var longest_name:int = 0;
         var found:Boolean = false;
         var i:int = 0;
-        for(i;i<actions.length;i++){
+        for(i;i<actions.size();i++){
             if(actions[i].get_trade_flag() && actions[i].trader_item != null){
                 if(actions[i].trader_item.get_name().length > longest_name)longest_name = actions[i].trader_item.get_name().length;
             }
@@ -3933,7 +3943,7 @@ public class Character extends DynamicObject {
     private function AI():String{
         var ret:String = "";
         if(location.cm != null){//is there combat going on in the room?
-            if(location.cm.active_combat() && location.cm.get_init(this) >= 0)set_busy();
+            if(location.cm.active_combat() && location.cm.get_init(this) >= 0)setBusy();
         }
         
         var action_expression:RegExp = new RegExp("<a href=\"event:[,_a-z0-9]*\">","gi");
@@ -3947,7 +3957,7 @@ public class Character extends DynamicObject {
                 if(party.get_leader().location != location){
                     new_location(party.get_leader().location);
                 }
-                if(busy <= 0)set_busy();//stop-gap until i figure out what someone seperated from their party should do
+                if(busy <= 0)setBusy();//stop-gap until i figure out what someone seperated from their party should do
             }else{
                 if(previous_action_output == ""){
                     action_choices = new Array();
@@ -3968,24 +3978,24 @@ public class Character extends DynamicObject {
                     }
                     
                     for(i=0;i<location.exits.length;i++){
-                        action_choices[action_choices.length] = "<a href=\"event:go_to_new_room," + String(i) +"\">";							
+                        action_choices[action_choices.length] = "<a href=\"event:go_to_new_room," +Integer.toString(i) +"\">";							
                     }
                     
                     for(i=0; i<location.descriptions.length;i++){
-                        action_choices[action_choices.length] = "<a href=\"event:inspect,-1," + String(i) +"\">";							
+                        action_choices[action_choices.length] = "<a href=\"event:inspect,-1," +Integer.toString(i) +"\">";							
                     }
                     
                     for(i=0;i<location.contents.length;i++){
                         if(location.contents[i] is Character && location.contents[i] != this){
-                            action_choices[action_choices.length] = "<a href=\"event:look," + String(i) +"\">";
+                            action_choices[action_choices.length] = "<a href=\"event:look," +Integer.toString(i) +"\">";
                         }else if(location.contents[i] is Item){
-                            action_choices[action_choices.length] = "<a href=\"event:pick_up," + String(i) +"\">";
+                            action_choices[action_choices.length] = "<a href=\"event:pick_up," +Integer.toString(i) +"\">";
                         }
                     }
                     
-                    for(i=0;i<location.actions.length;i++){
+                    for(i=0;i<location.actions.size();i++){
                         if (location.action_max_times[i] > location.action_current_num_times[i] || location.action_max_times[i] == -1){
-                            action_choices[action_choices.length] = "<a href=\"event:action,-1," + String(i) +"\">";
+                            action_choices[action_choices.length] = "<a href=\"event:action,-1," +Integer.toString(i) +"\">";
                         }
                     }
                     
@@ -4005,7 +4015,7 @@ public class Character extends DynamicObject {
                     choice = personality.determine_overworld_action(action_choices, this);
                     
                     if(choice == -1){
-                        set_busy();
+                        setBusy();
                         return ret;
                     }
                     options = action_choices[choice];
@@ -4034,13 +4044,13 @@ public class Character extends DynamicObject {
                                 ret += go_to_new_location(tempArray[1],0,1);
                             }
                         }
-                        if(busy <= 0)set_busy();
+                        if(busy <= 0)setBusy();
                     }else if (tempArray[0] == "pick_up"){
                         previous_action_output = pick_up(tempArray[1]);
-                        set_busy();
+                        setBusy();
                     }else if (tempArray[0] == "loot"){
                         previous_action_output = char.loot(int(tempArray[1]),int(tempArray[2]));
-                        set_busy();
+                        setBusy();
                     }else if (tempArray[0] == "look"){
                         if(tempArray[1] == null){
                             previous_action_output = look();
@@ -4051,7 +4061,7 @@ public class Character extends DynamicObject {
                             previous_action_output = look(int(tempArray[1]), int(tempArray[2]));								
                         }
                         status = " is standing here";
-                        set_busy();
+                        setBusy();
                     }else if(tempArray[0] == "use_item"){
                         if(char.party == null){
                             if(tempArray[2] != null){
@@ -4161,7 +4171,7 @@ public class Character extends DynamicObject {
                             if(party != null)char = party.members[int(tempArray[1])];
                             if(char != null)previous_action_output = char.inventory();
                             if(party != null){
-                                if(int(tempArray[1]) < party.members.length - 1)previous_action_output += "<a href=\"event:inventory,"+(int(tempArray[1])+1)+"\">";
+                                if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:inventory,"+(int(tempArray[1])+1)+"\">";
                             }
                         }
                         previous_action_output += "<a href=\"event:status\"><a href=\"event:wait\"><a href=\"event:show_skills\"><a href=\"event:look\">";
@@ -4175,9 +4185,9 @@ public class Character extends DynamicObject {
                         }else{
                             char = party.members[int(tempArray[1])];
                             if(char != null) previous_action_output = char.appearance(1);
-                            if(int(tempArray[1]) < party.members.length - 1)previous_action_output += "<a href=\"event:appearance,"+(int(tempArray[1])+1)+"\">";
+                            if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:appearance,"+(int(tempArray[1])+1)+"\">";
                         }
-                        set_busy();
+                        setBusy();
                         status = " is standing here";
                     }else if(tempArray[0] == "status"){
                         if(tempArray[2] == null){
@@ -4195,7 +4205,7 @@ public class Character extends DynamicObject {
                                 }
                                 previous_action_output = char.statistics(this);
                                 
-                                if(party == null || int(tempArray[1]) < party.members.length - 1)previous_action_output += "<a href=\"event:status,"+(int(tempArray[1])+1)+"\">";
+                                if(party == null || int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:status,"+(int(tempArray[1])+1)+"\">";
                             }
                         }else{
                             char = this;
@@ -4237,7 +4247,7 @@ public class Character extends DynamicObject {
                             if(party != null)char = party.members[int(tempArray[1])];
                             if(char != null)previous_action_output = char.skills.show_all_skills(char, show_children_of);
                             if(party != null){
-                                if(int(tempArray[1]) < party.members.length - 1)previous_action_output += "<a href=\"event:show_skills,"+(int(tempArray[1])+1)+"\">";
+                                if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:show_skills,"+(int(tempArray[1])+1)+"\">";
                             }
                         }else{
                             if(party != null)char = party.members[int(tempArray[1])];
@@ -4264,7 +4274,7 @@ public class Character extends DynamicObject {
         }
         
         if(busy <= 0){
-            set_busy();//well, you tried
+            setBusy();//well, you tried
             //trace("(Character.AI)Character just did action without setting any busy..." + previous_action_output + " " + ret + " " + options);
         }
         
@@ -4449,7 +4459,7 @@ public class Character extends DynamicObject {
         var party_id:int = 0;
         if(party != null){
             var i:int = 0;
-            for(i;i<party.members.length;i++){
+            for(i;i<party.members.size();i++){
                 if(party.members[i] == this){
                     party_id = i;
                     break;
@@ -5169,7 +5179,7 @@ public class Character extends DynamicObject {
         
         actions = new Array();
         i = 0;
-        for(i;i<c.actions.length;i++){
+        for(i;i<c.actions.size();i++){
             var a:Action = new Action();
             a.clone(c.actions[i]);
             add_action(a);
