@@ -222,9 +222,9 @@ public class Area extends StaticObject{
         
         if(lr == null && exempt_rooms == null){
             lr = this.get_random_room();
-            exempt_rooms = null;//new array()
+            exempt_rooms = new ArrayList<>();//new array()
         }else if(lr == null){
-            if(exempt_rooms == null) exempt_rooms = null;//new Array
+            if(exempt_rooms == null) exempt_rooms = new ArrayList<>();//new Array
             if (exempt_rooms.size() >= room_list.size()){
                 //There is no one to attach to for our poor friend. Guess he gets to be a loner
                 Boolean placed = false;
@@ -301,7 +301,8 @@ public class Area extends StaticObject{
                     int[] connect_status = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges);//var connect_status:Array = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges)
 
                     if(connect_status[0] == -1){
-                        //return place_room(r, null, max_same_room, exempt_rooms.concat(lr), restrict_edges);//TODO concat rooms
+                        exempt_rooms.add(lr);//was concat in return call
+                        return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
                     }else if(connect_status[0] == -2){
                         return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
                     }
@@ -406,10 +407,7 @@ public class Area extends StaticObject{
                 }
             }				
         }
-        
-        //if(rooms[new_x] == null)rooms[new_x] = null;//was new Array()
         if(rooms.get(new_x) == null)rooms.set(new_x, new ArrayList<ArrayList<Room>>());
-        //if(rooms[new_x][new_y] == null)rooms[new_x][new_y] = null; // was new Array()
         if(rooms.get(new_x).get(new_y) == null)rooms.get(new_x).set(new_y, new ArrayList<Room>());
         if(rooms.get(new_x).get(new_y).get(new_z) != null&&rooms.get(new_x).get(new_y).get(new_z) != r){//[][][]
             String areaMsgOut = ("(Area.existing_exit_add)Over-writing a room on the map at co-ordinates " + new_x + "," + new_y + "," + new_z + " existing_exit_check() has failed us!");
@@ -477,13 +475,6 @@ public class Area extends StaticObject{
                 if(r.exits.get(counter).area != null) continue;
                 //figure out the offset based on the name
                 int[] offset = get_offset_by_name(r.exitNames[counter]);//TODO this is always 3 elements?
-                /*
-                int[] offset = new int[get_offset_by_name(r.exitNames[counter]).size()];
-                for (int i=0; i < offset.length; i++)
-                {
-                    offset[i] = get_offset_by_name(r.exitNames[counter]).get(i).intValue();
-                }*///TODO does this shit really work?
-                //TODO readme as ArrayList to primitive
                 //need to check if we need to assign a new offset
                 if(offset[0] == 0 && offset[1] == 0 && offset[2] == 0){
                     Boolean loop_flag = true;
@@ -1086,7 +1077,6 @@ public class Area extends StaticObject{
                         new_room.set_id(room_list.size());
                         room_list.add(new_room); //room_list[room_list.size()] = new_room
                         rooms.get(x).get(y).set(z, new_room); //rooms.get(x).get(y).get(z) = new_room
-                        //if(z < -rooms.get(x].get(y).length) rooms.get(x].get(y)[-z] = null
                         if(z < -rooms.get(x).get(y).size()) rooms.get(x).get(y).set(-z, null);
                         
                         temp_z = z;
@@ -1267,7 +1257,6 @@ public class Area extends StaticObject{
         //exit_action was Action
         CharAction act= new CharAction();
         act.copyCharAction(exit_action);
-        //TODO
 
         //check if the action already exists
         int count = 0;
@@ -1295,8 +1284,6 @@ public class Area extends StaticObject{
 
         if(conseq instanceof RoomConsequence){//was is
             ((RoomConsequence) conseq ).add_room_effect(move_room);//as
-            //conseq.add_room_effect(move_room);
-            //TODO one immediately above
         }
         
         int con_count = 0;
@@ -1471,8 +1458,8 @@ public class Area extends StaticObject{
                         
                         if(unconnected_rooms.get(j).get_exit_id(connected_rooms.get(i)) < 0 && 
                         (rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2])!= null && 
-                        rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2]) != null)){ //&& 
-                        //rooms[temp_loc1.get(0)][temp_loc2.get(1)][temp_loc1.get(2)].get_exit_id(rooms[temp_loc2.get(0)][temp_loc1.get(1)][temp_loc1.get(2)]) < 0)){
+                        rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2]) != null && 
+                        rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0)){
                             //need a new connection
                             connected_rooms.get(i).new_exit(unconnected_rooms.get(j), get_direction(temp_loc1[0],temp_loc1[1],temp_loc1[2],temp_loc2[0],temp_loc2[1], temp_loc2[2]));
                             unconnected_rooms.get(j).new_exit(connected_rooms.get(i), get_direction(temp_loc2[0],temp_loc2[1], temp_loc2[2],temp_loc1[0],temp_loc1[1],temp_loc1[2]));
@@ -1520,11 +1507,9 @@ public class Area extends StaticObject{
                         
                         if(r.template != null){
                             if(r.template.get_propagating_description_distance() > 0){
-                                int temp_x = x - r.template.get_propagating_description_distance();
-                                for(temp_x= x - r.template.get_propagating_description_distance();temp_x <= x + r.template.get_propagating_description_distance();temp_x++){
-                                    int temp_y = y - r.template.get_propagating_description_distance(); 
+                                for(int temp_x= x - r.template.get_propagating_description_distance();temp_x <= x + r.template.get_propagating_description_distance();temp_x++){ 
                                     int temp_z = 0;
-                                    for(temp_y=y - r.template.get_propagating_description_distance();temp_y <= y + r.template.get_propagating_description_distance();temp_y++){
+                                    for(int temp_y=y - r.template.get_propagating_description_distance();temp_y <= y + r.template.get_propagating_description_distance();temp_y++){
                                         if(temp_x == x && temp_y == y) continue;
                                         if(rooms.get(temp_x) != null){
                                             if(rooms.get(temp_x).get(temp_y) != null){
@@ -1627,7 +1612,7 @@ public class Area extends StaticObject{
             for(int j = i+1;j<room_list.size();j++){
                 if(room_list.get(i)== room_list.get(j)){
                     LOGGER.info("(Area)We have the same room multiple times in room list in Area " + get_description() + ". " + i + " " + j);
-                    //if(room_list.get(i).template == filler_template) LOGGER.info("And it looks like a filler room");
+                    //if(room_list.get(i).template == fillerTemplate) LOGGER.info("And it looks like a filler room");
                     LOGGER.info("(Area)Doing absolutely nothing about it");
                 }
             }
@@ -1665,10 +1650,10 @@ public class Area extends StaticObject{
             }
             
             if(fillerTemplate != null){
-                /*TODO what?!
-                if(r.description == fillerTemplate.description){
+                /*
+                if(r.description == fillerTemplate.description){//TODO getDescription?
                     room_symbol = "F";
-                    temp[5] = "<colour=" + String(colour) + ">" + room_symbol;
+                    temp[5] = "<colour=" + Integet.toString(colour) + ">" + room_symbol;
                     if(r.found()&& !mini_map){
                         temp[5] = "<a href=\"event:quickmove," + String(r.id)  +"," + String(world.get_area_id(this)) +"\" colour=" + String(colour) + ">"+ room_symbol+ "</a>";
                     }else if(c != null && mini_map){
@@ -2024,7 +2009,7 @@ public class Area extends StaticObject{
     }
     public ArrayList<Room> get_edge_rooms(int indent, Boolean skip_area_check){
         //default 0, false
-        ArrayList<Room> list = null;//var list:Array = null//new Array()
+        ArrayList<Room> list = new ArrayList<>();//var list:Array = null//new Array()
         int x = 0;
         int y = 0;
         int z = baseFloorZ;
@@ -2160,10 +2145,9 @@ public class Area extends StaticObject{
         int i = 0;
         
         for(i=0;i<room_list.size();i++){
-            ///*TODO combat manager
             if(room_list.get(i)!= null){
                 String tick_happenings = "";
-                //room_list[i].last_area_tick = totalActionsTaken;
+                //room_list.get(i).last_area_tick = totalActionsTaken;
                 if(room_list.get(i).cm != null){
                     /*
                     if(!room_list.get(i).cm.active_combat()){
@@ -2176,7 +2160,6 @@ public class Area extends StaticObject{
                     */
                 }
                 if(room_list.get(i).contents != null){
-                    q = 0;
                     for(q=0;q<room_list.get(i).contents.size();q++){
                         if (room_list.get(i).contents.get(q) instanceof Character){
                             Character temp;
@@ -2202,9 +2185,7 @@ public class Area extends StaticObject{
                             Item temp_i = (Item)room_list.get(i).contents.get(q);
                             temp_i.tick(room_list.get(i));
                         }
-                    }
-                    q = 0;
-                    
+                    }               
                     for(q=0;q<room_list.get(i).static_contents.size();q++){
                         if(room_list.get(i).static_contents.get(q) instanceof Container){
                             //need to clean up bodies

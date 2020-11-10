@@ -51,8 +51,11 @@ public class AlchemyItem extends Item {
             ArrayList<Object> initial_array = new ArrayList<>();//var initial_array:Array = this.types.concat(item2.types)
             initial_array.addAll(types);
             initial_array.addAll(item2.types);
-            //initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd)
-            initial_array.addAll(changeEffects);
+            //replaced by below//initial_array = initial_array.concat(this.changeEffects).concat(item2.changeEffects).concat(this.statActionAdd).concat(item2.statActionAdd)
+            initial_array.addAll(this.changeEffects);
+            initial_array.addAll(item2.changeEffects);
+            initial_array.addAll(this.statActionAdd);
+            initial_array.addAll(item2.statActionAdd);
 
             ArrayList<Double> effect_amounts = new ArrayList<>();
             int x = 0;

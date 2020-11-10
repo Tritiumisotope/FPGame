@@ -22,11 +22,7 @@ public class FPalace_topics {
             ct.set_topic_name("area");
             
 			ct.set_no_mention();
-			/*
-			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
-			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
-			dia1.add(Character.relations_affect_id);
-			dia2.add(5);*///TODO holy fuck this is hacky
+			
 			ct.add_dialog("You ask </n2> about the area you're in.", Character.relations_affect_id, 5,false, Conversation_topic.ask_topic);
 			
 			ct.add_dialog("You ask </n2> about the area you're in",Character.relations_affect_id, 5,false, Conversation_topic.telling_topic);
@@ -2860,17 +2856,16 @@ public class FPalace_topics {
 			Item cola_item = FPalace_items.futa_cola();
             Quest get_futa_cola_quest= new Quest();
 			get_futa_cola_quest.set_name("Helping out Lucy");
-			//get_futa_cola_quest.new_objective("Find something to help Lucy become more like her big sister Heidi. ",Quest.pick_up_action,{cola_item});
-			//get_futa_cola_quest.new_objective("Get the cola back to Lucy. ",Quest.talk_action,null);
-			//get_futa_cola_quest.add_end_reward([50]);
-			//TODO
+			get_futa_cola_quest.new_objective("Find something to help Lucy become more like her big sister Heidi. ",Quest.pick_up_action,cola_item);
+			get_futa_cola_quest.new_objective("Get the cola back to Lucy. ",Quest.talk_action,null);
+			get_futa_cola_quest.add_end_reward(new ArrayList<>(Arrays.asList(50)));
 			get_futa_cola_quest.set_end_step(2);
 			
 			CharAction a = new CharAction();
 			a.set_dialogue("",0);
 			Challenge challenge = new Challenge();
 			challenge.set_attack_stat(-1,0);
-			//challenge.set_attack_quest(get_futa_cola_quest,1);
+			challenge.set_attack_quest(get_futa_cola_quest,1);
 			challenge.set_defense_stat(-1,1);
 			challenge.setVariability(0);
 			challenge.setText("");
@@ -2912,7 +2907,7 @@ public class FPalace_topics {
 			ItemConsequence iconsequence = new ItemConsequence();
 			iconsequence.addConsequence(Character.relations_affect_id,40, "You watch as Lucys body changes before your eyes. As her body finally settles down, you see her staring at your body hungrily. ",0,0,0,-1,true);
 			iconsequence.add_item_use(cola_item,0,false);
-			//iconsequence.add_item_use(cola_item,0,false);
+			iconsequence.add_item_use(cola_item,0,false);
 			a.addChallenge(challenge,iconsequence);
 			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
@@ -3066,11 +3061,11 @@ public class FPalace_topics {
 			ct.set_no_spread();
 			ct.set_topic_name("Making a Delivery");
             Quest nunnery_quest = new Quest();
-            /*
+            
 			nunnery_quest.set_name("Making a Delivery");
 			nunnery_quest.new_objective("Deliver Johns package to the Nunnery in the mountains. ",Quest.talk_action,null);
 			nunnery_quest.new_objective("Talk to John. ",Quest.talk_action,null);
-			nunnery_quest.add_end_reward([100,FPalace_items.gold(20)]);
+			nunnery_quest.add_end_reward(new ArrayList<>(Arrays.asList(100,FPalace_items.gold(20))));
 			nunnery_quest.set_end_step(2);
 			
 			CharAction a = new CharAction();
@@ -3101,7 +3096,7 @@ public class FPalace_topics {
 			
 			a.addChallenge(challenge,qconsequence);
 			
-			var temp_item:Item = FPalace_items.milk_jug();
+			Item temp_item = FPalace_items.milk_jug();
 			
 			challenge = new Challenge();
 			challenge.set_attack_stat(-1,0);
@@ -3152,8 +3147,8 @@ public class FPalace_topics {
 			
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-            */
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+            
 			return ct;			
 		}
 		
@@ -3161,14 +3156,13 @@ public class FPalace_topics {
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Filling the quota for cum");
-			/*
+			
 			Item temp_item = FPalace_items.cum_jug();
             Quest cum_quota_quest = new Quest();
-            /*TODO Quest
 			cum_quota_quest.set_name("Filling the quota for cum");
-			cum_quota_quest.new_objective("Get a jug of cum for Heidi. ",Quest.pick_up_action,[temp_item]);
+			cum_quota_quest.new_objective("Get a jug of cum for Heidi. ",Quest.pick_up_action,temp_item);
 			cum_quota_quest.new_objective("Get the cum back to Heidi. ",Quest.talk_action,null);
-			cum_quota_quest.add_end_reward([50,FPalace_items.gold(7)]);
+			cum_quota_quest.add_end_reward(new ArrayList<>(Arrays.asList(50,FPalace_items.gold(7))));
 			cum_quota_quest.set_end_step(2);
 			
 			CharAction a = new CharAction();
@@ -3220,8 +3214,8 @@ public class FPalace_topics {
 			iconsequence.add_item_reward(temp_item,0,false,false);
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-            */
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+            
 			return ct;
 		}
 		
@@ -3229,14 +3223,13 @@ public class FPalace_topics {
 			Conversation_topic ct = new Conversation_topic();
 			ct.set_no_spread();
 			ct.set_topic_name("Keeping the girls Calm");
-			//Character temp_char = FPalace_npcs.FPalace_Herm().gen_char();
-            //Quest sleeping_with_amazons_quest = new Quest();
-            /*TODO Quest
+			Character temp_char = FPalace_npcs.FPalace_Herm().gen_char();
+            Quest sleeping_with_amazons_quest = new Quest();
 			sleeping_with_amazons_quest.set_name("Calming the girls down");
 			sleeping_with_amazons_quest.new_objective("Incapacitate 2 Amazons in the Palace for Vivian. ",Quest.incapacitate_action,temp_char);
 			sleeping_with_amazons_quest.new_objective("Incapacitate an Amazon in the Palace for Vivian. ",Quest.incapacitate_action,temp_char);
 			sleeping_with_amazons_quest.new_objective("Talk to Vivian. ",Quest.talk_action,null);
-			sleeping_with_amazons_quest.add_end_reward([50]);
+			sleeping_with_amazons_quest.add_end_reward(new ArrayList<>(Arrays.asList(50)));
 			sleeping_with_amazons_quest.set_end_step(3);
 			
 			CharAction a = new CharAction();
@@ -3266,8 +3259,8 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-            */
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+    
 			return ct;			
 		}
 		
@@ -3281,18 +3274,17 @@ public class FPalace_topics {
 			Item temp_item3 = FPalace_items.Stubby_twig();
 			Item temp_item4 = FPalace_items.round_apple();
 			
-			/*
             Quest gathering_quest = new Quest();
 			gathering_quest.set_name("Gathering Ingredients for a Hermit");
 			gathering_quest.new_objective("Get a floppy cucumber for the Hermit. ",Quest.pick_up_action,temp_item);
 			gathering_quest.new_objective("Give the cucumber to the Hermit. ",Quest.talk_action,null);
-			gathering_quest.new_objective("Get some dickweed for the Hermit. ",Quest.pick_up_action,[temp_item2]);
+			gathering_quest.new_objective("Get some dickweed for the Hermit. ",Quest.pick_up_action,temp_item2);
 			gathering_quest.new_objective("Give the dickweed to the Hermit. ",Quest.talk_action,null);
-			gathering_quest.new_objective("Get a stubby twig for the Hermit. ",Quest.pick_up_action,[temp_item3]);
+			gathering_quest.new_objective("Get a stubby twig for the Hermit. ",Quest.pick_up_action,temp_item3);
 			gathering_quest.new_objective("Give the stubby twig to the Hermit. ",Quest.talk_action,null);
-			gathering_quest.new_objective("Get a round apple for the Hermit. ",Quest.pick_up_action,[temp_item4]);
+			gathering_quest.new_objective("Get a round apple for the Hermit. ",Quest.pick_up_action,temp_item4);
 			gathering_quest.new_objective("Give the apple to the Hermit. ",Quest.talk_action,null);
-			gathering_quest.add_end_reward([100,FPalace_items.gold(20)]);
+			gathering_quest.add_end_reward(new ArrayList<>(Arrays.asList(100,FPalace_items.gold(20))));
 			gathering_quest.set_end_step(8);
 			
 			CharAction a = new CharAction();
@@ -3476,8 +3468,8 @@ public class FPalace_topics {
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "The Hermit complains about how hard it is to find ingredients. ",-1);
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, [FPalaceHelper.int_id, Character.relations_affect_id], [5, 0],false, Conversation_topic.being_told_topic);
-            */
+			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+            
 			return ct;			
 		}
 		
@@ -3514,8 +3506,7 @@ public class FPalace_topics {
 			challenge.setVariability(0);
 			challenge.setText("audition");
 			consequence = new Consequence();
-            //consequence.add_change_effect(FPalace_classes.job_prostitute());
-            //TODO Classes
+            consequence.add_change_effect(FPalace_classes.job_prostitute());
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "</n2>s smile becomes a grin as </pronoun2> motions to </noun2> groin. ",0);
 	
 			a.addChallenge(challenge,consequence);
