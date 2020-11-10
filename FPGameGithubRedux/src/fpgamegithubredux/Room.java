@@ -540,6 +540,20 @@ public class Room extends StaticObject{
 
         return ret;
     }//dummy version, commented rest in
+    public void remove_exit(Room e){
+        int i = 0;
+        for(i=0;i<exits.size();i++){
+            if(exits.get(i) == e){
+                //exit_names = exit_names.slice(0,i).concat(exit_names.slice(i+1,exit_names.length));
+                exit_names.remove(i);
+                //exits = exits.slice(0,i).concat(exits.slice(i+1,exits.length));
+                exits.remove(i);
+                //exit_actions = exit_actions.slice(0,i).concat(exit_actions.slice(i+1,exit_actions.length));
+                exit_actions.remove(i);
+                break;
+            }
+        }
+    }
     public void remove_static_contents(int i){
         //static_contents = static_contents.slice(0, i).concat(static_contents.slice(i+1, static_contents.length))
         static_contents.remove(i);
@@ -547,6 +561,9 @@ public class Room extends StaticObject{
         for(int count=0;count<static_contents.size();count++){
             static_contents.get(count).set_id(count);
         }
+    }
+    public int new_exit(Room e){
+        return new_exit(e,null);
     }
     public int new_exit(Room e,String d){// default d = null
         int i = 0;

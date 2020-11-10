@@ -719,7 +719,7 @@ public class Character extends DynamicObject {
         String ret = "";
         Sex determined_sex = c.determine_sex(this);
         String temp_string = "";
-        if(get_primary_race().getName() != c.get_primary_race().getName()){
+        if(!get_primary_race().getName().equals(c.get_primary_race().getName())){
             if(personality.job == null){
                 temp_string = determined_sex.get_age_name(this);
                 if(temp_string.equals("")){
@@ -862,7 +862,7 @@ public class Character extends DynamicObject {
     public String new_body_part(BodyPart p, Boolean give_bonus){//def true
         String ret = "";
         
-        if(p.getName() != "")ret += "</n> now has " + p.getName() + ". ";
+        if(!p.getName().equals(""))ret += "</n> now has " + p.getName() + ". ";
         
         if(p.race == null) p.set_race(this.get_primary_race());
         
@@ -1864,7 +1864,7 @@ public class Character extends DynamicObject {
         ArrayList<Object> move_array = new ArrayList<Object>();
         int found_num = 0;
         for(Item tempItem : possessions){
-            if(tempItem.getName() == item.getName()){
+            if(tempItem.getName().equals(item.getName())){
                 move_array.add(tempItem);
                 found_num++;
             }else{
@@ -4722,7 +4722,7 @@ public class Character extends DynamicObject {
                             Boolean found = false;
                             int k= 0;
                             for(k=0;k<body.parts.size();k++){
-                                if(c.body.parts.get(i).getName() == body.parts.get(k).getName()){
+                                if(c.body.parts.get(i).getName().equals(body.parts.get(k).getName())){
                                     //both_parts[both_parts.length] = [body.parts[k],c.body.parts[i]]
                                     both_parts.add(new BodyPart[]{body.parts.get(k),c.body.parts.get(i)}); 
                                     mom_found_parts.set(k,true);//mom_found_parts[k] = true
@@ -4780,7 +4780,7 @@ public class Character extends DynamicObject {
                     //Figure out the kids name
                     String baby_name = " child of " + this.getName() + " and " + c.getName();
                     
-                    if(baby.sex.name == "Male"){
+                    if(baby.sex.name.equals("Male")){
                         baby_name = baby.get_primary_race().get_random_male_name();
                     }else{
                         baby_name = baby.get_primary_race().get_random_female_name();

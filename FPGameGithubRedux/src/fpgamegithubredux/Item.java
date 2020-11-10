@@ -241,7 +241,7 @@ public class Item {
                         String l_string = FPalaceHelper.get_stat_name_by_id(count);
                         if(identEfficacy.get(0)>20){
                             
-                            if(l_string != "?"){
+                            if(!l_string.equals("?")){
                                 if(effects.get(count) >= 0){
                                     desc += "Increase " + l_string + " by "	+effects.get(count)+".\n";
                                 }else{
@@ -250,7 +250,7 @@ public class Item {
                             }
                             
                         }else if(identEfficacy.get(0)>10){
-                            if(l_string != "?"){
+                            if(!l_string.equals("?")){
                                 if(effects.get(count) >= 0){
                                     desc += "Increase ";
                                 }else{

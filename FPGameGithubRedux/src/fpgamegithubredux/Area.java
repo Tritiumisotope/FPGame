@@ -959,7 +959,9 @@ public class Area extends StaticObject{
     }
     
     
-    
+    public void filler_area(){
+        filler_area(-2);
+    }
     public void filler_area(int floor_to_build){
         //floor_to_build = -2
         if(floor_to_build < -1)floor_to_build = baseFloorZ;

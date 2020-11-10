@@ -155,7 +155,7 @@ public class ItemConsequence extends Consequence {
                 int k = 0;
                 if(item_use_holder.get(i)){
                     for(k=0;k<c.possessions.size();k++){
-                        if(c.possessions.get(k).name == item_use.get(i).name){
+                        if(c.possessions.get(k).name.equals(item_use.get(i).name)){
                             if(item_reward_target.get(i)){
                                 ret += c.sanitize(c.possessions.get(k).useItem(c,k),c);							
                             }else{
@@ -167,7 +167,7 @@ public class ItemConsequence extends Consequence {
                     }
                 }else{
                     for(k=0;k<c2.possessions.size();k++){
-                        if(c2.possessions.get(k).name == item_use.get(i).name){
+                        if(c2.possessions.get(k).name.equals(item_use.get(i).name)){
                             if(item_reward_target.get(i)){
                                 ret += c.sanitize(c2.possessions.get(k).useItem(c,k),c);							
                             }else{
