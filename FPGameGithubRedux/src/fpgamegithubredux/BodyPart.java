@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
+import java.util.logging.Logger;
+
 
 public class BodyPart extends DynamicObject {
+    private static final Logger LOGGER = Logger.getLogger(BodyPart.class.getName());
     public static final int display_front = 0;
     public static final int display_bottom = 1;
     public static final int display_top = 2;
@@ -111,7 +114,7 @@ public class BodyPart extends DynamicObject {
         for(i=0;i<covered_by.size();i++){
             int image_id = covered_by.get(i).get_part_image(part_id);
             if(image_id >=0){
-                //JLabel temp_bmp = FPalaceHelper.get_image_by_id(image_id, "Equipment");//was BitMap
+                JLabel temp_bmp = FPalaceHelper.get_image_by_id(image_id, "Equipment");//was BitMap
                 //if(ret == null)ret = new JLabel();//= new Array()
                                     
                 //ret = temp_bmp;//was ret[ret.length]
@@ -196,11 +199,10 @@ public class BodyPart extends DynamicObject {
                      
                     for(j=0;j<connected_to.get(0).size();j++){//[].length
                         if(connected_to.get(i).get(j) == bp){//[][]
-                            /*TODO slice
-                            connected_to[i] = connected_to[i].slice(0,j).concat(connected_to[i].slice(j+1,connected_to[i].length))
-                            if(connected_to[i].length == 0)connected_to[i] = null
+                            //connected_to[i] = connected_to[i].slice(0,j).concat(connected_to[i].slice(j+1,connected_to[i].length))
+                            connected_to.remove(j);
+                            if(connected_to.get(i).size() == 0)connected_to.set(i, null);
                             break;
-                            */
                         }
                     }
                     
@@ -260,7 +262,7 @@ public String getName(){
         for(int i=0;i<stat_description.size();i++){
              int ps = stat_description.get(i).check_combat_status(c, this);
             if(ps <= Stat.STATUSCONFIRMEDINCAPACITATED){
-                //ret[ret.length] = stat_description.get(i).get_id();
+                //ret[ret.length] = stat_description.get(i).get_id()
                 ret.add(stat_description.get(i).get_id());
             }
         }
@@ -316,7 +318,7 @@ public String getName(){
     }
     
     public void add_upkeep(TickEffect tf){
-        part_upkeep.add(tf); //part_upkeep[part_upkeep.size()] = tf;
+        part_upkeep.add(tf); //part_upkeep[part_upkeep.size()] = tf
     }
     
     public void set_get_pregnant(){
@@ -363,8 +365,7 @@ public String getName(){
          int ret = 0;
          int i = 0;
         for(i=0;i<covered_by.size();i++){
-            //ret += covered_by[i].covered_difficulty(c, part_id, this);	
-            //TODO			
+            ret += covered_by.get(i).covered_difficulty(c, part_id, this);		
         }
         
         return ret;
@@ -408,7 +409,7 @@ public String getName(){
                 while(ret.indexOf("</bpn>") >= 0)ret = ret.replace("</bpn>", get_pair_name());
             }
         }else if(other_cover != null){
-            //trace("(Body_part.pair_appearance)Should be outputing the other parts cover I think... it actually has some. Ignoring cover instead.");
+            LOGGER.info("(Body_part.pair_appearance)Should be outputing the other parts cover I think... it actually has some. Ignoring cover instead.");
         }
         
         if(other_bp.stat_descriptions(c).equals(stat_descriptions(c))){
@@ -443,7 +444,7 @@ public String getName(){
         
         
         if(part_state != null && covered_by.get(covered_by.size() -1) == null && other_bp.part_state != null && other_bp.covered_by.get(covered_by.size()-1) == null){
-            //trace("(Body_part.pair_appearance)Should be outputing some sort of paired part state. Doing nothing.");
+            LOGGER.info("(Body_part.pair_appearance)Should be outputing some sort of paired part state. Doing nothing.");
         }else{
             if(part_state != null && covered_by.get(covered_by.size() -1) == null){
                 if(!part_state.get_current_state_description(c, this).equals("")){
@@ -466,9 +467,8 @@ public String getName(){
         
         return ret;
     }
-    /*
     @Override
-public String appearance(int i, Character c){//default 0, null
+    public String appearance(int i, Character c){//default 0, null
          String s = "";
         if(!description.equals("")){
             s = description + stat_descriptions(c);
@@ -489,7 +489,6 @@ public String appearance(int i, Character c){//default 0, null
         
         return s;
     }
-    */
     public void set_race(Race r){
         //remove the racial stats if we already had a race
         if(race != null){
@@ -526,8 +525,8 @@ public String appearance(int i, Character c){//default 0, null
             }
         }
         s.setStatValue(c);
-        stat_id.add(id); //stat_id[stat_id.size()] = id;
-        stat_description.add(s); //stat_description[stat_description.size()] = s;
+        stat_id.add(id); //stat_id[stat_id.size()] = id
+        stat_description.add(s); //stat_description[stat_description.size()] = s
         
     }
     
@@ -536,8 +535,10 @@ public String appearance(int i, Character c){//default 0, null
         for(i=0;i<stat_id.size();i++){
             if(stat_id.get(i) == id){
                 //TODO
-                //stat_id = stat_id.slice(0, i).concat(stat_id.slice(i+1, stat_id.size()));
-                //stat_description = stat_description.slice(0, i).concat(stat_description.slice(i+1, stat_description.size()));
+                //stat_id = stat_id.slice(0, i).concat(stat_id.slice(i+1, stat_id.size()))
+                stat_id.remove(i);
+                //stat_description = stat_description.slice(0, i).concat(stat_description.slice(i+1, stat_description.size()))
+                stat_description.remove(i);
             }
         }
     }
@@ -552,11 +553,11 @@ public String appearance(int i, Character c){//default 0, null
     }
     
     public ArrayList<CharAction> get_stat_actions(int id){
-        ArrayList<CharAction> ret = new ArrayList<>();// = new Array();
+        ArrayList<CharAction> ret = new ArrayList<>();// = new Array()
          int i = 0;
         for(i=0;i<stat_id.size();i++){
             if(stat_id.get(i) == id){
-                ret.addAll(stat_description.get(i).get_actions());//ret = ret.concat(stat_description.get(i).get_actions());
+                ret.addAll(stat_description.get(i).get_actions());//ret = ret.concat(stat_description.get(i).get_actions())
             }
         }
         return ret;
@@ -572,12 +573,11 @@ public String appearance(int i, Character c){//default 0, null
     }
     
     public void set_equip(Equipment e){
-        //equip[equip.length] = e;
-        equip.add(e);
+        equip.add(e);//equip[equip.length] = e
     }
     
     public void set_cover(Equipment e){
-        covered_by.add(e); //covered_by[covered_by.length] = e;
+        covered_by.add(e); //covered_by[covered_by.length] = e
     }
     
     public ArrayList<Equipment> get_equip(){
@@ -594,8 +594,7 @@ public String appearance(int i, Character c){//default 0, null
     
     public void set_hold(Weapon w, Character c){
         if(hold != null){
-            //c.unhold(hold);
-            //TODO
+            c.unhold(hold);
         }
         hold = w;
     }
@@ -621,8 +620,7 @@ public String appearance(int i, Character c){//default 0, null
                 }else{
                     if(c == null)continue;
                      BodyPart p = null;
-                     //found_array:Array = new Array();
-                     ArrayList<Integer> found_array= new ArrayList<>();
+                     ArrayList<Integer> found_array= new ArrayList<>();//found_array:Array = new Array()
                      int j = 0;
                      int parts_count = 0;
                      
@@ -648,12 +646,12 @@ public String appearance(int i, Character c){//default 0, null
                                     for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.size();k++){
                                         if(stat_description.get(i).stat_desc_ttl_part_limit.get(k) == p.part_id){
                                             if(found_array.get(k) != null && found_array.get(k) < part_check){
-                                                //stat_total -= found_array.get(k);
+                                                //stat_total -= found_array.get(k)
                                                 stat_total = stat_total.doubleValue() - found_array.get(k);
-                                                //found_array[k] = part_check;
+                                                //found_array[k] = part_check
                                                 found_array.set(k,part_check);
                                             }else if(found_array.get(k) == null){
-                                                //found_array[k] = part_check;
+                                                //found_array[k] = part_check
                                                 found_array.set(k,part_check);
                                             }else{
                                                 part_check = 0;
@@ -712,8 +710,7 @@ public String appearance(int i, Character c){//default 0, null
             k = k.doubleValue() * race.get_damage_mod(effect_type);
             int cover_count = 0;
             for(cover_count=0;cover_count<covered_by.size();cover_count++){
-                //k = k* covered_by[cover_count].get_damage_mod(effect_type);
-                //TODO get_damage_mod
+                k = k.doubleValue() * covered_by.get(cover_count).get_damage_mod(effect_type).doubleValue();
             }
         }
         
@@ -733,8 +730,7 @@ public String appearance(int i, Character c){//default 0, null
                     }
                 }					
                 
-                //s += stat_description.get(j).get_change_magnitude(k,c,temp,this);
-                //TODO that method
+                s += stat_description.get(j).get_change_magnitude(k.intValue(),c,temp,this);
                 //if(temp == 0 && stat_description.get(j).stat_value < 0){
                     //if not a temp, and we're setting less than 0, should we destroy the part? 
                     
@@ -804,18 +800,18 @@ public String appearance(int i, Character c){//default 0, null
     }
     
     public void new_attack(CharAction a){
-        attacks.add(a); //attacks[attacks.length] = a;
+        attacks.add(a); //attacks[attacks.length] = a
     }
     
     public void new_action(CharAction a){
-        actions.add(a); //actions[actions.length] = a;
+        actions.add(a); //actions[actions.length] = a
     }
     
     public CharAction get_attack_action(int i){
         if (i>=0 && i<attacks.size()){
             return attacks.get(i);
         }else{
-            //trace("(BODY_PART)Should be getting racial attack");
+            LOGGER.info("(BODY_PART)Should be getting racial attack");
         }
         return null;
     }
@@ -833,15 +829,16 @@ public String appearance(int i, Character c){//default 0, null
         if (i>=0 && i<actions.size()){
             return actions.get(i);
         }else{
-            //trace("(BODY_PART)Should be getting racial action");
+            LOGGER.info("(BODY_PART)Should be getting racial action");
         }
         return null;
     }
     
     public ArrayList<CharAction> get_actions(){
-        ArrayList<CharAction> ret = new ArrayList<>();// = new Array();
-        ret.addAll(race.actions);
-        //ret = actions.concat(race.actions);
+        ArrayList<CharAction> ret = new ArrayList<>();// = new Array()
+        ret.addAll(actions);
+        ret.addAll(race.actions);//ret = actions.concat(race.actions)
+        
         
         return ret;
     }

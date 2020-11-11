@@ -1746,26 +1746,23 @@ public class Character extends DynamicObject {
 			}
 			return "";
 		}
-		/*
-		public function unhold(w:Weapon):String{
+		public String unhold(Weapon w){
 			setBusy();
 			
-			var party_id:int = 0;
-			var count:int;
+			int party_id = 0;
+			int count;
 			if(party != null){
-				count = 0;
-				for(count;count<party.members.size();count++){
+				for(count=0;count<party.members.size();count++){
 					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
 				}
 			}
-			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
-			personality.advance_objectives(Quest.unhold_action, [w], this);
+			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			personality.advance_objectives(Quest.unhold_action, new ArrayList<>(Arrays.asList(w)), this);
 			return sanitize(body.unhold(w,this) + back_string, null);
 		}
-        */
         public String get_item_description(Item item){
             return get_item_description(item, false);
         }

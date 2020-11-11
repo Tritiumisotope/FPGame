@@ -1650,7 +1650,7 @@ public class Area extends StaticObject{
             }
             
             if(fillerTemplate != null){
-                /*
+                /*TODO find out why that is an array and yet should have a description
                 if(r.description == fillerTemplate.description){//TODO getDescription?
                     room_symbol = "F";
                     temp[5] = "<colour=" + Integet.toString(colour) + ">" + room_symbol;
@@ -1998,7 +1998,7 @@ public class Area extends StaticObject{
             if(room_list.get(room_num).attached_to_other_area()) return get_random_room(true);
         }
         
-        return new Room();//room_list[room_num];//TODO
+        return room_list.get(room_list.size());//room_list[room_num];//TODO
         
     }
     public ArrayList<Room> get_edge_rooms(){
