@@ -219,7 +219,7 @@ public class Character extends DynamicObject {
                 
                 if((old_quant > 0 && new_quant < 0) || (old_quant < 0 && new_quant > 0)){
                     if(!(challenge_output.indexOf(stat_id,chall_out_index+1) >= 0)){
-                        challenge_output += s + "~\n~";
+                        challenge_output += s + "~<br>~";
                     }else{
                         chall_out_index = challenge_output.indexOf(stat_id,chall_out_index+1)
                         old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
@@ -231,14 +231,14 @@ public class Character extends DynamicObject {
                     challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length);
                 }
             }else{
-                challenge_output += s + "~\n~";
+                challenge_output += s + "~<br>~";
             }
         }else{
-            var temp_array:Array = s.split("\n");
+            var temp_array:Array = s.split("<br>");
             var i:int = 0;
             for(i;i<temp_array.length;i++){
                 if(!(challenge_output.indexOf(temp_array[i]) >= 0) && temp_array[i] != null && temp_array[i] != ""){
-                    challenge_output += temp_array[i] + "~\n~";   
+                    challenge_output += temp_array[i] + "~<br>~";   
                 }else if(challenge_output.indexOf(temp_array[i]) >= 0){
                     //we may need to tick up the count for this stat...
                     if(challenge_output.charAt(challenge_output.indexOf(temp_array[i]) - 1) == "\""){
@@ -249,9 +249,9 @@ public class Character extends DynamicObject {
                             var curr_count:int = int(challenge_output.slice(start_string, challenge_output.indexOf(temp_array[i]) - 2));
                             curr_count++;
                             if(curr_count == 0){
-                                while(challenge_output.charAt(start_string) != "\n" && start_string >= 0)start_string--;
+                                while(challenge_output.charAt(start_string) != "<br>" && start_string >= 0)start_string--;
                                 start_string++;
-                                challenge_output = challenge_output.slice(0, start_string) + challenge_output.slice(challenge_output.indexOf("\n",start_string), challenge_output.length);
+                                challenge_output = challenge_output.slice(0, start_string) + challenge_output.slice(challenge_output.indexOf("<br>",start_string), challenge_output.length);
                             }else{
                                 challenge_output = challenge_output.slice(0, start_string) + curr_count + challenge_output.slice(challenge_output.indexOf(temp_array[i]) - 2, challenge_output.length);
                             }
@@ -264,7 +264,7 @@ public class Character extends DynamicObject {
     
     public function get_challenge_output():String{
         var ret:String = "";
-        var temp_array:Array = challenge_output.split("~\n~");
+        var temp_array:Array = challenge_output.split("~<br>~");
         var i:int = 0;
         for(i;i<temp_array.length;i++){
             if(temp_array[i] != null && temp_array[i].indexOf("<sid") >= 0){
@@ -303,8 +303,8 @@ public class Character extends DynamicObject {
                 if(temp_array[i] != null && temp_array[i] != "")ret += temp_array[i];
             }
         }
-        if(ret!="")ret += "\n\n";
-        if(location == null)ret = "</n> has died. \n\n";
+        if(ret!="")ret += "<br><br>";
+        if(location == null)ret = "</n> has died. <br><br>";
         challenge_output = "";
         return ret;
     }
@@ -483,7 +483,7 @@ public class Character extends DynamicObject {
                         
                     if(j!=null){
                         if(Integer.parseInt(j) == -1 && party != null){
-                            ret = "choose target:\n";
+                            ret = "choose target:<br>";
                             int member_count = 0;
                             for(member_count=0;member_count<party.members.size();member_count++){
                                  if(temp_action.auto_trigger_id > -1){
@@ -757,17 +757,17 @@ public class Character extends DynamicObject {
     /*
     override public function appearance(i:int = 0, c:Character = null):String{
          var s:String = "";
-         s += get_status(c) + ".\n";
+         s += get_status(c) + ".<br>";
          
-         if(c != null)s += c.judge_relative_skill(this) + "\n";
+         if(c != null)s += c.judge_relative_skill(this) + "<br>";
          
          var k:int = 0;
          if (i != 0){
             for (k;k<stat.length;k++){
                 if(stat[k].get_description(this).length > 0) s += stat[k].get_description(this);
              }
-            s += body.get_parts_appearance(this) + "\n"; 
-            if(c != null)s += "\n\n<font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
+            s += body.get_parts_appearance(this) + "<br>"; 
+            if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
          }else{
             var temp_array:Array = get_all_overworld_actions();
             for (k;k<temp_array.length;k++){
@@ -949,7 +949,7 @@ public class Character extends DynamicObject {
     }
     *//*
     public function new_race(i:int, r:Race):String{
-			var ret:String = "\n";
+			var ret:String = "<br>";
 			if (i >= 0 && i < body.parts.length) {
 				if(body.parts[i].race != null){
 					body.parts[i].race.reverse_bonuses(this, body.parts[i],true);
@@ -985,7 +985,7 @@ public class Character extends DynamicObject {
 			if(this.party != null){
 				if(this.party.get_leader() != this){
 					if(party.get_leader().location == location || party.get_leader().location == r){
-						//ret += sanitize("</n> stays with </noun> party.\n");
+						//ret += sanitize("</n> stays with </noun> party.<br>");
 						if(party.get_leader().location == location)move_flag = false;
 					}
 				}
@@ -1026,7 +1026,7 @@ public class Character extends DynamicObject {
 								this.party.members.get(k).new_location(init_r, true, is_player, true);
 							}
 						}
-						ret += "the party stops.\n";
+						ret += "the party stops.<br>";
 					}
 				}
 			}
@@ -1051,7 +1051,7 @@ public class Character extends DynamicObject {
 							ret += location.exit_actions[i].trigger(this);						
 							look_flag = false;
 						}else{					
-							ret += "The trip takes " + Main.get_time(location.area.move_time_mod) + ".\n"
+							ret += "The trip takes " + Main.get_time(location.area.move_time_mod) + ".<br>"
 							ret += new_location(s);
 						}
 						
@@ -1078,7 +1078,7 @@ public class Character extends DynamicObject {
 						}						
 					}
 				}else{
-					ret += sanitize(get_overworld_failures())+"\n";
+					ret += sanitize(get_overworld_failures())+"<br>";
 				}
 			}			
 			
@@ -1322,7 +1322,7 @@ public class Character extends DynamicObject {
         Boolean found = false;
         int count = 0;
         
-        if (k.intValue() == 0) i = -1;
+        if (k.doubleValue() == 0.0) i = -1;
         if(effect_type > -1){
             //replaced by belowk *= sex.get_damage_mod(effect_type)
             k = k.doubleValue()* sex.get_damage_mod(effect_type);
@@ -1338,13 +1338,13 @@ public class Character extends DynamicObject {
                     if(stats.get(j).age){
                         k = Math.ceil(k.doubleValue()/get_primary_race().get_aging_mod().doubleValue());
                         sex.age(this,k.intValue());
-                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);
+                        s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);
                     }//TODO so much
                     
                     if(body_app_method == Body.change_stats_individual){
-                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);				
+                        s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);				
                     }else if(body_app_method == Body.change_first_stat && !found){
-                        s += stats.get(j).get_change_magnitude(k.intValue(),this,temp);
+                        s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);
                         found = true;
                     }
                 }
@@ -1375,6 +1375,7 @@ public class Character extends DynamicObject {
                 }
                 */
             }else{					
+                LOGGER.info("attempting to apply affect of magnitude " + k.doubleValue());
                 s += body.get_effects(i.intValue(),k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
             }
         }else if(part_id == Body.target_parts_one_by_one){
@@ -1416,6 +1417,7 @@ public class Character extends DynamicObject {
         
         return s;
     }
+    /*
     //test version
     public String applyAffectByID(int statIDForChange, Number changeBy){
         String ret = "";
@@ -1427,6 +1429,7 @@ public class Character extends DynamicObject {
 
         return ret;
     }
+    */
     public String equip(Equipment e,int k){
         return equip(e, k,-1,false);
     }
@@ -1443,7 +1446,7 @@ public class Character extends DynamicObject {
 					}
 				}
 			}
-			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
 			int i = -1;
@@ -1497,15 +1500,15 @@ public class Character extends DynamicObject {
 				}
 				if(attach_option){
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "<br>Would you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "<br>Would you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}else{
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "<br>Would you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "<br>Would you like to <a href=\"event:equip," + Integer.toString(i) +","+party_id+",0\">equip</a>, <a href=\"event:equip," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:equip," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}
 			}
@@ -1527,7 +1530,7 @@ public class Character extends DynamicObject {
 				drop(i);
 				setBusy();
 				personality.advance_objectives(Quest.equip_action, new ArrayList<>(Arrays.asList(e)), this);
-				return sanitize("</n> equips the " + e.getName() + "\n" + ret, null) + back_string;
+				return sanitize("</n> equips the " + e.getName() + "<br>" + ret, null) + back_string;
 			}else if(k == 1){
 				drop(i);
 				location.newContent(e);
@@ -1538,11 +1541,11 @@ public class Character extends DynamicObject {
 				setBusy();
 				return "You throw away the " + e.getName() + " never to see it again." + back_string;
 			}else if( k == 3 && j == -1){
-				String s = "Who do you want to give it to?\n";
+				String s = "Who do you want to give it to?<br>";
 				count = 0;
 				for(count=0;count<party.members.size();count++){
 					if(party_id != count){
-						s += " <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,"+count+"\">"+ party.members.get(count).getName() +"</a>\n";
+						s += " <a href=\"event:equip," + Integer.toString(i) +","+party_id+",3,"+count+"\">"+ party.members.get(count).getName() +"</a><br>";
 					}
 				}
 				return s + back_string;
@@ -1554,7 +1557,7 @@ public class Character extends DynamicObject {
 			}else if(k == 4){
 				String s = "";
 				if(j == -1){
-					s += "Choose a mod:\n";
+					s += "Choose a mod:<br>";
 					ArrayList<Integer> avail_mods= new ArrayList<>();
 					count = 0;
 					for(count=0;count<e.upgrade_slot_ids.size();count++){
@@ -1596,7 +1599,7 @@ public class Character extends DynamicObject {
 					}
 				}
 			}
-			var back_string:String = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			var back_string:String = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			personality.advance_objectives(Quest.unequip_action, [e], this);
 			return sanitize(body.unequip(e,this) + back_string, null);
 		}
@@ -1617,7 +1620,7 @@ public class Character extends DynamicObject {
 					}
 				}
 			}
-			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
 			int i = -1;
@@ -1670,15 +1673,15 @@ public class Character extends DynamicObject {
 				}
 				if(attach_option){
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "<br>Would you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "<br>Would you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",4,-1\">attach mod</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}else{
 					if(party != null){
-						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
+						return ret + "<br>Would you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",3,-1\">give</a>?";
 					}else{
-						return ret + "\nWould you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
+						return ret + "<br>Would you like to <a href=\"event:hold," + Integer.toString(i) +","+party_id+",0\">hold</a>, <a href=\"event:hold," + Integer.toString(i) +","+party_id+",1\">drop</a>, or <a href=\"event:hold," + Integer.toString(i) +","+party_id+",2\">throw away</a>?";
 					}
 				}
 			}
@@ -1702,7 +1705,7 @@ public class Character extends DynamicObject {
 				setBusy();
 				return "You throw away the " + w.getName() + " never to see it again." + back_string;
 			}else if( k == 3 && j == -1){
-				String s = "Who do you want to give it to?\n";
+				String s = "Who do you want to give it to?<br>";
 				count = 0;
 				for(count=0;count<party.members.size();count++){
 					if(party_id != count){
@@ -1718,7 +1721,7 @@ public class Character extends DynamicObject {
 			}else if(k == 4){
 				String s = "";
 				if(j == -1){
-					s += "Choose a mod:\n";
+					s += "Choose a mod:<br>";
 					ArrayList<Integer> avail_mods = new ArrayList<>();
 					count = 0;
 					for(count=0;count<w.upgrade_slot_ids.size();count++){
@@ -1759,7 +1762,7 @@ public class Character extends DynamicObject {
 					}
 				}
 			}
-			String back_string = "\n<font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			personality.advance_objectives(Quest.unhold_action, new ArrayList<>(Arrays.asList(w)), this);
 			return sanitize(body.unhold(w,this) + back_string, null);
 		}
@@ -1917,7 +1920,7 @@ public class Character extends DynamicObject {
             }
             System.out.println("Use Case 0.");
             System.out.println(ret);
-            return ret;
+            return sanitize(ret);
         }else if(useCase == 1){
             if(found_num > 1 && num_to_move == -1){
                 ret += "How many would you like to drop?<br><a href=\"event:use_item," + inventoryID +",1,"+party_id+",-1,1\">x1</a>";
@@ -2059,7 +2062,7 @@ public class Character extends DynamicObject {
     
     public String set_xp(int i){//was uint
         String s = "";
-        s += getName() + " gains " + i + " experience points.\n";
+        s += getName() + " gains " + i + " experience points.<br>";
         xp += i;
         while(xp >= nxt_lvl_xp){
             s += level_up();
@@ -2082,7 +2085,7 @@ public class Character extends DynamicObject {
         String s= "";
         stat_points += 1;
         lvl++;			
-        s = "\n" + getName() + " advances to level " + lvl;
+        s = "<br>" + getName() + " advances to level " + lvl;
         Character_class curr_class = null;
         int i = 0;
         /*TODO make sense!
@@ -2090,15 +2093,15 @@ public class Character extends DynamicObject {
             if(cclass[i*3 + 2] == true){
                 curr_class = cclass[i*3];
                 cclass[i*3 + 1] = lvl;
-                s = "\n" + getName() + " advances to level " + cclass[i*3 + 1];
+                s = "<br>" + getName() + " advances to level " + cclass[i*3 + 1];
                 break;
             }
         }
         */
         if(curr_class != null){
-            s+= " in the " + curr_class.getName() + " class. \n";
+            s+= " in the " + curr_class.getName() + " class. <br>";
         }else{
-            s+= ". \n";
+            s+= ". <br>";
         }
         
         //reset_stats();
@@ -2109,29 +2112,29 @@ public class Character extends DynamicObject {
         apply_affect_by_id(FPalaceHelper.max_hp_id, stat_gain, 0, null, Body.change_stats_total);
         apply_affect_by_id(FPalaceHelper.curr_hp_id, stat_gain, 0, null, Body.change_stats_total);
         
-        s+=  "Maximum HP increases by "+stat_gain +"! \n";
+        s+=  "Maximum HP increases by "+stat_gain +"! <br>";
         
         stat_gain = (int)Math.ceil(get_stat(FPalaceHelper.dex_id).doubleValue()/10);
         
         apply_affect_by_id(FPalaceHelper.max_fatigue_id, stat_gain, 0, null, Body.change_stats_total);
         apply_affect_by_id(FPalaceHelper.curr_fatigue_id, stat_gain, 0, null, Body.change_stats_total);
         
-        s+=  "Maximum Fatigue increases by "+stat_gain +"! \n";
+        s+=  "Maximum Fatigue increases by "+stat_gain +"! <br>";
         
         stat_gain = (int)Math.ceil(get_stat(FPalaceHelper.will_id).doubleValue()/10);
         
         apply_affect_by_id(FPalaceHelper.max_mp_id, stat_gain, 0, null, Body.change_stats_total);
         apply_affect_by_id(FPalaceHelper.curr_mp_id, stat_gain, 0, null, Body.change_stats_total);
         
-        s+=  "Maximum MP increases by "+stat_gain +"! \n";
+        s+=  "Maximum MP increases by "+stat_gain +"! <br>";
         
         stat_gain = (int)Math.ceil(get_stat(FPalaceHelper.sex_appeal_id).doubleValue()/10);
         
         apply_affect_by_id(FPalaceHelper.max_lust_id, stat_gain, 0, null, Body.change_stats_total);
         
-        s+=  "Maximum LUST increases by "+stat_gain +"! \n";
+        s+=  "Maximum LUST increases by "+stat_gain +"! <br>";
         
-        s+= getName() +" now has "+ stat_points +" stat points to spend. \n";
+        s+= getName() +" now has "+ stat_points +" stat points to spend. <br>";
         
         if(curr_class != null){				
             //s+= sanitize(curr_class.level_up(this), null);
@@ -2211,7 +2214,7 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-
+/*
     public String statistics(){//ignore
         String ret = "Name: " + name + "<br>";
         for(Stat s:stats){
@@ -2220,7 +2223,7 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-
+*/
     public String showAllSkills(){//ignore
         return "<table><tr><u><tc>Skill</tc><tc>Ranks</tc><tc>Bonus</tc><tc>Cost</tc><tc>Current XP to spend: <font color='#00FF00'>0</font>/100</tc></u></tr></table>";
     }
@@ -2381,7 +2384,7 @@ public class Character extends DynamicObject {
 				var temp_cont:Container = location.static_contents[i] as Container;
 				
 				if(possessions.length > 0){
-					ret += "\n<font color='#0000FF'><a href=\"event:loot,"+i+",-3\">Store</a></font>";
+					ret += "<br><font color='#0000FF'><a href=\"event:loot,"+i+",-3\">Store</a></font>";
 				}
 				
 				if(temp_cont.bury_action == null && temp_cont.bury != ""){
@@ -2389,7 +2392,7 @@ public class Character extends DynamicObject {
 					for (count;count<actions.size();count++){
 						if(actions[count] != null && location != null){
 							if(actions[count].get_name() != "" && actions[count].get_bury()){
-								ret += "\n<a href=\"event:action," + location.get_content_id(this) + "," + String(count)+","+String(i)+"\"><font color='#0000FF'>"+ actions[count].get_name() +"</font></a>";
+								ret += "<br><a href=\"event:action," + location.get_content_id(this) + "," + String(count)+","+String(i)+"\"><font color='#0000FF'>"+ actions[count].get_name() +"</font></a>";
 							}
 						}
 					}
@@ -2492,17 +2495,17 @@ public class Character extends DynamicObject {
             personality.advance_objectives(Quest.pick_up_action, [item], this);
             if (item.get_name().toLowerCase() == "gold"){
                 set_gold(item.get_value(null, null));
-                return sanitize("</n> got " + item.get_value(null, null) + " gold coins.\n", null) + look();
+                return sanitize("</n> got " + item.get_value(null, null) + " gold coins.<br>", null) + look();
             }else{
                 possessions[possessions.length] = item;
-                return sanitize("</n> got " + item.get_name() + ".\n", null) + look();
+                return sanitize("</n> got " + item.get_name() + ".<br>", null) + look();
             }
         }
         return "";
     }
     
     public function loot(i:int,k:int,no_back:Boolean = false):String{
-        var back_string:String = "\n<font color='#0000FF'><a href=\"event:inspect,"+i+",0\">Back</a></font>";
+        var back_string:String = "<br><font color='#0000FF'><a href=\"event:inspect,"+i+",0\">Back</a></font>";
         if(no_back) back_string = "";
         if(k>=0){
             var item:Item = location.take_from_sub_content(i,k);
@@ -2522,7 +2525,7 @@ public class Character extends DynamicObject {
             if(k == -1){//loot all
                 var end_count:int = location.static_contents[i].contents.length;
                 for(count;count<end_count;count++){
-                    ret += loot(i, 0, true) + "\n";
+                    ret += loot(i, 0, true) + "<br>";
                 }
                 return ret + back_string;
             }else{
@@ -2539,7 +2542,7 @@ public class Character extends DynamicObject {
                 }else{//item storage
                     if(k == -3){
                         for(count;count<possessions.length;count++){
-                            ret += "<font color='#0000FF'><a href=\"event:loot,"+i+","+ (-4-count) +"\">" + possessions[count].get_name() + "</a></font>\n";
+                            ret += "<font color='#0000FF'><a href=\"event:loot,"+i+","+ (-4-count) +"\">" + possessions[count].get_name() + "</a></font><br>";
                         }
                     }else{
                         ret += sanitize("</n> stores the " + possessions[-(k+4)].get_name() + " in the " + temp_cont.name);
@@ -2622,7 +2625,7 @@ public class Character extends DynamicObject {
             s = s.substr(0,s.length - 2);
         }
         
-        s+="\n";
+        s+="<br>";
         //Need to display current equipment
         var found:Boolean = false;
         var equip_count:int = 0;
@@ -2656,7 +2659,7 @@ public class Character extends DynamicObject {
             s+= "Nothing!";
         }
         
-        s+="\n";
+        s+="<br>";
         //Need to display weapons and other held equipment
         found = false;
         s+="Holding: ";
@@ -2688,7 +2691,7 @@ public class Character extends DynamicObject {
             s+= "Nothing!";
         }
         
-        s+= "\n";
+        s+= "<br>";
         s+= "</n> purse contains " + get_gold() + " gold coins.";
         
         return sanitize(s, null);
@@ -2763,7 +2766,7 @@ public class Character extends DynamicObject {
                 }
                 if(!found && c.action_lvl_req.get(i) <= 1){
                     add_action(c.actions.get(i));
-                    if(c.actions.get(i).name != "")ret += "<\n> learns " + c.actions.get(i).name;
+                    if(c.actions.get(i).name != "")ret += "<<br>> learns " + c.actions.get(i).name;
                 }
             }
         }
@@ -2821,9 +2824,9 @@ public class Character extends DynamicObject {
         var i:int = 0;
         for (i;i<attack_array.length;i++){
             if(attack_array[i]!=null && o!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +"," + location.get_content_id(o) +"\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +"," + location.get_content_id(o) +"\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
             }else if(attack_array[i]!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +",-1\">" + attack_array[i].get_name() + "</a>\n";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +",-1\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
             }
         }
         
@@ -3091,9 +3094,9 @@ public class Character extends DynamicObject {
                 }
             }
             if(i==null){
-                ret = "Choose your first ingrediant:\n" + ret;
+                ret = "Choose your first ingrediant:<br>" + ret;
             }else{
-                ret = "Choose your second ingrediant:\n" + ret;
+                ret = "Choose your second ingrediant:<br>" + ret;
             }
             
         }else{
@@ -3126,16 +3129,16 @@ public class Character extends DynamicObject {
                     ret += "<a href=\"event:sew,"+count+"\">" + possessions[count].get_name() + "</a>";
                 }
             }
-            ret = "Which equipment would you like to modify:\n" + ret;
+            ret = "Which equipment would you like to modify:<br>" + ret;
         }else if(j == null){
             temp_equip = possessions[int(i)];
-            ret = "What aspect of the "+ temp_equip.get_name()+ " should be modified:\n";
+            ret = "What aspect of the "+ temp_equip.get_name()+ " should be modified:<br>";
             for(count;count<temp_equip.stat_req.length;count++){
                 if(temp_equip.stat_req.get(count) != null){
-                    ret += "Modify " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(count)) + "\t<font color='#00FF00'><a href=\"event:sew,"+i+","+(count+1)+"\">Up</a>\t<a href=\"event:sew,"+i+","+(-(count+1))+"\">Down</a></font>\n";
+                    ret += "Modify " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(count)) + "\t<font color='#00FF00'><a href=\"event:sew,"+i+","+(count+1)+"\">Up</a>\t<a href=\"event:sew,"+i+","+(-(count+1))+"\">Down</a></font><br>";
                 }
             }
-            ret += "\n\n<a href=\"event:sew\"><font color='#0000FF'>back</font></a>";
+            ret += "<br><br><a href=\"event:sew\"><font color='#0000FF'>back</font></a>";
         }else{
             temp_equip = possessions[int(i)];
             
@@ -3183,7 +3186,7 @@ public class Character extends DynamicObject {
                     temp_equip.stat_max[int(j)]++;
                     ret += "</n> sews the " + temp_equip.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req[int(j)]);						
                 }else{
-                    ret += "</n> doesn't have the necessary components. \n";
+                    ret += "</n> doesn't have the necessary components. <br>";
                 }
             }else{
                 j = String(int(j)+1);
@@ -3196,7 +3199,7 @@ public class Character extends DynamicObject {
                     break;
                 }
             }				
-            ret += "\n\n<a href=\"event:sew,"+count+"\"><font color='#0000FF'>back</font></a>";
+            ret += "<br><br><a href=\"event:sew,"+count+"\"><font color='#0000FF'>back</font></a>";
         }
         return sanitize(ret);
     }
@@ -3213,10 +3216,10 @@ public class Character extends DynamicObject {
                     ret += "<a href=\"event:dismantle,"+count+"\">" + possessions[count].get_name() + "</a>";
                 }
             }
-            ret = "What would you like to dismantle:\n" + ret;
+            ret = "What would you like to dismantle:<br>" + ret;
         }else{
             temp_item = possessions[int(i)] as Item;
-            ret += "</n> dismantles the " + temp_item.get_name()+ ". \n";
+            ret += "</n> dismantles the " + temp_item.get_name()+ ". <br>";
             
             var potential_rewards:Array = new Array();
             potential_rewards = potential_rewards.concat(temp_item.crafting_requirements);
@@ -3270,9 +3273,9 @@ public class Character extends DynamicObject {
                     }
                     
                     if(add_count > 1){
-                        ret += "</n> gets " +add_count+ " " + dismantle_reward.get_name()+ ". \n";
+                        ret += "</n> gets " +add_count+ " " + dismantle_reward.get_name()+ ". <br>";
                     }else if(add_count > 0){
-                        ret += "</n> gets " + dismantle_reward.get_name()+ ". \n";
+                        ret += "</n> gets " + dismantle_reward.get_name()+ ". <br>";
                     }
                 }
             }
@@ -3293,7 +3296,7 @@ public class Character extends DynamicObject {
             
             drop(int(i));
             
-            ret += "\n<a href=\"event:dismantle\"><font color='#0000FF'>back</font></a>";
+            ret += "<br><a href=\"event:dismantle\"><font color='#0000FF'>back</font></a>";
         }
         return sanitize(ret);
     }
@@ -3304,12 +3307,12 @@ public class Character extends DynamicObject {
         if(i == null){
             for(count;count<personality.known_recipes.length;count++){
                 if(personality.known_recipes[count]!=null){
-                    ret += "\n<a href=\"event:craft,"+count+"\"><font color='#0000FF'>" + personality.known_recipes[count].get_name() + "</font></a>";
+                    ret += "<br><a href=\"event:craft,"+count+"\"><font color='#0000FF'>" + personality.known_recipes[count].get_name() + "</font></a>";
                     //should go through and list the requirements, and the count of them...
                     var temp_item:Item = personality.known_recipes[count];
                     var req_count:int = 0;
                     for(req_count;req_count<temp_item.crafting_requirements.length;req_count++){
-                        ret += "\n\t" + temp_item.crafting_requirements[req_count][0].get_name() + " x" + temp_item.crafting_requirements[req_count][1];
+                        ret += "<br>\t" + temp_item.crafting_requirements[req_count][0].get_name() + " x" + temp_item.crafting_requirements[req_count][1];
                     }
                 }
             }
@@ -3365,7 +3368,7 @@ public class Character extends DynamicObject {
                 for(count;count<drop_ids.length;count++){
                     drop(drop_ids[count] - count);
                 }
-                ret += "</n> makes " + made_item.get_name()+ ". \n";
+                ret += "</n> makes " + made_item.get_name()+ ". <br>";
                 var stat_changes:Array = new Array();
                 var skill_changes:Array = new Array();
                 var max_enhance:int = 0;
@@ -3449,7 +3452,7 @@ public class Character extends DynamicObject {
                 if(stat_result > 0){
                     count = 0;
                     for(count;count<stat_changes.length;count++){
-                        ret += "</n> enhances the " + made_item.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes[count]) + "\n";
+                        ret += "</n> enhances the " + made_item.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes[count]) + "<br>";
                         made_item.effects[stat_changes[count]]+=stat_result;
                     }
                     max_enhance = stat_result;
@@ -3472,10 +3475,10 @@ public class Character extends DynamicObject {
                     if(skill_result > 0){
                         if(skill_result > max_enhance)max_enhance = skill_result;
                         if(made_item is Weapon){
-                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "\n";
+                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "<br>";
                             (made_item as Weapon).skill_bonus[count]+= skill_result;
                         }else if(made_item is Equipment){
-                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "\n";
+                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "<br>";
                             (made_item as Equipment).skill_bonus[count]+= skill_result;
                         }
                     }
@@ -3490,10 +3493,10 @@ public class Character extends DynamicObject {
                 possessions[possessions.length] = made_item;
                 
             }else{
-                ret += "</n> doesn't have the necessary components. \n";
+                ret += "</n> doesn't have the necessary components. <br>";
             }
             
-            ret += "\n<a href=\"event:craft\"><font color='#0000FF'>back</font></a>";
+            ret += "<br><a href=\"event:craft\"><font color='#0000FF'>back</font></a>";
         }
         return sanitize(ret);
     }
@@ -3512,13 +3515,13 @@ public class Character extends DynamicObject {
                     ret += "<a href=\"event:enchant,"+count+"\">" + possessions[count].get_name() + "</a>";
                 }
             }
-            ret = "Which equipment would you like to enchant:\n" + ret;
+            ret = "Which equipment would you like to enchant:<br>" + ret;
         }else if(j == null){
             //figure out which enchantment we want to go with
             if(possessions[int(i)] is Weapon){
                 temp_weap = possessions[int(i)];
                 //FPalace_skills.weapon_effects_id
-                ret += temp_weap.get_name() + " Current enchantment level: " + temp_weap.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"\n";
+                ret += temp_weap.get_name() + " Current enchantment level: " + temp_weap.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
                 count = 0;
                 for(count;count<temp_weap.effects.length;count++){
                     if(temp_weap.effects[count] != null){
@@ -3544,16 +3547,16 @@ public class Character extends DynamicObject {
                 }
                 count = 0;
                 for(count;count<stat_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*100 + 50)+"xp\n";
+                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*100 + 50)+"xp<br>";
                 }
                 count = 0;
                 for(count;count<skill_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*10 + 10)+"xp\n";
+                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*10 + 10)+"xp<br>";
                 }
             }else{
                 temp_equip = possessions[int(i)];
                 //FPalace_skills.equipment_effects_id
-                ret += temp_equip.get_name() + " Current enchantment level: " + temp_equip.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"\n";
+                ret += temp_equip.get_name() + " Current enchantment level: " + temp_equip.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
                 count = 0;
                 for(count;count<temp_equip.effects.length;count++){
                     if(temp_equip.effects[count] != null){
@@ -3563,11 +3566,11 @@ public class Character extends DynamicObject {
                 skill_changes = temp_equip.skill_id;
                 count = 0;
                 for(count;count<stat_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*100 + 50)+"xp\n";
+                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*100 + 50)+"xp<br>";
                 }
                 count = 0;
                 for(count;count<skill_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*10 + 10)+"xp\n";
+                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*10 + 10)+"xp<br>";
                 }
             }
         }else{
@@ -3725,13 +3728,13 @@ public class Character extends DynamicObject {
         if (!buy_from.busy)buy_from.setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
-            s += "\n\n<font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
+            s += "<br><br><font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
         }else if(k == -1){
-            s += buy_from.get_items_to_sell(i) + "\n\n"+get_name()+" has "+gold+" gold to spend.\n\n<font color='#0000FF'><a href=\"event:buy,"+i+",-2\">Back</a></font>";
+            s += buy_from.get_items_to_sell(i) + "<br><br>"+get_name()+" has "+gold+" gold to spend.<br><br><font color='#0000FF'><a href=\"event:buy,"+i+",-2\">Back</a></font>";
         }else{
             var trade_good:Item = buy_from.get_possesion_by_id(k);
             if(trade_good != null){
-                var back_string:String = "\n<font color='#0000FF'><a href=\"event:buy,"+i+",-1\">Back</a></font>";
+                var back_string:String = "<br><font color='#0000FF'><a href=\"event:buy,"+i+",-1\">Back</a></font>";
                 if(show_item_desc > -1){
                     s += get_item_description(trade_good);
                 }else{
@@ -3802,12 +3805,12 @@ public class Character extends DynamicObject {
         setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
-            s += "\n\n<font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
+            s += "<br><br><font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
         }else if(k == -1){
-            s += get_items_to_sell(i) + "\n\n"+get_name()+" has "+gold+" gold.\n\n<font color='#0000FF'><a href=\"event:sell,"+i+",-2\">Back</a></font>";
+            s += get_items_to_sell(i) + "<br><br>"+get_name()+" has "+gold+" gold.<br><br><font color='#0000FF'><a href=\"event:sell,"+i+",-2\">Back</a></font>";
         }else{
             var trade_good:Item = get_possesion_by_id(k);
-            var back_string:String = "\n<font color='#0000FF'><a href=\"event:sell,"+i+",-1\">Back</a></font>";
+            var back_string:String = "<br><font color='#0000FF'><a href=\"event:sell,"+i+",-1\">Back</a></font>";
             var item_value:int = trade_good.get_value(sell_to, this);
             if(sell_to.get_gold() < item_value){
                 s += sell_to.get_name() + " doesn't have enough to buy that. You wanted " + item_value + " gold for it. ";
@@ -4093,7 +4096,7 @@ public class Character extends DynamicObject {
                     }else if(tempArray[0] == "action"){
                         previous_action_output = fire_action(int(tempArray[1]),int(tempArray[2]), tempArray[3]);
                     }else if(tempArray[0] == "challenge"){
-                        previous_action_output = fire_challenge(int(tempArray[1]), int(tempArray[2]), int(tempArray[3]), tempArray[4], tempArray[5]) + "\n";							
+                        previous_action_output = fire_challenge(int(tempArray[1]), int(tempArray[2]), int(tempArray[3]), tempArray[4], tempArray[5]) + "<br>";							
                     }else if(tempArray[0] == "combat"){
                         if(tempArray[3] != null){
                             char = location.get_content(int(tempArray[3])) as Character;
@@ -4287,7 +4290,7 @@ public class Character extends DynamicObject {
         var i:int = 0;
         for(i;i<currentTickEffects.length;i++){
             if(currentTickEffects[i] != null){
-                ret += currentTickEffects[i].tick(this) + "\n";
+                ret += currentTickEffects[i].tick(this) + "<br>";
                 if(currentTickEffects[i] != null && currentTickEffects[i].ticks_left() <= 0){//this effect is done
                     currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
                     i--;
@@ -4343,7 +4346,7 @@ public class Character extends DynamicObject {
                         var grow_flag:Boolean = true;
                         i = 0;
                         for(i;i<currentTickEffects.length;i++){
-                            //ret += currentTickEffects[i].tick(this) + "\n";
+                            //ret += currentTickEffects[i].tick(this) + "<br>";
                             if(currentTickEffects[i].status_id == TickEffect.fluid_regen_status){
                                 grow_flag = false;
                                 break;
@@ -4351,7 +4354,7 @@ public class Character extends DynamicObject {
                         }
                         if(grow_flag){
                             var grow_mult:Number = (min_lust*curr_lust/max_lust)/max_lust/12;
-                            ret += "</n>s body groans from its need to cum. \n";
+                            ret += "</n>s body groans from its need to cum. <br>";
                             ret += apply_affect_by_id(FPalaceHelper.penis_length_id, grow_mult*get_stat(FPalaceHelper.penis_length_id), 0, null, Body.change_stats_total);
                             ret += apply_affect_by_id(FPalaceHelper.penis_girth_id, grow_mult*get_stat(FPalaceHelper.penis_girth_id), 0, null, Body.change_stats_total);
                             ret += apply_affect_by_id(FPalaceHelper.breast_size_id, grow_mult*get_stat(FPalaceHelper.breast_size_id), 0, null, Body.change_stats_total);
@@ -4420,7 +4423,7 @@ public class Character extends DynamicObject {
         
         var i:int = 0;
         for(i;i<Math.ceil(cclass.length/3);i++){
-            ret += cclass[i*3].get_name() + " Lvl: " + cclass[i*3+1] + "\n";
+            ret += cclass[i*3].get_name() + " Lvl: " + cclass[i*3+1] + "<br>";
         }
         
         return ret;
@@ -4439,21 +4442,25 @@ public class Character extends DynamicObject {
         */
         return ret;
     }
-    /*
-    private function show_stat_for_statistics(stat_id:int, precision:int = 0):String{
-        var s:String = "";
-        var temp_stat:Number = this.get_stat(stat_id);
-        var real_stat:Number = this.get_stat(stat_id, 0,0,-1,false);
-        s += temp_stat.toFixed(precision);
-        if(real_stat.toFixed(2) != temp_stat.toFixed(2)){
-            s += "(" + real_stat.toFixed(precision) + ")";
+    
+    private String show_stat_for_statistics(int stat_id){return show_stat_for_statistics(stat_id, 0);}
+    private String show_stat_for_statistics(int stat_id, int precision){
+        String s = "";
+        Number temp_stat = this.get_stat(stat_id);
+        Number real_stat = this.get_stat(stat_id, 0,0,-1,false);
+        s += temp_stat.intValue();//temp_stat.toFixed(precision);
+        if(real_stat.intValue() != temp_stat.intValue()){//if(real_stat.toFixed(2) != temp_stat.toFixed(2)){
+            s += "(" + real_stat.intValue() + ")";//s += "(" + real_stat.toFixed(precision) + ")";
         }
         return s;
     }
     
-    public function statistics(c:Character, stat_up:int = -1):String{
-        var s:String = "";
-        var party_id:int = 0;
+    public String statistics(){return statistics(null,-1);}
+    public String statistics(Character c){return statistics(c,-1);}
+    public String statistics(Character c, int stat_up){
+        String s = "";
+        int party_id = 0;
+        /*
         if(party != null){
             var i:int = 0;
             for(i;i<party.members.size();i++){
@@ -4463,24 +4470,27 @@ public class Character extends DynamicObject {
                 }
             }
         }
+        */
         if(stat_up != -1){
             s += sanitize(apply_affect_by_id(stat_up,1,0,null, Body.change_stats_total),c);
-            s += "\n<a href=\"event:status," + party_id + "\"><font color='#0000FF'>Back</font></a>"; 
+            s += "<br><a href=\"event:status," + party_id + "\"><font color='#0000FF'>Back</font></a>"; 
             stat_points -= this.get_current_class().get_stat_cost(stat_up);
         }else{
-            s += "Name: " + this.get_name() + "\n";
-            if(this.sex != null)s += "Sex: " + this.sex.get_name()+ "\n";
-            if(this.get_current_class() != null && location != null)s += "<a href=\"event:cclass_history," + location.get_content_id(this) + "\"><font color='#0000FF'>Class</font></a>: " + this.get_current_class().get_name() + "\n";
-            if(this.personality.job != null)s += "Job: " + this.personality.job.get_name() + "\n";
-            s += "Level: " + this.get_lvl() + "\n";
-            if(stat_points > 0)s += "Stat points to spend: <font color='#00FF00'>" + this.stat_points + "</font>\n";
+            s += "Name: " + this.getName() + "<br>";
+            if(this.sex != null)s += "Sex: " + this.sex.getName()+ "<br>";
+            if(this.get_current_class() != null && location != null)s += "<a href=\"event:cclass_history," + location.getContentID(this) + "\"><font color='#0000FF'>Class</font></a>: " + this.get_current_class().getName() + "<br>";
+            if(this.personality.job != null)s += "Job: " + this.personality.job.get_name() + "<br>";
+            s += "Level: " + this.get_lvl() + "<br>";
+            if(stat_points > 0)s += "Stat points to spend: <font color='#00FF00'>" + this.stat_points + "</font><br>";
+            s += "Age: " + this.get_stat(FPalaceHelper.age_id) + "<br>";/*
             if(get_primary_race().get_aging_mod() == 1){
-                s += "Age: " + this.get_stat(FPalaceHelper.age_id).toFixed(0) + "\n";
+                s += "Age: " + this.get_stat(FPalaceHelper.age_id).toFixed(0) + "<br>";
             }else{
-                s += "Age: " + (this.get_stat(FPalaceHelper.age_id)*get_primary_race().get_aging_mod() + Math.floor(this.get_tick()/Main.t1_year)).toFixed(0) + "(looks about "+this.get_stat(FPalaceHelper.age_id).toFixed(0)+")\n";
+                s += "Age: " + (this.get_stat(FPalaceHelper.age_id)*get_primary_race().get_aging_mod() + Math.floor(this.get_tick()/Main.t1_year)).toFixed(0) + "(looks about "+this.get_stat(FPalaceHelper.age_id).toFixed(0)+")<br>";
             }
+            */
             s += "Birthday in ";
-            
+            /*
             var temp_tick:int = Main.t1_year - this.get_tick();
             if(temp_tick / Main.t1_month > 0){
                 s += Math.floor(temp_tick / Main.t1_month) + " Months ";
@@ -4490,96 +4500,107 @@ public class Character extends DynamicObject {
                 s += "and " + Math.floor(temp_tick / FPGameGithub.T1_DAY) + " Days ";
                 temp_tick = temp_tick - (Math.floor(temp_tick / FPGameGithub.T1_DAY)*FPGameGithub.T1_DAY);
             }
-            s += "\n";
+            */
+            s += "<br>";
             
-            s += (this.nxt_lvl_xp - this.get_xp()) + "xp to next level.\n";
+            s += (this.nxt_lvl_xp - this.get_xp()) + "xp to next level.<br>";
+            /*
             if(this.get_status_effects()[0] != null){
                 var temp_string:String = "";
                 var temp_array:Array = this.get_status_effects();
-                var count:int = 0;
-                for(count;count<temp_array.length;count++){
+                
+                for(int count=0;count<temp_array.length;count++){
                     temp_string = TickEffect.get_status_effect_name(temp_array[count]);
                     if(temp_string != ""){
                         s+=temp_string + "\t";
                     }
                 }
-                s += "\n";
+                s += "<br>";
             }
-            s += "HP: " + show_stat_for_statistics(FPalaceHelper.curr_hp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_hp_id) + "\n";
-            s += "MP: " + show_stat_for_statistics(FPalaceHelper.curr_mp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_mp_id) + "\n";
-            s += "FP: " + show_stat_for_statistics(FPalaceHelper.curr_fatigue_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_fatigue_id) + "\n";
-            s += "LP: " + show_stat_for_statistics(FPalaceHelper.lust_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_lust_id) + "\n";
+            */
+            s += "HP: " + show_stat_for_statistics(FPalaceHelper.curr_hp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_hp_id) + "<br>";
+            s += "MP: " + show_stat_for_statistics(FPalaceHelper.curr_mp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_mp_id) + "<br>";
+            s += "FP: " + show_stat_for_statistics(FPalaceHelper.curr_fatigue_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_fatigue_id) + "<br>";
+            s += "LP: " + show_stat_for_statistics(FPalaceHelper.lust_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_lust_id) + "<br>";
             s += "Str: " + show_stat_for_statistics(FPalaceHelper.str_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.str_id) <= stat_points && body.get_max_stat(FPalaceHelper.str_id) >= this.get_stat(FPalaceHelper.str_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.str_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.str_id) <= stat_points && body.get_max_stat(FPalaceHelper.str_id).intValue() >= this.get_stat(FPalaceHelper.str_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.str_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Dex: " + show_stat_for_statistics(FPalaceHelper.dex_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.dex_id) <= stat_points && body.get_max_stat(FPalaceHelper.dex_id) >= this.get_stat(FPalaceHelper.dex_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.dex_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.dex_id) <= stat_points && body.get_max_stat(FPalaceHelper.dex_id).intValue() >= this.get_stat(FPalaceHelper.dex_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.dex_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Con: " + show_stat_for_statistics(FPalaceHelper.con_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.con_id) <= stat_points && body.get_max_stat(FPalaceHelper.con_id) >= this.get_stat(FPalaceHelper.con_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.con_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.con_id) <= stat_points && body.get_max_stat(FPalaceHelper.con_id).intValue() >= this.get_stat(FPalaceHelper.con_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.con_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Beauty: " + show_stat_for_statistics(FPalaceHelper.sex_appeal_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.sex_appeal_id) <= stat_points && body.get_max_stat(FPalaceHelper.sex_appeal_id) >= this.get_stat(FPalaceHelper.sex_appeal_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.sex_appeal_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.sex_appeal_id) <= stat_points && body.get_max_stat(FPalaceHelper.sex_appeal_id).intValue() >= this.get_stat(FPalaceHelper.sex_appeal_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.sex_appeal_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
             s += "Int: " + show_stat_for_statistics(FPalaceHelper.int_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.int_id) <= stat_points && body.get_max_stat(FPalaceHelper.int_id) >= this.get_stat(FPalaceHelper.int_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.int_id+"\"><font color='#0000FF'>+</font></a>\n";
+            
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.int_id) <= stat_points && body.get_max_stat(FPalaceHelper.int_id).intValue() >= this.get_stat(FPalaceHelper.int_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.int_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Wis: " + show_stat_for_statistics(FPalaceHelper.wis_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.wis_id) <= stat_points && body.get_max_stat(FPalaceHelper.wis_id) >= this.get_stat(FPalaceHelper.wis_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.wis_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.wis_id) <= stat_points && body.get_max_stat(FPalaceHelper.wis_id).intValue() >= this.get_stat(FPalaceHelper.wis_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.wis_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Will: " + show_stat_for_statistics(FPalaceHelper.will_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.will_id) <= stat_points && body.get_max_stat(FPalaceHelper.will_id) >= this.get_stat(FPalaceHelper.will_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.will_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.will_id) <= stat_points && body.get_max_stat(FPalaceHelper.will_id).intValue() >= this.get_stat(FPalaceHelper.will_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.will_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
+            
             s += "Cha: " + show_stat_for_statistics(FPalaceHelper.cha_id);
-            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.cha_id) <= stat_points && body.get_max_stat(FPalaceHelper.cha_id) >= this.get_stat(FPalaceHelper.cha_id, 0,0,-1,false) + 1){
-                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.cha_id+"\"><font color='#0000FF'>+</font></a>\n";
+            if(this.get_current_class() != null && this.get_current_class().get_stat_cost(FPalaceHelper.cha_id) <= stat_points && body.get_max_stat(FPalaceHelper.cha_id).intValue() >= this.get_stat(FPalaceHelper.cha_id, 0,0,-1,false).intValue() + 1){
+                s += "<a href=\"event:status," + party_id + ","+FPalaceHelper.cha_id+"\"><font color='#0000FF'>+</font></a><br>";
             }else{
-                s += "\n";
+                s += "<br>";
             }
-            s += "Weight: " + show_stat_for_statistics(FPalaceHelper.weight_id,2) + " / " + show_stat_for_statistics(FPalaceHelper.max_weight_id,2) + "\n";
+            
+            s += "Weight: " + show_stat_for_statistics(FPalaceHelper.weight_id,2) + " / " + show_stat_for_statistics(FPalaceHelper.max_weight_id,2) + "<br>";
             /*
-            s += "Min Lust: " + show_stat_for_statistics(FPalaceHelper.min_lust_id)+ "\n";//
-            s += "Height: " + show_stat_for_statistics(FPalaceHelper.height_id,2) + "\n";
-            if( this.get_stat(FPalaceHelper.cum_volume_id) > -1)s += "Cum Volume: " + show_stat_for_statistics(FPalaceHelper.cum_volume_id,2) + "mL\n";//
-            if( this.get_stat(FPalaceHelper.milk_volume_id) > -1)s += "Milk Volume: " + show_stat_for_statistics(FPalaceHelper.milk_volume_id,2) + "mL\n";//
-            s += "Anus width: " + show_stat_for_statistics(FPalaceHelper.anal_width_id,2) + "\"\n";//
-            s += "Anus depth: " + show_stat_for_statistics(FPalaceHelper.anal_depth_id,2)+ "\"\n";//
-            if( this.get_stat(FPalaceHelper.vaginal_width_id) > -1)s += "Vaginal width: " + show_stat_for_statistics(FPalaceHelper.vaginal_width_id,2) + "\"\n";//
-            if( this.get_stat(FPalaceHelper.vaginal_depth_id) > -1)s += "Vaginal depth: " + show_stat_for_statistics(FPalaceHelper.vaginal_depth_id,2) + "\"\n";//
-            if(this.get_stat(FPalaceHelper.semen_fertility_id) > -1)s += "Semen Fertility: " + (this.get_stat(FPalaceHelper.semen_fertility_id)*100).toFixed(2) + "%\n";//
-            if( this.get_stat(FPalaceHelper.egg_fertility_id) > -1)s += "Womb Fertility: " + (this.get_stat(FPalaceHelper.egg_fertility_id)*100).toFixed(2) + "%\n";//
-            if( this.get_stat(FPalaceHelper.erection_ratio_id) > -1)s += "Flacid:Erect Ratio:  " + (this.get_stat(FPalaceHelper.erection_ratio_id)).toFixed(2) + "\n";//
-            if( this.get_stat(FPalaceHelper.biomass_consumed) > -1)s += "Biomass consumed: " + show_stat_for_statistics(FPalaceHelper.biomass_consumed,2) + "mL\n";//
-            *//*
-            s += "\n";
+            s += "Min Lust: " + show_stat_for_statistics(FPalaceHelper.min_lust_id)+ "<br>";//
+            s += "Height: " + show_stat_for_statistics(FPalaceHelper.height_id,2) + "<br>";
+            if( this.get_stat(FPalaceHelper.cum_volume_id) > -1)s += "Cum Volume: " + show_stat_for_statistics(FPalaceHelper.cum_volume_id,2) + "mL<br>";//
+            if( this.get_stat(FPalaceHelper.milk_volume_id) > -1)s += "Milk Volume: " + show_stat_for_statistics(FPalaceHelper.milk_volume_id,2) + "mL<br>";//
+            s += "Anus width: " + show_stat_for_statistics(FPalaceHelper.anal_width_id,2) + "\"<br>";//
+            s += "Anus depth: " + show_stat_for_statistics(FPalaceHelper.anal_depth_id,2)+ "\"<br>";//
+            if( this.get_stat(FPalaceHelper.vaginal_width_id) > -1)s += "Vaginal width: " + show_stat_for_statistics(FPalaceHelper.vaginal_width_id,2) + "\"<br>";//
+            if( this.get_stat(FPalaceHelper.vaginal_depth_id) > -1)s += "Vaginal depth: " + show_stat_for_statistics(FPalaceHelper.vaginal_depth_id,2) + "\"<br>";//
+            if(this.get_stat(FPalaceHelper.semen_fertility_id) > -1)s += "Semen Fertility: " + (this.get_stat(FPalaceHelper.semen_fertility_id)*100).toFixed(2) + "%<br>";//
+            if( this.get_stat(FPalaceHelper.egg_fertility_id) > -1)s += "Womb Fertility: " + (this.get_stat(FPalaceHelper.egg_fertility_id)*100).toFixed(2) + "%<br>";//
+            if( this.get_stat(FPalaceHelper.erection_ratio_id) > -1)s += "Flacid:Erect Ratio:  " + (this.get_stat(FPalaceHelper.erection_ratio_id)).toFixed(2) + "<br>";//
+            if( this.get_stat(FPalaceHelper.biomass_consumed) > -1)s += "Biomass consumed: " + show_stat_for_statistics(FPalaceHelper.biomass_consumed,2) + "mL<br>";//
+            */
+            s += "<br>";
         }
         
-        //s += "\n\n" + this.personality.get_all_relationships(this);
+        //s += "<br><br>" + this.personality.get_all_relationships(this);
         
         return s;
     }
-    */
+    
     public String consume(int consumption_id){
         return consume(consumption_id,null);
     }

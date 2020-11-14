@@ -1339,7 +1339,7 @@ public class FPalace_npcs {
             Race race = FPalace_races.race_human();
             
             creature.new_body_part(FPalaceHelper.new_head(race));
-            creature.new_body_part(FPalaceHelper.new_eyes(race,0));
+            creature.new_body_part(FPalaceHelper.new_eyes(race,0.0));
             creature.new_body_part(FPalaceHelper.new_torso(race));
             creature.new_body_part(FPalaceHelper.new_left_arms(race));
             creature.new_body_part(FPalaceHelper.new_left_hands(race));
@@ -1416,7 +1416,7 @@ public class FPalace_npcs {
             Race race = FPalace_races.race_goo();
             
             creature.new_body_part(FPalaceHelper.new_head(race));
-            creature.new_body_part(FPalaceHelper.new_eyes(race,0));
+            creature.new_body_part(FPalaceHelper.new_eyes(race,0.0));
             creature.new_body_part(FPalaceHelper.new_torso(race));
             creature.new_body_part(FPalaceHelper.new_left_arms(race));
             creature.new_body_part(FPalaceHelper.new_left_hands(race));
@@ -2204,7 +2204,7 @@ public class FPalace_npcs {
             Race race = FPalace_races.race_goo();
                         
             creature.new_body_part(FPalaceHelper.new_goo_head(race));
-            creature.new_body_part(FPalaceHelper.new_eyes(race,0));
+            creature.new_body_part(FPalaceHelper.new_eyes(race,0.0));
             
             creature.set_character_class(FPalace_classes.cclass_fleshstealer());
             creature.set_xp(1);
@@ -4098,7 +4098,7 @@ public class FPalace_npcs {
             Race race = FPalace_races.race_goo();
             
             creature.new_body_part(FPalaceHelper.new_head(race));
-            creature.new_body_part(FPalaceHelper.new_eyes(race,0));
+            creature.new_body_part(FPalaceHelper.new_eyes(race,0.0));
             creature.new_body_part(FPalaceHelper.new_torso(race));
             creature.new_body_part(FPalaceHelper.new_left_arms(race));
             creature.new_body_part(FPalaceHelper.new_left_hands(race));

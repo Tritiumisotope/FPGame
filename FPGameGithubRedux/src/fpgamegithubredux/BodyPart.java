@@ -730,7 +730,7 @@ public String getName(){
                     }
                 }					
                 
-                s += stat_description.get(j).get_change_magnitude(k.intValue(),c,temp,this);
+                s += stat_description.get(j).get_change_magnitude(k.doubleValue(),c,temp,this);
                 //if(temp == 0 && stat_description.get(j).stat_value < 0){
                     //if not a temp, and we're setting less than 0, should we destroy the part? 
                     

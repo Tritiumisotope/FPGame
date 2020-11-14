@@ -46,7 +46,7 @@ public class BodyPartState {
 			}
 			
 			//if we didn't set a stat to effect, should effect all of them
-			if (stat_effected.get(0) == null) return mod;//[]]
+			if (stat_effected.size() == 0) return mod;//[]]
 			
 			return 1;
 		}

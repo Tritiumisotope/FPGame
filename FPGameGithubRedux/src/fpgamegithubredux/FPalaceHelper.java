@@ -946,9 +946,9 @@ public class FPalaceHelper{
 			return p;
 		}
 		public static BodyPart new_eyes(Race r){
-			return new_eyes(r,0);
+			return new_eyes(r,0.0);
 		}
-		public static BodyPart new_eyes(Race r, int s1){
+		public static BodyPart new_eyes(Race r, Double s1){
             // s1 = 0
 			BodyPart p = new BodyPart();
 				p.set_name("eyes");

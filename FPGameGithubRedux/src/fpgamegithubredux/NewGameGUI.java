@@ -143,17 +143,17 @@ public class NewGameGUI implements ActionListener {
                         if ("fitness,1".equals(result)) {
                             LOGGER.info("Athletic");
                             // body_flag = 1;
-                            newPlayer.applyAffectByID(0, 0);
+                            //newPlayer.applyAffectByID(0, 0);
                             setEyeColor();
                         } else if ("fitness,2".equals(result)) {
                             LOGGER.info("Chubby");
                             // body_flag = 2;
-                            newPlayer.applyAffectByID(0, 1);
+                            //newPlayer.applyAffectByID(0, 1);
                             setEyeColor();
                         } else if ("fitness,3".equals(result)) {
                             LOGGER.info("Slim");
                             // body_flag = 3;
-                            newPlayer.applyAffectByID(0, 2);
+                            //newPlayer.applyAffectByID(0, 2);
                             setEyeColor();
                         } else {
                             String msg = "(newGameGui.java) got unexpected result: " + result;
@@ -225,19 +225,19 @@ public class NewGameGUI implements ActionListener {
                         if ("hairColor,2".equals(result)) {
                             LOGGER.info("Black");
                             // body_flag = 1;
-                            newPlayer.applyAffectByID(2, 2);
+                            //newPlayer.applyAffectByID(2, 2);
                         } else if ("hairColor,5".equals(result)) {
                             LOGGER.info("Brown");
                             // body_flag = 2;
-                            newPlayer.applyAffectByID(2, 5);
+                            //newPlayer.applyAffectByID(2, 5);
                         } else if ("hairColor,7".equals(result)) {
                             LOGGER.info("Red");
                             // body_flag = 3;
-                            newPlayer.applyAffectByID(2, 7);
+                            //newPlayer.applyAffectByID(2, 7);
                         } else if ("hairColor,4".equals(result)) {
                             LOGGER.info("Blonde");
                             // body_flag = 3;
-                            newPlayer.applyAffectByID(2, 4);
+                            //newPlayer.applyAffectByID(2, 4);
                         } else {
                             String msg = "(newGameGui.java) got unexpected result: " + result;
                             LOGGER.fine(msg);
@@ -306,7 +306,7 @@ public class NewGameGUI implements ActionListener {
 
         newPlayer.new_body_part(FPalaceHelper.new_hair(race,1/*hair length*/,hair_flag));
         newPlayer.new_body_part(FPalaceHelper.new_head(race));
-        newPlayer.new_body_part(FPalaceHelper.new_eyes(race,(int)(eye_flag-9.9)));//TODO why double?!
+        newPlayer.new_body_part(FPalaceHelper.new_eyes(race,(eye_flag-9.9)));
         newPlayer.new_body_part(FPalaceHelper.new_torso(race));
         newPlayer.new_body_part(FPalaceHelper.new_left_arms(race));
         newPlayer.new_body_part(FPalaceHelper.new_left_hands(race));
@@ -333,6 +333,9 @@ public class NewGameGUI implements ActionListener {
         
         newPlayer.location = tempRoom;
         tempRoom.newContent(newPlayer);
+
+        //newPlayer.apply_affect_by_id(FPalaceHelper.curr_hp_id, -5,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.curr_hp_id, -0.1);
 
         goBack.setEnabled(true);
         theMainGUI.player = newPlayer;
@@ -363,6 +366,7 @@ public class NewGameGUI implements ActionListener {
             //newPlayer.setAge(ageEntry.getText());
             newPlayer.ageDemo = age_flag;
             //newPlayer.applyAffectByID(FPalaceHelper.age_id, age_flag-23);//,0,null,Body.change_stats_total)
+            
             textField.remove(ageEntry);
             nameEntry = null;
             textField.remove(confirmAge);
