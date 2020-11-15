@@ -540,6 +540,13 @@ public class Room extends StaticObject{
 
         return ret;
     }//dummy version, commented rest in
+    public int get_content_id(DynamicObject o){
+        int i = 0;
+        for (i=0;i<contents.size();i++){
+            if (contents.get(i) == o) return i;
+        }
+        return -1;
+    }
     public void remove_exit(Room e){
         int i = 0;
         for(i=0;i<exits.size();i++){

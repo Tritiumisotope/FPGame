@@ -759,27 +759,27 @@ public class Character extends DynamicObject {
     public String appearance(int i){return appearance(i, null);}
     public String appearance(int i, Character c){
         String s = "";
-        /*
-        s += get_status(c) + ".<br>";
         
-        if(c != null)s += c.judge_relative_skill(this) + "<br>";
+        s += getStatus(c) + ".<br>";
         
-        var k:int = 0;
+        //if(c != null)s += c.judge_relative_skill(this) + "<br>";
+        
+        int k = 0;
         if (i != 0){
-        for (k;k<stat.length;k++){
-            if(stat[k].get_description(this).length > 0) s += stat[k].get_description(this);
-            }*/
+        for (k=0;k<stats.size();k++){
+            //if(stats.get(k).get_description(this).length > 0) s += stats.get(k).get_description(this);
+            }
         s += body.get_parts_appearance(this) + "<br>"; 
-        /*if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
+        if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
         }else{
-        var temp_array:Array = get_all_overworld_actions();
-        for (k;k<temp_array.length;k++){
-                if(temp_array[k] != null && location != null){
-                if(temp_array[k].get_name() != "" && !temp_array[k].get_personal() && !temp_array[k].get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
-                }
+            ArrayList<CharAction> temp_array = get_all_overworld_actions();
+            for (k=0;k<temp_array.size();k++){
+                    if(temp_array.get(k) != null && location != null){
+                        if(temp_array.get(k).getName() != "" && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
+                    }
             }
         }
-        */    
+          
         if (i == 0 && location != null) s += "<a href=\"event:look," + location.getContentID(this) +",1\"><font color='#0000FF'>Appearance</font></a>";
         
         return sanitize(s, c);

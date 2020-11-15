@@ -306,6 +306,7 @@ public class NewGameGUI implements ActionListener {
 
         newPlayer.new_body_part(FPalaceHelper.new_hair(race,1/*hair length*/,hair_flag));
         newPlayer.new_body_part(FPalaceHelper.new_head(race));
+        newPlayer.new_body_part(FPalaceHelper.new_head(race));
         newPlayer.new_body_part(FPalaceHelper.new_eyes(race,(eye_flag-9.9)));
         newPlayer.new_body_part(FPalaceHelper.new_torso(race));
         newPlayer.new_body_part(FPalaceHelper.new_left_arms(race));
@@ -317,6 +318,43 @@ public class NewGameGUI implements ActionListener {
         newPlayer.new_body_part(FPalaceHelper.new_left_feet(race));
         newPlayer.new_body_part(FPalaceHelper.new_right_legs(race));
         newPlayer.new_body_part(FPalaceHelper.new_right_feet(race));
+        
+        if (sex_flag == 1){
+            newPlayer.new_body_part(FPalaceHelper.new_penis(race));
+            newPlayer.new_body_part(FPalaceHelper.new_balls(race));
+            
+            if(body_flag == 1){
+                
+            }else if(body_flag == 2){
+                newPlayer.apply_affect_by_id(FPalaceHelper.waist_id,8);
+                newPlayer.apply_affect_by_id(FPalaceHelper.hips_id,4);
+            }else if(body_flag == 3){
+                newPlayer.apply_affect_by_id(FPalaceHelper.bust_id,-4);
+                newPlayer.apply_affect_by_id(FPalaceHelper.hips_id,-4);
+            }
+        }
+
+        if (sex_flag == 2){
+            newPlayer.new_body_part(FPalaceHelper.new_breasts(race));
+            newPlayer.new_body_part(FPalaceHelper.new_vagina(race));
+            newPlayer.new_body_part(FPalaceHelper.new_clit(race));
+            
+            if(body_flag == 1){
+                
+            }else if(body_flag == 2){
+                newPlayer.apply_affect_by_id(FPalaceHelper.bust_id,4);
+                newPlayer.apply_affect_by_id(FPalaceHelper.waist_id,8);
+                newPlayer.apply_affect_by_id(FPalaceHelper.hips_id,4);
+                newPlayer.apply_affect_by_id(FPalaceHelper.breast_size_id,3);
+                newPlayer.apply_affect_by_id(FPalaceHelper.milk_volume_id,40);
+                
+            }else if(body_flag == 3){
+                newPlayer.apply_affect_by_id(FPalaceHelper.bust_id,-4);
+                newPlayer.apply_affect_by_id(FPalaceHelper.hips_id,-4);
+                newPlayer.apply_affect_by_id(FPalaceHelper.breast_size_id,-2);
+                newPlayer.apply_affect_by_id(FPalaceHelper.milk_volume_id,-40);
+            }
+        }
         Room tempRoom = new Room();
 
         Item tempItem = new Item();

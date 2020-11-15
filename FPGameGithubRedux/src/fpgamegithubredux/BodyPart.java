@@ -213,8 +213,10 @@ public class BodyPart extends DynamicObject {
     
     @Override
 public String getName(){
-        String ret;//=name
-        if(part_count%10 == 1&&part_count!=11){
+        String ret =  name;//=name
+        if(part_count == 0){
+
+        }else if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + name;
         }else if(part_count%10 == 2&&part_count!=12){
             ret = (part_count) + "nd " + name;
@@ -243,6 +245,7 @@ public String getName(){
     }
     
     public void set_part_count(int i){
+        LOGGER.info("Part count is: " + i);
         part_count = i;			
     }
     
@@ -787,7 +790,7 @@ public String getName(){
     }
     
     public void reset_stat(Character c, int i, int k){//default i = -1, k = -1
-         int j = 0;
+        int j = 0;
         if (i == -1){
             for (j=0;j<stat_description.size();j++){
                 stat_description.get(j).reset_stat(c, k, this);
@@ -795,7 +798,7 @@ public String getName(){
             }
         }else{
             for (j=0;j<stat_description.size();j++){
-                //if(stat_description.get(j).getStat() == i)stat_description.get(j).reset_stat(c, k, this);
+                if(stat_description.get(j).get_id() == i)stat_description.get(j).reset_stat(c, k, this);//was stat, not id, before
                 //TODO what
             }
         }

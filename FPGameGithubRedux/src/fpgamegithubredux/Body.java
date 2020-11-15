@@ -42,6 +42,7 @@ public class Body {
         Boolean has_vag = false;
         int i = 0;
         for(i=0;i<parts.size();i++){
+            LOGGER.info("Part scanned: " + parts.get(i).get_part_id());
             if(c == null){
                 if(parts.get(i).get_part_id() == FPalaceHelper.breasts_slot)has_breasts = true;
                 if(parts.get(i).get_part_id() == FPalaceHelper.cock_slot)has_cock = true;
@@ -458,10 +459,14 @@ public class Body {
         temp_array.add(p);//this is the first element anyway//temp_array.set(0,p) //temp_array[0] = p
         i = 0;
         for(i=0;i<parts.size();i++){
+            LOGGER.info("Parts scan, part: " + i);
             if(parts.get(i) != null){
-                if(parts.get(i).name.indexOf(p.name) >= 0){
+                LOGGER.info("Part " + i + " is not null! P.name: " + p.name + ", part name: " + parts.get(i).name);
+                if(parts.get(i).name.contains(p.name)){//parts.get(i).name.indexOf(p.name) >= 0
+                    LOGGER.info("could increment name in use, which is: " + name_in_use);
                     if(name_in_use == 0)parts.get(i).set_part_count(1);
                     name_in_use++;
+                    LOGGER.info("Now name in use is: " + name_in_use);
                 }
             }
             if(i>0){
@@ -469,10 +474,11 @@ public class Body {
                     if(p.get_part_id() >= parts.get(i - 1).get_part_id()
                     && p.get_part_id() < parts.get(i).get_part_id() ){
                         //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
-                        ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
-                        temp_parts.addAll(temp_array);
-                        temp_parts.addAll(parts.subList(i,parts.size()));
-                        parts = new ArrayList<>(temp_parts);
+                        //ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
+                        //temp_parts.addAll(temp_array);
+                        //temp_parts.addAll(parts.subList(i,parts.size()));
+                        //parts = new ArrayList<>(temp_parts);
+                        parts.remove(i);//TODO confirm
                         i++;
                         added = true;
                     }
@@ -521,7 +527,7 @@ public class Body {
                     p.connect_to_part(connect_part_arr.get(0),false,true);
                 }
             }else{
-                //LOGGER.info("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.getName()+ " " + p.getName());				
+                LOGGER.info("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.getName()+ " " + p.getName());				
             }
         }
         
@@ -574,10 +580,12 @@ public class Body {
             BodyPart p= (BodyPart)parts.get(i);//parts.get(i) as Body_part;
             if(p != null){
                 Boolean same_id = false;
-                if(parts.get(i+1) != null){
-                    if(parts.get(i+1).get_part_id() == p.get_part_id() && parts.get(i+1).race.name.equals(p.race.name) && 
-                    !p.pair_description.equals("") && !p.name.equals(parts.get(i+1).name)){
-                        same_id = true;
+                if(i+1<parts.size()){
+                    if(parts.get(i+1) != null){
+                        if(parts.get(i+1).get_part_id() == p.get_part_id() && parts.get(i+1).race.name.equals(p.race.name) && 
+                        !p.pair_description.equals("") && !p.name.equals(parts.get(i+1).name)){
+                            same_id = true;
+                        }
                     }
                 }
                 if(s.indexOf(p.appearance(0, c)) <= -1 && !(same_id && s.indexOf(p.pair_appearance(parts.get(i+1), c)) >= 0)){
@@ -592,20 +600,20 @@ public class Body {
         }
         return s;
     }
-    /*TODO BodyPart get_stat
+    
     public String get_equip_effects(int id,Number change_amt, Character c){
         String ret = "";
         int i = 0;
         for(i=0;i<parts.size();i++){
             BodyPart bp = (BodyPart)parts.get(i); //as Body_part;
-            if(bp.get_stat(c, id, 0) > -1){
+            if(bp.get_stat(c, id, 0).intValue() > -1){
                 ret = bp.apply_equip_effect(id, change_amt, c);
             }
         }
         
         return ret;
     }
-    */
+    
     public String get_effects(int stat_id,Number k, Character c, int temp,int body_app_method){
         return get_effects(stat_id, k, c, temp, body_app_method,0,target_all_parts,-1);
     }
