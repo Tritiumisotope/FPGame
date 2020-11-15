@@ -325,7 +325,9 @@ public class NewGameGUI implements ActionListener {
 
         tempRoom.newContent(tempItem);
 
-        tempRoom.newContent(FPalace_items.bandages());        
+        tempRoom.newContent(FPalace_items.bandages());
+        World temp_world = new World();
+        //temp_world = FPalace_content.new_world(temp_world);
 
         Character tempChar = new Character();
         tempChar.location = tempRoom;

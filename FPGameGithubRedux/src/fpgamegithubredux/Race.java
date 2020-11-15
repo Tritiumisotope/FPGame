@@ -217,8 +217,8 @@ public class Race extends DynamicObject {
     public void new_attack(CharAction a, int slot_id){//default -1
         //attacks[attacks.length] = a;
         //attack_slots[attack_slots.length] = slot_id;
-        attacks.set(attacks.size(), a);
-        attack_slots.set(attack_slots.size(), slot_id);
+        attacks.add(a);
+        attack_slots.add(slot_id);
     }
     
     

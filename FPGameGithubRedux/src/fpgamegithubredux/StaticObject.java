@@ -71,7 +71,7 @@ public class StaticObject {
 		}
 		
 		public void add_sub_descriptions(String s){
-            descriptions.set(descriptions.size(), s);//descriptions[descriptions.length] = s
+            descriptions.add(s);//descriptions[descriptions.length] = s
 		}
         
 		 

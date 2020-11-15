@@ -373,7 +373,7 @@ public String getName(){
     
     private String get_covered_desc(Character c){
          String ret = null;
-        if(covered_by.get(covered_by.size() -1) != null) {
+        if(covered_by.size() > 0) {
             Equipment cover_equip = covered_by.get(covered_by.size() -1);
 
             if(cover_equip.show_other_cover() && covered_by.get(covered_by.size() -2) != null){
@@ -477,7 +477,7 @@ public String getName(){
         }
         String cover = get_covered_desc(c);
         if(cover != null) s = cover;
-        if(part_state != null && covered_by.get(covered_by.size() -1) == null){
+        if(part_state != null && covered_by.size() > 0 ){
             if(!part_state.get_current_state_description(c, this).equals(""))s += part_state.get_current_state_description(c, this);
         }
         if(hold != null) s += "</pronoun> is holding a " + hold.getName() + " in </noun> </bpn>. ";

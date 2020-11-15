@@ -14,6 +14,7 @@ public class World {
     
     private ArrayList<Integer> already_tried_area;//:Array
     
+    public World(){this(null, null, null);}
     public World(ArrayList<Area> a,ArrayList<Room> sr,ArrayList<ArrayList<Object>> l) {//def null,null,null
         // constructor code
         if(a == null){

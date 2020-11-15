@@ -754,36 +754,38 @@ public class Character extends DynamicObject {
         return ret;
     }
 
-    /*
-    override public function appearance(i:int = 0, c:Character = null):String{
-         var s:String = "";
-         s += get_status(c) + ".<br>";
-         
-         if(c != null)s += c.judge_relative_skill(this) + "<br>";
-         
-         var k:int = 0;
-         if (i != 0){
-            for (k;k<stat.length;k++){
-                if(stat[k].get_description(this).length > 0) s += stat[k].get_description(this);
-             }
-            s += body.get_parts_appearance(this) + "<br>"; 
-            if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
-         }else{
-            var temp_array:Array = get_all_overworld_actions();
-            for (k;k<temp_array.length;k++){
-                 if(temp_array[k] != null && location != null){
-                    if(temp_array[k].get_name() != "" && !temp_array[k].get_personal() && !temp_array[k].get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
-                 }
-             }
-         }
-                  
-         if (i == 0 && location != null) s += "<a href=\"event:look," + location.get_content_id(this) +",1\"><font color='#0000FF'>Appearance</font></a>";
-         
-         return sanitize(s, c);
+    public String appearance(){return appearance(0, null);}
+    public String appearance(int i){return appearance(i, null);}
+    public String appearance(int i, Character c){
+        String s = "";
+        /*
+        s += get_status(c) + ".<br>";
+        
+        if(c != null)s += c.judge_relative_skill(this) + "<br>";
+        
+        var k:int = 0;
+        if (i != 0){
+        for (k;k<stat.length;k++){
+            if(stat[k].get_description(this).length > 0) s += stat[k].get_description(this);
+            }*/
+        s += body.get_parts_appearance(this) + "<br>"; 
+        /*if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
+        }else{
+        var temp_array:Array = get_all_overworld_actions();
+        for (k;k<temp_array.length;k++){
+                if(temp_array[k] != null && location != null){
+                if(temp_array[k].get_name() != "" && !temp_array[k].get_personal() && !temp_array[k].get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
+                }
+            }
+        }
+        */    
+        if (i == 0 && location != null) s += "<a href=\"event:look," + location.getContentID(this) +",1\"><font color='#0000FF'>Appearance</font></a>";
+        
+        return sanitize(s, c);
     }
     
 
-    */
+    
     public void add_action(CharAction a){	
         int i= 0;
         for(i=0;i<actions.size();i++){
@@ -2148,6 +2150,7 @@ public class Character extends DynamicObject {
     //   EARLY TESTING METHODS
     //
     //+++++++++++++++++++++++++++++++++++++++++++++++
+    /*
     public String appearance(int lookID, Character c){//dummy
         String ret = "";
         if(c == this || c == null){
@@ -2167,6 +2170,7 @@ public class Character extends DynamicObject {
         
         return ret;
     }
+    */
     public String newLocation(Room newRoom){
         //TODO dummy out
         return "";
