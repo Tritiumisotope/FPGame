@@ -496,7 +496,7 @@ public class Stat {
         }
         
         //s = s.replace("</" + statID + ">",current_value.toFixed(show_decimals));
-        s = s.replace("</sd" + statID + ">",get_short_description(current_value));
+        s = s.replace("</" + statID + ">",String.valueOf(current_value));
         
         return s;
     }

@@ -2229,7 +2229,7 @@ public class FPalaceHelper{
 					//top half! facial... if breasts are present, try to pull off the top
 					consequence1.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 					//consequence1.addConsequence(FPalaceHelper.lust_id,/*25*/1, "</n2> aggressively starts fondling </n>s chest, enticing </objnoun>. ",0,0,0,2);
-					consequence1.addConsequence(FPalaceHelper.lust_id,/*25*/1, "</c2>\n</c4>",0);
+					consequence1.addConsequence(FPalaceHelper.lust_id,/*25*/1, "</c2><br></c4>",0);
 						//check if breasts present
 						Challenge challenge2 = new Challenge();
 						challenge2.set_attack_stat(-1,1);
@@ -2258,13 +2258,13 @@ public class FPalaceHelper{
 										//attacker is ready to climax herself
 										consequence10.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 										consequence10.addConsequence(FPalaceHelper.lust_id,40, "</n2> climaxes, forcing </n>s face even deeper into </noun2> cunt. ",0,0,0,-1);
-										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1, true);
+										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1, true);
 										//attacker isn't quite there yet....
 										consequence10.addConsequence(FPalaceHelper.lust_id,25, "",-1,0,0,-1);
-										consequence10.addConsequence(FPalaceHelper.lust_id,25, "\n</n2> nearly crushes </n>s face as </pronoun2> appreciates the feeling of </n>s sucking for air. ",-1,0,0,1, true);
+										consequence10.addConsequence(FPalaceHelper.lust_id,25, "<br></n2> nearly crushes </n>s face as </pronoun2> appreciates the feeling of </n>s sucking for air. ",-1,0,0,1, true);
 									//attacker isn't particularly aroused... start from scratch
 									consequence9.addConsequence(FPalaceHelper.lust_id,25, "The smell of </n2>s folds have </n>s eyes rolling into </noun> head. ",-1,0,0,-1);
-									consequence9.addConsequence(FPalaceHelper.lust_id,15, "\n",-1,0,0,2,true);
+									consequence9.addConsequence(FPalaceHelper.lust_id,15, "<br>",-1,0,0,2,true);
 							//titties! attempt to disrobe breasts
 							consequence2.addConsequence(FPalaceHelper.lust_id,10, "</n2>s hands dive for </n>s chest, and begin to grope and dig! ",-1,0,0,3);
 							Challenge challenge3 = new Challenge();
@@ -2361,7 +2361,7 @@ public class FPalaceHelper{
 											//try and stretch
 											consequence13.addConsequence(FPalaceHelper.vaginal_width_id,0.5, "</n2> pounds </noun2> cunt uselessly against the head of </n>s massive cock. ",-1,0,0,13, true);
 											consequence13.addConsequence(FPalaceHelper.curr_hp_id,-1, "",-1,0,0,-1, true);
-											consequence13.addConsequence(FPalaceHelper.lust_id,20, "\n",-1,0,0,-1);
+											consequence13.addConsequence(FPalaceHelper.lust_id,20, "<br>",-1,0,0,-1);
 											//give up if it's more than 2 inches bigger
 											consequence13.addConsequence(FPalaceHelper.lust_id,25, "Realizing the futility of </noun2> task, </n2> gives up, disgruntled. ",-2,0,0,-1, true);
 											
@@ -2392,11 +2392,11 @@ public class FPalaceHelper{
 													consequence15.set_impregnate(2);
 													//Attacker is ready to climax...
 													consequence15.addConsequence(FPalaceHelper.lust_id,50, "</n2> lets out a moan as </noun2> body clenches and jerks from orgasm. </n> can't help but loose a load. ",0,0,0,-1);
-													consequence15.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1,true);
+													consequence15.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1,true);
 													
 													//Not ready for own climax! Keep going!
 													consequence15.addConsequence(FPalaceHelper.lust_id,15, "</n> grunts as </pronoun> finds a load of spunk being extracted from </objnoun>. </n2> doesn't look particularly satisfied. ",-1,0,0,-1);
-													consequence15.addConsequence(FPalaceHelper.lust_id,15, "\n",-1,0,0,14, true);
+													consequence15.addConsequence(FPalaceHelper.lust_id,15, "<br>",-1,0,0,14, true);
 								//defender has no dick... check for a pussy, and some lesbian action
 								consequence5.addConsequence(FPalaceHelper.lust_id,15, "</n2>s fingers continue to wander around </n>s groin enticingly. ",0,0,0,7);
 								Challenge challenge7 = new Challenge();
@@ -2417,10 +2417,10 @@ public class FPalaceHelper{
 											//Attacker is ready to climax
 											consequence16.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 											consequence16.addConsequence(FPalaceHelper.lust_id,50, "</n2> screams out as </pronoun2> climaxes, bringing </n> along for the ride. ",0,0,0,-1);
-											consequence16.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1,true);
+											consequence16.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1,true);
 											//Not ready yet... keep going....
 											consequence16.addConsequence(FPalaceHelper.lust_id,25, "A moan and a grunt escape the entwined pair. ",-1,0,0,-1);
-											consequence16.addConsequence(FPalaceHelper.lust_id,25, "\n",-1,0,0,16,true);
+											consequence16.addConsequence(FPalaceHelper.lust_id,25, "<br>",-1,0,0,16,true);
 									//no genitals!? head to the top...
 									consequence7.addConsequence(FPalaceHelper.lust_id,15, "Quickly bored by the lack of genitals on </n>, </n2> moves up the anotomy. ",0,0,0,2);
 							//defender is wearing something! Try and take it off!
@@ -2601,7 +2601,7 @@ public class FPalaceHelper{
 					//top half! facial... if breasts are present, try to pull off the top
 					consequence1.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 					//consequence1.addConsequence(FPalaceHelper.lust_id,10, "</n2> aggressively starts fondling </n>s chest, enticing </objnoun>. ",0,0,0,2);
-					consequence1.addConsequence(FPalaceHelper.lust_id,0, "</c2>\n</c4>",0);
+					consequence1.addConsequence(FPalaceHelper.lust_id,0, "</c2><br></c4>",0);
 						//check if breasts present
 						Challenge challenge2 = new Challenge();
 						challenge2.set_attack_stat(-1,1);
@@ -2621,7 +2621,7 @@ public class FPalaceHelper{
 									//attacker is aroused! BJ! 
 									consequence9.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 									consequence9.addConsequence(FPalaceHelper.lust_id,50, "</n2> thrusts </noun2> cock at </n>s mouth, greadily pouring </noun2> waiting inches into </n>s agape mouth. ",0,0,0,-1);
-									consequence9.addConsequence(FPalaceHelper.lust_id,20, "\n",0,0,0,10,true);
+									consequence9.addConsequence(FPalaceHelper.lust_id,20, "<br>",0,0,0,10,true);
 										Challenge challenge10 = new Challenge();
 										challenge10.set_attack_stat(FPalaceHelper.cum_volume_id);
 										challenge10.set_defense_stat(-1,1);
@@ -2639,13 +2639,13 @@ public class FPalaceHelper{
 										consequence10.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 										consequence10.set_consume(FPalaceHelper.cum_volume_id);
 										consequence10.addConsequence(FPalaceHelper.lust_id,50, "</n2> begins to launch a load of semen down </n>s throat, a look of relief crossing </noun2> face. ",0,0,0,-1);
-										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1,true);
+										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1,true);
 										//attack has no cum!? Still need a climax!
 										consequence10.addConsequence(FPalaceHelper.lust_id,50, "</n2> bucks and jerks as </pronoun2> climaxes. ",-1,0,0,-1);
-										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "\n",-1,0,0,-1,true);
+										consequence10.addConsequence(FPalaceHelper.lust_id,-50, "<br>",-1,0,0,-1,true);
 									//attack is not aroused! Smother and try again!
 									consequence9.addConsequence(FPalaceHelper.lust_id,25, "Not quite hard yet, </n2> coaxes a lick from </n>. ",-1,0,0,-1);
-									consequence9.addConsequence(FPalaceHelper.lust_id,25, "\n",-1,0,0,9,true);
+									consequence9.addConsequence(FPalaceHelper.lust_id,25, "<br>",-1,0,0,9,true);
 	
 							//titties! attempt to disrobe breasts
 							consequence2.addConsequence(FPalaceHelper.lust_id,10, "</n2>s hands dive for </n>s chest, and begin to grope and dig! ",-1,0,0,3);
@@ -2693,13 +2693,13 @@ public class FPalaceHelper{
 											//attacker can keep going! Head to BJ!
 											consequence12.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 											consequence12.addConsequence(FPalaceHelper.lust_id,50, "</n2> blows </noun2> load all over </n>s face and tits. Unsatisfied </pronoun2> begins to eye </n>s cum smeered face. ",0,0,0,-1);
-											consequence12.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,9,true);
+											consequence12.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,9,true);
 											//attacker is done! stop the madness!
 											consequence12.addConsequence(FPalaceHelper.lust_id,50, "</n2> blows </noun2> load all over </n>s face and tits, leaving </objnoun2> spent for the moment. ",-1,0,0,-1);
-											consequence12.addConsequence(FPalaceHelper.lust_id,-50, "\n",-1,0,0,-1,true);
+											consequence12.addConsequence(FPalaceHelper.lust_id,-50, "<br>",-1,0,0,-1,true);
 										//attack is not aroused. Play with tits and try again
 										consequence11.addConsequence(FPalaceHelper.lust_id,25, "</n2> takes a moment to stroke </objnoun2>self to erection. ",-1,0,0,-1);
-										consequence11.addConsequence(FPalaceHelper.lust_id,25, "\n",-1,0,0,11,true);
+										consequence11.addConsequence(FPalaceHelper.lust_id,25, "<br>",-1,0,0,11,true);
 					//bottom half!
 					//consequence1.addConsequence(FPalaceHelper.lust_id,25, "</n2> aggressively starts exploring </n>s groin with </noun2> fingers, enticing </n>. ",-1,0,0,4);
 						//disrobe attempt
@@ -2749,13 +2749,13 @@ public class FPalaceHelper{
 												consequence14.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 												consequence14.set_impregnate();
 												consequence14.addConsequence(FPalaceHelper.lust_id,50, "</n2> begins to launch a load of semen into </n>, an *O* visible on </noun2> face. ",0,0,0,-1);
-												consequence14.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1,true);
+												consequence14.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1,true);
 												//attack has no cum!? Still need a climax!
 												consequence14.addConsequence(FPalaceHelper.lust_id,50, "</n2> bucks and jerks as </pronoun2> climaxes. ",-1,0,0,-1);
-												consequence14.addConsequence(FPalaceHelper.lust_id,-50, "\n",-1,0,0,-1,true);
+												consequence14.addConsequence(FPalaceHelper.lust_id,-50, "<br>",-1,0,0,-1,true);
 											//dick too big... go for blowjob
 											consequence13.addConsequence(FPalaceHelper.lust_id,50, "Despite </noun> attempts, </n2>s dick isn't going to fit. ",-1,0,0,-1);
-											consequence13.addConsequence(FPalaceHelper.vaginal_width_id,0.5, "\n",-1,0,0,2);
+											consequence13.addConsequence(FPalaceHelper.vaginal_width_id,0.5, "<br>",-1,0,0,2);
 									//fuck ass
 									consequence6.addConsequence(FPalaceHelper.lust_id,25, "Finding nothing else, </n2> leads </noun2> cock towards </n>s ass. ",0,0,0,7);
 										Challenge challenge7 = new Challenge();
@@ -2775,17 +2775,17 @@ public class FPalaceHelper{
 												Consequence consequence15 = new Consequence();
 												consequence15.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
 												consequence15.addConsequence(FPalaceHelper.lust_id,50, "</n2> begins to launch a load of semen into </n>, an *O* visible on </noun2> face. ",0,0,0,-1);
-												consequence15.addConsequence(FPalaceHelper.lust_id,-50, "\n",0,0,0,-1,true);
+												consequence15.addConsequence(FPalaceHelper.lust_id,-50, "<br>",0,0,0,-1,true);
 												//attack has no cum!? Still need a climax!
 												consequence15.addConsequence(FPalaceHelper.lust_id,50, "</n2> bucks and jerks as </pronoun2> climaxes. ",-1,0,0,-1);
-												consequence15.addConsequence(FPalaceHelper.lust_id,-50, "\n",-1,0,0,-1,true);
+												consequence15.addConsequence(FPalaceHelper.lust_id,-50, "<br>",-1,0,0,-1,true);
 											
 											//dick too big... try mouth...
 											consequence7.addConsequence(FPalaceHelper.lust_id,50, "</n2> pounds and pounds but </pronoun2> just isn't going to fit. ",-1,0,0,-1);
-											consequence7.addConsequence(FPalaceHelper.anal_width_id,0.5, "\n",-1,0,0,2);
+											consequence7.addConsequence(FPalaceHelper.anal_width_id,0.5, "<br>",-1,0,0,2);
 								//character is not aroused...
 								consequence5.addConsequence(FPalaceHelper.lust_id,25, "</n2> take a moment to stroke </objnoun2>self to arrousal. ",-1,0,0,-1);
-								consequence5.addConsequence(FPalaceHelper.lust_id,25, "\n",-1,0,0,5,true);
+								consequence5.addConsequence(FPalaceHelper.lust_id,25, "<br>",-1,0,0,5,true);
 								
 						//character is wearing clothing!
 						consequence4.addConsequence(FPalaceHelper.lust_id,25, "</n2> pulls and tugs on </n>s clothing. ",-1,0,0,16,true);
@@ -3643,27 +3643,27 @@ public class FPalaceHelper{
 			Stat s = new Stat(eye_colour_id);
 				s.set_min(-2);
 				s.setName("eye colour");
-				s.new_description("and as dark as midnight. \n\n",0);
-				s.new_description("and a dark yellow. \n\n",1);
-				s.new_description("and an eye-catching yellow. \n\n",2);
-				s.new_description("and a dull golden yellow. \n\n",3);
-				s.new_description("and a dull brown. \n\n",4);
-				s.new_description("and a hazel that sparkles brown and green. \n\n",5);
-				s.new_description("and a light-brown that twinkle. \n\n",6);
-				s.new_description("and a green with brown and yellow spots that flare in the light. \n\n",7);
-				s.new_description("and a shimmering green. \n\n",8);
-				s.new_description("and a green with silver flecks that shimmer. \n\n",9);
-				s.new_description("and a blue gray with brown spots and golden flecks that sparkle. \n\n",10);
-				s.new_description("and a childish grey. \n\n",11);
-				s.new_description("and a grey blue reminiscent of a cloudy sky. \n\n",12);
-				s.new_description("and a deep piercing blue. \n\n",13);
-				s.new_description("and a sky coloured blue. \n\n",14);
-				s.new_description("and a violet that glows with inner light. \n\n",15);
-				s.new_description("and a purple that shimmers in the light. \n\n",16);
-				s.new_description("and a blood red that reflects the light with menace. \n\n",17);
-				s.new_description("and a red that glows with inner light. \n\n",18);
-				s.new_description("and a light, sickly red. \n\n",19);
-				s.new_description("and a stark white. \n\n",20);
+				s.new_description("and as dark as midnight. <br><br>",0);
+				s.new_description("and a dark yellow. <br><br>",1);
+				s.new_description("and an eye-catching yellow. <br><br>",2);
+				s.new_description("and a dull golden yellow. <br><br>",3);
+				s.new_description("and a dull brown. <br><br>",4);
+				s.new_description("and a hazel that sparkles brown and green. <br><br>",5);
+				s.new_description("and a light-brown that twinkle. <br><br>",6);
+				s.new_description("and a green with brown and yellow spots that flare in the light. <br><br>",7);
+				s.new_description("and a shimmering green. <br><br>",8);
+				s.new_description("and a green with silver flecks that shimmer. <br><br>",9);
+				s.new_description("and a blue gray with brown spots and golden flecks that sparkle. <br><br>",10);
+				s.new_description("and a childish grey. <br><br>",11);
+				s.new_description("and a grey blue reminiscent of a cloudy sky. <br><br>",12);
+				s.new_description("and a deep piercing blue. <br><br>",13);
+				s.new_description("and a sky coloured blue. <br><br>",14);
+				s.new_description("and a violet that glows with inner light. <br><br>",15);
+				s.new_description("and a purple that shimmers in the light. <br><br>",16);
+				s.new_description("and a blood red that reflects the light with menace. <br><br>",17);
+				s.new_description("and a red that glows with inner light. <br><br>",18);
+				s.new_description("and a light, sickly red. <br><br>",19);
+				s.new_description("and a stark white. <br><br>",20);
 				
 				
 				s.new_increase_description("</n>s eyes looks a different colour. ");
@@ -3944,7 +3944,7 @@ public class FPalaceHelper{
 			Stat s = new Stat(hips_id);
 			s.set_min(-2);
 				s.setName("hips");
-				s.new_description("\n\n</noun> </bpn> are </"+hips_id+"> inches around and </r>");
+				s.new_description("<br><br></noun> </bpn> are </"+hips_id+"> inches around and </r>");
 				s.new_increase_description("</n>s ass jiggles as it grows. ");
 				s.new_descrease_description("</n>s ass seems to contract. ");
 				
@@ -4354,7 +4354,7 @@ public class FPalaceHelper{
 			st.set_always_show();
 			Integer[] parts_to_show = {head_slot, torso_slot, hips_slot, legs_slot, feet_slot, barrel_slot};//was array with non curly 
 			st.set_stat_description_show(new ArrayList<Integer>(Arrays.asList(parts_to_show)));//show this as a total in appearance instead of individually
-			st.new_description("</pronoun> is only </"+FPalaceHelper.height_id+"> inches tall. \n\n",0);
+			st.new_description("</pronoun> is only </"+FPalaceHelper.height_id+"> inches tall. <br><br>",0);
 			st.new_description("</pronoun> is under 2' tall. ",12);
 			st.new_description("</pronoun> is under 3' tall. ",24);
 			st.new_description("</pronoun> is 3' tall. ",36);
@@ -4865,13 +4865,13 @@ public class FPalaceHelper{
 			Area_weather weather = new Area_weather();
 			
 			weather.set_minimum_length(FPGameGithub.T1_HOUR*6);
-			weather.new_daytime_status("It is night, the moon high in the sky.\n",0);
-			weather.new_daytime_status("It is the early morning, sun shinning from the east.\n",FPGameGithub.T1_DAY*1/4);
-			weather.new_daytime_status("It is the morning, the sun shining brightly.\n",FPGameGithub.T1_DAY*3/8);
-			weather.new_daytime_status("It is the afternoon, the sun high overhead.\n",FPGameGithub.T1_DAY*1/2);
-			weather.new_daytime_status("It is the late afternoon, the sun shining brightly.\n",FPGameGithub.T1_DAY*5/8);
-			weather.new_daytime_status("It is the evening, the sun retreating to the west.\n",FPGameGithub.T1_DAY*3/4);
-			weather.new_daytime_status("It is night, the moon high in the sky.\n",FPGameGithub.T1_DAY*7/8);
+			weather.new_daytime_status("It is night, the moon high in the sky.<br>",0);
+			weather.new_daytime_status("It is the early morning, sun shinning from the east.<br>",FPGameGithub.T1_DAY*1/4);
+			weather.new_daytime_status("It is the morning, the sun shining brightly.<br>",FPGameGithub.T1_DAY*3/8);
+			weather.new_daytime_status("It is the afternoon, the sun high overhead.<br>",FPGameGithub.T1_DAY*1/2);
+			weather.new_daytime_status("It is the late afternoon, the sun shining brightly.<br>",FPGameGithub.T1_DAY*5/8);
+			weather.new_daytime_status("It is the evening, the sun retreating to the west.<br>",FPGameGithub.T1_DAY*3/4);
+			weather.new_daytime_status("It is night, the moon high in the sky.<br>",FPGameGithub.T1_DAY*7/8);
 			
 			return weather;			
 		}
@@ -4880,13 +4880,13 @@ public class FPalaceHelper{
 			Area_weather weather = new Area_weather();
 			
 			weather.set_minimum_length(FPGameGithub.T1_HOUR*6);
-			weather.new_daytime_status("It is night, and raining heavily.\n",0);
-			weather.new_daytime_status("It is the early morning, though the rain obscures the sun.\n",FPGameGithub.T1_DAY*1/4);
-			weather.new_daytime_status("It is the morning, the rain unable to abate the light of the sun.\n",FPGameGithub.T1_DAY*3/8);
-			weather.new_daytime_status("It is the afternoon, silver lining bright in the clouds pouring rain down.\n",FPGameGithub.T1_DAY*1/2);
-			weather.new_daytime_status("It is the late afternoon, the rain unable to abate the light of the sun.\n",FPGameGithub.T1_DAY*5/8);
-			weather.new_daytime_status("It is the evening, the sun visible between the horizon and the rain.\n",FPGameGithub.T1_DAY*3/4);
-			weather.new_daytime_status("It is night, and raining heavily.\n",FPGameGithub.T1_DAY*7/8);
+			weather.new_daytime_status("It is night, and raining heavily.<br>",0);
+			weather.new_daytime_status("It is the early morning, though the rain obscures the sun.<br>",FPGameGithub.T1_DAY*1/4);
+			weather.new_daytime_status("It is the morning, the rain unable to abate the light of the sun.<br>",FPGameGithub.T1_DAY*3/8);
+			weather.new_daytime_status("It is the afternoon, silver lining bright in the clouds pouring rain down.<br>",FPGameGithub.T1_DAY*1/2);
+			weather.new_daytime_status("It is the late afternoon, the rain unable to abate the light of the sun.<br>",FPGameGithub.T1_DAY*5/8);
+			weather.new_daytime_status("It is the evening, the sun visible between the horizon and the rain.<br>",FPGameGithub.T1_DAY*3/4);
+			weather.new_daytime_status("It is night, and raining heavily.<br>",FPGameGithub.T1_DAY*7/8);
 			
 			return weather;			
 		}

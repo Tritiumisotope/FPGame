@@ -638,19 +638,21 @@ public String getName(){
                                     stat_total = stat_total.doubleValue() + part_check;
                                     for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.size();k++){
                                         if(stat_description.get(i).stat_desc_ttl_part_limit.get(k) == part_id){
-                                            found_array.set(k,part_check);//found_array[k] = part_check
+                                            found_array.add(part_check);//found_array[k] = part_check
                                             break;
+                                        }else{
+                                            found_array.add(null);
                                         }
                                     }
                                 }else if(show_desc){
                                     for(k=0;k<stat_description.get(i).stat_desc_ttl_part_limit.size();k++){
                                         if(stat_description.get(i).stat_desc_ttl_part_limit.get(k) == p.part_id){
-                                            if(found_array.get(k) != null && found_array.get(k) < part_check){
+                                            if(found_array.size() > k && found_array.get(k) != null && found_array.get(k) < part_check){
                                                 //stat_total -= found_array.get(k)
                                                 stat_total = stat_total.doubleValue() - found_array.get(k);
                                                 //found_array[k] = part_check
                                                 found_array.set(k,part_check);
-                                            }else if(found_array.get(k) == null){
+                                            }else if(found_array.size() > k && found_array.get(k) == null){
                                                 //found_array[k] = part_check
                                                 found_array.set(k,part_check);
                                             }else{
@@ -847,7 +849,7 @@ public String getName(){
          String ret = "";
          int i = 0;
         for(i=0;i<part_upkeep.size();i++){
-            ret += part_upkeep.get(i).tick(c) + "\n";
+            ret += part_upkeep.get(i).tick(c) + "<br>";
         }
         return ret;
     }
