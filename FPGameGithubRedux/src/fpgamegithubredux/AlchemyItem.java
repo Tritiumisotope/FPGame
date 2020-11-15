@@ -469,7 +469,7 @@ public class AlchemyItem extends Item {
         
         for(count = 0;count<types.size();count++){
             //temp.types[count] = this.types[count]
-            temp.types.set(count,this.types.get(count));
+            temp.types.add(this.types.get(count));
         }
         
         
@@ -479,20 +479,20 @@ public class AlchemyItem extends Item {
         temp.value = this.value;
         
         for(count=0;count<effects.size();count++){
-            temp.effects.set(count, this.effects.get(count));//temp.effects[count] = this.effects[count]
+            temp.effects.add(this.effects.get(count));//temp.effects[count] = this.effects[count]
         }
         
         temp.useDescription = this.useDescription;
         temp.numUses = this.numUses;
         
         for(count=0;count<changeEffects.size();count++){
-            temp.changeEffects.set(count, this.changeEffects.get(count));//temp.changeEffects[count] = this.changeEffects[count]
+            temp.changeEffects.add(this.changeEffects.get(count));//temp.changeEffects[count] = this.changeEffects[count]
         }
         temp.propogate = this.propogate;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
         for(count=0;count < statActionAdd.size();count++){
-            temp.statActionAdd.set(count, this.statActionAdd.get(count));//temp.statActionAdd[count] = this.statActionAdd[count]
+            temp.statActionAdd.add(this.statActionAdd.get(count));//temp.statActionAdd[count] = this.statActionAdd[count]
         }
         
         temp.imageID = this.imageID;

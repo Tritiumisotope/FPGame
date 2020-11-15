@@ -51,11 +51,11 @@ public class ItemConsequence extends Consequence {
     }
     public void add_item_reward(Item i,int r, Boolean gen_flag,Boolean target,Boolean r_flag){
         //default false, true, false
-        item_reward.set(item_reward.size(), i);//item_reward[item_reward.length] = i
-        item_reward_roll.set(item_reward_roll.size(),r);//item_reward_roll[item_reward_roll.length] = r
-        item_gen.set(item_gen.size(), gen_flag);//item_gen[item_gen.length] = gen_flag
-        item_reward_target.set(item_reward_target.size(),target);//item_reward_target[item_reward_target.length] = target
-        remove_flag.set(remove_flag.size(), r_flag);// remove_flag[remove_flag.length] = r_flag
+        item_reward.add(i);//item_reward[item_reward.length] = i
+        item_reward_roll.add(r);//item_reward_roll[item_reward_roll.length] = r
+        item_gen.add(gen_flag);//item_gen[item_gen.length] = gen_flag
+        item_reward_target.add(target);//item_reward_target[item_reward_target.length] = target
+        remove_flag.add(r_flag);// remove_flag[remove_flag.length] = r_flag
     }
     
     public void add_item_recipe(Item i){
@@ -91,7 +91,7 @@ public class ItemConsequence extends Consequence {
                 item = item_reward.get(i).copyItem();
                 if(item_gen.get(i)){
                     if(extract > 0){
-                        ArrayList<Object> consume_effects = c.get_stat_actions(extract);
+                        ArrayList<CharAction> consume_effects = c.get_stat_actions(extract);
                         int consume_count = 0;//TODO ABOVE!!
                         for(consume_count=0;consume_count<consume_effects.size();consume_count++){
                             CharAction temp_a = (CharAction)consume_effects.get(consume_count) ;

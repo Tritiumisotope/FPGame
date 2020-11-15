@@ -174,11 +174,11 @@ public class Skill_set {
             if(skill_ids.get(i) == skill_id) break;///[]
         }
         if(i==skill_ids.size()){//.length
-            skill_ids.set(i,skill_id);//[] for all
-            skill_ranks.set(i, 0);
-            bonus_mod.set(i,0);
-            skill_value.set(i,-1);
-            last_update_tick.set(i,0);
+            skill_ids.add(skill_id);//[] for all
+            skill_ranks.add(0);
+            bonus_mod.add(0);
+            skill_value.add(-1);
+            last_update_tick.add(0);
         }
         
         //REPLACED BELOW//skill_ranks[i] += change_amount; all like this before

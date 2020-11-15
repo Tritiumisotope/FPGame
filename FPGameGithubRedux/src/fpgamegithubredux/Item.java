@@ -603,7 +603,7 @@ public class Item {
         int count = 0;
 
         for(count=0;count<effects.size();count++){        //effects copy, maybe toClone.effects.length?
-            retItem.effects.set(count,effects.get(count));
+            retItem.effects.add(effects.get(count));
         }
         //retItem.effects = Arrays.copyOf(effects, effects.size());//this might be enough? not with ArrayList
         //Collections.addAll(this.list, source);
@@ -611,21 +611,21 @@ public class Item {
         retItem.useDescription = useDescription;
         for(count=0;count<changeEffects.size();count++){
             //retItem.changeEffects[count] = changeEffects[count];
-            retItem.changeEffects.set(count,changeEffects.get(count));
+            retItem.changeEffects.add(changeEffects.get(count));
         }//change effects copy
         //retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.size());//this might be enough? not with ArrayList
         retItem.propogate = propogate;
         retItem.identDifficulty = identDifficulty;
         retItem.weight = weight;
         for(count=0;count < statActionAdd.size();count++){
-            retItem.statActionAdd.set(count, statActionAdd.get(count));
+            retItem.statActionAdd.add(statActionAdd.get(count));
         }//stat action add copy
         //retItem.statActionAdd = Arrays.copyOf(statActionAdd, statActionAdd.size());//this might be enough? not with ArrayList
         retItem.numUses = numUses;
         retItem.imageID = imageID;
         //topic
         for(count=0;count < statActionAdd.size();count++){
-            retItem.craftingRequirements.set(count, craftingRequirements.get(count));
+            retItem.craftingRequirements.add(craftingRequirements.get(count));
         }
         //retItem.craftingRequirements = Arrays.copyOf(craftingRequirements, craftingRequirements.size());//crafting requirements
 

@@ -130,6 +130,7 @@ public class Character extends DynamicObject {
         body = new Body();
         sex = new Sex();
         cclass = new ArrayList<>();
+        skills = new Skill_set();
         /*
         skills = new Skill_set();
         
@@ -814,13 +815,13 @@ public class Character extends DynamicObject {
         body.remove_stat_action(id, a);
     }
     
-    public ArrayList<Object> get_stat_actions(int id){
-        ArrayList<Object> ret = new ArrayList<>();
+    public ArrayList<CharAction> get_stat_actions(int id){
+        ArrayList<CharAction> ret = new ArrayList<>();
         int i = 0;
         for(i=0;i<stats.size();i++){//stat to stats, stat_id to statID
             if(statID.get(i) == id)ret.addAll(stats.get(i).get_actions());//ret = ret.concat(stats.get(i).get_actions())
         }
-        ret.add(body.get_stat_actions(id));//ret = ret.concat(body.get_stat_actions(id));
+        ret.addAll(body.get_stat_actions(id));//ret = ret.concat(body.get_stat_actions(id));
         
         //remove duplicates
         for(i=0;i<ret.size();i++){
@@ -1451,10 +1452,12 @@ public class Character extends DynamicObject {
 			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
-			int i = -1;
-			for(i=-1;i<possessions.size();i++){
-				if(possessions.get(i) == e) break;
-			}
+            int i = -1;
+            if(possessions.size() > 0){
+                for(i=0;i<possessions.size();i++){
+                    if(possessions.get(i) == e) break;
+                }
+            }
 			
 			Character char_for_chal = this;
 			int equip_ident = 0;
@@ -2177,7 +2180,9 @@ public class Character extends DynamicObject {
     }
     public void drop(int item){
         //TODO dummy out
-        possessions.remove(item);
+        if(item >= 0 && item < possessions.size()){
+            possessions.remove(item);
+        }
     }
     public String look(){return look(-1, 0);}
     public String look(int contentID){return look(contentID, 0);}
@@ -4636,11 +4641,11 @@ public class Character extends DynamicObject {
             
             ret += this.apply_affect_by_id(FPalaceHelper.biomass_consumed, consume_volume, 0, null, Body.change_stats_total);
             
-            ArrayList<Object> consume_effects = c.get_stat_actions(consumption_id);
+            ArrayList<CharAction> consume_effects = c.get_stat_actions(consumption_id);
             
             i = 0;
             for(i=0;i<consume_effects.size();i++){
-                CharAction temp_a = (CharAction)consume_effects.get(i);
+                CharAction temp_a = consume_effects.get(i);
                 if(temp_a != null){
                     if(temp_a.get_consume())ret += temp_a.challenge(0,this,c);
                 }
@@ -4659,7 +4664,7 @@ public class Character extends DynamicObject {
     
     public String fluid_extraction(int fluid_id){
         String ret = "";
-        ArrayList<Object> extract_effects = get_stat_actions(fluid_id);
+        ArrayList<CharAction> extract_effects = get_stat_actions(fluid_id);
         int i = 0;
         for(i=0;i<extract_effects.size();i++){
             CharAction temp_a = (CharAction)extract_effects.get(i);

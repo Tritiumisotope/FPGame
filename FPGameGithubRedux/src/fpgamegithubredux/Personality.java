@@ -206,7 +206,7 @@ public class Personality {
 			for(i=0;i<mob_allegiances.size();i++){
 				if(mob_allegiances.get(i) == m)return;
 				int j = 0;//make sure we aren't joining two enemy mobs here...
-				for(j=0;j<=mob_allegiances.get(i).enemy_mobs.size();j++){
+				for(j=0;j<mob_allegiances.get(i).enemy_mobs.size();j++){
 					if(m==mob_allegiances.get(i).enemy_mobs.get(j))return;
 				}
 			}

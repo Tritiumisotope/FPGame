@@ -197,7 +197,7 @@ public class Area extends StaticObject{
         if (r == null) return 1;
         int[] temp = new int[3];//Array temp, also no need to initialize, it gets filled by find_room?
         tempOffset = null;
-        if (rooms.get(0) == null){//[]
+        if (rooms.size() == 0 || rooms.get(0) == null){//[]
             //rooms[0] = null;//new Array()
             //rooms[0][0] = null;//new Array()
             //rooms[0][0][0] = r
@@ -626,7 +626,15 @@ public class Area extends StaticObject{
             
             if(new_x < 0 && !restrict_edges){ 
                 for(new_x = rooms.size();new_x >= 0;new_x--){//.length
-                    rooms.set(new_x,rooms.get(new_x - 1));
+                    if(new_x == rooms.size()){
+                        rooms.add(rooms.get(new_x - 1));
+                    }else{
+                        if(new_x -1 >= 0){
+                            rooms.set(new_x,rooms.get(new_x - 1));
+                        }else{
+                            rooms.set(new_x, new ArrayList<ArrayList<Room>>());
+                        }
+                    }
                 }
                 if(rooms.get(new_x) == null){
                     rooms.set(new_x, new ArrayList<ArrayList<Room>>());//new Array
@@ -640,7 +648,11 @@ public class Area extends StaticObject{
                 for(x= 0;x<rooms.size();x++){//.length
                     if(rooms.get(x) == null) rooms.set(x, new ArrayList<ArrayList<Room>>());//new Array()
                     for(new_y= rooms.get(x).size();new_y >= 0;new_y--){
-                        rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [] []
+                        if(new_y == rooms.get(x).size()){
+                            rooms.get(x).add(rooms.get(x).get(new_y - 1));
+                        }else{
+                            rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [] []
+                        }
                     }
                 }
                 new_y = 0;
@@ -654,9 +666,27 @@ public class Area extends StaticObject{
                 return new int[]{-1};
             }
             
-            if(rooms.get(new_x) == null) rooms.set(new_x, new ArrayList<ArrayList<Room>>());//new Array()
-            if(rooms.get(new_x).get(new_y) == null)rooms.get(new_x).set(new_y,new ArrayList<Room>());//new Array
+            if(rooms.size() <= new_x || rooms.get(new_x) == null){
+                if(rooms.size() <= new_x){
+                    for(int count_x=rooms.size();count_x<=new_x;count_x++){
+                        rooms.add(new ArrayList<ArrayList<Room>>());
+                    }
+                }else{
+                    rooms.set(new_x, new ArrayList<ArrayList<Room>>());//new Array()
+                }
+                
+            } 
+            if(rooms.get(new_x).size() <= new_y || rooms.get(new_x).get(new_y) == null){
+                if(new_y >= rooms.get(new_x).size()){
+                    for(int count_y=rooms.get(new_x).size();count_y <= new_y;count_y++){
+                        rooms.get(new_x).add(new ArrayList<Room>());
+                    }
+                }else{
+                    rooms.get(new_x).set(new_y,new ArrayList<Room>());//new Array
+                }
+            }
             
+            LOGGER.info("new x:" + new_x + " new y:" + new_y + " new z:" + new_z);
             if(rooms.get(new_x).get(new_y).get(new_z) != null){
                 //Let's join them... if they aren't already joined
                 if(new_x != x || new_y != y || new_z != z){
@@ -1998,7 +2028,7 @@ public class Area extends StaticObject{
             if(room_list.get(room_num).attached_to_other_area()) return get_random_room(true);
         }
         
-        return room_list.get(room_list.size());//room_list[room_num];//TODO
+        return room_list.get(room_num);//room_list[room_num];//TODO
         
     }
     public ArrayList<Room> get_edge_rooms(){

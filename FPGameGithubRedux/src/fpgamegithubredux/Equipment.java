@@ -110,17 +110,17 @@ public class Equipment extends Item {
 		}
 		public void add_upgrade_slot(int id){
 			//upgrade_slot_ids[upgrade_slot_ids.length] = id
-			upgrade_slot_ids.set(upgrade_slot_ids.size(), id);
+			upgrade_slot_ids.add(id);
 		}
 		
 		public void add_damage_resistance(int id){
 			//damage_type_strengths[damage_type_strengths.length] = id
-			damage_type_strengths.set(damage_type_strengths.size(), id);
+			damage_type_strengths.add(id);
 		}
 		
 		public void add_damage_weakness(int id){
 			//damage_type_weaknesses[damage_type_weaknesses.length] = id
-			damage_type_weaknesses.set(damage_type_weaknesses.size(), id);
+			damage_type_weaknesses.add(id);
 		}
 		
 		public Number get_damage_mod(int id){
@@ -164,9 +164,9 @@ public class Equipment extends Item {
 		
 		public void set_skill_bonus(int id,int bonus){
 			//skill_id[skill_id.length] = id
-			skill_id.set(skill_id.size(), id);
+			skill_id.add(id);
 			//skill_bonus[skill_bonus.length] = bonus
-			skill_bonus.set(skill_bonus.size(), bonus);
+			skill_bonus.add(bonus);
 		}
 		
 		public void set_show_other_cover(){
@@ -182,9 +182,9 @@ public class Equipment extends Item {
 		}
 		public void new_equip_slot(int i,int num_slots){//default num_slots 0
 			//equips_on[equips_on.length] = i
-			equips_on.set(equips_on.size(), i);
+			equips_on.add(i);
 			//equips_on_num[equips_on_num.length] = num_slots
-			equips_on_num.set(equips_on_num.size(), num_slots);
+			equips_on_num.add(num_slots);
 		}
 		
 		public int get_max_equip_slot(int equip_on_id){
@@ -212,12 +212,12 @@ public class Equipment extends Item {
 		}
 		public void new_cover_slot(int i,String s,int c,int min, int cover_nm,int perception_difficulty){
 			//default s="", -1, 0, 0, 0, 0
-			covers.set(covers.size(), i);//covers[covers.length] = i
-			covers_desc.set(covers_desc.size(), s);//covers_desc[covers_desc.length] = s
-			cover_min.set(cover_min.size(), min);//cover_min[cover_min.length] = min
-			cover_stat.set(cover_stat.size(), c);//cover_stat[cover_stat.length] = c
-			cover_num.set(cover_num.size(),cover_nm);//cover_num[cover_num.length] = cover_nm
-			covered_perception_difficulty.set(covered_perception_difficulty.size(), perception_difficulty);//covered_perception_difficulty[covered_perception_difficulty.length] = perception_difficulty
+			covers.add(i);//covers[covers.length] = i
+			covers_desc.add(s);//covers_desc[covers_desc.length] = s
+			cover_min.add(min);//cover_min[cover_min.length] = min
+			cover_stat.add(c);//cover_stat[cover_stat.length] = c
+			cover_num.add(cover_nm);//cover_num[cover_num.length] = cover_nm
+			covered_perception_difficulty.add(perception_difficulty);//covered_perception_difficulty[covered_perception_difficulty.length] = perception_difficulty
 		}
 		
 		public ArrayList<Integer> get_equip_slots(){

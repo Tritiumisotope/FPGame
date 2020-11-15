@@ -76,8 +76,17 @@ public class Character_class extends DynamicObject {
     }
     
     public void set_bonus(int stat_id, Number i){
-        bonus.set(stat_id,i); //bonus.get(stat_id) = i
-        //TODO null-fill?
+        if(stat_id >= bonus.size()){
+            for(int count = bonus.size();count<= stat_id;count++){
+                if(count == stat_id){
+                    bonus.add(i);
+                }else{
+                    bonus.add(null);
+                }
+            }
+        }else{
+            bonus.set(stat_id,i); //bonus.get(stat_id) = i
+        }       
     }
     
     public int get_stat_cost(int stat_id){//was uint
