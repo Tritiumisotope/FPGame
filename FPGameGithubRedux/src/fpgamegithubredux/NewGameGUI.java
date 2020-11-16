@@ -183,16 +183,19 @@ public class NewGameGUI implements ActionListener {
 
                         if ("eyeColor,4".equals(result)) {
                             LOGGER.info("Brown");
+                            eye_flag = 4;
                             // body_flag = 1;
                             // newPlayer.applyAffectByID(1,4);
                             setHairColor();
                         } else if ("eyeColor,8".equals(result)) {
                             LOGGER.info("Green");
+                            eye_flag = 8;
                             // body_flag = 2;
                             // newPlayer.applyAffectByID(1,8);
                             setHairColor();
                         } else if ("eyeColor,14".equals(result)) {
                             LOGGER.info("Blue");
+                            eye_flag = 14;
                             // body_flag = 3;
                             // newPlayer.applyAffectByID(1,14);
                             setHairColor();
@@ -224,18 +227,22 @@ public class NewGameGUI implements ActionListener {
 
                         if ("hairColor,2".equals(result)) {
                             LOGGER.info("Black");
+                            hair_flag = 2;
                             // body_flag = 1;
                             //newPlayer.applyAffectByID(2, 2);
                         } else if ("hairColor,5".equals(result)) {
                             LOGGER.info("Brown");
+                            hair_flag = 5;
                             // body_flag = 2;
                             //newPlayer.applyAffectByID(2, 5);
                         } else if ("hairColor,7".equals(result)) {
                             LOGGER.info("Red");
+                            hair_flag = 7;
                             // body_flag = 3;
                             //newPlayer.applyAffectByID(2, 7);
                         } else if ("hairColor,4".equals(result)) {
                             LOGGER.info("Blonde");
+                            hair_flag = 4;
                             // body_flag = 3;
                             //newPlayer.applyAffectByID(2, 4);
                         } else {
