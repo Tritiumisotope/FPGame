@@ -230,8 +230,10 @@ public String getName(){
     }
     
     public String get_pair_name(){
-         String ret;// = pair_name
-         if(part_count%10 == 1&&part_count!=11){
+        String ret = pair_name;// = pair_name
+        if(part_count==0){
+            //leave as is, no additional text needed
+        }else if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + pair_name;
         }else if(part_count%10 == 2&&part_count!=12){
             ret = (part_count) + "nd " + pair_name;

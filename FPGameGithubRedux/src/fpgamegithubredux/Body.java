@@ -474,11 +474,7 @@ public class Body {
                     if(p.get_part_id() >= parts.get(i - 1).get_part_id()
                     && p.get_part_id() < parts.get(i).get_part_id() ){
                         //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
-                        //ArrayList<BodyPart> temp_parts = new ArrayList<>(parts.subList(0,i));
-                        //temp_parts.addAll(temp_array);
-                        //temp_parts.addAll(parts.subList(i,parts.size()));
-                        //parts = new ArrayList<>(temp_parts);
-                        parts.remove(i);//TODO confirm
+                        parts.addAll(i, temp_array);//TODO confirm
                         i++;
                         added = true;
                     }
