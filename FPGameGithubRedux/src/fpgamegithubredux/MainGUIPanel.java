@@ -36,6 +36,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     protected boolean startingagame = false;
     protected StartupGUI startup = new StartupGUI();
     public Character player;
+    public World world;
     private String[] messages = {"Not Supported Yet"};
     
     public MainGUIPanel(){
@@ -128,6 +129,16 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     @Override
     public void newGamePressed(){
         //same as second options press, i.e. put it away.
+        //TODO worldgen here instead of new game GUI
+        /* From the main of the original
+        if (world == null){
+            world = new World();
+            world_gen = true;
+            world_gen_progressbar.visible = true;
+            world_gen_progressbar.enabled = true;
+            world = FPalace_content.new_world(world, world_gen_progressbar);				
+        }
+        */
         cleanOptions();
         if(!startingagame){
             startingagame = true;
