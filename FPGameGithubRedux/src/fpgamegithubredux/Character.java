@@ -767,7 +767,7 @@ public class Character extends DynamicObject {
         int k = 0;
         if (i != 0){
         for (k=0;k<stats.size();k++){
-            //if(stats.get(k).get_description(this).length > 0) s += stats.get(k).get_description(this);
+            if(stats.get(k).get_description(this).length() > 0) s += stats.get(k).get_description(this);
             }
         s += body.get_parts_appearance(this) + "<br>"; 
         if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
@@ -2244,6 +2244,21 @@ public class Character extends DynamicObject {
         System.out.println("Character sanitize called!");
         System.out.println("Call Character: " + callCharacter);
         System.out.println("Initial: " + stringToSanitize);
+        /*possibly obsolete
+        int nlineidx=0;
+        while(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>") >= 0){
+            if(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>")> nlineidx){
+                //if(stringToSanitize.charAt(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("</br>")+1)!=' '){
+                    int idx1 = stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("</br>")+1;
+                    stringToSanitize.substring(idx1,idx1+1).toUpperCase();
+                    nlineidx = idx1;
+                //}
+                System.out.println(nlineidx);
+                System.out.println(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>"));
+
+            }
+        }
+        */
         stringToSanitize = body.sanitize(stringToSanitize, callCharacter, this);
         if(callCharacter != null){
         sex_to_use = callCharacter.determine_sex(this);
@@ -2276,6 +2291,8 @@ public class Character extends DynamicObject {
         }
         
         System.out.println("Return value from character sanitize: "+ stringToSanitize);
+        //TODO test this capitalization routine RELIGIOUSLY
+        
         return stringToSanitize;
     }
     /*
@@ -2334,7 +2351,31 @@ public class Character extends DynamicObject {
     public String getStatus(){return getStatus(null);}
     public String getStatus(Character lookingCharacter){
         String ret = name;
-
+        int char_init = -1;
+            
+        /*TODO combat
+        if(location != null){
+            if(location.cm != null && location.cm.active_combat())char_init = location.cm.get_init(this);
+        }
+        */
+        
+        if(char_init > -1){
+            status = " is fighting here";
+        }else if(get_stat(FPalaceHelper.lust_id).intValue() >= get_stat(FPalaceHelper.max_lust_id).intValue()){
+            status = " is lying in a pool of " + sex.noun + " own juices on the ground";
+        }else if(get_stat(FPalaceHelper.curr_fatigue_id).intValue() < 1){
+            status = " is barely managing to stand here";
+        }else if(busy > 0){
+            //should have been set by the action				
+        }else{
+            status = " is standing here";
+        }
+        
+        if(lookingCharacter != null){
+            ret = personality.get_name(lookingCharacter, this) + status;
+        }else{
+           ret = getName() + status;
+        }	
         return ret;
     }
     //ALL SAME FROM HERE BELOW, line 1960 in original

@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.logging.Logger;
+import java.util.regex.*;
 
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -160,7 +161,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void appearancePressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
-        textField.setText(player.appearance(1, null));       
+        System.out.println("Appearance");
+        textField.setText(capitalize(player.appearance(1, null)));//TODO this everywhere with capitalize if doable.
     }
     @Override
     public void inventoryPressed(){
@@ -242,5 +244,42 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     @Override
     public void componentHidden(ComponentEvent e) {
         throw new UnsupportedOperationException(messages[0]); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String capitalize(String s){
+        String ret = s;
+        System.out.println("capitalize called");
+        //var myPattern:RegExp = /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g;  
+        Pattern myPattern =  Pattern.compile("(\\. [a-z])|(<br>[a-z])|(\n[a-z])|(! [a-z])|(: [a-z])"); // /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g;  
+        Matcher myMatcher = myPattern.matcher(ret);
+        while (myMatcher.find()) {
+            System.out.print("Start index: " + myMatcher.start());
+            System.out.print(" End index: " + myMatcher.end() + " ");
+            System.out.println(myMatcher.group());
+            ret = ret.substring(0, myMatcher.end()-1) + ret.substring(myMatcher.end()-1, myMatcher.end()).toUpperCase() + 
+            ret.substring(myMatcher.end());
+        }
+        /*
+        private String Uppercase() {
+            return arguments[0].toUpperCase();
+        }
+        */
+        myPattern = Pattern.compile("([a-z])");
+        String ret_start= ret.substring(0,1);
+        myMatcher = myPattern.matcher(ret_start);
+        while (myMatcher.find()) {
+            System.out.print("Start index: " + myMatcher.start());
+            System.out.print(" End index: " + myMatcher.end() + " ");
+            System.out.println(myMatcher.group());
+            ret = ret.substring(0, myMatcher.end()-1) + ret.substring(myMatcher.end()-1, myMatcher.end()).toUpperCase() + 
+            ret.substring(myMatcher.end());
+        }
+        /*
+        if(ret_start.contains(myPattern) >= 0){//if(ret_start.search(myPattern) >= 0){
+            ret = ret_start.toUpperCase() + ret.substr(1,ret.length);
+        }
+        */
+        
+        return ret;
     }
 }

@@ -3676,19 +3676,19 @@ public class FPalaceHelper{
 			Stat s = new Stat(hair_colour_id);
 				s.set_min(-2);
 				s.setName("hair colour");
-				s.new_description("stark white ",0);
-				s.new_description("grey ",1);
-				s.new_description("dark as midnight ",2);
-				s.new_description("yellow ",3);
-				s.new_description("golden yellow ",4);
-				s.new_description("brown that shimmers in the light ",5);
-				s.new_description("light red ",6);
-				s.new_description("fiery red ",7);
-				s.new_description("dark orange ",8);
-				s.new_description("green ",9);
-				s.new_description("blue ",10);
-				s.new_description("violet ",11);
-				s.new_description("purple ",12);
+				s.new_description("stark white. ",0);//TODO verify periods
+				s.new_description("grey. ",1);
+				s.new_description("dark as midnight. ",2);
+				s.new_description("yellow. ",3);
+				s.new_description("golden yellow. ",4);
+				s.new_description("brown that shimmers in the light. ",5);
+				s.new_description("light red. ",6);
+				s.new_description("fiery red. ",7);
+				s.new_description("dark orange. ",8);
+				s.new_description("green. ",9);
+				s.new_description("blue. ",10);
+				s.new_description("violet. ",11);
+				s.new_description("purple. ",12);
 				
 				s.new_short_description("stark white",0);
 				s.new_short_description("grey",1);
@@ -4058,7 +4058,7 @@ public class FPalaceHelper{
 			Stat s = new Stat(penis_girth_id);
 			s.setName("penis girth");
 				s.set_min(-2);
-				s.new_description("and a </sd"+penis_girth_id+"> sized </"+penis_girth_id+">-inches thick");
+				s.new_description("and a </sd"+penis_girth_id+"> sized </"+penis_girth_id+">-inches thick. ");
 				s.new_increase_description("</n>s cock bulges, thickening. ");
 				s.new_descrease_description("</n>s penis seems slimmer. ");
 				

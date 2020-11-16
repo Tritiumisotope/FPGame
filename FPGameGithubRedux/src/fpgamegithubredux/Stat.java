@@ -479,7 +479,9 @@ public class Stat {
         stat_down_operators.add(op); //stat_down_operators[stat_down_operators.length] = op
         stat_down_products.add(pro); //stat_down_products[stat_down_products.length] = pro
     }
-    
+    public String get_description(Character c){
+        return get_description(c,-1);
+    }
     public String get_description(Character c,double current_value){
         //default Number -1
         String s = "";
