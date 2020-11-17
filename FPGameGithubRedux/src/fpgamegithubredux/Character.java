@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Ailer and Tritium
@@ -341,32 +344,31 @@ public class Character extends DynamicObject {
         set_next_attack();
         return ret;
     }
-    /*
-    public function get_status_effects():Array{
-        var ret:Array = new Array();
-        var i:int = 0;
-        for(i;i<currentTickEffects.length;i++){
-            if(currentTickEffects[i].get_id() >= 0){
-                var found:Boolean = false;
-                var k:int = 0;
-                for(k;k<ret.length;k++){
-                    if(ret[k] == currentTickEffects[i].get_id()){
+    
+    public ArrayList<Integer> get_status_effects(){
+        ArrayList<Integer> ret = new ArrayList<>();
+        int i = 0;
+        for(i=0;i<currentTickEffects.size();i++){
+            if(currentTickEffects.get(i).get_id() >= 0){
+                Boolean found = false;
+                int k = 0;
+                for(k=0;k<ret.size();k++){
+                    if(ret.get(k) == currentTickEffects.get(i).get_id()){
                         found = true;
                         break;
                     }
                 }
-                if(!found)ret[ret.length] = currentTickEffects[i].get_id();
+                if(!found)ret.add(currentTickEffects.get(i).get_id());//ret[ret.length] = currentTickEffects.get(i).get_id()
             }
         }
         return ret;
-    }
-    */    
+    }  
     public Number get_inventory_weight(){
         Number ret = 0;
         int i = 0;
         for(i=0;i<possessions.size();i++){
             Item item = (Item)possessions.get(i);
-            ret = ret.doubleValue() + item.getWeight(); //ret += item.getWeight();
+            ret = ret.doubleValue() + item.getWeight(); //ret += item.getWeight()
         }
         return ret;
     }
@@ -4683,34 +4685,35 @@ public class Character extends DynamicObject {
             }
             */
             s += "Birthday in ";
-            /*
-            var temp_tick:int = Main.t1_year - this.get_tick();
-            if(temp_tick / Main.t1_month > 0){
-                s += Math.floor(temp_tick / Main.t1_month) + " Months ";
-                temp_tick = temp_tick - (Math.floor(temp_tick / Main.t1_month)*Main.t1_month);
+            
+            int temp_tick = FPGameGithub.T1_YEAR - this.get_tick();
+            if(temp_tick / FPGameGithub.T1_MONTH > 0){
+                s += Math.floor(temp_tick / FPGameGithub.T1_MONTH) + " Months ";
+                temp_tick = temp_tick - (int)(Math.floor(temp_tick / FPGameGithub.T1_MONTH)*FPGameGithub.T1_MONTH);
             }
             if(temp_tick / FPGameGithub.T1_DAY > 0){
                 s += "and " + Math.floor(temp_tick / FPGameGithub.T1_DAY) + " Days ";
-                temp_tick = temp_tick - (Math.floor(temp_tick / FPGameGithub.T1_DAY)*FPGameGithub.T1_DAY);
+                temp_tick = temp_tick - (int)(Math.floor(temp_tick / FPGameGithub.T1_DAY)*FPGameGithub.T1_DAY);
             }
-            */
+            
             s += "<br>";
             
             s += (this.nxt_lvl_xp - this.get_xp()) + "xp to next level.<br>";
-            /*
-            if(this.get_status_effects()[0] != null){
-                var temp_string:String = "";
-                var temp_array:Array = this.get_status_effects();
+            
+            //if(this.get_status_effects().get(0) != null){ I dont like this because null array is null array
+            if(this.get_status_effects().size() != 0){
+                String temp_string = "";
+                ArrayList<Integer> temp_array = new ArrayList<>(this.get_status_effects());
                 
-                for(int count=0;count<temp_array.length;count++){
-                    temp_string = TickEffect.get_status_effect_name(temp_array[count]);
+                for(int count=0;count<temp_array.size();count++){
+                    temp_string = TickEffect.get_status_effect_name(temp_array.get(count));
                     if(temp_string != ""){
                         s+=temp_string + "\t";
                     }
                 }
                 s += "<br>";
             }
-            */
+            
             s += "HP: " + show_stat_for_statistics(FPalaceHelper.curr_hp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_hp_id) + "<br>";
             s += "MP: " + show_stat_for_statistics(FPalaceHelper.curr_mp_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_mp_id) + "<br>";
             s += "FP: " + show_stat_for_statistics(FPalaceHelper.curr_fatigue_id) + " / " + show_stat_for_statistics(FPalaceHelper.max_fatigue_id) + "<br>";
@@ -4775,16 +4778,16 @@ public class Character extends DynamicObject {
             /*
             s += "Min Lust: " + show_stat_for_statistics(FPalaceHelper.min_lust_id)+ "<br>";//
             s += "Height: " + show_stat_for_statistics(FPalaceHelper.height_id,2) + "<br>";
-            if( this.get_stat(FPalaceHelper.cum_volume_id) > -1)s += "Cum Volume: " + show_stat_for_statistics(FPalaceHelper.cum_volume_id,2) + "mL<br>";//
-            if( this.get_stat(FPalaceHelper.milk_volume_id) > -1)s += "Milk Volume: " + show_stat_for_statistics(FPalaceHelper.milk_volume_id,2) + "mL<br>";//
+            if( this.get_stat(FPalaceHelper.cum_volume_id).intValue() > -1)s += "Cum Volume: " + show_stat_for_statistics(FPalaceHelper.cum_volume_id,2) + "mL<br>";//
+            if( this.get_stat(FPalaceHelper.milk_volume_id).intValue() > -1)s += "Milk Volume: " + show_stat_for_statistics(FPalaceHelper.milk_volume_id,2) + "mL<br>";//
             s += "Anus width: " + show_stat_for_statistics(FPalaceHelper.anal_width_id,2) + "\"<br>";//
             s += "Anus depth: " + show_stat_for_statistics(FPalaceHelper.anal_depth_id,2)+ "\"<br>";//
-            if( this.get_stat(FPalaceHelper.vaginal_width_id) > -1)s += "Vaginal width: " + show_stat_for_statistics(FPalaceHelper.vaginal_width_id,2) + "\"<br>";//
-            if( this.get_stat(FPalaceHelper.vaginal_depth_id) > -1)s += "Vaginal depth: " + show_stat_for_statistics(FPalaceHelper.vaginal_depth_id,2) + "\"<br>";//
-            if(this.get_stat(FPalaceHelper.semen_fertility_id) > -1)s += "Semen Fertility: " + (this.get_stat(FPalaceHelper.semen_fertility_id)*100).toFixed(2) + "%<br>";//
-            if( this.get_stat(FPalaceHelper.egg_fertility_id) > -1)s += "Womb Fertility: " + (this.get_stat(FPalaceHelper.egg_fertility_id)*100).toFixed(2) + "%<br>";//
-            if( this.get_stat(FPalaceHelper.erection_ratio_id) > -1)s += "Flacid:Erect Ratio:  " + (this.get_stat(FPalaceHelper.erection_ratio_id)).toFixed(2) + "<br>";//
-            if( this.get_stat(FPalaceHelper.biomass_consumed) > -1)s += "Biomass consumed: " + show_stat_for_statistics(FPalaceHelper.biomass_consumed,2) + "mL<br>";//
+            if( this.get_stat(FPalaceHelper.vaginal_width_id).intValue() > -1)s += "Vaginal width: " + show_stat_for_statistics(FPalaceHelper.vaginal_width_id,2) + "\"<br>";//
+            if( this.get_stat(FPalaceHelper.vaginal_depth_id).intValue() > -1)s += "Vaginal depth: " + show_stat_for_statistics(FPalaceHelper.vaginal_depth_id,2) + "\"<br>";//
+            if(this.get_stat(FPalaceHelper.semen_fertility_id).intValue() > -1)s += "Semen Fertility: " + (this.get_stat(FPalaceHelper.semen_fertility_id)*100).toFixed(2) + "%<br>";//
+            if( this.get_stat(FPalaceHelper.egg_fertility_id).intValue() > -1)s += "Womb Fertility: " + (this.get_stat(FPalaceHelper.egg_fertility_id)*100).toFixed(2) + "%<br>";//
+            if( this.get_stat(FPalaceHelper.erection_ratio_id).intValue() > -1)s += "Flacid:Erect Ratio:  " + (this.get_stat(FPalaceHelper.erection_ratio_id)).toFixed(2) + "<br>";//
+            if( this.get_stat(FPalaceHelper.biomass_consumed).intValue() > -1)s += "Biomass consumed: " + show_stat_for_statistics(FPalaceHelper.biomass_consumed,2) + "mL<br>";//
             */
             s += "<br>";
         }
