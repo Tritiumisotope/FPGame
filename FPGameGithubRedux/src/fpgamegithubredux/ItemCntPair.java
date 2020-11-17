@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 public class ItemCntPair {
+    //item, then count, in that order
     private final Item item;
     private final int count;
 

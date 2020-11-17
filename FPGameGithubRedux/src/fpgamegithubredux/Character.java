@@ -8,6 +8,8 @@ package fpgamegithubredux;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -36,7 +38,8 @@ public class Character extends DynamicObject {
 
     public Body body;
     protected Sex sex;//public var sex:Sex
-    protected ArrayList<Object> cclass;//public var cclass:Array
+    protected ArrayList<CharClassObj> cclass;//public var cclass:Array
+    //was Object in order of cclass,int,bool. NO
 
     public Skill_set skills;
 
@@ -121,31 +124,31 @@ public class Character extends DynamicObject {
         
         actions.add(tempAction);
         //END TESTING
-        /*unsafe additions for now
-        new_stat(FPalaceHelper.age_id, FPalaceHelper.stat_age(), 23);//probably won't move this one
+        //*unsafe additions for now
+        newStat(FPalaceHelper.age_id, FPalaceHelper.stat_age(), (double)23);//probably won't move this one
 			
-        new_stat(FPalaceHelper.weight_id, FPalaceHelper.stat_weight(), 0);
-        new_stat(FPalaceHelper.max_weight_id, FPalaceHelper.stat_max_weight(), 0);
-        */
+        newStat(FPalaceHelper.weight_id, FPalaceHelper.stat_weight(), (double)0);
+        newStat(FPalaceHelper.max_weight_id, FPalaceHelper.stat_max_weight(), (double)0);
+        //*/
         body = new Body();
         sex = new Sex();
         cclass = new ArrayList<>();
         skills = new Skill_set();
-        /*
+        
         skills = new Skill_set();
         
         challenge_output = "";
         next_attack = "";
         
-        CharAction a = new Action();
-        a.set_name("Attack");
+        CharAction a = new CharAction();
+        a.setName("Attack");
         add_action(a);
         
         a = new CharAction();
-        a.set_name("Talk");
+        a.setName("Talk");
         a.set_talk_flag();
         add_action(a);
-        */
+        
         char_sprite_id = -1;
         char_34sprite_id = -1;
     }
@@ -207,54 +210,64 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    /*
-    public function set_challenge_output(s:String):void{
+    */
+    public void set_challenge_output(String s){
         //attempt to remove duplicate warnings and empty space
         if(s.indexOf("<sid") >= 0){
-            var stat_id:String = s.slice(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")));
+            //String stat_id = s.slice(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")));
+            String stat_id = s.substring(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")));
             if(challenge_output.indexOf(stat_id) >= 0){
-                var chall_out_index:int = challenge_output.indexOf(stat_id);
+                int chall_out_index = challenge_output.indexOf(stat_id);//TODO verify this whole crazy method
                 //OK, we've already got some output for this stat... let's modify the quantity
-                var new_quant:Number = Number(s.slice(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)));
-                var old_quant:Number = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
-                
-                if((old_quant > 0 && new_quant < 0) || (old_quant < 0 && new_quant > 0)){
+                //Number new_quant = Number(s.slice(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)));
+                Number new_quant = (Number)Double.parseDouble(s.substring(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)));
+                //Number old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                Number old_quant = (Number)Double.parseDouble(challenge_output.substring(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                if((old_quant.doubleValue() > 0 && new_quant.doubleValue() < 0) || (old_quant.doubleValue() < 0 && new_quant.doubleValue() > 0)){
                     if(!(challenge_output.indexOf(stat_id,chall_out_index+1) >= 0)){
                         challenge_output += s + "~<br>~";
                     }else{
-                        chall_out_index = challenge_output.indexOf(stat_id,chall_out_index+1)
-                        old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
-                        old_quant = old_quant + new_quant;
-                        challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length);
+                        chall_out_index = challenge_output.indexOf(stat_id,chall_out_index+1);
+                        //old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                        old_quant = (Number)Double.parseDouble(challenge_output.substring(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                        old_quant = old_quant.doubleValue() + new_quant.doubleValue();
+                        //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length);
+                        challenge_output = challenge_output.substring(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.substring(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
                     }
                 }else{
-                    old_quant = old_quant + new_quant;
-                    challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length);
+                    old_quant = old_quant.doubleValue() + new_quant.doubleValue();
+                    //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
+                    challenge_output = challenge_output.substring(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.substring(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
                 }
             }else{
                 challenge_output += s + "~<br>~";
             }
         }else{
-            var temp_array:Array = s.split("<br>");
-            var i:int = 0;
-            for(i;i<temp_array.length;i++){
-                if(!(challenge_output.indexOf(temp_array[i]) >= 0) && temp_array[i] != null && temp_array[i] != ""){
-                    challenge_output += temp_array[i] + "~<br>~";   
-                }else if(challenge_output.indexOf(temp_array[i]) >= 0){
+            ArrayList<String> temp_array = new ArrayList<>(Arrays.asList(s.split("<br>")));
+            int i = 0;
+            for(i=0;i<temp_array.size();i++){
+                if(!(challenge_output.indexOf(temp_array.get(i)) >= 0) && temp_array.get(i) != null && temp_array.get(i) != ""){
+                    challenge_output += temp_array.get(i) + "~<br>~";   
+                }else if(challenge_output.indexOf(temp_array.get(i)) >= 0){
                     //we may need to tick up the count for this stat...
-                    if(challenge_output.charAt(challenge_output.indexOf(temp_array[i]) - 1) == "\""){
-                        var start_string:int = challenge_output.indexOf(temp_array[i]) - 3;
-                        while(challenge_output.charAt(start_string) != "," && start_string >= 0)start_string--;
+                    if(challenge_output.charAt(challenge_output.indexOf(temp_array.get(i)) - 1) == '\"'){
+                        int start_string = challenge_output.indexOf(temp_array.get(i)) - 3;
+                        while(challenge_output.charAt(start_string) != ',' && start_string >= 0)start_string--;
                         if(start_string >= 0){
                             start_string++;
-                            var curr_count:int = int(challenge_output.slice(start_string, challenge_output.indexOf(temp_array[i]) - 2));
-                            curr_count++;
+                            //int curr_count = int(challenge_output.slice(start_string, challenge_output.indexOf(temp_array.get(i)) - 2));
+                            int curr_count = (int)Integer.parseInt(challenge_output.substring(start_string, challenge_output.indexOf(temp_array.get(i)) - 2));
+                            curr_count++;//TODO why, the integer is reset every time
                             if(curr_count == 0){
-                                while(challenge_output.charAt(start_string) != "<br>" && start_string >= 0)start_string--;
+                                //while(challenge_output.charAt(start_string) != "<br>" && start_string >= 0)start_string--;
+                                //TODO above makes no sense, a string is not a char, verify intention below
+                                while(challenge_output.substring(start_string, start_string+3) != "<br>" && start_string >= 0)start_string--;
                                 start_string++;
-                                challenge_output = challenge_output.slice(0, start_string) + challenge_output.slice(challenge_output.indexOf("<br>",start_string), challenge_output.length);
+                                //challenge_output = challenge_output.slice(0, start_string) + challenge_output.slice(challenge_output.indexOf("<br>",start_string), challenge_output.length);
+                                challenge_output = challenge_output.substring(0, start_string) + challenge_output.substring(challenge_output.indexOf("<br>",start_string), challenge_output.length());
                             }else{
-                                challenge_output = challenge_output.slice(0, start_string) + curr_count + challenge_output.slice(challenge_output.indexOf(temp_array[i]) - 2, challenge_output.length);
+                                //challenge_output = challenge_output.slice(0, start_string) + curr_count + challenge_output.slice(challenge_output.indexOf(temp_array.get(i)) - 2, challenge_output.length);
+                                challenge_output = challenge_output.substring(0, start_string) + curr_count + challenge_output.substring(challenge_output.indexOf(temp_array.get(i)) - 2, challenge_output.length());
                             }
                         }
                     }
@@ -263,45 +276,51 @@ public class Character extends DynamicObject {
         }
     }
     
-    public function get_challenge_output():String{
-        var ret:String = "";
-        var temp_array:Array = challenge_output.split("~<br>~");
-        var i:int = 0;
-        for(i;i<temp_array.length;i++){
-            if(temp_array[i] != null && temp_array[i].indexOf("<sid") >= 0){
-                var first_comma:int = temp_array[i].indexOf(",",temp_array[i].indexOf("<sid"));
-                var sid:String = temp_array[i].slice(temp_array[i].indexOf("<sid")+1, first_comma);
-                var second_comma:int = temp_array[i].indexOf(",",first_comma+1);
-                var quant:Number = Number(temp_array[i].slice(first_comma+1, second_comma));
+    public String get_challenge_output(){
+        String ret = "";
+        ArrayList<String> temp_array = new ArrayList<>(Arrays.asList(challenge_output.split("~<br>~")));
+        int i = 0;
+        for(i=0;i<temp_array.size();i++){//TODO verify all slice replacements
+            if(temp_array.get(i) != null && temp_array.get(i).indexOf("<sid") >= 0){
+                int first_comma = temp_array.get(i).indexOf(",",temp_array.get(i).indexOf("<sid"));
+                //String sid = temp_array.get(i).slice(temp_array.get(i).indexOf("<sid")+1, first_comma);
+                String sid = temp_array.get(i).substring(temp_array.get(i).indexOf("<sid")+1, first_comma);
+                int second_comma = temp_array.get(i).indexOf(",",first_comma+1);
+                //Number quant = Number(temp_array.get(i).slice(first_comma+1, second_comma));
+                Number quant = Double.parseDouble(temp_array.get(i).substring(first_comma+1, second_comma));
                 first_comma = second_comma;
-                second_comma = temp_array[i].indexOf(",",first_comma+1);
-                var curr_count:int = int(temp_array[i].slice(first_comma+1, second_comma));
+                second_comma = temp_array.get(i).indexOf(",",first_comma+1);
+                //int curr_count = int(temp_array.get(i).slice(first_comma+1, second_comma));
+                int curr_count = Integer.parseInt(temp_array.get(i).substring(first_comma+1, second_comma));
                 if(curr_count > 0){
-                    var k:int = i + 1;
-                    for(k;k<temp_array.length;k++){
-                        if(temp_array[k] != null && temp_array[k].indexOf(sid) >= 0){
-                            first_comma = temp_array[k].indexOf(",",temp_array[k].indexOf("<sid"));
-                            second_comma = temp_array[k].indexOf(",",first_comma+1);
-                            var second_quant:Number = Number(temp_array[k].slice(first_comma+1, second_comma));
+                    int k = i + 1;
+                    for(k=i+1;k<temp_array.size();k++){
+                        if(temp_array.get(k) != null && temp_array.get(k).indexOf(sid) >= 0){
+                            first_comma = temp_array.get(k).indexOf(",",temp_array.get(k).indexOf("<sid"));
+                            second_comma = temp_array.get(k).indexOf(",",first_comma+1);
+                            //Number second_quant = Number(temp_array.get(k).slice(first_comma+1, second_comma));//was Number
+                            Number second_quant = Double.parseDouble(temp_array.get(k).substring(first_comma+1, second_comma));//was Number
                             first_comma = second_comma;
-                            second_comma = temp_array[k].indexOf(",",first_comma+1);
-                            curr_count = int(temp_array[k].slice(first_comma+1, second_comma));
+                            second_comma = temp_array.get(k).indexOf(",",first_comma+1);
+                            //curr_count = int(temp_array.get(k).slice(first_comma+1, second_comma));
+                            curr_count = Integer.parseInt(temp_array.get(k).substring(first_comma+1, second_comma));
                             if(curr_count > 0){
-                                if( (quant > 0 && quant + second_quant >= 0) || (quant < 0 && quant + second_quant <= 0) )temp_array[k] = null;
-                                if((second_quant > 0 && quant + second_quant >= 0) || (second_quant < 0 && quant + second_quant <= 0))temp_array[i] = null;
+                                if( (quant.intValue() > 0 && quant.intValue() + second_quant.intValue() >= 0) || (quant.intValue() < 0 && quant.intValue() + second_quant.intValue() <= 0) )temp_array.set(k,null);//temp_array.get(k) = null;
+                                if((second_quant.intValue() > 0 && quant.intValue() + second_quant.intValue() >= 0) || (second_quant.intValue() < 0 && quant.intValue() + second_quant.intValue() <= 0))temp_array.set(i,null);//temp_array.get(i) = null;
                             }
                         }
                     }
-                    if(temp_array[i] != null){
-                        first_comma = temp_array[i].indexOf(",",temp_array[i].indexOf("<sid"));
-                        second_comma = temp_array[i].indexOf(",",first_comma+1);
+                    if(temp_array.get(i) != null){
+                        first_comma = temp_array.get(i).indexOf(",",temp_array.get(i).indexOf("<sid"));
+                        second_comma = temp_array.get(i).indexOf(",",first_comma+1);
                         first_comma = second_comma;
-                        second_comma = temp_array[i].indexOf(",",first_comma+1);
-                        ret += temp_array[i].slice(second_comma + 2, temp_array[i].indexOf("\"", second_comma + 2));
+                        second_comma = temp_array.get(i).indexOf(",",first_comma+1);
+                        //ret += temp_array.get(i).slice(second_comma + 2, temp_array.get(i).indexOf("\"", second_comma + 2));
+                        ret += temp_array.get(i).substring(second_comma + 2, temp_array.get(i).indexOf("\"", second_comma + 2));
                     }
                 }
             }else{
-                if(temp_array[i] != null && temp_array[i] != "")ret += temp_array[i];
+                if(temp_array.get(i) != null && temp_array.get(i) != "")ret += temp_array.get(i);
             }
         }
         if(ret!="")ret += "<br><br>";
@@ -310,16 +329,19 @@ public class Character extends DynamicObject {
         return ret;
     }
     
-    public function set_next_attack(s:String = ""):void{
+    public void set_next_attack(){
+        set_next_attack("");
+    }
+    public void set_next_attack(String s){//def ""
         next_attack = s;
     }
     
-    public function get_next_attack():String{
-        var ret:String = next_attack;
+    public String get_next_attack(){
+        String ret = next_attack;
         set_next_attack();
         return ret;
     }
-    
+    /*
     public function get_status_effects():Array{
         var ret:Array = new Array();
         var i:int = 0;
@@ -402,25 +424,29 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    
-    public function increase_skill_by_id(skill_id:int, change_amount:int = 1):String{
-        var ret:String = "";
-        var cost:int = skills.get_skill_cost(this, skill_id, change_amount);
+    */
+    public String increase_skill_by_id(int skill_id){
+        return increase_skill_by_id(skill_id,1);
+    }
+    public String increase_skill_by_id(int skill_id,int change_amount){
+        //def change = 1
+        String ret = "";
+        int cost = skills.get_skill_cost(this, skill_id, change_amount);
         xp = xp - cost;
         ret += skills.set_skill_value(this, skill_id, change_amount);
         setBusy();
         return ret;
     }
     
-    public function set_skill_bonus(skill_id:int, change_amt:int):String{
-        var ret:String = "";
+    public String set_skill_bonus(int skill_id,int change_amt){
+        String ret = "";
         if(FPalace_skills.get_skill_by_id(skill_id) != null){
             ret += skills.set_bonus(skill_id, change_amt);
         }			
         
         return ret;
     }
-    */
+    
     public Sex determine_sex(){
         return determine_sex(null);
     }
@@ -518,26 +544,28 @@ public class Character extends DynamicObject {
             }
         return ret;
     }
-    /*
-    public function fire_challenge(i:int, k:int, j:int, l:String = null, m:Array = null):String{
-        var ret:String = "";
+    
+    public String fire_challenge(int i,int k,int j,String l, ArrayList<Integer> m){//default m = null
+        //def l=null, m = null, m was Array
+        String ret = "";
         if (i == -1){	
-            ret = location.fire_challenge(k, j, this, m);
+            ret = location.fireChallenge(k, j, this, m);
             if(challenge_output != ""){
                 ret += get_challenge_output();
             }
             ret = this.sanitize(ret);
         }else{
-            var temp_char:Character;
+            Character temp_char;
             if(l!= null){
-                temp_char = location.get_content(int(l)) as Character;
+                temp_char = (Character)location.getContent(Integer.parseInt(l));
             }else{
                 temp_char = this;
             }
-            if(temp_char != null && temp_char.location != null && temp_char.location.get_content(i) != null){
-                var i_char:Character = (temp_char.location.get_content(i) as Character);
-                var temp_action:Action = i_char.get_action(k);
+            if(temp_char != null && temp_char.location != null && temp_char.location.getContent(i) != null){
+                Character i_char = (Character)(temp_char.location.getContent(i));
+                CharAction temp_action = i_char.get_action(k);
                 if(temp_action != null){
+                    /*TODO true CharAction challenge and get_challenge_output
                     ret = temp_char.sanitize(temp_action.challenge(j,i_char,temp_char,0, m));
                     ret = i_char.sanitize(ret);
                     if(temp_char.challenge_output != ""){
@@ -546,12 +574,13 @@ public class Character extends DynamicObject {
                     if(i_char.challenge_output != ""){
                         ret += i_char.sanitize(i_char.get_challenge_output());
                     }
+                    */
                 }
             }
         }
         return ret;
     }
-    */
+    
     public void apply_TickEffect(TickEffect tf){
         if(!get_primary_race().check_immunity(tf.status_id)){
             ArrayList<Object> teTemp = new ArrayList<>();
@@ -577,26 +606,43 @@ public class Character extends DynamicObject {
     public Party get_party(){
         return party;
     }
-    /*
-    public function talk(c:Character, topic:int = -1, topic_step:int = 0, challenge_num:int = -1, dynamic_choice:Array = null):String{
+    public String talk(Character c){
+        return talk(c, -1, 0, -1,null);
+    }
+    public String talk(Character c,int topic){
+        return talk(c, topic, 0, -1,null);
+    }
+    public String talk(Character c,int topic,int topic_step){
+        return talk(c, topic, topic_step, -1,null);
+    }
+    public String talk(Character c,int topic,int topic_step,int challenge_num){
+        return talk(c, topic, topic_step, challenge_num,null);
+    }
+    public String talk(Character c,int topic,int topic_step,int challenge_num,ArrayList<Object> dynamic_choice){
+        //def -1,0,-1,null
         setBusy();
         return personality.talk(c, this, topic, topic_step, challenge_num, dynamic_choice);			
     }
-    */
+    
     //gets called from apply_affect_by_id
     public Number character_reaction(Character c,int stat_id,Number quant){
         return personality.determine_reaction(c, stat_id, quant, this);
     }
-    /*
-    public function get_aggresive(c:Character, party_check:int = 0, c_party_check:int = 0):Boolean{
-        var agg:Boolean = false;
+    public Boolean get_aggresive(Character c){
+        return get_aggresive(c,0, 0);
+    }
+    public Boolean get_aggresive(Character c,int party_check){
+        return get_aggresive(c, party_check, 0);
+    }
+    public Boolean get_aggresive(Character c,int party_check,int c_party_check){//def 0,0
+        Boolean agg = false;
         if(c == this) return agg;
         
         if(c.party != null && c_party_check == 0){
-            var i:int = 0;
-            var party_mem:Array = c.party.get_members();
-            for(i;i<party_mem.length;i++){
-                if(get_aggresive(party_mem[i], 0, 1)) agg = get_aggresive(party_mem[i], 0, 1);
+            int i= 0;
+            ArrayList<Character> party_mem = new ArrayList<>(c.party.get_members());
+            for(i=0;i<party_mem.size();i++){
+                if(get_aggresive(party_mem.get(i), 0, 1)) agg = get_aggresive(party_mem.get(i), 0, 1);
             }
         }
         
@@ -609,7 +655,7 @@ public class Character extends DynamicObject {
         
         return agg;
     }
-    */
+    
     public ArrayList<CharAction> get_all_overworld_actions(){
         ArrayList<CharAction> ret = new ArrayList<>();
         ret.addAll(actions);//ret = ret.concat(actions)
@@ -618,21 +664,21 @@ public class Character extends DynamicObject {
         if(personality.job != null)ret.addAll(personality.job.get_actions(this));//ret = ret.concat(personality.job.get_actions(this))
         return ret;
     }
-    /*
-    public function get_overworld_actions_by_type(type_name:String, init_char:Character):String{
-        var ret:String = "";
-        var temp_array:Array = get_all_overworld_actions();
-        var i:int = 0;
-        for(i;i<temp_array.length;i++){
-            if(temp_array[i] != null && temp_array[i].attack_type == type_name){
-                if(ret.indexOf(">"+temp_array[i].get_name() +"<") >= 0)continue;
-                if(temp_array[i].get_party_use() && party != null){
-                    ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
+    
+    public String get_overworld_actions_by_type(String type_name,Character init_char){
+        String ret = "";
+        ArrayList<CharAction> temp_array = new ArrayList<>(get_all_overworld_actions());
+        int i = 0;
+        for(i=0;i<temp_array.size();i++){
+            if(temp_array.get(i) != null && temp_array.get(i).attack_type == type_name){
+                if(ret.indexOf(">"+temp_array.get(i).getName() +"<") >= 0)continue;
+                if(temp_array.get(i).get_party_use() && party != null){
+                    ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
                 }else{
                     if(init_char == this){
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) +"\"><font color='#0000FF'>"+ temp_array[i].get_name() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) +"\"><font color='#0000FF'>"+ temp_array.get(i).getName() +"</font></a>    "; 
                     }else{
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array[i].get_name() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
                     }
                 }
             }
@@ -640,7 +686,7 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    
+    /*
     public function get_party_actions():String{
         var s:String = "";
         var k:int = 0;
@@ -896,7 +942,7 @@ public class Character extends DynamicObject {
                         if(location!= null){
                             unhold(w);
                             var k:int = 0;
-                            for(k;k<possessions.length;k++){
+                            for(k;k<possessions.size();k++){
                                 if(possessions[k] == w){
                                     drop(k);
                                     break;
@@ -920,7 +966,7 @@ public class Character extends DynamicObject {
                                 if(get_stat(e.stat_req.get(count)) > e.stat_max.get(count)){						
                                     set_challenge_output("<b></n>s change has torn </noun> " + e.getName() + " to shreds! </b>")
                                     unequip(e);
-                                    for(k;k<possessions.length;k++){
+                                    for(k;k<possessions.size();k++){
                                         if(possessions[k] == e){
                                             drop(k);
                                             break;
@@ -930,7 +976,7 @@ public class Character extends DynamicObject {
                                     set_challenge_output("<b></n>s change has caused </noun> " + e.getName() + " to fall from </noun> " + body.parts[i].get_name() + "! </b>")
                                     unequip(e);
                                     if(location!= null){
-                                        for(k;k<possessions.length;k++){
+                                        for(k;k<possessions.size();k++){
                                             if(possessions[k] == e){
                                                 drop(k);
                                                 break;
@@ -1035,60 +1081,60 @@ public class Character extends DynamicObject {
 			}
 			return ret;
 		}
-		/*
-		public function go_to_new_location(i:int,is_player:int = 0,no_look:int = 0):String{	
-			var ret:String = "";
-			var look_flag:Boolean = true;
-			if(no_look > 0) look_flag = false;
-			if(location != null){
-				if(get_overworld_status()){
-					if(location.area != null){
-						set_busy(location.area.move_time_mod);
-					}else{
-						setBusy();
-					}
-					var s:Room = location.get_exit(i);
-					if (s != null){
-						ret += "</n> moves " + location.get_exit_direction(i) + ". ";
-						if(location.exit_actions[i] != null){						
-							ret += location.exit_actions[i].trigger(this);						
-							look_flag = false;
-						}else{					
-							ret += "The trip takes " + Main.get_time(location.area.move_time_mod) + ".<br>"
-							ret += new_location(s);
-						}
-						
-						if(location != null && is_player == 1){
-							if(!location.player_discovered && location.get_discovery_difficulty() >= 0){
-								var char_for_chal:Character = this;
-								if(party != null) char_for_chal = party.get_best_at_skill(FPalace_skills.map_making_id);
-								
-								var discovery_chal:Challenge = new Challenge(true);
-								discovery_chal.set_attack_stat(FPalace_skills.map_making_id);
-								discovery_chal.set_defense_stat(-1,location.get_discovery_difficulty());
-								discovery_chal.set_variability(5);
-								
-								var result:int = discovery_chal.roll(char_for_chal);
-					
-								if(result >= 0){
-									location.player_found();
-								}
-							}
-						}
-						
-						if(look_flag){
-							ret += look();
-						}						
-					}
-				}else{
-					ret += sanitize(get_overworld_failures())+"<br>";
-				}
-			}			
-			
-			return sanitize(ret, null);
-		}
 		
-    */
+    public String go_to_new_location(int i,int is_player,int no_look){//def is = 0, no = 0
+        String ret = "";
+        Boolean look_flag = true;
+        if(no_look > 0) look_flag = false;
+        if(location != null){
+            if(get_overworld_status()){
+                if(location.area != null){
+                    setBusy(location.area.moveTimeMod);
+                }else{
+                    setBusy();
+                }
+                Room s = location.get_exit(i);
+                if (s != null){
+                    ret += "</n> moves " + location.get_exit_direction(i) + ". ";
+                    if(location.exit_actions.get(i) != null){						
+                        ret += location.exit_actions.get(i).trigger(this);						
+                        look_flag = false;
+                    }else{					
+                        ret += "The trip takes " + FPGameGithub.get_time(location.area.moveTimeMod) + ".<br>";
+                        ret += new_location(s);
+                    }
+                    
+                    if(location != null && is_player == 1){
+                        if(!location.player_discovered && location.get_discovery_difficulty() >= 0){
+                            Character char_for_chal = this;
+                            if(party != null) char_for_chal = party.get_best_at_skill(FPalace_skills.map_making_id);
+                            
+                            Challenge discovery_chal = new Challenge(true);
+                            discovery_chal.set_attack_stat(FPalace_skills.map_making_id);
+                            discovery_chal.set_defense_stat(-1,location.get_discovery_difficulty());
+                            discovery_chal.setVariability(5);
+                            
+                            int result = discovery_chal.roll(char_for_chal);
+                
+                            if(result >= 0){
+                                location.player_found();
+                            }
+                        }
+                    }
+                    
+                    if(look_flag){
+                        ret += look();
+                    }						
+                }
+            }else{
+                ret += sanitize(get_overworld_failures())+"<br>";
+            }
+        }			
+        
+        return sanitize(ret, null);
+    }
+		
+    
     //TODO dummy later, ignore for now
     public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
     public void newStat(int newStatID, Stat newStat, Double statVal){
@@ -1436,6 +1482,9 @@ public class Character extends DynamicObject {
     public String equip(Equipment e,int k){
         return equip(e, k,-1,false);
     }
+    public String equip(Equipment e,int k,int j){
+        return equip(e, k,j,false);
+    }
 	public String equip(Equipment e,int k,int j,Boolean no_back_string){
         //def -1, -1, false
 			int party_id = 0;
@@ -1590,27 +1639,30 @@ public class Character extends DynamicObject {
 			}
 			return "";
 		}
-		/*
-		public function unequip(e:Equipment):String{
+		
+		public String unequip(Equipment e){
 			setBusy();
-			var party_id:int = 0;
-			var count:int;
+			int party_id = 0;
+			int count;
 			if(party != null){
 				count = 0;
-				for(count;count<party.members.size();count++){
+				for(count=0;count<party.members.size();count++){
 					if(party.members.get(count) == this){
 						party_id = count;
 						break;
 					}
 				}
 			}
-			var back_string:String = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
-			personality.advance_objectives(Quest.unequip_action, [e], this);
+			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
+			personality.advance_objectives(Quest.unequip_action,new ArrayList<>(Arrays.asList(e)), this);
 			return sanitize(body.unequip(e,this) + back_string, null);
 		}
-        */
+        
         public String hold(Weapon w,int k){
             return hold(w, k,-1,false);
+        }
+        public String hold(Weapon w,int k,int j){
+            return hold(w, k,j,false);
         }
 		public String hold(Weapon w,int k,int j,Boolean no_back_string){
             //def k = -1, j = -1, no_back = false
@@ -2000,7 +2052,7 @@ public class Character extends DynamicObject {
                         if(move_array[count] != null){
                             item = possessions[count - found_num];
                             drop(count - found_num);
-                            party.members[j].add_to_possessions(item);
+                            party.members[j].addToPossessions(item);
                             
                             //move_array = move_array.slice(0,count).concat(move_array.slice(count+1,move_array.length));
                             //count--;
@@ -2009,7 +2061,7 @@ public class Character extends DynamicObject {
                     }
                 }else{
                     drop(i);
-                    party.members[j].add_to_possessions(item);
+                    party.members[j].addToPossessions(item);
                 }
                 setBusy();
                 return "Gave item" + back_string;
@@ -2025,7 +2077,7 @@ public class Character extends DynamicObject {
 				if (i.get_name().toLowerCase() == "gold"){
 					set_gold(i.get_value(null, null));
 				}else{
-					possessions[possessions.length] = i;
+					possessions[possessions.size()] = i;
 				}
 				personality.advance_objectives(Quest.pick_up_action, [i], this);
 			}
@@ -2078,11 +2130,11 @@ public class Character extends DynamicObject {
     public int get_total_level(){
         int ret = 0;
         int i= 0;
-        /*TODO make sense
-        for(i=0;i<Math.ceil(cclass.length/3);i++){
-            ret += cclass[i*3 + 1];
+        
+        for(i=0;i<Math.ceil(cclass.size());i++){
+            ret += cclass.get(i).getLevel();
         }
-        */
+        
         return ret;
     }
     
@@ -2093,23 +2145,23 @@ public class Character extends DynamicObject {
         s = "<br>" + getName() + " advances to level " + lvl;
         Character_class curr_class = null;
         int i = 0;
-        /*TODO make sense!
-        for(i=0;i<Math.ceil(cclass.length/3);i++){
-            if(cclass[i*3 + 2] == true){
-                curr_class = cclass[i*3];
-                cclass[i*3 + 1] = lvl;
-                s = "<br>" + getName() + " advances to level " + cclass[i*3 + 1];
+        
+        for(i=0;i<Math.ceil(cclass.size());i++){
+            if(cclass.get(i).getBool() == true){
+                curr_class = cclass.get(i).getCclass();
+                cclass.get(i).setLevel(lvl);
+                s = "<br>" + getName() + " advances to level " + cclass.get(i).getLevel();
                 break;
             }
         }
-        */
+        
         if(curr_class != null){
             s+= " in the " + curr_class.getName() + " class. <br>";
         }else{
             s+= ". <br>";
         }
         
-        //reset_stats();
+        reset_stats();
         //TODO reset_stats
         
         int stat_gain = (int)Math.ceil(get_stat(FPalaceHelper.con_id).doubleValue()/10);
@@ -2425,24 +2477,25 @@ public class Character extends DynamicObject {
 				}
 			}
 			return ret;
-	}
-    public function inspect(i:int, k:int):String{
-			var ret:String = "";
+    }
+    */
+    public String inspect(int i, int k){
+			String ret = "";
 			ret = location.get_content_sub_description(i,k);
 			//need to check for bury action, and add own bury actions (if they exist)
-			if(location.static_contents[i] is Container){
-				var temp_cont:Container = location.static_contents[i] as Container;
+			if(location.static_contents.get(i) instanceof Container){
+				Container temp_cont = (Container)location.static_contents.get(i);
 				
-				if(possessions.length > 0){
+				if(possessions.size() > 0){
 					ret += "<br><font color='#0000FF'><a href=\"event:loot,"+i+",-3\">Store</a></font>";
 				}
 				
 				if(temp_cont.bury_action == null && temp_cont.bury != ""){
-					var count:int = 0;
-					for (count;count<actions.size();count++){
-						if(actions[count] != null && location != null){
-							if(actions[count].get_name() != "" && actions[count].get_bury()){
-								ret += "<br><a href=\"event:action," + location.get_content_id(this) + "," + String(count)+","+String(i)+"\"><font color='#0000FF'>"+ actions[count].get_name() +"</font></a>";
+					int count = 0;
+					for (count=0;count<actions.size();count++){
+						if(actions.get(count) != null && location != null){
+							if(actions.get(count).getName() != "" && actions.get(count).get_bury()){
+								ret += "<br><a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(count)+","+Integer.toString(i)+"\"><font color='#0000FF'>"+ actions.get(count).getName() +"</font></a>";
 							}
 						}
 					}
@@ -2451,7 +2504,8 @@ public class Character extends DynamicObject {
 					
 			setBusy();
 			return ret;
-	}
+    }
+    /*
     public function get_status(c:Character = null):String{
         var s:String = "";
         var char_init:int = -1;
@@ -2480,12 +2534,12 @@ public class Character extends DynamicObject {
         
         return s;
     }
-    
-    public function get_combat_status():Boolean{
-        var ret:Boolean = true;
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat[i].check_combat_status(this, null) < Stat.status_confired_ok) ret = false;
+    */
+    public Boolean get_combat_status(){
+        Boolean ret = true;
+        int i = 0;
+        for(i=0;i<stats.size();i++){
+            if(stats.get(i).check_combat_status(this, null) < Stat.STATUSCONFIRMEDOK) ret = false;
         }
         
         ret = body.check_combat_status(ret, this);
@@ -2497,11 +2551,11 @@ public class Character extends DynamicObject {
         return ret;
     }
     
-    public function get_overworld_status():Boolean{
-        var ret:Boolean = true;
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat[i].check_overworld_status(this, null) < Stat.status_confired_ok) ret = false;
+    public Boolean get_overworld_status(){
+        Boolean ret = true;
+        int i= 0;
+        for(i=0;i<stats.size();i++){
+            if(stats.get(i).check_overworld_status(this, null) < Stat.STATUSCONFIRMEDOK) ret = false;
         }
         if(ret){
             ret = body.check_overworld_status(ret, this);
@@ -2509,24 +2563,24 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    
+    /*
     public function get_combat_failures():String{
         var ret:String = "";
         var i:int = 0;
         for(i;i<stat.length;i++){
-            if(stat[i].check_combat_status(this, null) < Stat.status_confired_ok) ret += stat[i].get_combat_status(this, null);
+            if(stat[i].check_combat_status(this, null) < Stat.STATUSCONFIRMEDOK) ret += stat[i].get_combat_status(this, null);
         }
         
         ret += body.get_combat_status(this);
         
         return ret;
     }
-    
-    public function get_overworld_failures():String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat[i].check_overworld_status(this, null) < Stat.status_confired_ok) ret += stat[i].get_overworld_status(this, null);
+    */
+    public String get_overworld_failures(){
+        String ret = "";
+        int i = 0;
+        for(i=0;i<stats.size();i++){
+            if(stats.get(i).check_overworld_status(this, null) < Stat.STATUSCONFIRMEDOK) ret += stats.get(i).get_overworld_status(this, null);
         }
         
         ret += body.get_overworld_status(this);
@@ -2534,52 +2588,57 @@ public class Character extends DynamicObject {
         return ret;
     }
     
-    public function open(i:int):String{
+    public String open(int i){
         setBusy();
         return location.open(i);
     }
     
-    public function pick_up(i:int):String{
-        var item:Item = location.item_loss(i);
+    public String pick_up(int i){
+        Item item = location.itemLoss(i);
         if (item != null){
-            personality.advance_objectives(Quest.pick_up_action, [item], this);
-            if (item.get_name().toLowerCase() == "gold"){
-                set_gold(item.get_value(null, null));
-                return sanitize("</n> got " + item.get_value(null, null) + " gold coins.<br>", null) + look();
+            personality.advance_objectives(Quest.pick_up_action, new ArrayList<>(Arrays.asList(item)), this);//[item]
+            if (item.getName().toLowerCase() == "gold"){
+                set_gold(item.getValue(null, null));
+                return sanitize("</n> got " + item.getValue(null, null) + " gold coins.<br>", null) + look();
             }else{
-                possessions[possessions.length] = item;
-                return sanitize("</n> got " + item.get_name() + ".<br>", null) + look();
+                //possessions[possessions.size()] = item;
+                this.possessions.add(item);
+                return sanitize("</n> got " + item.getName() + ".<br>", null) + look();
             }
         }
         return "";
     }
-    
-    public function loot(i:int,k:int,no_back:Boolean = false):String{
-        var back_string:String = "<br><font color='#0000FF'><a href=\"event:inspect,"+i+",0\">Back</a></font>";
+    public String loot(int i,int k){
+        return loot(i,k,false);
+    }
+    public String loot(int i,int k,Boolean no_back){//def false
+        String back_string = "<br><font color='#0000FF'><a href=\"event:inspect,"+i+",0\">Back</a></font>";
         if(no_back) back_string = "";
         if(k>=0){
-            var item:Item = location.take_from_sub_content(i,k);
-            personality.advance_objectives(Quest.pick_up_action, [item], this);
+            Item item = location.take_from_sub_content(i,k);
+            personality.advance_objectives(Quest.pick_up_action, new ArrayList<>(Arrays.asList(item)), this);
             if (item != null){
-                if (item.get_name().toLowerCase() == "gold"){
-                    set_gold(item.get_value(null, null));
-                    return sanitize("</n> got " + item.get_value(null, null) + " gold coins.", null) + back_string;
+                if (item.getName().toLowerCase() == "gold"){
+                    set_gold(item.getValue(null, null));
+                    return sanitize("</n> got " + item.getValue(null, null) + " gold coins.", null) + back_string;
                 }else{
-                    possessions[possessions.length] = item;
-                    return sanitize("</n> got " + item.get_name() + ".", null) + back_string;
+                    //possessions[possessions.size()] = item;
+                    this.possessions.add(item);
+                    return sanitize("</n> got " + item.getName() + ".", null) + back_string;
                 }
             }
-        }else{
-            var ret:String = "";
-            var count:int = 0;
+        }else{//TODO verify presuming Container Static_object
+            String ret = "";
+            int count = 0;
             if(k == -1){//loot all
-                var end_count:int = location.static_contents[i].contents.length;
-                for(count;count<end_count;count++){
+                //int end_count = location.static_contents.get(i).contents.length;
+                int end_count = ((Container)location.static_contents.get(i)).contents.size();
+                for(count=0;count<end_count;count++){
                     ret += loot(i, 0, true) + "<br>";
                 }
                 return ret + back_string;
             }else{
-                var temp_cont:Container = location.static_contents[i];
+                Container temp_cont = (Container)location.static_contents.get(i);
                 if(k == -2){//bury/bury action
                     busy++;						
                     location.remove_static_contents(i);
@@ -2591,12 +2650,12 @@ public class Character extends DynamicObject {
                     return ret;
                 }else{//item storage
                     if(k == -3){
-                        for(count;count<possessions.length;count++){
-                            ret += "<font color='#0000FF'><a href=\"event:loot,"+i+","+ (-4-count) +"\">" + possessions[count].get_name() + "</a></font><br>";
+                        for(count=0;count<possessions.size();count++){
+                            ret += "<font color='#0000FF'><a href=\"event:loot,"+i+","+ (-4-count) +"\">" + possessions.get(count).getName() + "</a></font><br>";
                         }
                     }else{
-                        ret += sanitize("</n> stores the " + possessions[-(k+4)].get_name() + " in the " + temp_cont.name);
-                        temp_cont.add_content(possessions[-(k+4)]);
+                        ret += sanitize("</n> stores the " + possessions.get(-(k+4)).getName() + " in the " + temp_cont.name);
+                        temp_cont.add_content(possessions.get(-(k+4)));
                         drop(-(k+4));
                     }
                     return ret + back_string;
@@ -2606,7 +2665,7 @@ public class Character extends DynamicObject {
         }
         return "";
     }
-    */
+    
     public String inventory(){//dummy
         String returnString = "";
         System.out.println("In inventory");
@@ -2637,12 +2696,12 @@ public class Character extends DynamicObject {
             }
         }
         
-        if (possessions.length <= 0){
+        if (possessions.size() <= 0){
             s = "</n> Inventory contains nothing.";
         }else{
             s = "</n> Inventory contains: ";
             var skip_array:Array = new Array();
-            for (i=0;i<possessions.length;i++){
+            for (i=0;i<possessions.size();i++){
                 skip_array.sort(Array.NUMERIC);
                 while(i > skip_array[0])skip_array = skip_array.slice(1,skip_array.length);
                 if(i == skip_array[0]){
@@ -2651,7 +2710,7 @@ public class Character extends DynamicObject {
                 }
                 var item_count:int = 1;
                 var j:int = i+1;
-                for(j;j<possessions.length;j++){
+                for(j;j<possessions.size();j++){
                     if(possessions[i].same_item(possessions[j])){
                         item_count++;
                         skip_array[skip_array.length] = j;							
@@ -2746,15 +2805,15 @@ public class Character extends DynamicObject {
         
         return sanitize(s, null);
     }
-    
-    public function get_equip_by_count(sought_count:int):Equipment{
-        var equip_count:int = 0;
-        var i:int = 0;
-        for(i;i<body.parts.length;i++){
-            if(body.parts[i].equip != null){
-                var j:int = 0;
-                for(j;j<body.parts[i].equip.length;j++){
-                    if(equip_count == sought_count) return body.parts[i].equip[j];
+    */
+    public Equipment get_equip_by_count(int sought_count){
+        int equip_count = 0;
+        int i = 0;
+        for(i=0;i<body.parts.size();i++){
+            if(body.parts.get(i).equip != null){
+                int j = 0;
+                for(j=0;j<body.parts.get(i).equip.size();j++){
+                    if(equip_count == sought_count) return body.parts.get(i).equip.get(j);
                     equip_count++;
                 }
             }
@@ -2762,21 +2821,21 @@ public class Character extends DynamicObject {
         
         return null;
     }
-    
+    /*
     public function drop(i:int):void{
-        if(i>=possessions.length)return;
+        if(i>=possessions.size())return;
         personality.advance_objectives(Quest.drop_action, [possessions[i]], this);
-        for (i;i<possessions.length;i++){
-            if(i<possessions.length-1){
+        for (i;i<possessions.size();i++){
+            if(i<possessions.size()-1){
                 possessions[i] = possessions[i+1];
             }
         }
-        possessions.length--;
+        possessions.size()--;
     }
     
     public function drop_item(i:Item):void{
         var count:int = 0;
-        for(count;count<possessions.length;count++){
+        for(count;count<possessions.size();count++){
             if(possessions[count].same_item(i)){
                 drop(count);
                 break;
@@ -2790,19 +2849,21 @@ public class Character extends DynamicObject {
         personality.advance_objectives(Quest.class_action,new ArrayList<>(Arrays.asList(c)), this);
         Boolean found = false;
         int i = 0;
-        for(i=0;i<Math.ceil(cclass.size()/3);i++){
-            cclass.set(i*3 + 2, false);//cclass[i*3 + 2] = false;
-            if((Character_class)cclass.get(i*3) == c || ((Character_class)cclass.get(i*3)).getName() == c.getName()){
-                cclass.set(i*3 + 2, true);//cclass[i*3 + 2] = true;
-                lvl = (Integer)cclass.get(i*3 + 1);
+        for(i=0;i<Math.ceil(cclass.size());i++){
+            cclass.get(i).setBool(false);//cclass[i*3 + 2] = false;
+            if(cclass.get(i).getCclass() == c || (cclass.get(i).getCclass()).getName() == c.getName()){
+                cclass.get(i).setBool(true);//cclass[i*3 + 2] = true;
+                lvl = cclass.get(i).getLevel();
                 found = true;
             }
         }
         if(!found){
-            cclass.add(c);//cclass[cclass.length] = c;
-            cclass.add(i);//cclass[cclass.length] = 1;
+            //cclass[cclass.length] = c
+            //cclass[cclass.length] = 1
+            //cclass[cclass.length] = true
             lvl = 1;
-            cclass.add(true);//cclass[cclass.length] = true;
+            
+            cclass.add(new CharClassObj(c,i,true));
             //need to add the actions with no requirements...
             i = 0;
             for(i=0;i<c.actions.size();i++){
@@ -2831,14 +2892,13 @@ public class Character extends DynamicObject {
     
     public Character_class get_current_class(){
         Character_class ret = null;
-        /*TODO make sense!
-        for(int i = 0;i<Math.ceil(cclass.length/3);i++){
-            if(cclass[i*3 + 2] == true){
-                ret = cclass[i*3];
+        for(int i = 0;i<Math.ceil(cclass.size());i++){
+            if(cclass.get(i).getBool() == true){
+                ret = cclass.get(i).getCclass();
                 break;
             }
         }
-        */
+        
         return ret;
     }
     
@@ -3102,7 +3162,7 @@ public class Character extends DynamicObject {
             body.drop_equipment(this);//add equipment to inventory
             //add items from inventory to body..
             var i:int = 0;
-            for (i;i<possessions.length;i++){
+            for (i;i<possessions.size();i++){
                 cont.add_content(possessions[i]);
             }
             if(this.get_gold() > 0){
@@ -3124,22 +3184,22 @@ public class Character extends DynamicObject {
         
         return "";
     }
-    
-    public function alchemy(i:String,j:String):String{
-        var ret:String = "";
-        var k:int = 0;
+    */
+    public String alchemy(String i,String j){
+        String ret = "";
+        int k = 0;
         if(i == null || j == null){
             
-            for (k;k<possessions.length;k++){
+            for (k=0;k<possessions.size();k++){
                 if(i == null){
-                    if(possessions[k] is Alchemy_item){
+                    if(possessions.get(k) instanceof AlchemyItem){
                         if(ret != "")ret += ", ";
-                        ret += "<a href=\"event:alchemy,"+k+"\">" + possessions[k].get_name() + "</a>";
+                        ret += "<a href=\"event:alchemy,"+k+"\">" + possessions.get(k).getName() + "</a>";
                     }
                 }else{
-                    if(possessions[k] is Alchemy_item && k != int(i)){						
+                    if(possessions.get(k) instanceof AlchemyItem && k != Integer.parseInt(i)){						
                         if(ret != "")ret += ", ";
-                        ret += "<a href=\"event:alchemy_gui,"+int(i)+","+k+"\">" + possessions[k].get_name() + "</a>";						
+                        ret += "<a href=\"event:alchemy_gui,"+Integer.parseInt(i)+","+k+"\">" + possessions.get(k).getName() + "</a>";						
                     }
                 }
             }
@@ -3150,74 +3210,77 @@ public class Character extends DynamicObject {
             }
             
         }else{
-            var ai1:Alchemy_item = possessions[int(i)] as Alchemy_item;
-            var ai2:Alchemy_item = possessions[int(j)] as Alchemy_item;
+            AlchemyItem ai1 = (AlchemyItem)possessions.get(Integer.parseInt(i));
+            AlchemyItem ai2 = (AlchemyItem)possessions.get(Integer.parseInt(j));
             
-            var new_item:Item = ai1.combine(this, ai2, null);
-            drop(int(i));
-            if(j < i){
-                drop(int(j));
+            Item new_item = ai1.combine(this, ai2, null);
+            drop(Integer.parseInt(i));
+            if(Integer.parseInt(j) < Integer.parseInt(i)){
+                drop(Integer.parseInt(j));
             }else{
-                drop(int(j)-1);
+                drop(Integer.parseInt(j)-1);
             }
             
-            possessions[possessions.length] = new_item;
-            ret += ("You got " + new_item.get_name() + ".");
+            //possessions[possessions.size()] = new_item;
+            possessions.add(new_item);
+            ret += ("You got " + new_item.getName() + ".");
         }
         return ret;
     }
     
-    public function sewing(i:String,j:String):String{
-        var ret:String = "";
-        var temp_equip:Equipment;
-        var stat_limits:Array = new Array();
-        var count:int = 0;
+    public String sewing(String i,String j){//so many suspicious needs for casting!
+        String ret = "";
+        Equipment temp_equip;
+        //var stat_limits:Array = new Array();
+        //TODO WHY IS THE ABOVE UNUSED
+        int count = 0;
         if(i == null){
-            for(count;count<possessions.length;count++){
-                if(possessions[count] is Equipment){
+            for(count=0;count<possessions.size();count++){
+                if(possessions.get(count) instanceof Equipment){
                     if(ret != "")ret += ", ";
-                    ret += "<a href=\"event:sew,"+count+"\">" + possessions[count].get_name() + "</a>";
+                    ret += "<a href=\"event:sew,"+count+"\">" + possessions.get(count).getName() + "</a>";
                 }
             }
             ret = "Which equipment would you like to modify:<br>" + ret;
         }else if(j == null){
-            temp_equip = possessions[int(i)];
-            ret = "What aspect of the "+ temp_equip.get_name()+ " should be modified:<br>";
-            for(count;count<temp_equip.stat_req.length;count++){
+            temp_equip = (Equipment)possessions.get(Integer.parseInt(i));
+            ret = "What aspect of the "+ temp_equip.getName()+ " should be modified:<br>";
+            for(count=0;count<temp_equip.stat_req.size();count++){
                 if(temp_equip.stat_req.get(count) != null){
                     ret += "Modify " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(count)) + "\t<font color='#00FF00'><a href=\"event:sew,"+i+","+(count+1)+"\">Up</a>\t<a href=\"event:sew,"+i+","+(-(count+1))+"\">Down</a></font><br>";
                 }
             }
             ret += "<br><br><a href=\"event:sew\"><font color='#0000FF'>back</font></a>";
         }else{
-            temp_equip = possessions[int(i)];
+            temp_equip = (Equipment)possessions.get(Integer.parseInt(i));
             
             //determine consumption of items crafting requirements...
-            var meets_requirements:Boolean = true;
-            var char_for_chal:Character = this;
-            var sewing_challenge:Challenge = new Challenge(true);
+            Boolean meets_requirements = true;
+            Character char_for_chal = this;
+            Challenge sewing_challenge = new Challenge(true);
             if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.sewing_id);
             sewing_challenge.set_attack_stat(FPalace_skills.sewing_id);
             sewing_challenge.set_defense_stat(-1,temp_equip.value);
-            sewing_challenge.set_variability(10);
+            sewing_challenge.setVariability(10);
             
-            var skill_result:Number = sewing_challenge.roll(char_for_chal);
-            if(skill_result >= 0){
+            Number skill_result = sewing_challenge.roll(char_for_chal);
+            if(skill_result.intValue() >= 0){
                 skill_result = 0.1;
             }else{
-                skill_result = -skill_result*0.1;
+                skill_result = -skill_result.intValue()*0.1;
             }
-            if(int(j) >= 0){
-                j = String(int(j)-1);
-                var drop_ids:Array = new Array();
-                var req_count:int = 0;
-                for(req_count;req_count<temp_equip.crafting_requirements.length;req_count++){
+            if(Integer.parseInt(j) >= 0){
+                j = Integer.toString(Integer.parseInt(j)-1);
+                ArrayList<Integer> drop_ids = new ArrayList<>();
+                int req_count = 0;
+                for(req_count=0;req_count<temp_equip.craftingRequirements.size();req_count++){
                     meets_requirements = false;
-                    var needed_count:int = Math.ceil(temp_equip.crafting_requirements[count][1] * skill_result);
-                    var possession_count:int = 0;
-                    for(possession_count;possession_count<possessions.length;possession_count++){
-                        if(possessions[possession_count].get_name() == temp_equip.crafting_requirements[count][0].get_name()){
-                            drop_ids[drop_ids.length] = possession_count;
+                    int needed_count = (int)Math.ceil(temp_equip.craftingRequirements.get(count).count() * skill_result.intValue());
+                    int possession_count = 0;
+                    for(possession_count=0;possession_count<possessions.size();possession_count++){
+                        if(possessions.get(possession_count).getName() == temp_equip.craftingRequirements.get(count).item().getName()){
+                            //drop_ids[drop_ids.length] = possession_count;
+                            drop_ids.add(possession_count);
                             if(needed_count == 1){
                                 meets_requirements = true;
                                 break;
@@ -3228,24 +3291,24 @@ public class Character extends DynamicObject {
                     }
                 }
                 if(meets_requirements){
-                    needed_count = 0;
-                    for(needed_count;needed_count<drop_ids.length;needed_count++){
-                        drop(drop_ids[needed_count] - needed_count);
+                    int needed_count = 0;
+                    for(needed_count=0;needed_count<drop_ids.size();needed_count++){
+                        drop(drop_ids.get(needed_count) - needed_count);
                     }
-                    if(temp_equip.stat_min[int(j)] >= 0)temp_equip.stat_min[int(j)]++;
-                    temp_equip.stat_max[int(j)]++;
-                    ret += "</n> sews the " + temp_equip.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req[int(j)]);						
+                    if(temp_equip.stat_min.get(Integer.parseInt(j)) >= 0)temp_equip.stat_min.set(Integer.parseInt(j),temp_equip.stat_min.get(Integer.parseInt(j))+1);//temp_equip.stat_min.get(Integer.parseInt(j))++;
+                    temp_equip.stat_max.set(Integer.parseInt(j),temp_equip.stat_max.get(Integer.parseInt(j))+1);//temp_equip.stat_max.get(Integer.parseInt(j))++;
+                    ret += "</n> sews the " + temp_equip.getName()+ "s " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(Integer.parseInt(j)));						
                 }else{
                     ret += "</n> doesn't have the necessary components. <br>";
                 }
             }else{
-                j = String(int(j)+1);
-                if(temp_equip.stat_min[-int(j)] > 0)temp_equip.stat_min[-int(j)]--;
-                temp_equip.stat_max[-int(j)]--;
-                ret += "</n> sews the " + temp_equip.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req[-int(j)]);
+                j = Integer.toString(Integer.parseInt(j)+1);
+                if(temp_equip.stat_min.get(-Integer.parseInt(j)) > 0)temp_equip.stat_min.set(-Integer.parseInt(j),temp_equip.stat_min.get(-Integer.parseInt(j))-1);//temp_equip.stat_min.get(-Integer.parseInt(j))--;
+                temp_equip.stat_max.set(-Integer.parseInt(j),temp_equip.stat_max.get(-Integer.parseInt(j))-1);//temp_equip.stat_max.get(-Integer.parseInt(j))--;
+                ret += "</n> sews the " + temp_equip.getName()+ "s " + FPalaceHelper.get_stat_name_by_id(temp_equip.stat_req.get(-Integer.parseInt(j)));
             }
-            for(count;count<possessions.length;count++){
-                if(possessions[count].same_item(temp_equip)){
+            for(count=0;count<possessions.size();count++){
+                if(((Equipment)possessions.get(count)).sameItem((Equipment)temp_equip)){
                     break;
                 }
             }				
@@ -3254,45 +3317,48 @@ public class Character extends DynamicObject {
         return sanitize(ret);
     }
     
-    public function dismantle(i:String):String{
-        var ret:String = "";
-        var temp_item:Item;
-        var stat_limits:Array = new Array();
-        var count:int = 0;
+    public String dismantle(String i){
+        String ret = "";
+        Item temp_item;
+        //var stat_limits:Array = new Array();
+        int count = 0;
         if(i == null){
-            for(count;count<possessions.length;count++){
-                if(possessions[count].crafting_requirements[0]!=null){
+            for(count=0;count<possessions.size();count++){
+                if(possessions.get(count).craftingRequirements.get(0)!=null){
                     if(ret != "")ret += ", ";
-                    ret += "<a href=\"event:dismantle,"+count+"\">" + possessions[count].get_name() + "</a>";
+                    ret += "<a href=\"event:dismantle,"+count+"\">" + possessions.get(count).getName() + "</a>";
                 }
             }
             ret = "What would you like to dismantle:<br>" + ret;
         }else{
-            temp_item = possessions[int(i)] as Item;
-            ret += "</n> dismantles the " + temp_item.get_name()+ ". <br>";
+            temp_item = (Item)possessions.get(Integer.parseInt(i));
+            ret += "</n> dismantles the " + temp_item.getName()+ ". <br>";
             
-            var potential_rewards:Array = new Array();
-            potential_rewards = potential_rewards.concat(temp_item.crafting_requirements);
-            if(temp_item is Equipment){
-                var temp_e:Equipment = temp_item as Equipment;
-                for(count;count<temp_e.upgrade_items.length;count++){
-                    potential_rewards[potential_rewards.length] = [temp_e.upgrade_items[count],1];
+            ArrayList<ItemCntPair> potential_rewards = new ArrayList<>();//was array
+            //potential_rewards = potential_rewards.concat(temp_item.craftingRequirements);
+            potential_rewards.addAll(temp_item.craftingRequirements);
+            if(temp_item instanceof Equipment){
+                Equipment temp_e = (Equipment)temp_item;
+                for(count=0;count<temp_e.upgrade_items.size();count++){
+                    //potential_rewards[potential_rewards.length] = [temp_e.upgrade_items[count],1];
+                    potential_rewards.add(new ItemCntPair(temp_e.upgrade_items.get(count), 1));
                 }						
-            }else if(temp_item is Weapon){
-                var temp_w:Weapon = temp_item as Weapon;
-                for(count;count<temp_w.upgrade_items.length;count++){
-                    potential_rewards[potential_rewards.length] = [temp_w.upgrade_items[count],1];
+            }else if(temp_item instanceof Weapon){
+                Weapon temp_w = (Weapon)temp_item;
+                for(count=0;count<temp_w.upgrade_items.size();count++){
+                    //potential_rewards[potential_rewards.length] = [temp_w.upgrade_items[count],1];
+                    potential_rewards.add(new ItemCntPair(temp_w.upgrade_items.get(count), 1));
                 }
             }
             
             count = 0;
-            for(count;count<potential_rewards.length;count++){
-                var char_for_chal:Character = this;
-                var dismantle_challenge:Challenge = new Challenge(true);
-                if(temp_item is Weapon){
+            for(count=0;count<potential_rewards.size();count++){
+                Character char_for_chal = this;
+                Challenge dismantle_challenge = new Challenge(true);
+                if(temp_item instanceof Weapon){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.smithing_id);
                     dismantle_challenge.set_attack_stat(FPalace_skills.smithing_id);
-                }else if(temp_item is Equipment){
+                }else if(temp_item instanceof Equipment){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.sewing_id);
                     dismantle_challenge.set_attack_stat(FPalace_skills.sewing_id);
                 }else{
@@ -3300,87 +3366,90 @@ public class Character extends DynamicObject {
                     dismantle_challenge.set_attack_stat(FPalace_skills.items_id);
                 }
                 dismantle_challenge.set_defense_stat(-1,temp_item.value);
-                dismantle_challenge.set_variability(20);
+                dismantle_challenge.setVariability(20);
                 
-                var result:Number = dismantle_challenge.roll(char_for_chal);
+                Number result = dismantle_challenge.roll(char_for_chal);
                 
-                if(potential_rewards[count][0] is Item){
-                    var dismantle_reward:Item;
-                    if(result >= 10){
+                if(potential_rewards.get(count).item() instanceof Item){
+                    Item dismantle_reward = null;
+                    if(result.intValue() >= 10){
                         result = 1;
                     }else{
-                        result = 1/(10 - result);
+                        result = 1/(10 - result.intValue());
                     }
-                    var temp_count:int = potential_rewards[count][1];
-                    var add_count:int = 0;
+                    int temp_count = potential_rewards.get(count).count();
+                    int add_count = 0;
                     while(temp_count > 0){
-                        if(Math.random() <= result){
-                            dismantle_reward = potential_rewards[count][0].clone();
-                            possessions[possessions.length] = dismantle_reward;
+                        if(Math.random() <= result.intValue()){
+                            dismantle_reward = potential_rewards.get(count).item().copyItem();
+                            //possessions[possessions.size()] = dismantle_reward;
+                            possessions.add(dismantle_reward);
                             add_count++;
                         }
                         temp_count--;
                     }
                     
                     if(add_count > 1){
-                        ret += "</n> gets " +add_count+ " " + dismantle_reward.get_name()+ ". <br>";
+                        ret += "</n> gets " +add_count+ " " + dismantle_reward.getName()+ ". <br>";
                     }else if(add_count > 0){
-                        ret += "</n> gets " + dismantle_reward.get_name()+ ". <br>";
+                        ret += "</n> gets " + dismantle_reward.getName()+ ". <br>";
                     }
                 }
             }
             
             //check to see if I figure out how to make this item myself
-            var recipe_challenge:Challenge = new Challenge(true);
-            if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.crafting_id);
-            recipe_challenge.set_attack_stat(FPalace_skills.crafting_id);//not sure about this...
-            recipe_challenge.set_defense_stat(-1,temp_item.value);
-            recipe_challenge.set_variability(20);
-            if(recipe_challenge.roll(char_for_chal)>=0){
-                if(temp_item.dismantle_item == null){
-                    char_for_chal.personality.add_recipe(temp_item.clone());
-                }else{
-                    char_for_chal.personality.add_recipe(temp_item.dismantle_item.clone());
+            Challenge recipe_challenge = new Challenge(true);
+            if(party != null){
+                Character char_for_chal = party.get_best_at_skill(FPalace_skills.crafting_id);
+                recipe_challenge.set_attack_stat(FPalace_skills.crafting_id);//not sure about this...
+                recipe_challenge.set_defense_stat(-1,temp_item.value);
+                recipe_challenge.setVariability(20);
+                if(recipe_challenge.roll(char_for_chal)>=0){
+                    if(temp_item.dismantleItem == null){
+                        char_for_chal.personality.add_recipe(temp_item.copyItem());
+                    }else{
+                        char_for_chal.personality.add_recipe(temp_item.dismantleItem.copyItem());
+                    }
                 }
             }
             
-            drop(int(i));
+            drop(Integer.parseInt(i));
             
             ret += "<br><a href=\"event:dismantle\"><font color='#0000FF'>back</font></a>";
         }
         return sanitize(ret);
     }
     
-    public function craft(i:String):String{
-        var ret:String = "";
-        var count:int = 0;
+    public String craft(String i){
+        String ret = "";
+        int count = 0;
         if(i == null){
-            for(count;count<personality.known_recipes.length;count++){
-                if(personality.known_recipes[count]!=null){
-                    ret += "<br><a href=\"event:craft,"+count+"\"><font color='#0000FF'>" + personality.known_recipes[count].get_name() + "</font></a>";
+            for(count=0;count<personality.known_recipes.size();count++){
+                if(personality.known_recipes.get(count)!=null){
+                    ret += "<br><a href=\"event:craft,"+count+"\"><font color='#0000FF'>" + personality.known_recipes.get(count).getName() + "</font></a>";
                     //should go through and list the requirements, and the count of them...
-                    var temp_item:Item = personality.known_recipes[count];
-                    var req_count:int = 0;
-                    for(req_count;req_count<temp_item.crafting_requirements.length;req_count++){
-                        ret += "<br>\t" + temp_item.crafting_requirements[req_count][0].get_name() + " x" + temp_item.crafting_requirements[req_count][1];
+                    Item temp_item = personality.known_recipes.get(count);
+                    int req_count = 0;
+                    for(req_count=0;req_count<temp_item.craftingRequirements.size();req_count++){
+                        ret += "<br>\t" + temp_item.craftingRequirements.get(req_count).item().getName() + " x" + temp_item.craftingRequirements.get(req_count).count();
                     }
                 }
             }
             ret = "What would you like to craft:" + ret;
         }else{
-            var made_item:Item = personality.known_recipes[int(i)].clone();
-            var make_item:Boolean = true;
-            var drop_ids:Array = new Array();
-            for(count;count<made_item.crafting_requirements.length;count++){
+            Item made_item = personality.known_recipes.get(Integer.parseInt(i)).copyItem();
+            Boolean make_item = true;
+            ArrayList<Integer> drop_ids = new ArrayList<>();
+            for(count=0;count<made_item.craftingRequirements.size();count++){
                 make_item = false;
-                var possession_count:int = 0;
+                int possession_count = 0;
                 
-                var char_for_chal:Character = this;
-                var crafting_challenge:Challenge = new Challenge(true);
-                if(made_item is Weapon){
+                Character char_for_chal = this;
+                Challenge crafting_challenge = new Challenge(true);
+                if(made_item instanceof Weapon){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.smithing_id);
                     crafting_challenge.set_attack_stat(FPalace_skills.smithing_id);
-                }else if(made_item is Equipment){
+                }else if(made_item instanceof Equipment){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.sewing_id);
                     crafting_challenge.set_attack_stat(FPalace_skills.sewing_id);
                 }else{
@@ -3388,9 +3457,9 @@ public class Character extends DynamicObject {
                     crafting_challenge.set_attack_stat(FPalace_skills.items_id);
                 }
                 crafting_challenge.set_defense_stat(-1,made_item.value);
-                crafting_challenge.set_variability(20);
+                crafting_challenge.setVariability(20);
                 
-                var result:Number = crafting_challenge.roll(char_for_chal);
+                int result = crafting_challenge.roll(char_for_chal);//TODO verify, was number
                 
                 if(result >= 0){
                     result = 1;
@@ -3398,10 +3467,11 @@ public class Character extends DynamicObject {
                     result = (-result / 5) + 1;
                 }
                 
-                var needed_count:int = Math.round(made_item.crafting_requirements[count][1] * result);
-                for(possession_count;possession_count<possessions.length;possession_count++){
-                    if(possessions[possession_count].get_name() == made_item.crafting_requirements[count][0].get_name()){
-                        drop_ids[drop_ids.length] = possession_count;
+                int needed_count = Math.round(made_item.craftingRequirements.get(count).count() * result);
+                for(possession_count=0;possession_count<possessions.size();possession_count++){
+                    if(possessions.get(possession_count).getName() == made_item.craftingRequirements.get(count).item().getName()){
+                        //drop_ids[drop_ids.length] = possession_count;
+                        drop_ids.add(possession_count);
                         if(needed_count == 1){
                             make_item = true;
                             break;
@@ -3410,83 +3480,92 @@ public class Character extends DynamicObject {
                         }
                     }
                 }
-                if(make_item && possession_count >= possessions.length)make_item = false;
+                if(make_item && possession_count >= possessions.size())make_item = false;
                 if(!make_item)break;
             }
             if(make_item){
                 count = 0;
-                for(count;count<drop_ids.length;count++){
-                    drop(drop_ids[count] - count);
+                for(count=0;count<drop_ids.size();count++){
+                    drop(drop_ids.get(count) - count);
                 }
-                ret += "</n> makes " + made_item.get_name()+ ". <br>";
-                var stat_changes:Array = new Array();
-                var skill_changes:Array = new Array();
-                var max_enhance:int = 0;
-                if(made_item is Weapon){
-                    var temp_weap:Weapon = made_item as Weapon;
+                ret += "</n> makes " + made_item.getName()+ ". <br>";
+                ArrayList<Integer> stat_changes = new ArrayList<>();
+                ArrayList<Integer> skill_changes = new ArrayList<>();
+                int max_enhance = 0;
+                if(made_item instanceof Weapon){
+                    Weapon temp_weap = (Weapon)made_item;
                     //FPalace_skills.weapon_effects_id
                     count = 0;
-                    for(count;count<temp_weap.effects.length;count++){
-                        if(temp_weap.effects[count] != null){
-                            stat_changes[stat_changes.length] = count;
+                    for(count=0;count<temp_weap.effects.size();count++){
+                        if(temp_weap.effects.get(count) != null){
+                            //stat_changes[stat_changes.length] = count;
+                            stat_changes.add(count);
                         }
                     }
                     skill_changes = temp_weap.skill_id;
                     if(temp_weap.attack_action != null){
                         count = 0;
-                        for(count;count<temp_weap.attack_action.challenges.length;count++){
-                            if(!temp_weap.attack_action.challenges[count].static_attack){
-                                if(temp_weap.attack_action.challenges[count].stats_or_skills){
-                                    if(skill_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                        skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                        for(count=0;count<temp_weap.attack_action.challenges.size();count++){
+                            if(!temp_weap.attack_action.challenges.get(count).static_attack){
+                                if(temp_weap.attack_action.challenges.get(count).stats_or_skills){
+                                    if(skill_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                        //skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                        skill_changes.add(temp_weap.attack_action.challenges.get(count).attack_stat);
                                     }
                                 }else{
-                                    if(stat_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                        stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                    if(stat_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                        //stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                        stat_changes.add(temp_weap.attack_action.challenges.get(count).attack_stat);
                                     }
                                 }
                             }
                         }						
                     }	
-                }else if(made_item is Equipment){
-                    var temp_equip:Equipment = made_item as Equipment;
+                }else if(made_item instanceof Equipment){
+                    Equipment temp_equip = (Equipment)made_item;
                     //FPalace_skills.equipment_effects_id
                     count = 0;
-                    for(count;count<temp_equip.effects.length;count++){
-                        if(temp_equip.effects[count] != null){
-                            stat_changes[stat_changes.length] = count;
+                    for(count=0;count<temp_equip.effects.size();count++){
+                        if(temp_equip.effects.get(count) != null){
+                            //stat_changes[stat_changes.length] = count;
+                            stat_changes.add(count);
                         }
                     }
                     //Change the equipment to fit the crafting character
                     count = 0;
-                    for(count;count<temp_equip.stat_req.length;count++){
-                        var temp_stat:Number = get_stat(temp_equip.stat_req.get(count));
-                        if(temp_stat > temp_equip.stat_max.get(count)){
-                            temp_equip.stat_max.get(count) = temp_stat + 2;
+                    for(count=0;count<temp_equip.stat_req.size();count++){
+                        Number temp_stat = get_stat(temp_equip.stat_req.get(count));
+                        if(temp_stat.intValue() > temp_equip.stat_max.get(count)){
+                            //temp_equip.stat_max.get(count) = temp_stat + 2;
+                            while(temp_equip.stat_max.size()<count)temp_equip.stat_max.add(null);
+                            temp_equip.stat_max.set(count,temp_stat.intValue() + 2);
                         }
-                        if(temp_stat < temp_equip.stat_min[count] && temp_stat > 2){
-                            temp_equip.stat_min[count] = temp_stat - 2;
+                        if(temp_stat.intValue() < temp_equip.stat_min.get(count) && temp_stat.intValue() > 2){
+                            //temp_equip.stat_min[count] = temp_stat - 2;
+                            while(temp_equip.stat_min.size()<count)temp_equip.stat_min.add(null);
+                            temp_equip.stat_min.set(count, temp_stat.intValue() - 2);
                         }
                     }
                     
                     skill_changes = temp_equip.skill_id;
-                }else if(made_item is Upgrade_Item){
-                    var temp_upgrade:Upgrade_Item = made_item as Upgrade_Item;
+                }else if(made_item instanceof Upgrade_Item){
+                    Upgrade_Item temp_upgrade = (Upgrade_Item)made_item;
                     count = 0;
-                    for(count;count<temp_upgrade.effects.length;count++){
-                        if(temp_upgrade.effects[count] != null){
-                            stat_changes[stat_changes.length] = count;
+                    for(count=0;count<temp_upgrade.effects.size();count++){
+                        if(temp_upgrade.effects.get(count) != null){
+                            //stat_changes[stat_changes.length] = count;
+                            stat_changes.add(count);
                         }
                     }
                     skill_changes = temp_upgrade.skill_id;
                 }
                 
-                char_for_chal = this;
-                var enhancing_challenge1:Challenge = new Challenge(true);
-                if(made_item is Weapon){
+                Character char_for_chal = this;
+                Challenge enhancing_challenge1 = new Challenge(true);
+                if(made_item instanceof Weapon){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.smithing_id);
                     enhancing_challenge1.set_attack_stat(FPalace_skills.smithing_id);
-                }else if(made_item is Equipment){
+                }else if(made_item instanceof Equipment){
                     if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.sewing_id);
                     enhancing_challenge1.set_attack_stat(FPalace_skills.sewing_id);
                 }else{
@@ -3494,28 +3573,29 @@ public class Character extends DynamicObject {
                     enhancing_challenge1.set_attack_stat(FPalace_skills.items_id);
                 }
                 enhancing_challenge1.set_defense_stat(-1,made_item.value);
-                enhancing_challenge1.set_variability(made_item.value);
+                enhancing_challenge1.setVariability(made_item.value);
                 
-                result = enhancing_challenge1.roll(char_for_chal);
-                var stat_result:int = Math.round(result/made_item.value);
+                int result = enhancing_challenge1.roll(char_for_chal);
+                int stat_result = Math.round(result/made_item.value);
                 if(stat_result<0)stat_result = 0;
                 if(stat_result > 0){
                     count = 0;
-                    for(count;count<stat_changes.length;count++){
-                        ret += "</n> enhances the " + made_item.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes[count]) + "<br>";
-                        made_item.effects[stat_changes[count]]+=stat_result;
+                    for(count=0;count<stat_changes.size();count++){
+                        ret += "</n> enhances the " + made_item.getName()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes.get(count)) + "<br>";
+                        //made_item.effects[stat_changes[count]]+=stat_result;
+                        made_item.effects.set(stat_changes.get(count), made_item.effects.get(stat_changes.get(count))+stat_result);
                     }
                     max_enhance = stat_result;
                 }
                 count = 0;
-                for(count;count<skill_changes.length;count++){
-                    var enhancing_challenge2:Challenge = new Challenge(true);
-                    if(party != null)char_for_chal = party.get_best_at_skill(skill_changes[count]);
-                    enhancing_challenge2.set_attack_stat(skill_changes[count]);
+                for(count=0;count<skill_changes.size();count++){
+                    Challenge enhancing_challenge2 = new Challenge(true);
+                    if(party != null)char_for_chal = party.get_best_at_skill(skill_changes.get(count));
+                    enhancing_challenge2.set_attack_stat(skill_changes.get(count));
                     enhancing_challenge2.set_defense_stat(-1,made_item.value);
-                    enhancing_challenge2.set_variability(made_item.value);
+                    enhancing_challenge2.setVariability(made_item.value);
                     
-                    var skill_result:int = result + enhancing_challenge2.roll(char_for_chal);
+                    int skill_result = result + enhancing_challenge2.roll(char_for_chal);
                     
                     if(skill_result >= made_item.value){
                         skill_result = Math.round(result/made_item.value);
@@ -3524,23 +3604,26 @@ public class Character extends DynamicObject {
                     }
                     if(skill_result > 0){
                         if(skill_result > max_enhance)max_enhance = skill_result;
-                        if(made_item is Weapon){
-                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "<br>";
-                            (made_item as Weapon).skill_bonus[count]+= skill_result;
-                        }else if(made_item is Equipment){
-                            ret +=  "</n> enhances the " + made_item.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[count]) + "<br>";
-                            (made_item as Equipment).skill_bonus[count]+= skill_result;
+                        if(made_item instanceof Weapon){
+                            ret +=  "</n> enhances the " + made_item.getName()+ "s " + FPalace_skills.get_skill_name(skill_changes.get(count)) + "<br>";
+                            //((Weapon)made_item).skill_bonus.get(count)+= skill_result;
+                            ((Weapon)made_item).skill_bonus.set(count, ((Weapon)made_item).skill_bonus.get(count) + skill_result);
+                        }else if(made_item instanceof Equipment){
+                            ret +=  "</n> enhances the " + made_item.getName()+ "s " + FPalace_skills.get_skill_name(skill_changes.get(count)) + "<br>";
+                            //((Equipment)made_item).skill_bonus.get(count)+= skill_result;
+                            ((Equipment)made_item).skill_bonus.set(count, ((Equipment)made_item).skill_bonus.get(count)+ skill_result);
                         }
                     }
                 }	
                 
-                if(stat_changes.length > 0 || skill_changes.length > 0){
-                    made_item.name = made_item.get_name() + "+" + max_enhance;
+                if(stat_changes.size() > 0 || skill_changes.size() > 0){
+                    made_item.name = made_item.getName() + "+" + max_enhance;
                     made_item.value *= (max_enhance + 1);
-                    made_item.dismantle_item = personality.known_recipes[int(i)];
+                    made_item.dismantleItem = personality.known_recipes.get(Integer.parseInt(i));
                 }
                 
-                possessions[possessions.length] = made_item;
+                //possessions[possessions.size()] = made_item;
+                possessions.add(made_item);
                 
             }else{
                 ret += "</n> doesn't have the necessary components. <br>";
@@ -3551,114 +3634,123 @@ public class Character extends DynamicObject {
         return sanitize(ret);
     }
     
-    public function enchant(i:String,j:String):String{
-        var ret:String = "";
-        var stat_changes:Array = new Array();
-        var skill_changes:Array = new Array();
-        var temp_equip:Equipment;
-        var temp_weap:Weapon;
-        var count:int = 0;
+    public String enchant(String i,String j){
+        String ret = "";
+        //var stat_changes:Array = new Array();
+        ArrayList<Integer> stat_changes = new ArrayList<>();
+        //var skill_changes:Array = new Array();
+        ArrayList<Integer> skill_changes = new ArrayList<>();
+        Equipment temp_equip;
+        Weapon temp_weap;
+        int count = 0;
         if(i == null){
-            for(count;count<possessions.length;count++){
-                if(possessions[count] is Equipment || possessions[count] is Weapon){
+            for(count=0;count<possessions.size();count++){
+                if(possessions.get(count) instanceof Equipment || possessions.get(count) instanceof Weapon){
                     if(ret != "")ret += ", ";
-                    ret += "<a href=\"event:enchant,"+count+"\">" + possessions[count].get_name() + "</a>";
+                    ret += "<a href=\"event:enchant,"+count+"\">" + possessions.get(count).getName() + "</a>";
                 }
             }
             ret = "Which equipment would you like to enchant:<br>" + ret;
         }else if(j == null){
             //figure out which enchantment we want to go with
-            if(possessions[int(i)] is Weapon){
-                temp_weap = possessions[int(i)];
+            if(possessions.get(Integer.parseInt(i)) instanceof Weapon){
+                temp_weap = (Weapon)possessions.get(Integer.parseInt(i));
                 //FPalace_skills.weapon_effects_id
-                ret += temp_weap.get_name() + " Current enchantment level: " + temp_weap.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
+                ret += temp_weap.getName() + " Current enchantment level: " + temp_weap.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
                 count = 0;
-                for(count;count<temp_weap.effects.length;count++){
-                    if(temp_weap.effects[count] != null){
-                        stat_changes[stat_changes.length] = count;
+                for(count=0;count<temp_weap.effects.size();count++){
+                    if(temp_weap.effects.get(count) != null){
+                        //stat_changes[stat_changes.length] = count;
+                        stat_changes.add(count);
                     }
                 }
-                skill_changes = temp_weap.skill_id;
+                skill_changes = new ArrayList<>(temp_weap.skill_id);
                 if(temp_weap.attack_action != null){
                     count = 0;
-                    for(count;count<temp_weap.attack_action.challenges.length;count++){
-                        if(!temp_weap.attack_action.challenges[count].static_attack){
-                            if(temp_weap.attack_action.challenges[count].stats_or_skills){
-                                if(skill_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                    skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                    for(count=0;count<temp_weap.attack_action.challenges.size();count++){
+                        if(!temp_weap.attack_action.challenges.get(count).static_attack){
+                            if(temp_weap.attack_action.challenges.get(count).stats_or_skills){
+                                if(skill_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                    //skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                    skill_changes.add(temp_weap.attack_action.challenges.get(count).attack_stat);
                                 }
                             }else{
-                                if(stat_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                    stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                if(stat_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                    //stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                    stat_changes.add(temp_weap.attack_action.challenges.get(count).attack_stat);
                                 }
                             }
                         }
                     }						
                 }
                 count = 0;
-                for(count;count<stat_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*100 + 50)+"xp<br>";
+                for(count=0;count<stat_changes.size();count++){
+                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes.get(count))+"+1</a>\t"+(temp_weap.get_enchantment_level()*100 + 50)+"xp<br>";
                 }
                 count = 0;
-                for(count;count<skill_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_weap.get_enchantment_level()*10 + 10)+"xp<br>";
+                for(count=0;count<skill_changes.size();count++){
+                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.size())+"\">" +FPalace_skills.get_skill_name(skill_changes.get(count))+"+1</a>\t"+(temp_weap.get_enchantment_level()*10 + 10)+"xp<br>";
                 }
             }else{
-                temp_equip = possessions[int(i)];
+                temp_equip = (Equipment)possessions.get(Integer.parseInt(i));
                 //FPalace_skills.equipment_effects_id
-                ret += temp_equip.get_name() + " Current enchantment level: " + temp_equip.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
+                ret += temp_equip.getName() + " Current enchantment level: " + temp_equip.get_enchantment_level() + " xp to spend:<font color='#00FF00'>"+get_xp()+"</font>/"+nxt_lvl_xp+"<br>";
                 count = 0;
-                for(count;count<temp_equip.effects.length;count++){
-                    if(temp_equip.effects[count] != null){
-                        stat_changes[stat_changes.length] = count;
+                for(count=0;count<temp_equip.effects.size();count++){
+                    if(temp_equip.effects.get(count) != null){
+                        //stat_changes[stat_changes.length] = count;
+                        stat_changes.add(count);
                     }
                 }
                 skill_changes = temp_equip.skill_id;
                 count = 0;
-                for(count;count<stat_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*100 + 50)+"xp<br>";
+                for(count=0;count<stat_changes.size();count++){
+                    ret += "<a href=\"event:enchant,"+i+","+count+"\">" +FPalaceHelper.get_stat_name_by_id(stat_changes.get(count))+"+1</a>\t"+(temp_equip.get_enchantment_level()*100 + 50)+"xp<br>";
                 }
                 count = 0;
-                for(count;count<skill_changes.length;count++){
-                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.length)+"\">" +FPalace_skills.get_skill_name(skill_changes[count])+"+1</a>\t"+(temp_equip.get_enchantment_level()*10 + 10)+"xp<br>";
+                for(count=0;count<skill_changes.size();count++){
+                    ret += "<a href=\"event:enchant,"+i+","+(count+stat_changes.size())+"\">" +FPalace_skills.get_skill_name(skill_changes.get(count))+"+1</a>\t"+(temp_equip.get_enchantment_level()*10 + 10)+"xp<br>";
                 }
             }
         }else{
             //attempt to apply the enchantment
-            if(possessions[int(i)] is Weapon){
-                temp_weap = possessions[int(i)];
+            if(possessions.get(Integer.parseInt(i)) instanceof Weapon){
+                temp_weap = (Weapon)possessions.get(Integer.parseInt(i));
                 count = 0;
-                for(count;count<temp_weap.effects.length;count++){
-                    if(temp_weap.effects[count] != null){
-                        stat_changes[stat_changes.length] = count;
+                for(count=0;count<temp_weap.effects.size();count++){
+                    if(temp_weap.effects.get(count) != null){
+                        //stat_changes[stat_changes.length] = count;
+                        stat_changes.add(count);
                     }
                 }
                 skill_changes = temp_weap.skill_id;
                 if(temp_weap.attack_action != null){
                     count = 0;
-                    for(count;count<temp_weap.attack_action.challenges.length;count++){
-                        if(!temp_weap.attack_action.challenges[count].static_attack){
-                            if(temp_weap.attack_action.challenges[count].stats_or_skills){
-                                if(skill_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                    skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                    for(count=0;count<temp_weap.attack_action.challenges.size();count++){
+                        if(!temp_weap.attack_action.challenges.get(count).static_attack){
+                            if(temp_weap.attack_action.challenges.get(count).stats_or_skills){
+                                if(skill_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                    //skill_changes[skill_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
                                 }
                             }else{
-                                if(stat_changes.indexOf(temp_weap.attack_action.challenges[count].attack_stat)<0){
-                                    stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                if(stat_changes.indexOf(temp_weap.attack_action.challenges.get(count).attack_stat)<0){
+                                    //stat_changes[stat_changes.length] = temp_weap.attack_action.challenges[count].attack_stat;
+                                    stat_changes.add(temp_weap.attack_action.challenges.get(count).attack_stat);
                                 }
                             }
                         }
                     }						
                 }
-                if(int(j)>=stat_changes.length){
+                if(Integer.parseInt(j)>=stat_changes.size()){
                     if(xp < temp_weap.get_enchantment_level()*10 + 10){
                         ret += "</n> cannot muster enough energy to complete the enchantment. ";
                     }else{
-                        ret += "</n> enhances the " + temp_weap.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[int(j)-stat_changes.length])
-                        if(temp_weap.skill_id.indexOf(skill_changes[int(j)-stat_changes.length])>0){
-                            temp_weap.skill_bonus[temp_weap.skill_id.indexOf(skill_changes[int(j)-stat_changes.length])]++;
+                        ret += "</n> enhances the " + temp_weap.getName()+ "s " + FPalace_skills.get_skill_name(skill_changes.get(Integer.parseInt(j)-stat_changes.size()));
+                        if(temp_weap.skill_id.indexOf(skill_changes.get(Integer.parseInt(j)-stat_changes.size()))>-1){//was 0, but 0 is a valid index
+                            //temp_weap.skill_bonus.get(temp_weap.skill_id.indexOf(skill_changes.get(Integer.parseInt(j)-stat_changes.size())))++;
+                            temp_weap.skill_bonus.set(temp_weap.skill_id.indexOf(skill_changes.get(Integer.parseInt(j)-stat_changes.size())),temp_weap.skill_bonus.get(temp_weap.skill_id.indexOf(skill_changes.get(Integer.parseInt(j)-stat_changes.size())))+1);
                         }else{
-                            temp_weap.set_skill_bonus(skill_changes[int(j)-stat_changes.length],1)
+                            temp_weap.set_skill_bonus(skill_changes.get(Integer.parseInt(j)-stat_changes.size()),1);
                         }							
                         set_xp(-(temp_weap.get_enchantment_level()*10 + 10));
                         temp_weap.set_enchantment_level(temp_weap.get_enchantment_level()+1);
@@ -3667,27 +3759,30 @@ public class Character extends DynamicObject {
                     if(xp < temp_weap.get_enchantment_level()*100 + 50){
                         ret += "</n> cannot muster enough energy to complete the enchantment. ";
                     }else{
-                        ret +=  "</n> enhances the " + temp_weap.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes[int(j)])
-                        temp_weap.effects[stat_changes[int(j)]]++;						
+                        ret +=  "</n> enhances the " + temp_weap.getName()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes.get(Integer.parseInt(j)));
+                        //temp_weap.effects.get(stat_changes.get(Integer.parseInt(j)))++;	
+                        temp_weap.effects.set(stat_changes.get(Integer.parseInt(j)),temp_weap.effects.get(stat_changes.get(Integer.parseInt(j)))+1);						
                         set_xp(-(temp_weap.get_enchantment_level()*100 + 50));
                         temp_weap.set_enchantment_level(temp_weap.get_enchantment_level()+1);
                     }
                 }
             }else{
-                temp_equip = possessions[int(i)];
+                temp_equip = (Equipment)possessions.get(Integer.parseInt(i));
                 count = 0;
-                for(count;count<temp_equip.effects.length;count++){
-                    if(temp_equip.effects[count] != null){
-                        stat_changes[stat_changes.length] = count;
+                for(count=0;count<temp_equip.effects.size();count++){
+                    if(temp_equip.effects.get(count) != null){
+                        //stat_changes[stat_changes.length] = count;
+                        stat_changes.add(count);
                     }
                 }
-                if(int(j)>=stat_changes.length){
+                if(Integer.parseInt(j)>=stat_changes.size()){
                     skill_changes = temp_equip.skill_id;
                     if(xp < temp_equip.get_enchantment_level()*10 + 10){
                         ret += "</n> cannot muster enough energy to complete the enchantment. ";
                     }else{
-                        ret +=  "</n> enhances the " + temp_equip.get_name()+ "s " + FPalace_skills.get_skill_name(skill_changes[int(j)-stat_changes.length])
-                        temp_equip.skill_bonus[int(j)-stat_changes.length]++;
+                        ret +=  "</n> enhances the " + temp_equip.getName()+ "s " + FPalace_skills.get_skill_name(skill_changes.get(Integer.parseInt(j)-stat_changes.size()));
+                        //temp_equip.skill_bonus.get(Integer.parseInt(j)-stat_changes.size())++;
+                        temp_equip.skill_bonus.set(Integer.parseInt(j)-stat_changes.size(),temp_equip.skill_bonus.get(Integer.parseInt(j)-stat_changes.size())+1);
                         set_xp(-(temp_equip.get_enchantment_level()*10 + 10));
                         temp_equip.set_enchantment_level(temp_equip.get_enchantment_level()+1);
                     }
@@ -3695,8 +3790,9 @@ public class Character extends DynamicObject {
                     if(xp < temp_equip.get_enchantment_level()*100 + 50){
                         ret += "</n> cannot muster enough energy to complete the enchantment. ";
                     }else{
-                        ret += "</n> enhances the " + temp_equip.get_name()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes[int(j)])
-                        temp_equip.effects[stat_changes[int(j)]]++;
+                        ret += "</n> enhances the " + temp_equip.getName()+ "s " + FPalaceHelper.get_stat_name_by_id(stat_changes.get(Integer.parseInt(j)));
+                        //temp_equip.effects.get(stat_changes.get(Integer.parseInt(j)))++;
+                        temp_equip.effects.set(stat_changes.get(Integer.parseInt(j)),temp_equip.effects.get(stat_changes.get(Integer.parseInt(j)))+1);
                         set_xp(-(temp_equip.get_enchantment_level()*100 + 50));
                         temp_equip.set_enchantment_level(temp_equip.get_enchantment_level()+1);
                     }
@@ -3706,7 +3802,7 @@ public class Character extends DynamicObject {
         
         return sanitize(ret);
     }
-    
+    /*
     public function get_area_map(area_id:int = -1):String{
         var i:int = 0;
         var locate_flag:Boolean = false;
@@ -3757,85 +3853,102 @@ public class Character extends DynamicObject {
         
         return location.area.get_map();
     }
-    
-    public function get_possesion_by_id(i:int):Item{
-        if(i >= possessions.length){
-            var action_array:Array = get_all_overworld_actions();
-            if(action_array[i - possessions.length] != null && action_array[i - possessions.length].trader_item!=null){
-                var merchant_item:Item = action_array[i - possessions.length].trader_item.clone();
+    */
+    public Item get_possesion_by_id(int i){
+        if(i >= possessions.size()){
+            ArrayList<CharAction> action_array = new ArrayList<>(get_all_overworld_actions());
+            if(action_array.get(i - possessions.size()) != null && action_array.get(i - possessions.size()).trader_item!=null){
+                Item merchant_item = action_array.get(i - possessions.size()).trader_item.copyItem();
                 return merchant_item;
             }
         }
         
-        return possessions[i];
+        return possessions.get(i);
     }
-    
-    public function buy(i:int, k:int = -1, num:int = 1, show_item_desc:int = -1):String{
-        var s:String = "";
-        var buy_from:Character = location.get_content(i) as Character;
+    public String buy(int i){
+        return buy(i, -1, 1,-1);
+    } 
+    public String buy(int i,int k){
+        return buy(i, k, 1,-1);
+    } 
+    public String buy(int i,int k,int num){
+        return buy(i, k, num,-1);
+    }
+    public String buy(int i,int k,int num,int show_item_desc){
+        //def k=-1,num= 1,show=-1
+        String s= "";
+        Character buy_from = (Character)location.getContent(i);
         if( buy_from == null) return s;
         setBusy();
-        if (!buy_from.busy)buy_from.setBusy();
+        //if (!buy_from.busy)buy_from.setBusy();
+        if (buy_from.busy==0)buy_from.setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
             s += "<br><br><font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
         }else if(k == -1){
-            s += buy_from.get_items_to_sell(i) + "<br><br>"+get_name()+" has "+gold+" gold to spend.<br><br><font color='#0000FF'><a href=\"event:buy,"+i+",-2\">Back</a></font>";
+            s += buy_from.get_items_to_sell(i) + "<br><br>"+getName()+" has "+gold+" gold to spend.<br><br><font color='#0000FF'><a href=\"event:buy,"+i+",-2\">Back</a></font>";
         }else{
-            var trade_good:Item = buy_from.get_possesion_by_id(k);
+            Item trade_good = buy_from.get_possesion_by_id(k);
             if(trade_good != null){
-                var back_string:String = "<br><font color='#0000FF'><a href=\"event:buy,"+i+",-1\">Back</a></font>";
+                String back_string = "<br><font color='#0000FF'><a href=\"event:buy,"+i+",-1\">Back</a></font>";
                 if(show_item_desc > -1){
                     s += get_item_description(trade_good);
                 }else{
-                    var item_value:int = trade_good.get_value(this, buy_from);
+                    int item_value = trade_good.getValue(this, buy_from);
                     if(get_gold() < item_value){
-                        s += this.get_name() + " doesn't have enough to buy that. " + buy_from.get_name() + " wanted " + item_value + " gold for it. ";
+                        s += this.getName() + " doesn't have enough to buy that. " + buy_from.getName() + " wanted " + item_value + " gold for it. ";
                     }else{
                         if(num > 1){
                             if(get_gold() < item_value*num){//buy as many as we CAN afford
-                                num = Math.floor(get_gold()/item_value);
+                                num = (int)Math.floor(get_gold()/item_value);
                             }
-                            s += "after bartering for a bit, " + buy_from.get_name() + " sells you " +num+ " " + trade_good.get_name() + " for " + (item_value*num) + " Gold";
+                            s += "after bartering for a bit, " + buy_from.getName() + " sells you " +num+ " " + trade_good.getName() + " for " + (item_value*num) + " Gold";
                             buy_from.set_gold(item_value*num);
                             set_gold(-item_value*num);
                             
-                            var buy_array:Array = new Array();
-                            var count:int;
-                            if(k >= buy_from.possessions.length){
+                            //var buy_array:Array = new Array();
+                            ArrayList<Item> buy_array = new ArrayList<>();
+                            int count;
+                            if(k >= buy_from.possessions.size()){
                                 //trade good... just fill the array past k
                                 num--;
-                                for(num;num>=0;num--){
-                                    buy_array[k+num] = buy_from.get_possesion_by_id(k);
-                                }
+                                for(int numarr = num;numarr>=0;numarr--){
+                                    while(buy_array.size()<k+numarr)buy_array.add(null);
+                                    //buy_array[k+numarr] = buy_from.get_possesion_by_id(k);
+                                    buy_array.set(k+numarr, buy_from.get_possesion_by_id(k));
+                                }//TODO does this decrement num too, outside the loop?
                             }else{
                                 count = k;
-                                for(count;count<buy_from.possessions.length;count++){
+                                for(count=k;count<buy_from.possessions.size();count++){
                                     if(num <= 0)break;
-                                    if(buy_from.possessions[count].get_name() == trade_good.get_name()){
-                                        buy_array[count] = buy_from.possessions[count];
+                                    if(buy_from.possessions.get(count).getName() == trade_good.getName()){
+                                        while(buy_array.size()<count)buy_array.add(null);
+                                        //buy_array[count] = buy_from.possessions.get(count);
+                                        buy_array.set(count, buy_from.possessions.get(count));
                                         num--;
                                     }else{
-                                        buy_array[count] = null;
+                                        //buy_array[count] = null;
+                                        buy_array.set(count,null);
                                     }
                                 }
                             }
                             
                             count = 0;
-                            for(count;count<buy_array.length;count++){
-                                if(buy_array[count] != null){
+                            for(count=0;count<buy_array.size();count++){
+                                if(buy_array.get(count) != null){
                                     trade_good = buy_from.get_possesion_by_id(count);
                                     buy_from.drop(count);
-                                    add_to_possessions(trade_good);
-                                    buy_array = buy_array.slice(0,count).concat(buy_array.slice(count+1, buy_array.length));
+                                    addToPossessions(trade_good);
+                                    //buy_array = buy_array.slice(0,count).concat(buy_array.slice(count+1, buy_array.size()));
+                                    buy_array.remove(count);
                                     count--;
                                 }
                             }
                         }else{
-                            s += "after bartering for a bit, " + buy_from.get_name() + " sells you " + trade_good.get_name() + " for " + item_value + " Gold";
+                            s += "after bartering for a bit, " + buy_from.getName() + " sells you " + trade_good.getName() + " for " + item_value + " Gold";
                             buy_from.set_gold(item_value);
                             buy_from.drop(k);
-                            add_to_possessions(trade_good);
+                            addToPossessions(trade_good);
                             set_gold(-item_value);
                         }
                     }
@@ -3846,59 +3959,72 @@ public class Character extends DynamicObject {
         
         return s;
     }
-    
-    public function sell(i:int, k:int = -1, num:int = 1):String{
-        var s:String = "";
-        var sell_to:Character = location.get_content(i) as Character;
+    public String sell(int i){
+        return sell(i, -1,1);
+    }
+    public String sell(int i,int k){
+        return sell(i, k,1);
+    }
+    public String sell(int i,int k,int num){
+        //def k=-1, num=1
+        String s = "";
+        Character sell_to = (Character)location.getContent(i);
         if( sell_to == null) return s;
-        if (!sell_to.busy)sell_to.setBusy();
+        //if (!sell_to.busy)sell_to.setBusy();
+        if (sell_to.busy==0)sell_to.setBusy();//TODO verify here and in buy
         setBusy();
         if(k == -2){
             s += "<a href=\"event:buy,"+ i +"\">Buy</a>\t<a href=\"event:sell,"+ i +"\">Sell</a>";
             s += "<br><br><font color='#0000FF'><a href=\"event:look," + i +"\">Back</a></font>";
         }else if(k == -1){
-            s += get_items_to_sell(i) + "<br><br>"+get_name()+" has "+gold+" gold.<br><br><font color='#0000FF'><a href=\"event:sell,"+i+",-2\">Back</a></font>";
+            s += get_items_to_sell(i) + "<br><br>"+getName()+" has "+gold+" gold.<br><br><font color='#0000FF'><a href=\"event:sell,"+i+",-2\">Back</a></font>";
         }else{
-            var trade_good:Item = get_possesion_by_id(k);
-            var back_string:String = "<br><font color='#0000FF'><a href=\"event:sell,"+i+",-1\">Back</a></font>";
-            var item_value:int = trade_good.get_value(sell_to, this);
+            Item trade_good = get_possesion_by_id(k);
+            String back_string = "<br><font color='#0000FF'><a href=\"event:sell,"+i+",-1\">Back</a></font>";
+            int item_value = trade_good.getValue(sell_to, this);
             if(sell_to.get_gold() < item_value){
-                s += sell_to.get_name() + " doesn't have enough to buy that. You wanted " + item_value + " gold for it. ";
+                s += sell_to.getName() + " doesn't have enough to buy that. You wanted " + item_value + " gold for it. ";
             }else{
                 if(num > 1){
                     if(sell_to.get_gold() < item_value*num){//buy as many as we CAN afford
-                        num = Math.floor(sell_to.get_gold()/item_value);
+                        num = (int)Math.floor(sell_to.get_gold()/item_value);
                     }
-                    s += "after bartering for a bit, " + get_name() + " sells " +num+ " " + trade_good.get_name() + " to " + sell_to.get_name() +" for " + (item_value*num) + " Gold";
+                    s += "after bartering for a bit, " + getName() + " sells " +num+ " " + trade_good.getName() + " to " + sell_to.getName() +" for " + (item_value*num) + " Gold";
                     sell_to.set_gold(-item_value*num);
                     set_gold(item_value*num);
                     
-                    var buy_array:Array = new Array();
-                    var count:int = k;
-                    for(count;count<possessions.length;count++){
+                    //var buy_array:Array = new Array();
+                    ArrayList<Item> buy_array = new ArrayList<>();
+                    int count = k;
+                    for(count=k;count<possessions.size();count++){
                         if(num <= 0)break;
-                        if(possessions[count].get_name() == trade_good.get_name()){
-                            buy_array[count] = possessions[count];
+                        if(possessions.get(count).getName() == trade_good.getName()){
+                            while(buy_array.size()<count)buy_array.add(null);
+                            //buy_array[count] = possessions.get(count);
+                            buy_array.set(count, possessions.get(count));
                             num--;
                         }else{
-                            buy_array[count] = null;
+                            while(buy_array.size()<count)buy_array.add(null);
+                            //buy_array[count] = null;
+                            buy_array.set(count, null);
                         }
                     }
                     
                     count = 0;
-                    for(count;count<buy_array.length;count++){
-                        if(buy_array[count] != null){
+                    for(count=0;count<buy_array.size();count++){
+                        if(buy_array.get(count) != null){
                             trade_good = get_possesion_by_id(count);
                             drop(count);
-                            sell_to.add_to_possessions(trade_good);
-                            buy_array = buy_array.slice(0,count).concat(buy_array.slice(count+1, buy_array.length));
+                            sell_to.addToPossessions(trade_good);
+                            //buy_array = buy_array.slice(0,count).concat(buy_array.slice(count+1, buy_array.length));
+                            buy_array.remove(count);
                             count--;
                         }
                     }
                 }else{
-                    s += "after bartering for a bit, " + get_name() + " sells " + trade_good.get_name() + " to " + sell_to.get_name() +" for " + item_value + " Gold";
+                    s += "after bartering for a bit, " + getName() + " sells " + trade_good.getName() + " to " + sell_to.getName() +" for " + item_value + " Gold";
                     sell_to.set_gold(-item_value);
-                    sell_to.add_to_possessions(trade_good);
+                    sell_to.addToPossessions(trade_good);
                     set_gold(item_value);
                     drop(k);
                 }
@@ -3909,37 +4035,37 @@ public class Character extends DynamicObject {
         return s;
     }
     
-    public function get_items_to_sell(char_id:int):String{
-        var s:String = "<table>";
-        var longest_name:int = 0;
-        var found:Boolean = false;
-        var i:int = 0;
-        for(i;i<actions.size();i++){
-            if(actions[i].get_trade_flag() && actions[i].trader_item != null){
-                if(actions[i].trader_item.get_name().length > longest_name)longest_name = actions[i].trader_item.get_name().length;
+    public String get_items_to_sell(int char_id){
+        String s = "<table>";
+        int longest_name = 0;
+        Boolean found = false;
+        int i = 0;
+        for(i=0;i<actions.size();i++){
+            if(actions.get(i).get_trade_flag() && actions.get(i).trader_item != null){
+                if(actions.get(i).trader_item.getName().length() > longest_name)longest_name = actions.get(i).trader_item.getName().length();
             }
         }
         
         i = 0;
-        for(i;i<possessions.length;i++){
-            if(possessions[i] != null && possessions[i].value > 0){
-                if(possessions[i].get_name().length > longest_name)longest_name = possessions[i].get_name().length;
+        for(i=0;i<possessions.size();i++){
+            if(possessions.get(i) != null && possessions.get(i).value > 0){
+                if(possessions.get(i).getName().length() > longest_name)longest_name = possessions.get(i).getName().length();
             }
         }
         
-        var action_array:Array = get_all_overworld_actions();
+        ArrayList<CharAction> action_array = new ArrayList<>(get_all_overworld_actions());
         i = 0;
-        for(i;i<action_array.length;i++){
-            if(action_array[i].get_trade_flag()){
-                if(action_array[i].trader_item != null){
-                    if(s.indexOf("x "+action_array[i].trader_item.get_name()+"</tc>") >= 0){
+        for(i=0;i<action_array.size();i++){
+            if(action_array.get(i).get_trade_flag()){
+                if(action_array.get(i).trader_item != null){
+                    if(s.indexOf("x "+action_array.get(i).trader_item.getName()+"</tc>") >= 0){
                         continue;
                     }else{
-                        item_value = action_array[i].trader_item.get_value(this,this);
-                        s += "<tr><tc>99x <a href=\"event:buy,"+ char_id +","+(possessions.length + i)+",-1,1\">"+action_array[i].trader_item.get_name()+"</a></tc>";
-                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.length + i)+"\"><tc>x1 " + item_value + " gp</tc></a>"
-                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.length + i)+",5\"><tc>x5 " + item_value*5 + " gp</tc></a>";
-                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.length + i)+",10\"><tc>x10 " + item_value*10 + " gp</tc></a></tr>";
+                        int item_value = action_array.get(i).trader_item.getValue(this,this);
+                        s += "<tr><tc>99x <a href=\"event:buy,"+ char_id +","+(possessions.size() + i)+",-1,1\">"+action_array.get(i).trader_item.getName()+"</a></tc>";
+                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.size() + i)+"\"><tc>x1 " + item_value + " gp</tc></a>";
+                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.size() + i)+",5\"><tc>x5 " + item_value*5 + " gp</tc></a>";
+                        s += "<a href=\"event:buy,"+ char_id +","+(possessions.size() + i)+",10\"><tc>x10 " + item_value*10 + " gp</tc></a></tr>";
                     }
                     
                     found = true;
@@ -3948,36 +4074,36 @@ public class Character extends DynamicObject {
         }
         
         i = 0;
-        for(i;i<possessions.length;i++){
-            if(possessions[i] != null){
-                if(possessions[i].value > 0){
-                    if(s.indexOf("x "+possessions[i].get_name()+"</tc>") >= 0)continue;
+        for(i=0;i<possessions.size();i++){
+            if(possessions.get(i) != null){
+                if(possessions.get(i).value > 0){
+                    if(s.indexOf("x "+possessions.get(i).getName()+"</tc>") >= 0)continue;
                     
-                    var item_count:int = 0;
-                    var j:int = i;
-                    for(j;j<possessions.length;j++){
-                        if(possessions[j].get_name() == possessions[i].get_name())item_count++
+                    int item_count = 0;
+                    int j = i;
+                    for(j=i;j<possessions.size();j++){
+                        if(possessions.get(j).getName() == possessions.get(i).getName())item_count++;
                     }
                     
-                    var item_value:int = 1;
+                    int item_value = 1;
                     if(char_id != location.get_content_id(this)){
-                        item_value = possessions[i].get_value(location.get_content(char_id),this);
-                        s += "<tr><tc>"+item_count+"x "+ possessions[i].get_name()+"</tc>";
+                        item_value = possessions.get(i).getValue((Character)location.getContent(char_id),this);
+                        s += "<tr><tc>"+item_count+"x "+ possessions.get(i).getName()+"</tc>";
                         s += "<a href=\"event:sell,"+ char_id +","+i+"\"><tc>x1 " + item_value + "gp</tc></a>";
                         if(item_count > 1){
                             if(Math.floor(item_count/2) > 1)s+= "<a href=\"event:sell,"+ char_id +","+i+","+Math.floor(item_count/2)+"\"><tc>x" + Math.floor(item_count/2) + " " + item_value*Math.floor(item_count/2) + "gp</tc></a>";
                             s+= "<a href=\"event:sell,"+ char_id +","+i+","+item_count+"\"><tc>x" + item_count + " " + item_value*item_count + "gp</tc></a>";
                         }
-                        s += "</tr>"
+                        s += "</tr>";
                     }else{
-                        item_value = possessions[i].get_value(this,this);
-                        s += "<tr><a href=\"event:buy,"+ char_id +","+i+",-1,1\"><tc>"+item_count+"x "+possessions[i].get_name()+"</tc></a>";
+                        item_value = possessions.get(i).getValue(this,this);
+                        s += "<tr><a href=\"event:buy,"+ char_id +","+i+",-1,1\"><tc>"+item_count+"x "+possessions.get(i).getName()+"</tc></a>";
                         s += "<a href=\"event:buy,"+ char_id +","+i+"\"><tc>x1 " + item_value + "gp</tc></a>";
                         if(item_count > 1){
                             if(Math.floor(item_count/2) > 1)s+= "<a href=\"event:buy,"+ char_id +","+i+","+Math.floor(item_count/2)+"\"><tc>x" + Math.floor(item_count/2) + " " + (item_value*Math.floor(item_count/2)) + "gp</tc></a>";
                             s+= "<a href=\"event:buy,"+ char_id +","+i+","+item_count+"\"><tc>x" + item_count + " " + (item_value*item_count) + "gp</tc></a>";
                         }
-                        s += "</tr>"
+                        s += "</tr>";
                     }
                     found = true;
                 }
@@ -3985,20 +4111,22 @@ public class Character extends DynamicObject {
         }
         
         if(!found){
-            s = get_name() + " doesn't have anything to sell!";
+            s = getName() + " doesn't have anything to sell!";
         }
         return s + "</table>";
     }
     
-    private function AI():String{
-        var ret:String = "";
+    private String AI(){
+        String ret = "";
         if(location.cm != null){//is there combat going on in the room?
             if(location.cm.active_combat() && location.cm.get_init(this) >= 0)setBusy();
         }
         
-        var action_expression:RegExp = new RegExp("<a href=\"event:[,_a-z0-9]*\">","gi");
-        var options:String = "";
-        var action_choices:Array = null;
+        //var action_expression:RegExp = new RegExp("<a href=\"event:[,_a-z0-9]*\">","gi");
+        Pattern action_expression = Pattern.compile("<a href=\"event:[,_a-z0-9]*\">");
+        Matcher myMatcher;
+        String options = "";
+        ArrayList<String> action_choices = new ArrayList<>();//was Array, and equal to null
         
         if(busy <= 0){
             if(next_attack != "") next_attack = "";
@@ -4010,314 +4138,329 @@ public class Character extends DynamicObject {
                 if(busy <= 0)setBusy();//stop-gap until i figure out what someone seperated from their party should do
             }else{
                 if(previous_action_output == ""){
-                    action_choices = new Array();
-                    var temp_array:Array = get_all_overworld_actions();
-                    var k:int = 0;
-                    for (k;k<temp_array.length;k++){
-                         if(temp_array[k] != null && location != null){
-                            if(temp_array[k].get_name() != "" && !temp_array[k].get_bury()){
-                                if(get_name() != "" && (temp_array[k].get_personal() || temp_array[k].get_party_use())){
-                                    if(temp_array[k].get_party_use() && party != null){
-                                        action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +",-1\">"; 
+                    action_choices = new ArrayList<>();
+                    ArrayList<CharAction> temp_array = get_all_overworld_actions();
+                    int k = 0;
+                    for (k=0;k<temp_array.size();k++){
+                         if(temp_array.get(k) != null && location != null){
+                            if(temp_array.get(k).getName() != "" && !temp_array.get(k).get_bury()){
+                                if(getName() != "" && (temp_array.get(k).get_personal() || temp_array.get(k).get_party_use())){
+                                    if(temp_array.get(k).get_party_use() && party != null){
+                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +",-1\">";
+                                        action_choices.add("<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +",-1\">"); 
                                     }else{
-                                        action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\">"; 
+                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\">"; 
+                                        action_choices.add("<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\">"); 
                                     }
                                 }
                             }
                          }
                     }
-                    
-                    for(i=0;i<location.exits.length;i++){
-                        action_choices[action_choices.length] = "<a href=\"event:go_to_new_room," +Integer.toString(i) +"\">";							
+                    int i;
+                    for(i=0;i<location.exits.size();i++){
+                        //action_choices[action_choices.length] = "<a href=\"event:go_to_new_room," +Integer.toString(i) +"\">";							
+                        action_choices.add("<a href=\"event:go_to_new_room," +Integer.toString(i) +"\">");							
                     }
                     
-                    for(i=0; i<location.descriptions.length;i++){
-                        action_choices[action_choices.length] = "<a href=\"event:inspect,-1," +Integer.toString(i) +"\">";							
+                    for(i=0; i<location.descriptions.size();i++){
+                        action_choices.add("<a href=\"event:inspect,-1," +Integer.toString(i) +"\">");							
                     }
                     
-                    for(i=0;i<location.contents.length;i++){
-                        if(location.contents[i] is Character && location.contents[i] != this){
-                            action_choices[action_choices.length] = "<a href=\"event:look," +Integer.toString(i) +"\">";
-                        }else if(location.contents[i] is Item){
-                            action_choices[action_choices.length] = "<a href=\"event:pick_up," +Integer.toString(i) +"\">";
+                    for(i=0;i<location.contents.size();i++){
+                        if(location.contents.get(i) instanceof Character && (Character)location.contents.get(i) != this){
+                            //action_choices[action_choices.length] = "<a href=\"event:look," +Integer.toString(i) +"\">";
+                            action_choices.add("<a href=\"event:look," +Integer.toString(i) +"\">");
+                        }else if(location.contents.get(i) instanceof Item){
+                            //action_choices[action_choices.length] = "<a href=\"event:pick_up," +Integer.toString(i) +"\">";
+                            action_choices.add("<a href=\"event:pick_up," +Integer.toString(i) +"\">");
                         }
                     }
                     
                     for(i=0;i<location.actions.size();i++){
-                        if (location.action_max_times[i] > location.action_current_num_times[i] || location.action_max_times[i] == -1){
-                            action_choices[action_choices.length] = "<a href=\"event:action,-1," +Integer.toString(i) +"\">";
+                        if (location.action_max_times.get(i) > location.action_current_num_times.get(i) || location.action_max_times.get(i) == -1){
+                            //action_choices[action_choices.length] = "<a href=\"event:action,-1," +Integer.toString(i) +"\">";
+                            action_choices.add("<a href=\"event:action,-1," +Integer.toString(i) +"\">");
                         }
                     }
                     
-                    action_choices[action_choices.length] = "<a href=\"event:status\">";
-                    action_choices[action_choices.length] = "<a href=\"event:wait\">";
-                    action_choices[action_choices.length] = "<a href=\"event:show_skills\">";
-                    action_choices[action_choices.length] = "<a href=\"event:inventory\">";
+                    //action_choices[action_choices.length] = "<a href=\"event:status\">";
+                    action_choices.add("<a href=\"event:status\">");
+                    //action_choices[action_choices.length] = "<a href=\"event:wait\">";
+                    action_choices.add("<a href=\"event:wait\">");//you get the point
+                    action_choices.add("<a href=\"event:show_skills\">");
+                    action_choices.add("<a href=\"event:inventory\">");
                 }else{
                     options = previous_action_output;
-                    action_choices = options.match(action_expression);						
-                    previous_action_output = "";
+                    //action_choices = options.match(action_expression);	
+                    myMatcher = action_expression.matcher(options);	
+                    while(myMatcher.find()){
+                    action_choices.add(options.substring(myMatcher.start(),myMatcher.end()));			
+                    }	
+                    previous_action_output = "";//TODO verify above replacement for the single line
                 }
                 
-                var choice:int;
+                int choice;
                 
-                if(action_choices != null && action_choices.length > 0){
+                if(action_choices != null && action_choices.size() > 0){
                     choice = personality.determine_overworld_action(action_choices, this);
                     
                     if(choice == -1){
                         setBusy();
                         return ret;
                     }
-                    options = action_choices[choice];
-                    options = options.slice(options.indexOf(":")+1, options.length-2);
+                    options = action_choices.get(choice);
+                    //options = options.slice(options.indexOf(":")+1, options.length-2);
+                    options = options.substring(options.indexOf(":")+1, options.length()-2);
                     
-                    var tempArray:Array = options.split(",");
-                    var char:Character = this;
+                    ArrayList<String> tempArray = new ArrayList<>(Arrays.asList(options.split(",")));//was array
+                    Character chara = this;
                     
-                    if (tempArray[0] == "open"){
-                        previous_action_output = char.open(int(tempArray[1]));
-                    }else if(tempArray[0] == "inspect"){
-                        previous_action_output = char.inspect(int(tempArray[1]),int(tempArray[2]));
-                    }else if(tempArray[0] == "go_to_new_room"){
+                    if (tempArray.get(0) == "open"){
+                        previous_action_output = chara.open(Integer.parseInt(tempArray.get(1)));
+                    }else if(tempArray.get(0) == "inspect"){
+                        previous_action_output = chara.inspect(Integer.parseInt(tempArray.get(1)),Integer.parseInt(tempArray.get(2)));
+                    }else if(tempArray.get(0) == "go_to_new_room"){
                         if(location != null){
                             if (ai_move == 1){
-                                if(location.exits[tempArray[1]].template == location.template){
-                                    ret += go_to_new_location(tempArray[1],0,1);
+                                if(location.exits.get(Integer.parseInt(tempArray.get(1))).template == location.template){
+                                    ret += go_to_new_location(Integer.parseInt(tempArray.get(1)),0,1);
                                 }
                             }else if( ai_move == 2){
-                                if(location.exits[tempArray[1]] != null && location.exits[tempArray[1]].area != null && location.area != null){
-                                    if(location.exits[tempArray[1]].area == location.area){
-                                        ret += go_to_new_location(tempArray[1],0,1);
+                                if(location.exits.get(Integer.parseInt(tempArray.get(1))) != null && location.exits.get(Integer.parseInt(tempArray.get(1))).area != null && location.area != null){
+                                    if(location.exits.get(Integer.parseInt(tempArray.get(1))).area == location.area){
+                                        ret += go_to_new_location(Integer.parseInt(tempArray.get(1)),0,1);
                                     }
                                 }
                             }else if (ai_move > 2){
-                                ret += go_to_new_location(tempArray[1],0,1);
+                                ret += go_to_new_location(Integer.parseInt(tempArray.get(1)),0,1);
                             }
                         }
                         if(busy <= 0)setBusy();
-                    }else if (tempArray[0] == "pick_up"){
-                        previous_action_output = pick_up(tempArray[1]);
+                    }else if (tempArray.get(0) == "pick_up"){
+                        previous_action_output = pick_up(Integer.parseInt(tempArray.get(1)));
                         setBusy();
-                    }else if (tempArray[0] == "loot"){
-                        previous_action_output = char.loot(int(tempArray[1]),int(tempArray[2]));
+                    }else if (tempArray.get(0) == "loot"){
+                        previous_action_output = chara.loot(Integer.parseInt(tempArray.get(1)),Integer.parseInt(tempArray.get(2)));
                         setBusy();
-                    }else if (tempArray[0] == "look"){
-                        if(tempArray[1] == null){
+                    }else if (tempArray.get(0) == "look"){
+                        if(tempArray.get(1) == null){
                             previous_action_output = look();
-                        }else if (tempArray[2] == null){
-                            previous_action_output = look(int(tempArray[1]));
+                        }else if (tempArray.get(2) == null){
+                            previous_action_output = look(Integer.parseInt(tempArray.get(1)));
                             previous_action_output += "<a href=\"event:status\"><a href=\"event:wait\"><a href=\"event:show_skills\"><a href=\"event:inventory\"><a href=\"event:look\">";
                         }else{
-                            previous_action_output = look(int(tempArray[1]), int(tempArray[2]));								
+                            previous_action_output = look(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)));								
                         }
                         status = " is standing here";
                         setBusy();
-                    }else if(tempArray[0] == "use_item"){
-                        if(char.party == null){
-                            if(tempArray[2] != null){
-                                if(tempArray[5] != null){
-                                    previous_action_output = char.use_item(int(tempArray[1]), int(tempArray[2]),-1,int(tempArray[5]));
+                    }else if(tempArray.get(0) == "use_item"){
+                        if(chara.party == null){
+                            if(tempArray.get(2) != null){
+                                if(tempArray.get(5) != null){
+                                    previous_action_output = chara.use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)),-1,Integer.parseInt(tempArray.get(5)));
                                 }else{
-                                    previous_action_output = char.use_item(int(tempArray[1]), int(tempArray[2]));
+                                    previous_action_output = chara.use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)));
                                 }
                                 
                             }else{
-                                previous_action_output = char.use_item(int(tempArray[1]));
+                                previous_action_output = chara.use_item(Integer.parseInt(tempArray.get(1)));
                             }
                         }else{
-                            if(tempArray[2] != null){
-                                if(tempArray[4] == null){
-                                    if(tempArray[5] != null){
-                                        previous_action_output = char.party.members[int(tempArray[3])].use_item(int(tempArray[1]), int(tempArray[2]),-1,int(tempArray[5]));
+                            if(tempArray.get(2) != null){
+                                if(tempArray.get(4) == null){
+                                    if(tempArray.get(5) != null){
+                                        previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(3))).use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)),-1,Integer.parseInt(tempArray.get(5)));
                                     }else{
-                                        previous_action_output = char.party.members[int(tempArray[3])].use_item(int(tempArray[1]), int(tempArray[2]));
+                                        previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(3))).use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)));
                                     }
                                 }else{
-                                    if(tempArray[5] != null){
-                                        previous_action_output = char.party.members[int(tempArray[3])].use_item(int(tempArray[1]), int(tempArray[2]), int(tempArray[4]),int(tempArray[5]));
+                                    if(tempArray.get(5) != null){
+                                        previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(3))).use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(4)),Integer.parseInt(tempArray.get(5)));
                                     }else{
-                                        previous_action_output = char.party.members[int(tempArray[3])].use_item(int(tempArray[1]), int(tempArray[2]), int(tempArray[4]));
+                                        previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(3))).use_item(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(4)));
                                     }
                                 }
                             }else{
-                                previous_action_output = char.party.members[int(tempArray[3])].use_item(int(tempArray[1]));
+                                previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(3))).use_item(Integer.parseInt(tempArray.get(1)));
                             }
                         }
-                    }else if(tempArray[0] == "action"){
-                        previous_action_output = fire_action(int(tempArray[1]),int(tempArray[2]), tempArray[3]);
-                    }else if(tempArray[0] == "challenge"){
-                        previous_action_output = fire_challenge(int(tempArray[1]), int(tempArray[2]), int(tempArray[3]), tempArray[4], tempArray[5]) + "<br>";							
-                    }else if(tempArray[0] == "combat"){
-                        if(tempArray[3] != null){
-                            char = location.get_content(int(tempArray[3])) as Character;
-                            if(char != null){
+                    }else if(tempArray.get(0) == "action"){
+                        previous_action_output = fireAction(Integer.parseInt(tempArray.get(1)),Integer.parseInt(tempArray.get(2)), tempArray.get(3));
+                    }else if(tempArray.get(0) == "challenge"){
+                        previous_action_output = fire_challenge(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), tempArray.get(4), new ArrayList<>(Arrays.asList(Integer.parseInt(tempArray.get(5))))) + "<br>";							
+                    }else if(tempArray.get(0) == "combat"){
+                        if(tempArray.get(3) != null){
+                            chara = (Character)location.getContent(Integer.parseInt(tempArray.get(3)));
+                            if(chara != null){
                                 //someone is probably getting a pre-emptive strike here, but I'd rather let the combat_manager deal with it
                                 if(location.cm == null)location.cm = new Combat_manager();
                                 location.cm.add_participant(this);
-                                location.cm.add_participant(char);
+                                location.cm.add_participant(chara);
                             }
                         }else{
-                            trace("(Character.tick)Don't think I should ever see this one: " + options);
+                            LOGGER.info("(Character.tick)Don't think I should ever see this one: " + options);
                         }
-                    }else if(tempArray[0] == "equip"){
-                        if(char.party == null){
-                            previous_action_output = char.equip(char.possessions[int(tempArray[1])], int(tempArray[3]));
+                    }else if(tempArray.get(0) == "equip"){
+                        if(chara.party == null){
+                            previous_action_output = chara.equip((Equipment)chara.possessions.get(Integer.parseInt(tempArray.get(1))), Integer.parseInt(tempArray.get(3)));
                         }else{
-                            previous_action_output = char.party.members[int(tempArray[2])].equip(char.party.members[int(tempArray[2])].possessions[int(tempArray[1])], int(tempArray[3]), int(tempArray[4]));
+                            previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(2))).equip((Equipment)chara.party.members.get(Integer.parseInt(tempArray.get(2))).possessions.get(Integer.parseInt(tempArray.get(1))), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)));
                         }
-                    }else if(tempArray[0] == "unequip"){
-                        if(tempArray[2] == null){
-                            previous_action_output = unequip(get_equip_by_count(int(tempArray[1])));
+                    }else if(tempArray.get(0) == "unequip"){
+                        if(tempArray.get(2) == null){
+                            previous_action_output = unequip(get_equip_by_count(Integer.parseInt(tempArray.get(1))));
                         }else{
-                            if(party != null)char = party.members[int(tempArray[2])];
-                            previous_action_output = char.unequip(char.get_equip_by_count(int(tempArray[1])));
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(2)));
+                            previous_action_output = chara.unequip(chara.get_equip_by_count(Integer.parseInt(tempArray.get(1))));
                         }
-                    }else if(tempArray[0] == "hold"){
-                        if(char.party == null){
-                            previous_action_output = char.hold(char.possessions[int(tempArray[1])], int(tempArray[3]), int(tempArray[4]));
+                    }else if(tempArray.get(0) == "hold"){
+                        if(chara.party == null){
+                            previous_action_output = chara.hold((Weapon)chara.possessions.get(Integer.parseInt(tempArray.get(1))), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)));
                         }else{
-                            previous_action_output = char.party.members[int(tempArray[2])].hold(char.party.members[int(tempArray[2])].possessions[int(tempArray[1])], int(tempArray[3]), int(tempArray[4]));
+                            previous_action_output = chara.party.members.get(Integer.parseInt(tempArray.get(2))).hold((Weapon)chara.party.members.get(Integer.parseInt(tempArray.get(2))).possessions.get(Integer.parseInt(tempArray.get(1))), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)));
                         }
-                    }else if(tempArray[0] == "unhold"){
-                        if(tempArray[2] == null){
-                            previous_action_output = char.unhold(char.body.parts[int(tempArray[1])].hold);
+                    }else if(tempArray.get(0) == "unhold"){
+                        if(tempArray.get(2) == null){
+                            previous_action_output = chara.unhold(chara.body.parts.get(Integer.parseInt(tempArray.get(1))).hold);
                         }else{
-                            if(party != null)char = party.members[int(tempArray[2])];
-                            previous_action_output = char.unhold(char.body.parts[int(tempArray[1])].hold);
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(2)));
+                            previous_action_output = chara.unhold(chara.body.parts.get(Integer.parseInt(tempArray.get(1))).hold);
                         }
-                    }else if(tempArray[0] == "alchemy"){
-                        previous_action_output = char.alchemy(tempArray[1],tempArray[2]);
-                    }else if(tempArray[0] == "enchant"){
-                        previous_action_output = char.enchant(tempArray[1],tempArray[2]);
-                    }else if(tempArray[0] == "sew"){
-                        previous_action_output = char.sewing(tempArray[1],tempArray[2]);
-                    }else if(tempArray[0] == "alchemy_gui"){
-                        previous_action_output = char.alchemy(tempArray[1],tempArray[2]);
-                    }else if(tempArray[0] == "buy"){
-                        if(tempArray[2] == null){
-                            previous_action_output = char.buy(int(tempArray[1]));
-                        }else if(tempArray[3] != null){
-                            previous_action_output = char.buy(int(tempArray[1]), int(tempArray[2]),int(tempArray[3]));
+                    }else if(tempArray.get(0) == "alchemy"){
+                        previous_action_output = chara.alchemy(tempArray.get(1),tempArray.get(2));
+                    }else if(tempArray.get(0) == "enchant"){
+                        previous_action_output = chara.enchant(tempArray.get(1),tempArray.get(2));
+                    }else if(tempArray.get(0) == "sew"){
+                        previous_action_output = chara.sewing(tempArray.get(1),tempArray.get(2));
+                    }else if(tempArray.get(0) == "alchemy_gui"){
+                        previous_action_output = chara.alchemy(tempArray.get(1),tempArray.get(2));
+                    }else if(tempArray.get(0) == "buy"){
+                        if(tempArray.get(2) == null){
+                            previous_action_output = chara.buy(Integer.parseInt(tempArray.get(1)));
+                        }else if(tempArray.get(3) != null){
+                            previous_action_output = chara.buy(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)),Integer.parseInt(tempArray.get(3)));
                         }else{
-                            previous_action_output = char.buy(int(tempArray[1]), int(tempArray[2]));
+                            previous_action_output = chara.buy(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)));
                         }
                         previous_action_output += "<a href=\"event:look\">";
-                    }else if(tempArray[0] == "sell"){
-                        if(tempArray[2] == null){
-                            previous_action_output = char.sell(int(tempArray[1]));
-                        }else if(tempArray[3] != null){
-                            previous_action_output = char.sell(int(tempArray[1]), int(tempArray[2]),int(tempArray[3]));
+                    }else if(tempArray.get(0) == "sell"){
+                        if(tempArray.get(2) == null){
+                            previous_action_output = chara.sell(Integer.parseInt(tempArray.get(1)));
+                        }else if(tempArray.get(3) != null){
+                            previous_action_output = chara.sell(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)),Integer.parseInt(tempArray.get(3)));
                         }else{
-                            previous_action_output = char.sell(int(tempArray[1]), int(tempArray[2]));
+                            previous_action_output = chara.sell(Integer.parseInt(tempArray.get(1)), Integer.parseInt(tempArray.get(2)));
                         }
                         previous_action_output += "<a href=\"event:look\">";
-                    }else if(tempArray[0] == "inventory"){
-                        if(tempArray[1] == null){
+                    }else if(tempArray.get(0) == "inventory"){
+                        if(tempArray.get(1) == null){
                             previous_action_output = this.inventory();
                             if(party != null){
                                 previous_action_output += "<a href=\"event:inventory,1\">";
                             }								
                         }else{
-                            if(party != null)char = party.members[int(tempArray[1])];
-                            if(char != null)previous_action_output = char.inventory();
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(1)));
+                            if(chara != null)previous_action_output = chara.inventory();
                             if(party != null){
-                                if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:inventory,"+(int(tempArray[1])+1)+"\">";
+                                if(Integer.parseInt(tempArray.get(1)) < party.members.size() - 1)previous_action_output += "<a href=\"event:inventory,"+(Integer.parseInt(tempArray.get(1))+1)+"\">";
                             }
                         }
                         previous_action_output += "<a href=\"event:status\"><a href=\"event:wait\"><a href=\"event:show_skills\"><a href=\"event:look\">";
                         status = " is standing here";
-                    }else if(tempArray[0] == "appearance"){
-                        if(tempArray[1] == null){
+                    }else if(tempArray.get(0) == "appearance"){
+                        if(tempArray.get(1) == null){
                             previous_action_output = appearance(1);
                             if(party != null){
                                 previous_action_output += "<a href=\"event:appearance,1\">";
                             }
                         }else{
-                            char = party.members[int(tempArray[1])];
-                            if(char != null) previous_action_output = char.appearance(1);
-                            if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:appearance,"+(int(tempArray[1])+1)+"\">";
+                            chara = party.members.get(Integer.parseInt(tempArray.get(1)));
+                            if(chara != null) previous_action_output = chara.appearance(1);
+                            if(Integer.parseInt(tempArray.get(1)) < party.members.size() - 1)previous_action_output += "<a href=\"event:appearance,"+(Integer.parseInt(tempArray.get(1))+1)+"\">";
                         }
                         setBusy();
                         status = " is standing here";
-                    }else if(tempArray[0] == "status"){
-                        if(tempArray[2] == null){
-                            if(tempArray[1] == null){
+                    }else if(tempArray.get(0) == "status"){
+                        if(tempArray.get(2) == null){
+                            if(tempArray.get(1) == null){
                                 previous_action_output = statistics(this);
                                 if(party != null){
                                     previous_action_output += "<a href=\"event:status,1\">";
                                 }
                             }else{
                                 if(party != null){
-                                    char = party.members[int(tempArray[1])];
+                                    chara = party.members.get(Integer.parseInt(tempArray.get(1)));
                                     
                                 }else{
-                                    char = this;
+                                    chara = this;
                                 }
-                                previous_action_output = char.statistics(this);
+                                previous_action_output = chara.statistics(this);
                                 
-                                if(party == null || int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:status,"+(int(tempArray[1])+1)+"\">";
+                                if(party == null || Integer.parseInt(tempArray.get(1)) < party.members.size() - 1)previous_action_output += "<a href=\"event:status,"+(Integer.parseInt(tempArray.get(1))+1)+"\">";
                             }
                         }else{
-                            char = this;
-                            if(party != null)char = party.members[int(tempArray[1])];
-                            if(char != null)previous_action_output = char.statistics(this,int(tempArray[2]));
+                            chara = this;
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(1)));
+                            if(chara != null)previous_action_output = chara.statistics(this,Integer.parseInt(tempArray.get(2)));
                         }
                         status = " is standing here";
-                    }else if(tempArray[0] == "act_by_type"){
-                        if(char.party != null)char = location.get_content(tempArray[1]) as Character;
-                        previous_action_output = char.get_overworld_actions_by_type(tempArray[2], this);
+                    }else if(tempArray.get(0) == "act_by_type"){
+                        if(chara.party != null)chara = (Character)location.getContent(Integer.parseInt(tempArray.get(1)));
+                        previous_action_output = chara.get_overworld_actions_by_type(tempArray.get(2), this);
                         status = " is standing here";
-                    }else if(tempArray[0] == "talk"){
-                        char = this.location.get_content(int(tempArray[1])) as Character;
-                        if(tempArray[5] != null){
-                            previous_action_output = char.talk(this, int(tempArray[2]), int(tempArray[3]), int(tempArray[4]), tempArray.slice(5, tempArray.length));
-                        }else if(tempArray[4] != null){
-                            previous_action_output = char.talk(this, int(tempArray[2]), int(tempArray[3]), int(tempArray[4]));
+                    }else if(tempArray.get(0) == "talk"){
+                        chara = (Character)this.location.getContent(Integer.parseInt(tempArray.get(1)));
+                        if(tempArray.get(5) != null){
+                            //previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)), tempArray.slice(5, tempArray.size()));
+                            previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)), new ArrayList<>(tempArray.subList(5, tempArray.size())));
+                        }else if(tempArray.get(4) != null){
+                            previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)));
                         }else{
-                            previous_action_output = char.talk(this, int(tempArray[2]), int(tempArray[3]));
+                            previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)));
                         }
-                    }else if(tempArray[0] == "wait"){
-                        set_busy(FPGameGithub.T1_HOUR);
+                    }else if(tempArray.get(0) == "wait"){
+                        setBusy(FPGameGithub.T1_HOUR);
                         status = " is waiting here";
-                    }else if(tempArray[0] == "show_skills"){
-                        if(tempArray[2] != null){
-                            var skill_array:Array = FPalace_skills.get_skill_list();
-                            var show_children_of:Array = new Array;
-                            var i:int = 0;
-                            for(i;i<skill_array.length;i++){
-                                show_children_of[i] = skill_array[i].get_id();
+                    }else if(tempArray.get(0) == "show_skills"){
+                        ArrayList<Integer> show_children_of = new ArrayList<>();
+                        if(tempArray.get(2) != null){
+                            ArrayList<Skill> skill_array = new ArrayList<>(FPalace_skills.get_skill_list());
+                            //show_children_of was here
+                            for(int i=0;i<skill_array.size();i++){
+                                //show_children_of.get(i) = skill_array.get(i).get_id();
+                                show_children_of.add(skill_array.get(i).get_id());//i starts at 0, so...
                             }
                         }							
-                        if(tempArray[1] == null){
-                            previous_action_output = char.skills.show_all_skills(char, show_children_of);
+                        if(tempArray.get(1) == null){
+                            previous_action_output = chara.skills.show_all_skills(chara, show_children_of);
                             if(party != null){
                                 previous_action_output += "<a href=\"event:show_skills,1\">";
                             }
-                        }else if(tempArray[2] == null){
-                            if(party != null)char = party.members[int(tempArray[1])];
-                            if(char != null)previous_action_output = char.skills.show_all_skills(char, show_children_of);
+                        }else if(tempArray.get(2) == null){
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(1)));
+                            if(chara != null)previous_action_output = chara.skills.show_all_skills(chara, show_children_of);
                             if(party != null){
-                                if(int(tempArray[1]) < party.members.size() - 1)previous_action_output += "<a href=\"event:show_skills,"+(int(tempArray[1])+1)+"\">";
+                                if(Integer.parseInt(tempArray.get(1)) < party.members.size() - 1)previous_action_output += "<a href=\"event:show_skills,"+(Integer.parseInt(tempArray.get(1))+1)+"\">";
                             }
                         }else{
-                            if(party != null)char = party.members[int(tempArray[1])];
-                            previous_action_output = char.increase_skill_by_id(int(tempArray[2]));
+                            if(party != null)chara = party.members.get(Integer.parseInt(tempArray.get(1)));
+                            previous_action_output = chara.increase_skill_by_id(Integer.parseInt(tempArray.get(2)));
                         }
                         status = " is standing here";
-                    }else if(tempArray[0] == "cclass_history"){
+                    }else if(tempArray.get(0) == "cclass_history"){
                         if(location != null){
-                            if(location.get_content(int(tempArray[1])) is Character){
-                                char = location.get_content(int(tempArray[1])) as Character;
-                                previous_action_output = char.get_class_history();
+                            if(location.getContent(Integer.parseInt(tempArray.get(1))) instanceof Character){
+                                chara = (Character)location.getContent(Integer.parseInt(tempArray.get(1)));
+                                previous_action_output = chara.get_class_history();
                             }
                         }
                         status = " is standing here";
-                    }else if(tempArray[0] == "dismantle"){
-                        previous_action_output = dismantle(tempArray[1]);
-                    }else if(tempArray[0] == "craft"){
-                        previous_action_output = craft(tempArray[1]);
+                    }else if(tempArray.get(0) == "dismantle"){
+                        previous_action_output = dismantle(tempArray.get(1));
+                    }else if(tempArray.get(0) == "craft"){
+                        previous_action_output = craft(tempArray.get(1));
                     }else{
-                        trace("(Character)Don't know what to do with this link:"+tempArray);
+                        LOGGER.info("(Character)Don't know what to do with this link:"+tempArray);
                     }
                 }
             }
@@ -4331,22 +4474,24 @@ public class Character extends DynamicObject {
         return ret;
     }
     
-    public function tick():String{
+    public String tick(){
         total_actions_taken++;
-        wait_time++;
-        var ret:String = "";
-        var global_ret:String = "";
+        waitTime++;
+        String ret = "";
+        String global_ret = "";
         
-        var i:int = 0;
-        for(i;i<currentTickEffects.length;i++){
-            if(currentTickEffects[i] != null){
-                ret += currentTickEffects[i].tick(this) + "<br>";
-                if(currentTickEffects[i] != null && currentTickEffects[i].ticks_left() <= 0){//this effect is done
-                    currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+        int i = 0;
+        for(i=0;i<currentTickEffects.size();i++){
+            if(currentTickEffects.get(i) != null){
+                ret += currentTickEffects.get(i).tick(this) + "<br>";
+                if(currentTickEffects.get(i) != null && currentTickEffects.get(i).ticks_left() <= 0){//this effect is done
+                    //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                    currentTickEffects.remove(i);
                     i--;
                 }
             }else{
-                currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                currentTickEffects.remove(i);
                 i--;
             }
         }
@@ -4354,20 +4499,21 @@ public class Character extends DynamicObject {
         ret += body.tick(this);
         
         i = 0;
-        for(i;i<possessions.length;i++){
-            ret += possessions[i].tick(location, this);
+        for(i=0;i<possessions.size();i++){
+            ret += possessions.get(i).tick(location, this);
         }
         
         if(busy <= 0 && location != null)global_ret += AI();
         //while(busy <= 0 && location != null)global_ret += AI();
         
-        if(wait_time%FPGameGithub.T1_HOUR == 0 && wait_time > 0){
-            reset_stats(-1, get_stat(FPalaceHelper.con_id)/10);
+        if(waitTime%FPGameGithub.T1_HOUR == 0 && waitTime > 0){
+            reset_stats(-1, (int)get_stat(FPalaceHelper.con_id).doubleValue()/10);
             ret += apply_affect_by_id(FPalaceHelper.curr_hp_id, 5, 0, null, Body.change_stats_total);
             ret += apply_affect_by_id(FPalaceHelper.curr_mp_id, 5, 0, null, Body.change_stats_total);
             ret += apply_affect_by_id(FPalaceHelper.curr_fatigue_id, -1,0, null, Body.change_stats_total);
         }
-        personality.advance_objectives(Quest.wait_action, [location,wait_time], this);			
+        //personality.advance_objectives(Quest.wait_action, [location,waitTime], this);
+        personality.advance_objectives(Quest.wait_action, new ArrayList<>(Arrays.asList(location,waitTime)), this);			
         
         if(busy > 0){
             busy--;
@@ -4375,7 +4521,7 @@ public class Character extends DynamicObject {
         }
         
         //a year! happy birthday!
-        if(total_actions_taken%(Main.t1_year*get_primary_race().get_aging_mod()) == 0){
+        if(total_actions_taken%(FPGameGithub.T1_YEAR*get_primary_race().get_aging_mod().doubleValue()) == 0){
             sex.age(this,1);
             total_actions_taken = 0;
         }
@@ -4383,37 +4529,36 @@ public class Character extends DynamicObject {
         //this should be temporary, though the effect needs to come from somewhere....
         if(total_actions_taken%FPGameGithub.T1_HOUR == 0){
             if(location != null){
-                var curr_lust:Number = get_stat(FPalaceHelper.lust_id);
-                var max_lust:Number = get_stat(FPalaceHelper.max_lust_id);
-                var min_lust:Number = get_stat(FPalaceHelper.min_lust_id);
-                var decrease_by:Number = min_lust - 5;
+                Number curr_lust = get_stat(FPalaceHelper.lust_id);
+                Number max_lust = get_stat(FPalaceHelper.max_lust_id);
+                Number min_lust = get_stat(FPalaceHelper.min_lust_id);
+                Number decrease_by = min_lust.doubleValue() - 5;
                 
-                if(curr_lust > max_lust && decrease_by > 0){
-                    decrease_by = 5 - min_lust;
+                if(curr_lust.doubleValue() > max_lust.doubleValue() && decrease_by.doubleValue() > 0){
+                    decrease_by = 5 - min_lust.doubleValue();
                     //if the character is a herm/futa, and her semen volume is full, should be increasing ball/penis/breasts
                     if(this.sex.name == "hermaphrodite" || this.sex.name == "futanari"){
                         //need to check if there's any seminal volume missing...
-                        var grow_flag:Boolean = true;
-                        i = 0;
-                        for(i;i<currentTickEffects.length;i++){
+                        Boolean grow_flag = true;
+                        for(i=0;i<currentTickEffects.size();i++){
                             //ret += currentTickEffects[i].tick(this) + "<br>";
-                            if(currentTickEffects[i].status_id == TickEffect.fluid_regen_status){
+                            if(currentTickEffects.get(i).status_id == TickEffect.fluid_regen_status){
                                 grow_flag = false;
                                 break;
                             }
                         }
                         if(grow_flag){
-                            var grow_mult:Number = (min_lust*curr_lust/max_lust)/max_lust/12;
+                            Number grow_mult = (min_lust.doubleValue()*curr_lust.doubleValue()/max_lust.doubleValue())/max_lust.doubleValue()/12;
                             ret += "</n>s body groans from its need to cum. <br>";
-                            ret += apply_affect_by_id(FPalaceHelper.penis_length_id, grow_mult*get_stat(FPalaceHelper.penis_length_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.penis_girth_id, grow_mult*get_stat(FPalaceHelper.penis_girth_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.breast_size_id, grow_mult*get_stat(FPalaceHelper.breast_size_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.balls_size_id, grow_mult*get_stat(FPalaceHelper.balls_size_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.cum_volume_id, grow_mult*get_stat(FPalaceHelper.cum_volume_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.milk_volume_id, grow_mult*get_stat(FPalaceHelper.milk_volume_id), 0, null, Body.change_stats_total);
-                            ret += apply_affect_by_id(FPalaceHelper.min_lust_id, grow_mult*get_stat(FPalaceHelper.min_lust_id), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.penis_length_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.penis_length_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.penis_girth_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.penis_girth_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.breast_size_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.breast_size_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.balls_size_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.balls_size_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.cum_volume_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.cum_volume_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.milk_volume_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.milk_volume_id).doubleValue(), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.min_lust_id, grow_mult.doubleValue()*get_stat(FPalaceHelper.min_lust_id).doubleValue(), 0, null, Body.change_stats_total);
                             
-                            ret += apply_affect_by_id(FPalaceHelper.erection_ratio_id, -grow_mult*get_stat(FPalaceHelper.erection_ratio_id), 0, null, Body.change_stats_total);
+                            ret += apply_affect_by_id(FPalaceHelper.erection_ratio_id, -grow_mult.doubleValue()*get_stat(FPalaceHelper.erection_ratio_id).doubleValue(), 0, null, Body.change_stats_total);
                         }
                     }
                 }
@@ -4432,7 +4577,7 @@ public class Character extends DynamicObject {
         set_challenge_output(ret);
         return global_ret;			
     }
-    */
+    
     public Race get_primary_race(){
         Race r;
         int r_count;
@@ -4467,29 +4612,27 @@ public class Character extends DynamicObject {
     public int get_tick(){
         return total_actions_taken;
     }
-    /*
-    public function get_class_history():String{
-        var ret:String = "";
+    
+    public String get_class_history(){
+        String ret = "";
         
-        var i:int = 0;
-        for(i;i<Math.ceil(cclass.length/3);i++){
-            ret += cclass[i*3].get_name() + " Lvl: " + cclass[i*3+1] + "<br>";
+        for(int i = 0;i<Math.ceil(cclass.size());i++){
+            ret += cclass.get(i).getCclass().getName() + " Lvl: " + cclass.get(i).getLevel()+ "<br>";
         }
         
         return ret;
     }
-    */
+    
     public int get_class_lvl(Character_class c){
         int ret = 0;
         
-        /*TODO make sense!
-        for(int i=0;i<Math.ceil(cclass.size()/3);i++){
-            if(cclass.get(i*3).getName().equals(c.getName())){
-                ret = cclass.get(i*3+1);
+        for(int i=0;i<Math.ceil(cclass.size());i++){
+            if(cclass.get(i).getCclass().getName().equals(c.getName())){
+                ret = cclass.get(i).getLevel();
                 break;
             }
         }
-        */
+        
         return ret;
     }
     
@@ -5240,9 +5383,9 @@ public class Character extends DynamicObject {
         status = c.status;
         
         var i:int = 0;
-        for (i;i<c.possessions.length;i++){
+        for (i;i<c.possessions.size();i++){
             var item:Item = c.possessions[i].clone();
-            possessions[possessions.length] = item;
+            possessions[possessions.size()] = item;
         }
         
         actions = new Array();

@@ -362,6 +362,9 @@ public class NewGameGUI implements ActionListener {
                 newPlayer.apply_affect_by_id(FPalaceHelper.milk_volume_id,-40);
             }
         }
+        if(age_flag != 23){
+            newPlayer.apply_affect_by_id(FPalaceHelper.age_id,age_flag-23,0,null,Body.change_stats_total);
+        }
         Room tempRoom = new Room();
 
         Item tempItem = new Item();
@@ -407,7 +410,7 @@ public class NewGameGUI implements ActionListener {
             //System.out.println(digits);
             //int age = Integer.parseInt(digits);
             String text = ageEntry.getText();
-            int age = Integer.parseInt(text);
+            age_flag = Integer.parseInt(text);
             System.out.println(age_flag);
             LOGGER.info("ageconfirmationbuttonpressed");
             //newPlayer.setAge(ageEntry.getText());

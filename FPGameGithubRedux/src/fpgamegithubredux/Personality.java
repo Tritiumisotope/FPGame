@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.regex.*;
 
@@ -645,7 +646,7 @@ public class Personality {
 						a.set_originator(c_self);
 						//s += a.trigger(c, 1) + "\n";					
 					}else{
-						///s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
+						//s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
 						//TODO real methods
 					}
 				
@@ -1009,46 +1010,52 @@ public class Personality {
 			
 			return ret;
 		}
-		
-		public function determine_overworld_action(option_set:Array, c:Character):int{
-			var ret:int = 0;
+		*/
+		public int determine_overworld_action(ArrayList<String> option_set, Character c){//was array
+			int ret = 0;
 			
-			var overworld_stat:Boolean = c.get_overworld_status() || c.get_combat_status();
+			Boolean overworld_stat = c.get_overworld_status() || c.get_combat_status();
 			
-			var option_val:Array = new Array();
-			var top_val:int = 0;
-			var sec_val:int = 0;
-			var tri_val:int = 0;
-			var i:int = 0;
-			for(i;i<option_set.length;i++){
-				if(option_set[i] != null){
-					option_val[i] = determine_option_value(option_set[i], overworld_stat, c);
-					if(option_val[i] >= option_val[top_val]){
+			//var option_val:Array = new Array();
+			ArrayList<Integer> option_val = new ArrayList<>();
+			int top_val = 0;
+			int sec_val = 0;
+			int tri_val = 0;
+			int i = 0;
+			for(i=0;i<option_set.size();i++){
+				if(option_set.get(i)!= null){
+					if(i>option_val.size()){
+						option_val.add(null);
+					}
+					//option_val[i] = determine_option_value(option_set.get(i), overworld_stat, c);
+					option_val.set(i,determine_option_value(option_set.get(i), overworld_stat, c));
+					if(option_val.get(i) >= option_val.get(top_val)){
 						tri_val = sec_val;
 						sec_val = top_val;
 						top_val = i;
-					}else if(top_val == sec_val || option_val[i] >= option_val[sec_val]){
+					}else if(top_val == sec_val || option_val.get(i) >= option_val.get(sec_val)){
 						tri_val = sec_val;
 						sec_val = i;
 					}
 				}
 			}
 			
-			if(option_set[top_val] == null){
+			if(option_set.get(top_val) == null){
 				return -1;
 			}
 			
-			if(option_set[sec_val] == null){
+			if(option_set.get(sec_val) == null){
 				sec_val = top_val;
 			}
 			
-			if(option_set[tri_val] == null){
+			if(option_set.get(tri_val) == null){
 				tri_val = top_val;
 			}
 			
-			var avail_choice:Array = [top_val, sec_val, tri_val];
+			//var avail_choice:Array = [top_val, sec_val, tri_val];
+			int[] avail_choice = {top_val, sec_val, tri_val};
 			
-			var rand:Number = Math.random();
+			double rand = Math.random();//was number
 			if(rand >= 0.6){
 				ret = avail_choice[0];
 			}else if(rand >= 0.2){
@@ -1061,11 +1068,12 @@ public class Personality {
 			
 			return ret;
 		}
-		*/
-		/*TODO find out how to handle the int in string situation
+		
+		//*TODO find out how to handle the int in string situation
 		public int determine_option_value(String options,Boolean overworld_stat,Character c){
 			if(options == null) return -999;
-			options = options.slice(options.indexOf(":")+1, options.length()-2);
+			//options = options.slice(options.indexOf(":")+1, options.length()-2);
+			options = options.substring(options.indexOf(":")+1, options.length()-2);
 			
 			int current_step;
 			Room target_room = null;
@@ -1074,17 +1082,13 @@ public class Personality {
 			Item  target_item= null;
 			String  target_command= null;
 			
-			Item temp_item;
+			Item temp_item = null;
 			Character temp_char;
 			ArrayList<Object> temp_options;
 			int ret = 0;
 			int i = 0;
-			ArrayList<Object> tempArray;
-			String[] optSplit = options.split(",");	
-			for(int arr;arr<optSplit.length;arr++){
-				tempArray.add(optSplit[i]);
-			}	
-			
+			ArrayList<String> tempArray = new ArrayList<>(Arrays.asList(options.split(",")));
+
 			if (tempArray.get(0) == "open"){
 				ret = 1;
 			}else if(tempArray.get(0) == "inspect"){
@@ -1096,32 +1100,33 @@ public class Personality {
 					ret = -1;
 				}
 			}else if (tempArray.get(0) == "pick_up" ){
-				if(c.location.contents.get(tempArray.get(1)) instanceof Item){//i guess tempArray.get(1) is an Integer?
-					temp_item = c.location.contents[tempArray[1]];
+				if(c.location.contents.get(Integer.parseInt(tempArray.get(1))) instanceof Item){//i guess tempArray.get(1) is an Integer?
+					temp_item = (Item)c.location.contents.get(Integer.parseInt(tempArray.get(1)));
 					if(temp_item != null){
 						ret = determine_item_consequences(temp_item, c);
-						ret += determine_reaction(c, Character.gold_id, temp_item.get_value(c, c), c);
+						ret += determine_reaction(c, Character.gold_id, temp_item.getValue(c, c), c).doubleValue();
 					}else{
 						ret = -1;
 					}
 				}
 			}else if (tempArray.get(0) == "loot"){
 				ret = 1;				
-				if(c.location != null && c.location.static_contents[tempArray[1]] != null){
-					temp_item = c.location.static_contents[tempArray[1]].contents[tempArray[2]];
+				if(c.location != null && c.location.static_contents.get(Integer.parseInt(tempArray.get(1))) != null){
+					//temp_item = c.location.static_contents.get(Integer.parseInt(tempArray.get(1))).contents.get(Integer.parseInt(tempArray.get(2)));
+					//TODO no such variable as "contents" in a Static_object
 				}
 				if(temp_item != null){
 					ret += determine_item_consequences(temp_item, c);
-					ret += determine_reaction(c, Character.gold_id, temp_item.get_value(c, c), c);					
+					ret += determine_reaction(c, Character.gold_id, temp_item.getValue(c, c), c).intValue();					
 					
 				}
 			}else if (tempArray.get(0) == "look"){
-				if(tempArray[1] == null){
+				if(tempArray.get(1) == null){
 					ret = 1;
 				}else{
-					if(c.location.get_content(tempArray[1]) is Character){
-						if(tempArray[2] == null){
-							ret = Math.abs(check_relationship(c.location.get_content(tempArray[1]) as Character,c));
+					if(c.location.getContent(Integer.parseInt(tempArray.get(1))) instanceof Character){
+						if(tempArray.get(2) == null){
+							ret = Math.abs(check_relationship((Character)c.location.getContent(Integer.parseInt(tempArray.get(1))),c));
 						}else{
 							ret = 1;
 						}
@@ -1130,19 +1135,19 @@ public class Personality {
 					}
 				}
 			}else if(tempArray.get(0) == "use_item"){
-				if(int(tempArray[3]) == 2){
+				if(Integer.parseInt(tempArray.get(3)) == 2){
 					//never throw items away...
 					ret = -999;
 				}else{
 					//should be checking if this is a good idea or not...
 					temp_item = null;
 					if(c.party == null){
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.possessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3)) == 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}else{
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.party.members[int(tempArray[2])].posessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3))== 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.party.members.get(Integer.parseInt(tempArray.get(2))).possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}
 				}
@@ -1151,19 +1156,19 @@ public class Personality {
 				}
 			}else if(tempArray.get(0) == "action"){
 				//should be checking if this is a good idea or not...
-				var action_to_lookat:Action = null;
-				if(int(tempArray[1]) == -1){
-					action_to_lookat = c.location.actions[int(tempArray[2])];
+				CharAction action_to_lookat = null;
+				if(Integer.parseInt(tempArray.get(1)) == -1){
+					action_to_lookat = c.location.actions.get(Integer.parseInt(tempArray.get(2)));
 				}else{
-					if(c.location.contents[int(tempArray[1])] is Character){
-						action_to_lookat = c.location.contents[int(tempArray[1])].get_action(int(tempArray[2]));
+					if(c.location.contents.get(Integer.parseInt(tempArray.get(1))) instanceof Character){
+						action_to_lookat = ((Character)c.location.contents.get(Integer.parseInt(tempArray.get(1)))).get_action(Integer.parseInt(tempArray.get(2)));
 					}
 				}
 				if(action_to_lookat != null){
-					if(int(tempArray[1]) == -1){
+					if(Integer.parseInt(tempArray.get(1)) == -1){
 						ret = determine_action_consequence(action_to_lookat, c, c);
-					}else{
-						ret = determine_action_consequence(action_to_lookat, c, c.location.contents[int(tempArray[1])]);
+					}else{//TODO should this also be checked if instanceOf Character?
+						ret = determine_action_consequence(action_to_lookat, c, (Character)c.location.contents.get(Integer.parseInt(tempArray.get(1))));
 					}
 				}
 			}else if(tempArray.get(0) == "challenge"){
@@ -1171,19 +1176,19 @@ public class Personality {
 			}else if(tempArray.get(0) == "combat"){
 				ret = 0;
 			}else if(tempArray.get(0) == "equip"){
-				if(int(tempArray[3]) == 2){
+				if(Integer.parseInt(tempArray.get(3)) == 2){
 					//never throw items away...
 					ret = -999;
 				}else{
 					//should be checking if this is a good idea or not...
 					temp_item = null;
 					if(c.party == null){
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.possessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3)) == 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}else{
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.party.members[int(tempArray[2])].posessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3)) == 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.party.members.get(Integer.parseInt(tempArray.get(2))).possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}
 				}
@@ -1192,27 +1197,27 @@ public class Personality {
 				}
 			}else if(tempArray.get(0) == "unequip"){
 				if(c.party == null){
-					temp_item = c.get_equip_by_count(int(tempArray[1]));
+					temp_item = c.get_equip_by_count(Integer.parseInt(tempArray.get(1)));
 				}else{
-					temp_item = c.party.members[int(tempArray[2])].get_equip_by_count(int(tempArray[1]));
+					temp_item = c.party.members.get(Integer.parseInt(tempArray.get(2))).get_equip_by_count(Integer.parseInt(tempArray.get(1)));
 				}
 				if(temp_item != null){
 					ret = -1 -determine_item_consequences(temp_item, c);
 				}
 			}else if(tempArray.get(0) == "hold"){
-				if(int(tempArray[3]) == 2){
+				if(Integer.parseInt(tempArray.get(3)) == 2){
 					//never throw items away...
 					ret = -999;
 				}else{
 					//should be checking if this is a good idea or not...
 					temp_item = null;
 					if(c.party == null){
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.possessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3)) == 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}else{
-						if(tempArray[3] == 0 || tempArray[3] == -1){
-							temp_item = c.party.members[int(tempArray[2])].posessions[int(tempArray[1])];
+						if(Integer.parseInt(tempArray.get(3)) == 0 || Integer.parseInt(tempArray.get(3)) == -1){
+							temp_item = c.party.members.get(Integer.parseInt(tempArray.get(2))).possessions.get(Integer.parseInt(tempArray.get(1)));
 						}
 					}
 				}
@@ -1221,9 +1226,9 @@ public class Personality {
 				}
 			}else if(tempArray.get(0) == "unhold"){
 				if(c.party == null){
-					temp_item = c.body.parts[int(tempArray[1])].hold;
+					temp_item = c.body.parts.get(Integer.parseInt(tempArray.get(1))).hold;
 				}else{
-					temp_item = c.party.members[int(tempArray[2])].body.parts[int(tempArray[1])].hold;
+					temp_item = c.party.members.get(Integer.parseInt(tempArray.get(2))).body.parts.get(Integer.parseInt(tempArray.get(1))).hold;
 				}
 				if(temp_item != null){
 					ret = -1 -determine_item_consequences(temp_item, c);
@@ -1264,17 +1269,17 @@ public class Personality {
 			}else if(tempArray.get(0) == "craft"){
 				ret = 1;
 			}else{
-				trace("(Personality)Don't know what to think of this:"+tempArray);
+				LOGGER.info("(Personality)Don't know what to think of this:"+tempArray);
 				ret = 0;
 			}
 			
 			i = 0;
-			for(i;i<objectives.size();i++){
-				current_step = curr_obj_step.get(i)[curr_obj_step.get(i).length-1];
+			for(i=0;i<objectives.size();i++){
+				current_step = curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1);
 				
 				if(tempArray.get(0) == "go_to_new_room"){
 					target_room = objectives.get(i).get_target_room(current_step);
-					if(c.location != null && c.location.get_exit(tempArray[1]) == target_room){
+					if(c.location != null && c.location.get_exit(Integer.parseInt(tempArray.get(1))) == target_room){
 						ret += 5;
 					}else if(c.location == target_room){
 						ret = -1;
@@ -1290,7 +1295,7 @@ public class Personality {
 			}
 			return ret;
 		}
-		*/
+		
 		public Number determine_reaction(Character c,int stat_id,Number quant, Character c_self){
 			if(c_self.get_stat(stat_id).intValue() < 0){
 				quant = 0;

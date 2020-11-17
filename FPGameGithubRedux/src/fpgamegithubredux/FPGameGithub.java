@@ -51,4 +51,50 @@ public class FPGameGithub {
         });
         window.setVisible(true);
     }  
+    public static String get_time(int t){
+			String ret = "";
+			
+			if(t >= T1_YEAR){
+				if(t/T1_YEAR >= 2){
+					ret += Math.round(t/T1_YEAR) + " years";
+				}else{
+					ret += "a year";
+				}
+			}else if(t >= T1_MONTH){
+				if(t/T1_MONTH >= 2){
+					ret += Math.round(t/T1_MONTH) + " months";
+				}else{
+					ret += "a month";
+				}
+			}else if(t >= T1_WEEK){
+				if(t/T1_WEEK >= 2){
+					ret += Math.round(t/T1_WEEK) + " weeks";
+				}else{
+					ret += "a week";
+				}
+			}else if(t >= T1_DAY){
+				if(t/T1_DAY >= 2){
+					ret += Math.round(t/T1_DAY) + " days";
+				}else{
+					ret += "a day";
+				}
+			}else if(t >= T1_HOUR){
+				if(t/T1_HOUR >= 2){
+					ret += Math.round(t/T1_HOUR) + " hours";
+				}else{
+					ret += "a hour";
+				}
+			}else if(t >= T30_MIN){
+				ret += "a half hour";
+			}else if(t >= T1_MIN){
+				if(t > 1){
+					ret += "a couple of minutes";
+				}else{
+					ret += "a minute";
+				}
+			}
+			
+			
+			return ret;
+		}
 }

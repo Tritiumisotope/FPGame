@@ -134,12 +134,19 @@ public class CharAction {
     public Boolean get_rest_flag(){
         return rest_flag;
     }
-    public String getName(){
-        return name;
+    public Boolean get_trade_flag(){
+        return trade_flag;
     }
-
+    
+    public Boolean get_dismantle_flag(){
+        return dismantle_flag;
+    }
+    
     public void setName(String newName){
         name = newName;
+    }
+    public String getName(){
+        return name;
     }
     public void set_originator(DynamicObject d){
         originator = d;

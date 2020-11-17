@@ -521,13 +521,18 @@ public class Room extends StaticObject{
         return null;
     }
     */
+
     public String fireChallenge(int actionID, int challengeID, Character triggeringCharacter){
+        return fireChallenge(actionID, challengeID, triggeringCharacter,null);
+    }
+    public String fireChallenge(int actionID, int challengeID, Character triggeringCharacter,ArrayList<Integer> dynamic_choice){
         String ret = "";
         CharAction tempAction = getAction(actionID);
 
         if(tempAction != null){
-            ret = tempAction.challenge(challengeID, triggeringCharacter/*null,0,dynamic_choice*/);
-            /*TODO uncomment at leisure
+            /*TODO true challenge in CharAction
+            ret = tempAction.challenge(challengeID, triggeringCharacter,null,0,dynamic_choice);
+            
             if(ret.indexOf("</replace>") >= 0){
                 tempAction = tempAction.consequences.get(challengeID).replace_action;
                 if(tempAction != null){
@@ -535,7 +540,8 @@ public class Room extends StaticObject{
                 }
                 
                 while(ret.indexOf("</replace>") >= 0)ret = ret.replace("</replace>", "");
-             }*/
+             }
+             */
         }
 
         return ret;
@@ -547,6 +553,30 @@ public class Room extends StaticObject{
         }
         return -1;
     }
+    public String get_content_sub_description(int i, int k){
+        String s = "";
+        if (i == -1 && k >= 0 && k < descriptions.size()){
+            s = get_sub_description(k,i);
+            int j = 0;
+            for (j=0;j<actions.size();j++){
+                 if(actions.get(j) != null){
+                     if (action_max_times.get(j) > action_current_num_times.get(j) || action_max_times.get(j) == -1){
+                        s = s.replace("<a"+j+">","<a href=\"event:action,-1," + Integer.toString(j) +"\"><i>"+actions.get(j).getName() +"</i></a>"); 
+                     }else{
+                         s = s.replace("<a"+j+">",actions.get(j).getName());
+                     }
+                 }
+             }
+             return s;
+        }
+        
+        
+        if (static_contents.size() > i && i >= 0) return static_contents.get(i).get_sub_description(k,i);
+        
+        return s;
+        
+    }
+    
     public void remove_exit(Room e){
         int i = 0;
         for(i=0;i<exits.size();i++){

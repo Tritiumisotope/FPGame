@@ -118,73 +118,78 @@ public class Combat_manager {
         
         return ret;
     }
-    
-    public function add_participant(c:Character, no_party:Boolean = false):void{
+    */
+    public void add_participant(Character c){
+        add_participant(c,false);
+    }
+    public void add_participant(Character c,Boolean no_party){//def no_parrty=false
         if(c == null) return;
-        var i:int = 0;
-        var found:Boolean = false;
-        for(i;i<participants.length;i++){
-            if(participants[i] == c) found = true;
+        int i= 0;
+        Boolean found = false;
+        for(i=0;i<participants.size();i++){
+            if(participants.get(i) == c) found = true;
         }
         
         if(!found){
-            participants[participants.length] = c;
-            
+            //participants[participants.length] = c;
+            participants.add(c);
+
             //var temp_init:int = Math.round(Math.random()*20 + c.get_stat(FPalace_helper.dex_id));
-            var init_challenge:Challenge = new Challenge(true);
+            Challenge init_challenge = new Challenge(true);
             init_challenge.set_attack_stat(FPalace_skills.initiative_id);
             init_challenge.set_defense_stat(-1,1);
-            init_challenge.set_variability(20);
+            init_challenge.setVariability(20);
         
-            var temp_init:int = init_challenge.roll(c);
+            int temp_init = init_challenge.roll(c);
             if(temp_init <= 0)temp_init = 1;
             
             c.challenge_output = "";//hide initiative skill gains
             
             //need to make sure no participants have the same initiative...
             i = 0;
-            for(i;i<initiative.length;i++){
-                if(temp_init == initiative[i]){
+            for(i=0;i<initiative.size();i++){
+                if(temp_init == initiative.get(i)){
                     temp_init++;
                     i = -1;
                 }
             }
             
-            initiative[initiative.length] = temp_init;
+            //initiative[initiative.length] = temp_init;
+            initiative.add(temp_init);
             
             if(c.get_party() != null){
                 if(!no_party){
-                    new_participants += c.get_name();
-                    var p:Array = c.get_party().get_members();
-                    var num_left:int = p.length - 1;
+                    new_participants += c.getName();
+                    ArrayList<Character> p = new ArrayList<>(c.get_party().get_members());
+                    int num_left = p.size() - 1;
                     if(num_left > 1){
                         new_participants += ", ";
                     }else{
                         new_participants += " and ";
                     }
                     i = 0;
-                    for(i;i<p.length;i++){
-                        if(p[i] == c) continue;
-                        if(p[i].location == c.location){
+                    for(i=0;i<p.size();i++){
+                        if(p.get(i) == c) continue;
+                        if(p.get(i).location == c.location){
                             num_left--;
-                            new_participants += p[i].get_name();
+                            new_participants += p.get(i).getName();
                             if(num_left > 1){
                                 new_participants += ", ";
                             }else if(num_left == 1){
-                                if(p.length > 2)new_participants += ",";
+                                if(p.size() > 2)new_participants += ",";
                                 new_participants += " and ";
                             }
-                            add_participant(p[i],true);
+                            add_participant(p.get(i),true);
                         }
                     }
                     new_participants += " have joined the Fray!\n";
                 }
             }else{
-                new_participants += c.get_name() + " has joined the Fray!\n";
+                new_participants += c.getName() + " has joined the Fray!\n";
             }
         }
     }
-    
+    /*
     public function update_participants():Array{
         var s:Array = new Array;
         var i:int = 0;
@@ -236,18 +241,18 @@ public class Combat_manager {
         return [""];
         return s;
     }
-    
-    public function active_combat():Boolean{
-        var ret:Boolean = false;
+    */
+    public Boolean active_combat(){
+        Boolean ret = false;
         
         //check to see if anyone is aggressive against anyone else
-        var i:int = 0;
-        for(i;i<participants.length;i++){
-            if(participants[i].next_attack != "") ret = true;
+        int i = 0;
+        for(i=0;i<participants.size();i++){
+            if(participants.get(i).next_attack != "") ret = true;
             if(!ret){
-                var k:int = i + 1;
-                for(k;k<participants.length;k++){
-                    if((participants[i].get_aggresive(participants[k]) || participants[k].get_aggresive(participants[i])) && i != k && participants[i].location == participants[k].location) ret = true;
+                int k = i + 1;
+                for(k=i+1;k<participants.size();k++){
+                    if((participants.get(i).get_aggresive(participants.get(k)) || participants.get(k).get_aggresive(participants.get(i))) && i != k && participants.get(i).location == participants.get(k).location) ret = true;
                 }
             }
         }
@@ -255,15 +260,14 @@ public class Combat_manager {
         return ret;
     }
     
-    public function get_init(c:Character):int{
-        var i:int = 0;
-        for(i;i<participants.length;i++){
-            if(participants[i] == c) return initiative[i];
+    public int get_init(Character c){
+        for(int i = 0;i<participants.size();i++){
+            if(participants.get(i).equals(c)) return initiative.get(i);
         }
         
         return -1;
     }
-    
+    /*
     public function chars_since_last_action(c:Character):int{
         if(current_int == 0) return 1;
         var ret:int = 0;

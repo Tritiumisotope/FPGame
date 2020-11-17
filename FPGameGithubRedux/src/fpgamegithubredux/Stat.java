@@ -312,7 +312,7 @@ public class Stat {
         return get_stat_value(c,1,true,false);
     }
     public double get_stat_value(Character c, int i, Boolean add_equip){
-        return get_stat_value(c,i,add_equip);
+        return get_stat_value(c,i,add_equip,false);
     }
     public double get_stat_value(Character c, int i, Boolean add_equip, Boolean skip_calc){//Number
         // i:int = 1, add_equip:Boolean = true, skip_calc:Boolean = false
