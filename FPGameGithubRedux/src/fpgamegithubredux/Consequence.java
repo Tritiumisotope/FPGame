@@ -85,6 +85,24 @@ public class Consequence {//TODO get count of all below
         char_effect = new ArrayList<>();	
         start_combat = false;
     }
+    public static String name_swap(String swap_string){
+        while(swap_string.indexOf("</n2>") >= 0) swap_string = swap_string.replace("</n2>","</n0>");
+        while(swap_string.indexOf("</noun2>") >= 0) swap_string = swap_string.replace("</noun2>","</noun0>");
+        while(swap_string.indexOf("</pronoun2>") >= 0) swap_string = swap_string.replace("</pronoun2>","</pronoun0>");
+        while(swap_string.indexOf("</objnoun2>") >= 0) swap_string = swap_string.replace("</objnoun2>","</objnoun0>");
+        
+        while(swap_string.indexOf("</n>") >= 0) swap_string = swap_string.replace("</n>","</n2>");
+        while(swap_string.indexOf("</noun>") >= 0) swap_string = swap_string.replace("</noun>","</noun2>");
+        while(swap_string.indexOf("</pronoun>") >= 0) swap_string = swap_string.replace("</pronoun>","</pronoun2>");
+        while(swap_string.indexOf("</objnoun>") >= 0) swap_string = swap_string.replace("</objnoun>","</objnoun2>");
+        
+        while(swap_string.indexOf("</n0>") >= 0) swap_string = swap_string.replace("</n0>","</n>");
+        while(swap_string.indexOf("</noun0>") >= 0) swap_string = swap_string.replace("</noun0>","</noun>");
+        while(swap_string.indexOf("</pronoun0>") >= 0) swap_string = swap_string.replace("</pronoun0>","</pronoun>");
+        while(swap_string.indexOf("</objnoun0>") >= 0) swap_string = swap_string.replace("</objnoun0>","</objnoun>");
+        
+        return swap_string;
+    }
     public void set_replace_action(CharAction a){
         replace_action = a;
     }

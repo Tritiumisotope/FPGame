@@ -155,7 +155,7 @@ public class DynamicConsequence extends Consequence {
         return s;
     }
     
-    public String trigger_dynamic(int[] choice,int roll, Character c, Character c2){//was array for choice, default c null, c2 null
+    public String trigger_dynamic(ArrayList<Integer> choice,int roll, Character c, Character c2){//was array for choice, default c null, c2 null
         String ret = "";
         
         if(!consequence_list_text.equals("")) ret += consequence_list_text;
@@ -173,20 +173,20 @@ public class DynamicConsequence extends Consequence {
         //TODO body, type, slice, possessions
         if(consequence_list_action == DynamicConsequence.list_removepart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts.get(choice[0]);
+            temp_bp = c.body.parts.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
-            c.body.remove_part_by_count(choice[0], c);
+            c.body.remove_part_by_count(choice.get(0), c);
             //if(temp_bp.crit_part()) ret += c.die();				
         }else if(consequence_list_action == DynamicConsequence.list_removeandaddpart){
             //wrong in combat, right in overworld...
-            temp_bp = c.body.parts.get(choice[0]);
+            temp_bp = c.body.parts.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
-            c.body.remove_part_by_count(choice[0], c);
+            c.body.remove_part_by_count(choice.get(0), c);
             //if(temp_bp.crit_part()) ret += c.die();
             //c2.apply_change_effect(temp_bp);
         }else if(consequence_list_action == DynamicConsequence.list_useitem){
             //right in combat, don't know about overworld
-            temp_item = c2.possessions.get(choice[0]);
+            temp_item = c2.possessions.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon){//was is
                 //ret += c2.hold((Weapon)temp_item, 0, -1, true);
@@ -194,13 +194,13 @@ public class DynamicConsequence extends Consequence {
                 //ret += c2.equip((Equipment)temp_item , 0, -1, true);//was as
             }else{
                 if(temp_item != null){
-                    ret += temp_item.useItem(c2,choice[0]);
-                    //if(!temp_item.still_usable())c2.drop(choice[0]);
+                    ret += temp_item.useItem(c2,choice.get(0));
+                    //if(!temp_item.still_usable())c2.drop(choice.get(0));
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_useitemonother){
             //right in combat, don't know about overworld
-            temp_item = c2.possessions.get(choice[0]);//[]
+            temp_item = c2.possessions.get(choice.get(0));//[]
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon || temp_item instanceof Equipment){//was is
                 //trace("(DynamicConsequence.trigger_dynamic)Using some sort of equipment/weapon on another character... not sure what to do");
@@ -214,14 +214,14 @@ public class DynamicConsequence extends Consequence {
                             //TODO slice
                         }
                     }else{
-                        ret += temp_item.useItem(c,choice[0],1);
+                        ret += temp_item.useItem(c,choice.get(0),1);
                     }
-                    //if(!temp_item.still_usable())c2.drop(choice[0]);
+                    //if(!temp_item.still_usable())c2.drop(choice.get(0));
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_target_part){
             //right in combat, don't know about overworld
-            temp_bp = c.body.parts.get(choice[0]);
+            temp_bp = c.body.parts.get(choice.get(0));
             int count= 0;
             /*
             for(count=0;count<target_part.length;count++){
@@ -273,7 +273,7 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_action == DynamicConsequence.list_refine){
             //need to list the types available to refine...
-            //temp_aitem = c2.possessions[choice[0]];
+            //temp_aitem = c2.possessions[choice.get(0)];
             int alch_ident = 0;
             Character char_for_chal = c2;
             if(c2.party != null)char_for_chal = c2.party.get_best_at_skill(FPalace_skills.item_alchemy_effects_id);
@@ -304,7 +304,7 @@ public class DynamicConsequence extends Consequence {
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_remove_alchemy){
-            //temp_aitem = c2.possessions.get(choice[0]);//was[[]]
+            //temp_aitem = c2.possessions.get(choice.get(0));//was[[]]
             Challenge alch_challenge = new Challenge(true);
             alch_challenge.set_attack_stat(FPalace_skills.alchemy_id);
             alch_challenge.set_defense_stat(-1,temp_aitem.getIdentifyDifficulty());
@@ -312,7 +312,7 @@ public class DynamicConsequence extends Consequence {
             
             int result = alch_challenge.roll(c2);
 
-            int type_to_remove = choice[1];
+            int type_to_remove = choice.get(1);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(result < 0){
                 //temp_aitem.types = temp_aitem.types.slice(0,(type_to_remove>0) ? type_to_remove-1:0).concat(temp_aitem.types.slice(type_to_remove+2,temp_aitem.types.length));
@@ -323,7 +323,7 @@ public class DynamicConsequence extends Consequence {
             if(temp_aitem.getName().indexOf("Refined") < 0)temp_aitem.setName("Refined " + temp_aitem.getName());
             if(temp_aitem.getPropogate())temp_aitem.setPropogate();
         }else if(consequence_list_action == DynamicConsequence.list_halvepart){
-            temp_bp = c.body.parts.get(choice[0]);
+            temp_bp = c.body.parts.get(choice.get(0));
             int i = 0;
             for(i=0;i<temp_bp.stat_description.size();i++){
                 temp_stat = temp_bp.stat_description.get(i);

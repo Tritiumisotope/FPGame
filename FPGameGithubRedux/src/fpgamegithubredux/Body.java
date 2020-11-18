@@ -1,5 +1,6 @@
 package fpgamegithubredux;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -1443,12 +1444,15 @@ public class Body {
                 }
             }
             
-            j = 0;
             for(j=0;j<parts.get(i).stat_id.size();j++){
                 while(ret.indexOf("</s"+parts.get(i).stat_id.get(j)+">") >= 0){
                     //should be checking if this stat is shared across multiple parts... just getting the total
                     //ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">", String(c_self.get_stat(parts.get(i).stat_id.get(j)).toFixed(parts.get(i).stat_description.get(j).show_decimals)));
                     //TODO toFixed
+                    double temp = c_self.get_stat(parts.get(i).stat_id.get(j)).doubleValue();
+                    BigDecimal decimal = new BigDecimal(temp); 
+                    decimal.setScale(parts.get(i).stat_description.get(j).show_decimals);//TODO set rounding mode?
+                    ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">",decimal.toString());
                 }
             }
         }

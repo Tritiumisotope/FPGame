@@ -388,15 +388,15 @@ public class Combat_manager {
         }
         return next_int;
     }
-    
-    public function get_enemies(c:Character):Array{
-        var enemy_list:Array = new Array();
+    */
+    public ArrayList<Character> get_enemies(Character c){
+        ArrayList<Character> enemy_list = new ArrayList<>();
         if(c != null){
-            var i:int = 0;
-            for(i;i<participants.length;i++){
-                if(participants[i] != null){
-                    if (c.get_aggresive(participants[i]) || participants[i].get_aggresive(c)) {
-                        enemy_list[enemy_list.length] = participants[i];
+            for(int i=0;i<participants.size();i++){
+                if(participants.get(i) != null){
+                    if (c.get_aggresive(participants.get(i)) || participants.get(i).get_aggresive(c)) {
+                        //enemy_list[enemy_list.length] = participants[i];
+                        enemy_list.add(participants.get(i));
                     }
                 }
             }
@@ -404,7 +404,7 @@ public class Combat_manager {
         
         return enemy_list;
     }
-    
+    /*
     public function get_sideline(c:Character):Array{
         var ret_list:Array = new Array();
         var i:int = 0;

@@ -29,7 +29,7 @@ public class Challenge {
     protected Quest attack_quest;
     protected int attack_quest_step;
     
-    protected double defense_stat;
+    protected int defense_stat;
     protected int defense_part_process;
     protected Boolean static_defense;
     protected int defense_increment;
@@ -147,10 +147,10 @@ public class Challenge {
     }
     public void set_defense_stat(Number stat_id, Number static_atk, int multi_part_process){//default -1,0
         if (stat_id.intValue() != -1){
-            defense_stat = stat_id.doubleValue();
+            defense_stat = stat_id.intValue();
             defense_part_process = multi_part_process;
         }else{
-            defense_stat = static_atk.doubleValue();
+            defense_stat = static_atk.intValue();
             static_defense = true;
         }
     }

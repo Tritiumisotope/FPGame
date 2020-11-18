@@ -1,11 +1,14 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Stat {
     public static final int STATUSCONFIRMEDOK = 1;//is all good
 	public static final int STATUSCONFIRMEDINCAPACITATED = 0;//incapacitates
-	public static final int STATUSCONFIRMEDDEAD = -1;//kills part
+    public static final int STATUSCONFIRMEDDEAD = -1;//kills part
+    
+    private static final Logger LOGGER = Logger.getLogger(Stat.class.getName());
 
     protected int statID;
     protected String name;
@@ -50,7 +53,7 @@ public class Stat {
 
     
     
-    protected ArrayList<String> stat_calculation;//public var stat_calculation:Array;
+    protected ArrayList<Object> stat_calculation;//public var stat_calculation:Array;
     
     protected ArrayList<CharAction> stat_actions;//public var stat_actions:Array
     public Stat(){
@@ -211,7 +214,7 @@ public class Stat {
 					int compare = -1;
 					double temp_stat_val;
 					if(check_total.get(i)){
-						temp_stat_val = c.getStat(statID);
+						temp_stat_val = c.get_stat(statID).doubleValue();
 					}else{
 						temp_stat_val = get_stat_value(c);
 					}
@@ -219,7 +222,7 @@ public class Stat {
 						compare = -check_against.get(i) - 1;
 					}else{
 						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
-						if(compare < 0 || check_total.get(i)) compare = (int)c.getStat(check_against.get(i));
+						if(compare < 0 || check_total.get(i)) compare = (int)c.get_stat(check_against.get(i));
 					}
 										
 					if(check_condition.get(i).equals(">")){
@@ -246,12 +249,12 @@ public class Stat {
 				if(check_combat.get(i)){
 					int compare = -1;
 					int temp_stat_val = (int)get_stat_value(c);
-					if(check_total.get(i)) temp_stat_val = (int)c.getStat(statID);
+					if(check_total.get(i)) temp_stat_val = (int)c.get_stat(statID);
 					if(check_against.get(i) < 0){
 						compare = -check_against.get(i) - 1;
 					}else{
 						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
-						if(compare < 0 || check_total.get(i)) compare = (int)c.getStat(check_against.get(i));
+						if(compare < 0 || check_total.get(i)) compare = (int)c.get_stat(check_against.get(i));
 					}
 					
 					if(check_condition.get(i).equals(">")){
@@ -284,7 +287,7 @@ public class Stat {
         age = !age;
     }
     
-    public void set_stat_calculation(ArrayList<String> sc){
+    public void set_stat_calculation(ArrayList<Object> sc){
         stat_calculation = sc;
     }
     public void setStatValue(Number val, int dumb){
@@ -325,57 +328,96 @@ public class Stat {
             if(rummage_body)ret += c.get_equip_weight().doubleValue();
             int count = 0;
             ArrayList<Object> temp_calc = new ArrayList<>();//was Number maybe? in Array
-            
+            System.out.println("Starting get_stat_value, stat_calculation is: " + stat_calculation);
             for(count = 0;count < stat_calculation.size();count++){
-                if(temp_calc.get(count) == null){
+
+                System.out.println("Start of For loop, temp_calc is: " + temp_calc);
+                if(temp_calc.size()>count && temp_calc.get(count)==null){
+                    temp_calc.set(count, stat_calculation.get(count));
+                }
+                if(temp_calc.size()<=count){//if(temp_calc.get(count) == null){
+                //since we know the array starts empty, and we are using
+                //a for loop...
                     
                     if(stat_calculation.get(count) instanceof String){//was is
-                        if(stat_calculation.get(count).indexOf("s") >= 0 || stat_calculation.get(count).indexOf("k") >= 0){
-                            if(stat_calculation.get(count).indexOf("s") >= 0){
-                                //temp_calc.get(count) = c.getStat(Integer.parseInt((stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("s") + 1, stat_calculation.get(count).length()))));
+                        System.out.println("String is: " + ((String)stat_calculation.get(count)));
+                        if(((String)stat_calculation.get(count)).indexOf("s") >= 0 || ((String)stat_calculation.get(count)).indexOf("k") >= 0){
+                            if(((String)stat_calculation.get(count)).indexOf("s") >= 0){
+                                //temp_calc[count] = c.get_stat(int(stat_calculation[count].substr(stat_calculation[count].indexOf("s") + 1, stat_calculation[count].length)));
                                 //replaced by below
-                                temp_calc.set(count,(int)c.getStat(Integer.parseInt(stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("s") + 1, stat_calculation.get(count).length()))));
-                            }else{
-                                temp_calc.set(count, c.get_skill_by_id(Integer.parseInt(stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("k") + 1, stat_calculation.get(count).length()))));
+                                System.out.println("The s option, Raw stat_calculation.get(count): " + ((String)stat_calculation.get(count)));
+                                System.out.print("Trying to get the substring: ");
+                                System.out.println(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("s") + 1, ((String)stat_calculation.get(count)).length()));
+                                System.out.print("Parsing as Integer: ");
+                                System.out.println(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("s") + 1, ((String)stat_calculation.get(count)).length())));
+                                System.out.println("Inner get_stat_value.");
+                                temp_calc.add(c.get_stat(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("s") + 1, ((String)stat_calculation.get(count)).length()))));
+                                System.out.println("End of inner get_stat_value.");
+                            }else{//I'll just add to array, due to above assumption
+                                //temp_calc.set(count, c.get_skill_by_id(Integer.parseInt(stat_calculation.get(count).substring(stat_calculation.get(count).indexOf("k") + 1, stat_calculation.get(count).length()))));
+                                System.out.println("The k option, Raw stat_calculation.get(count): " + ((String)stat_calculation.get(count)));
+                                temp_calc.add(c.get_skill_by_id(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("k") + 1, ((String)stat_calculation.get(count)).length()))));
                             }								
+                            System.out.println("Stat line 345, temp_calc.get(count) is: " + temp_calc.get(count));
                             
-                            if((Integer)temp_calc.get(count) < 0)temp_calc.set(count, 0);
+                            if(temp_calc.get(count) instanceof Integer || temp_calc.get(count) instanceof Double || temp_calc.get(count) instanceof Number){
+                                if(((Number)temp_calc.get(count)).doubleValue() < 0)temp_calc.set(count, 0);
+                            }
                             int temp_count = count + 1;
                             for(temp_count= count + 1;temp_count< stat_calculation.size();temp_count++){
-                                if(stat_calculation.get(temp_count) == stat_calculation.get(count)){
-                                    temp_calc.set(temp_count, temp_calc.get(count));
+                                if((stat_calculation.get(temp_count)).equals((stat_calculation.get(count)))){
+                                    System.out.println("Stat_calculation total: " + stat_calculation);
+                                    System.out.println("At temp_count: " + stat_calculation.get(temp_count));
+                                    System.out.println("At count: " + stat_calculation.get(count));
+                                    //temp_calc.set(temp_count, temp_calc.get(count));
+                                    while(temp_calc.size()< temp_count)temp_calc.add(null);
+                                    temp_calc.add(temp_calc.get(count));//TODO this is correct, yes?
                                 }
                             }
-                        }else{
-                            temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));
+                        }else{//operators?
+                            //temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));
+                            System.out.println("get_stat_value in Stat.java, line 356, input is: " + stat_calculation.get(count));
+                            temp_calc.add(stat_calculation.get(count));
                         }
                         
-                    }else{
-                        temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));//temp_calc.get(count) = stat_calculation.get(count);
+                    }else{//actual number
+                        //temp_calc.set(count, Integer.parseInt(stat_calculation.get(count)));//temp_calc.get(count) = stat_calculation.get(count);
+                        temp_calc.add(stat_calculation.get(count));//temp_calc.get(count) = stat_calculation.get(count);
                     }
                 }
+                System.out.println("End of For loop, temp_calc is: " + temp_calc);
             }
             
             //TODO what even?!
             
             ArrayList<String> char_stack = new ArrayList<>(); // was array with new
             ArrayList<Number> num_stack = new ArrayList<>();//new Array();
-            
+            System.out.println("Beginning actual Stat calculation.");
+            System.out.println("temp_calc is: " + temp_calc);
             for(count=0; count < temp_calc.size(); count ++){//TODO this
-                System.out.println(temp_calc);
-                if(temp_calc.get(count) instanceof String || temp_calc.get(count) == null){//was is
+                System.out.println("Loop started, count is: " + count);
+
+                if(temp_calc.get(count) instanceof String || temp_calc.get(count).equals(null)){//was is
                     String temp_char = "";
                     Number num1;
                     Number num2;
-                    
-                    if(temp_calc.get(count).equals("(")){
+                    System.out.println("it is a string or null, which is: " + temp_calc.get(count));
+                    if(temp_calc.get(count) instanceof String){
+                        System.out.println("It was a string");
+                    }else{
+                        System.out.println("It was null");
+                    }
+                    if(((String)temp_calc.get(count)).equals("(")){
+                        System.out.println("Adding to char_stack: " + (String)temp_calc.get(count));
                         char_stack.add((String)temp_calc.get(count)); //char_stack.push(temp_calc.get(count));
-                    }else if(temp_calc.get(count).equals(")") || temp_calc.get(count) == null){
-                        temp_char = char_stack.remove(char_stack.size());//pop
+                    }else if(((String)temp_calc.get(count)).equals(")") || ((String)temp_calc.get(count)).equals(null)){
+                        temp_char = char_stack.remove(char_stack.size()-1);//pop
+                        System.out.println("Got ), temp_char removed from char_stack is: " + temp_char);
                         if(!temp_char.equals("(")){
-                            char_stack.remove(char_stack.size());//pop
-                            num2 = num_stack.remove(num_stack.size());//pop
-                            num1 = num_stack.remove(num_stack.size());//pop
+                            System.out.println("Time to calculate!");
+                            char_stack.remove(char_stack.size()-1);//pop
+                            num2 = num_stack.remove(num_stack.size()-1);//pop
+                            num1 = num_stack.remove(num_stack.size()-1);//pop
                             if(temp_char.equals("*")){
                                 num_stack.add(num1.doubleValue()*num2.doubleValue());//num_stack.push(num1.doubleValue()*num2.doubleValue());
                             }else if(temp_char.equals("/")){
@@ -389,15 +431,19 @@ public class Stat {
                                 num_stack.add(num2);//push
                             }
                         }
-                    }else{
-                        temp_char = char_stack.remove(char_stack.size());//pop
+                    }else if(((String)temp_calc.get(count)).equals("+")||((String)temp_calc.get(count)).equals("-")||((String)temp_calc.get(count)).equals("*")
+                    ||((String)temp_calc.get(count)).equals("/")){
+                        char_stack.add(((String)temp_calc.get(count)));
+                    }else if(char_stack.size()>0){//TODO this a good check to add?
+                        temp_char = char_stack.remove(char_stack.size()-1);//pop
+                        System.out.println("otherwise case, temp_char removed from char_stack is: " + temp_char);
                         if(temp_char.equals("(")){
                             char_stack.add(temp_char);//push
                             char_stack.add((String)temp_calc.get(count));//push
                         }else{
                             char_stack.add((String)(temp_calc.get(count)));//push
-                            num2 = num_stack.remove(num_stack.size());//pop
-                            num1 = num_stack.remove(num_stack.size());//pop
+                            num2 = num_stack.remove(num_stack.size()-1);//pop
+                            num1 = num_stack.remove(num_stack.size()-1);//pop
                             if(temp_char.equals("*")){
                                 num_stack.add(num1.doubleValue()*num2.doubleValue());//push
                             }else if(temp_char.equals("/")){
@@ -414,19 +460,49 @@ public class Stat {
                     }
                     
                 }else{//TODO if stat_calculatio/temp_calc are arraylist<object>
+                    System.out.println("Number added: " + (Number)temp_calc.get(count));
                     num_stack.add((Number)temp_calc.get(count));//num_stack.push(temp_calc.get(count));
+                    if(count == temp_calc.size()-1){
+                        System.out.println("Finished calculating after one last dance.");
+                        if(char_stack.size()>0){//TODO this a good check to add?
+                            String temp_char = "";
+                            Number num1;
+                            Number num2;
+                            temp_char = char_stack.remove(char_stack.size()-1);//pop
+                            System.out.println("otherwise case, temp_char removed from char_stack is: " + temp_char);
+                                //char_stack.add((String)(temp_calc.get(count)));//push
+                                num2 = num_stack.remove(num_stack.size()-1);//pop
+                                num1 = num_stack.remove(num_stack.size()-1);//pop
+                                if(temp_char.equals("*")){
+                                    num_stack.add(num1.doubleValue()*num2.doubleValue());//push
+                                }else if(temp_char.equals("/")){
+                                    num_stack.add(num1.doubleValue()/num2.doubleValue());//push
+                                }else if(temp_char.equals("+")){
+                                    num_stack.add(num1.doubleValue()+num2.doubleValue());//push
+                                }else if(temp_char.equals("-")){
+                                    num_stack.add(num1.doubleValue()-num2.doubleValue());//push
+                                }else{
+                                    if(temp_char != null)num_stack.add(num1);//push
+                                    num_stack.add(num2);//push
+                                }
+                            
+                        }
+                    }
                 }
+                System.out.println(" num_stack is: " + num_stack + ",\n char_stack is: " + char_stack);
                 
             }
             
             if(char_stack.size() == 0 && num_stack.size() == 1){
+                System.out.println("returning: "+ ret);
                 ret += num_stack.get(0).doubleValue();
             }else{
-                //trace("(Stat)We got a stat calculation gone wrong here....\n calc array:" + stat_calculation + "\n temp_calc:" + temp_calc + "\n char_stack:" + char_stack + "\n num_stack:" + num_stack);
+                LOGGER.info("(Stat)We got a stat calculation gone wrong here....\n calc array:" + stat_calculation + "\n temp_calc:" + temp_calc + "\n char_stack:" + char_stack + "\n num_stack:" + num_stack);
             }
             
             
         }
+        System.out.println("returning: "+ ret);
         return ret;
     }
     public int get_id(){
@@ -486,7 +562,7 @@ public class Stat {
         //default Number -1
         String s = "";
         
-        if(current_value == -1 && c != null) current_value = c.getStat(statID);			
+        if(current_value == -1 && c != null) current_value = c.get_stat(statID).doubleValue();			
         
         int i = 0;
         int req_met= -99;//was Number
@@ -560,9 +636,9 @@ public class Stat {
     
     private Boolean stat_op(int curr_effect_id,Character c,int comp_stat_id,String op,double pro){
         if(op.equals("/")){
-            if(c.getStat(statID)/c.getStat(comp_stat_id) >= pro) return true;
+            if(c.get_stat(statID).doubleValue()/c.get_stat(comp_stat_id).doubleValue() >= pro) return true;
         }else if(op.equals("")){
-            if(c.getStat(statID) >= comp_stat_id) return true;
+            if(c.get_stat(statID).intValue() >= comp_stat_id) return true;
         }
         
         return false;
@@ -605,7 +681,7 @@ public class Stat {
                 max = -max_stat_id - 2;
                 if(get_stat_value(c,0,false,true) >= max) ret = true;
             }else if(bp == null){
-                max = (int)c.getStat(max_stat_id);
+                max = (int)c.get_stat(max_stat_id);
                 if(c.get_stat(statID,0,0,-1,false).intValue() >= max) ret = true;
             }else{
                 if(bp.get_stat(c, max_stat_id).intValue() > -1){
@@ -630,7 +706,7 @@ public class Stat {
                 min = -min_stat_id - 2;
                 if(get_stat_value(c,0,false,true) <= min) ret = true;
             }else if(bp == null){
-                min = (int)c.getStat(min_stat_id);
+                min = (int)c.get_stat(min_stat_id);
                 if(c.get_stat(statID,0,0,-1,false).intValue() <= min) ret = true;
             }else{
                 if(bp.get_stat(c, min_stat_id).intValue() > -1){
@@ -655,7 +731,7 @@ public class Stat {
                 max = -max_stat_id - 2;
                 if(get_stat_value(c, 0,false,true) > max) flag = true;
             }else if(bp == null){
-                max = (int)c.getStat(max_stat_id);
+                max = (int)c.get_stat(max_stat_id);
                 if(c.get_stat(statID, 0,0,-1,false).intValue() > max) flag = true;
             }else{
                 if(bp.get_stat(c, max_stat_id).intValue() > -1){
@@ -675,7 +751,7 @@ public class Stat {
                 min = -min_stat_id - 2;
                 if(get_stat_value(c, 0,false,true) < min) flag = true;
             }else if(bp == null){
-                min = (int)c.getStat(min_stat_id);
+                min = (int)c.get_stat(min_stat_id);
                 if(c.get_stat(statID, 0,0,-1,false).intValue() < min) flag = true;
             }else{
                 if(bp.get_stat(c, min_stat_id).intValue() > -1){

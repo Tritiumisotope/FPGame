@@ -814,7 +814,7 @@ public class FPalaceHelper{
 				stat_names[bust_id] = stat_bust();
 				stat_names[waist_id] = stat_waist();
 				stat_names[hips_id] = stat_hips();
-				//stat_names[cum_volume_id] = stat_cum_volume();
+				stat_names[cum_volume_id] = stat_cum_volume();
 				stat_names[anal_width_id] = stat_anal_width();
 				stat_names[anal_depth_id] = stat_anal_depth();
 				stat_names[vaginal_width_id] = stat_vaginal_width();
@@ -1770,7 +1770,7 @@ public class FPalaceHelper{
 								
 				p.set_display_direction(BodyPart.display_back);
 				
-				p.set_display_length_stat(FPalaceHelper.height_id);
+				//p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				p.new_stat(FPalaceHelper.max_hp_id, FPalaceHelper.stat_max_hp(),5);
 				p.new_stat(FPalaceHelper.curr_hp_id, FPalaceHelper.stat_curr_hp(), 5);
@@ -1814,7 +1814,7 @@ public class FPalaceHelper{
 				
 				//p.set_display_direction(BodyPart.display_up_back);
 				
-				p.set_display_length_stat(FPalaceHelper.height_id);
+				//p.set_display_length_stat(FPalaceHelper.height_id);
 				
 				Stat s = new Stat(waist_id);
 				s.set_min(-2);
@@ -2559,7 +2559,7 @@ public class FPalaceHelper{
 			p.new_stat(penis_length_id, stat_penis_length(),s1);
 			
 			p.new_stat(penis_girth_id, stat_penis_girth(),s2);
-			//p.new_stat(cum_volume_id, stat_cum_volume(),s3);
+			p.new_stat(cum_volume_id, stat_cum_volume(),s3);
 			
 			
 			BodyPartState ps = new BodyPartState();
@@ -2950,7 +2950,7 @@ public class FPalaceHelper{
 			p.set_display_width2_stat(FPalaceHelper.balls_size_id);
 			p.set_display_width2_mod(1.5);
 						
-			//p.new_stat(cum_volume_id, stat_cum_volume(),s2);
+			p.new_stat(cum_volume_id, stat_cum_volume(),s2);
 			
 			p.new_stat(balls_size_id, stat_ball_size(),s1);
 				
@@ -3917,7 +3917,7 @@ public class FPalaceHelper{
 				
 			return s;
 		}
-		/*
+		
 		public static Stat stat_cum_volume(){
 			Stat s = new Stat(cum_volume_id);
 			s.set_min(-2);
@@ -3925,7 +3925,7 @@ public class FPalaceHelper{
 				s.new_description("");
 				s.new_increase_description("</n> somehow seems a more prodigious producer. ");
 				s.new_descrease_description("</n>s abdomen grumbles. ");
-				s.set_stat_calculation(new ArrayList<String>("s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id,"*", "s" + FPalaceHelper.balls_size_id);
+				s.set_stat_calculation(new ArrayList<>(Arrays.asList("s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id,"*", "s" + FPalaceHelper.balls_size_id)));
 				
 				s.new_short_description("dram",0);
 				s.new_short_description("teaspoon",5);
@@ -3939,7 +3939,7 @@ public class FPalaceHelper{
 				s.new_short_description("multiple gallons",9000);
 			return s;
 		}
-		*/
+		
 		public static Stat stat_hips(){
 			Stat s = new Stat(hips_id);
 			s.set_min(-2);
@@ -3977,7 +3977,7 @@ public class FPalaceHelper{
 			Stat s = new Stat(balls_size_id);
 			s.set_min(-2);
 			
-			//s.set_stat_calculation(new String[]{"s" + FPalaceHelper.max_mp_id, "/", Double.toString(10.0)});
+			s.set_stat_calculation(new ArrayList<>(Arrays.asList("s" + FPalaceHelper.max_mp_id, "/", 10.0)));
 			s.setName("ball size");
 				s.new_description("They are a </sd"+balls_size_id+"> </"+balls_size_id+">-inches around. ");
 				s.new_increase_description("</n>s balls swell. ");
@@ -4012,7 +4012,7 @@ public class FPalaceHelper{
 		
 		public static Stat stat_breast_size(){
 			Stat s = new Stat(breast_size_id);
-				//s.set_stat_calculation(new String[]{"s" + FPalaceHelper.max_mp_id, "/", Double.toString(10.0)});
+				s.set_stat_calculation(new ArrayList<>(Arrays.asList("s" + FPalaceHelper.max_mp_id, "/", 10.0)));
 				s.setName("breast size");
 				s.set_min(-2);
 				//s.new_description("They stick out from </noun> chest </"+breast_size_id+"> inches ");
@@ -4260,7 +4260,7 @@ public class FPalaceHelper{
 			st.new_descrease_description("");
 			st.set_always_calc();
 			
-			//st.set_stat_calculation(new String[]{"k" + FPalace_skills.toughness_id, "/", Double.toString(15.0)});
+			st.set_stat_calculation(new ArrayList<>(Arrays.asList("k" + FPalace_skills.toughness_id, "/", 15.0)));
 			
 			return st;
 		}
@@ -4295,7 +4295,7 @@ public class FPalaceHelper{
 			st.new_descrease_description("");
 			st.set_always_calc();
 			
-			//st.set_stat_calculation(new String[]{"k" + FPalace_skills.fortitude_id, "/", Double.toString(15.0)});
+			st.set_stat_calculation(new ArrayList<>(Arrays.asList("k" + FPalace_skills.fortitude_id, "/", 15.0)));
 			
 			st.add_combat_status_check("<=", -1, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> collapses from exhaustion. ");
 			
@@ -4324,7 +4324,7 @@ public class FPalaceHelper{
 			st.new_descrease_description("");
 			st.set_always_calc();
 			
-			//st.set_stat_calculation(new String[]{"k" + FPalace_skills.concentration_id, "/", Double.toString(2.0)});
+			st.set_stat_calculation(new ArrayList<>(Arrays.asList("k" + FPalace_skills.concentration_id, "/", 2.0)));
 			
 			st.add_combat_status_check("<=", -1, Stat.STATUSCONFIRMEDDEAD);
 			
@@ -4477,19 +4477,20 @@ public class FPalaceHelper{
 			st.set_rummage_inv();
 			st.set_rummage_body();
 			
-			/*st.set_stat_calculation("(", "s" + FPalaceHelper.penis_girth_id, "*", "s" + FPalaceHelper.penis_girth_id, "/", 12.5, "*", "s" + FPalaceHelper.penis_length_id, "/", 3.0, ")", "+", 
+			/*st.set_stat_calculation("(", "s" + Integer.toString(FPalaceHelper.penis_girth_id), "*", "s" + Integer.toString(FPalaceHelper.penis_girth_id), "/", Double.toString(12.5), "*", "s" + FPalaceHelper.penis_length_id, "/", 3.0, ")", "+", 
 				"(", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "/", 25.0,")", "+",
 				"(", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "/", 248.0, ")", "+",
 				"(","(","(", "s" + FPalaceHelper.hips_id, "+","s" + FPalaceHelper.bust_id, "+", "s" + FPalaceHelper.waist_id, "/", 3.0, ")" , "*", "s" + FPalaceHelper.height_id, ")" , "/", 32.0,")",  "+",
 				"(", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "/", 8.0,")", "+",
-				"(", "s" + FPalaceHelper.biomass_consumed, "/", 1000.0, ")")*/
-			/*st.set_stat_calculation(new String[]{"(", "s" + FPalaceHelper.penis_girth_id, "*", "s" + FPalaceHelper.penis_girth_id, "/", Double.toString(12.5), "*", "s" + FPalaceHelper.penis_length_id, "/", Double.toString(3.0), ")", "+", 
-				"(", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "/", Double.toString(25.0),")", "+",
-				"(", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "/", Double.toString(248.0), ")", "+",
-				"(","(","(", "s" + FPalaceHelper.hips_id, "+","s" + FPalaceHelper.bust_id, "+", "s" + FPalaceHelper.waist_id, "/", Double.toString(3.0), ")" , "*", "s" + FPalaceHelper.height_id, ")" , "/", Double.toString(32.0),")",  "+",
-				"(", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "/", Double.toString(8.0),")", "+",
-				"(", "s" + FPalaceHelper.biomass_consumed, "/", Double.toString(1000.0), ")"});
-			*/
+				"(", "s" + Integer.toString(FPalaceHelper.biomass_consumed), "/", Double.toString(1000.0), ")");
+				*/
+			st.set_stat_calculation(new ArrayList<>(Arrays.asList("(", "s" + FPalaceHelper.penis_girth_id, "*", "s" + FPalaceHelper.penis_girth_id, "/", 12.5, "*", "s" + FPalaceHelper.penis_length_id, "/", 3.0, ")", "+", 
+				"(", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "/", 25.0,")", "+",
+				"(", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "*", "s" + FPalaceHelper.balls_size_id, "/", 248.0, ")", "+",
+				"(","(","(", "s" + FPalaceHelper.hips_id, "+","s" + FPalaceHelper.bust_id, "+", "s" + FPalaceHelper.waist_id, "/", 3.0, ")" , "*", "s" + FPalaceHelper.height_id, ")" , "/", 32.0,")",  "+",
+				"(", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "*", "s" + FPalaceHelper.bloat_id, "/", 8.0,")", "+",
+				"(", "s" + FPalaceHelper.biomass_consumed, "/", 1000.0, ")")));
+			
 			st.add_overworld_status_check(">=", FPalaceHelper.max_weight_id, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> is carrying to much to do that! ");
 			st.add_combat_status_check(">=", FPalaceHelper.max_weight_id, Stat.STATUSCONFIRMEDINCAPACITATED, "</n> collapses from the weight </pronoun> is carrying! ");
 			
@@ -4503,7 +4504,7 @@ public class FPalaceHelper{
 			st.new_increase_description("</n> looks like </pronoun> can carry more. ");
 			st.new_descrease_description("</n> looks physically weaker. ");
 			
-			//st.set_stat_calculation(new String[]{"(", "s" + FPalaceHelper.str_id, "*", "s" + FPalaceHelper.str_id, ")", "+", "s" + FPalaceHelper.height_id});
+			st.set_stat_calculation(new ArrayList<>(Arrays.asList("(", "s" + FPalaceHelper.str_id, "*", "s" + FPalaceHelper.str_id, ")", "+", "s" + FPalaceHelper.height_id)));
 						
 			return st;
 		}
@@ -4516,7 +4517,7 @@ public class FPalaceHelper{
 			s.new_description("");
 			s.new_increase_description("</n> feels </noun> breasts swell with milk. ");
 			s.new_descrease_description("</n>s breasts feel empty. ");
-			//s.set_stat_calculation(new String[]{"s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id});
+			s.set_stat_calculation(new ArrayList<>(Arrays.asList("s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id, "*", "s" + FPalaceHelper.breast_size_id)));
 			
 			s.new_short_description("dram",0);
 			s.new_short_description("teaspoon",5);

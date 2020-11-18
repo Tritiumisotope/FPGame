@@ -1157,23 +1157,23 @@ public class Character extends DynamicObject {
 
         return ret;
     }
-    public Number get_stat(Number i){//Real thing, copied all original methods so far
+    public Number get_stat(int i){//Real thing, copied all original methods so far
         return get_stat(i,1,0,-1,true);
     }
-    public Number get_stat(Number i,int get_hard_value){
+    public Number get_stat(int i,int get_hard_value){
         return get_stat(i,get_hard_value,0,-1,true);
     }
-    public Number get_stat(Number i,int get_hard_value, int multi_part_process){
+    public Number get_stat(int i,int get_hard_value, int multi_part_process){
         return get_stat(i,get_hard_value,multi_part_process,-1,true);
     }
-    public Number get_stat(Number i,int get_hard_value, int multi_part_process, int part_id){
+    public Number get_stat(int i,int get_hard_value, int multi_part_process, int part_id){
         return get_stat(i,get_hard_value,multi_part_process,part_id,true);
     }
-    public Number get_stat(Number i,int get_hard_value, 
+    public Number get_stat(int i,int get_hard_value, 
     int multi_part_process/*Body.get_stat_total*/, 
     int part_id/*Body.target_all_parts*/, Boolean add_equip){
         //default get_hard = 1, multi_part =0, part_id = -1, add_eqip = true
-        if(i.intValue() == 0) return 0;
+        if(i == 0) return 0;
         Number ret = -1;
         
         if(part_id < 0){
@@ -1186,7 +1186,7 @@ public class Character extends DynamicObject {
             
             Number body_stat = -1;
             if(body != null){
-                body_stat = body.get_stat_by_id(this, i.intValue(),get_hard_value,multi_part_process,part_id,add_equip);
+                body_stat = body.get_stat_by_id(this, i,get_hard_value,multi_part_process,part_id,add_equip);
             }
         
             
@@ -1198,7 +1198,7 @@ public class Character extends DynamicObject {
             
         }else{
             
-            Number part_stat =body.get_stat_by_id(this, i.intValue(), get_hard_value, multi_part_process, part_id,add_equip);
+            Number part_stat =body.get_stat_by_id(this, i, get_hard_value, multi_part_process, part_id,add_equip);
             if(part_stat.doubleValue() > - 1){
                 ret = ret.doubleValue() + part_stat.doubleValue() + 1; 
             }
@@ -1209,12 +1209,12 @@ public class Character extends DynamicObject {
             ret = -1;//stat not found
         }
         
-        if(i.intValue() == Character.relations_affect_id){
+        if(i == Character.relations_affect_id){
             //only one thing should ever do this, and it's just to see if the "stat" exists over in Challenge
             return 1;
         }
         
-        if(i.intValue() == Character.gold_id){
+        if(i == Character.gold_id){
             return gold;
         }
                   
@@ -1360,13 +1360,13 @@ public class Character extends DynamicObject {
     public String apply_affect_by_id(int i,Number k){
         return apply_affect_by_id(i,k, 0, null, 0, false, -1,-1);
     }
-    public String apply_affect_by_id(Number i,Number k,int temp, Character c){
+    public String apply_affect_by_id(int i,Number k,int temp, Character c){
         return apply_affect_by_id(i,k, temp, c, 0, false, -1,-1);
     }
-    public String apply_affect_by_id(Number i,Number k,int temp, Character c,int body_app_method){
+    public String apply_affect_by_id(int i,Number k,int temp, Character c,int body_app_method){
         return apply_affect_by_id(i,k, temp, c, body_app_method, false, -1,-1);
     }
-    public String apply_affect_by_id(Number i,Number k,int temp, Character c,int body_app_method /*Body.change_stats_individual*/,Boolean char_only,int part_id /*Body.target_all_parts*/,int effect_type){
+    public String apply_affect_by_id(int i,Number k,int temp, Character c,int body_app_method /*Body.change_stats_individual*/,Boolean char_only,int part_id /*Body.target_all_parts*/,int effect_type){
         //def temp = 0, c = null, body_app_method = 0 /*Body.change_stats_individual*/, 
         //char_only = false, part_id:int = -1 /*Body.target_all_parts*/, effect_type:int = -1
         String s = "";
@@ -1404,12 +1404,12 @@ public class Character extends DynamicObject {
             if(body_app_method == Body.change_stats_total && !char_only && count > 0){
                 if(temp == 0){
                     if(k.intValue() > 0){
-                        count += body.part_count_by_stat(this, i.intValue(), 1);
+                        count += body.part_count_by_stat(this, i, 1);
                     }else{
-                        count += body.part_count_by_stat(this, i.intValue(), 0);
+                        count += body.part_count_by_stat(this,i, 0);
                     }
                 }else{
-                    count += body.part_count_by_stat(this, i.intValue());
+                    count += body.part_count_by_stat(this, i);
                 }
                 
                 Number start_amt = get_stat(i,temp);
@@ -1427,21 +1427,21 @@ public class Character extends DynamicObject {
                 */
             }else{					
                 LOGGER.info("attempting to apply affect of magnitude " + k.doubleValue());
-                s += body.get_effects(i.intValue(),k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
+                s += body.get_effects(i,k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
             }
         }else if(part_id == Body.target_parts_one_by_one){
             //trace("(Character) Should be eroding stat from part by part, instead of all at once.. doing nothing");
             //not sure what to do here yet...
         }else if(part_id >= 0){
             //we have a specific part id to apply this affect to...
-            if(!char_only)s += body.get_effects(i.intValue(),k,this, temp,body_app_method,0, part_id,effect_type);
+            if(!char_only)s += body.get_effects(i,k,this, temp,body_app_method,0, part_id,effect_type);
         }else{
             //trace("(Character) got passed a part id of "+ part_id + " and I have no idea what to do with it");
         }
         
         //deal with the relationship garbage - this should really happen when an action is attempted, not when it's successful....
         if(c != null){
-            personality.new_relationship(c, this, Relationship.stat_change, character_reaction(c, i.intValue(), k));
+            personality.new_relationship(c, this, Relationship.stat_change, character_reaction(c, i, k));
             //c.personality.determine_reaction_to_other(c, this, c, i, k);
             if(location == null){
                  if(c.location != null){
@@ -2565,19 +2565,18 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    /*
-    public function get_combat_failures():String{
-        var ret:String = "";
-        var i:int = 0;
-        for(i;i<stat.length;i++){
-            if(stat[i].check_combat_status(this, null) < Stat.STATUSCONFIRMEDOK) ret += stat[i].get_combat_status(this, null);
+    
+    public String get_combat_failures(){
+        String ret = "";
+        for(int i=0;i<stats.size();i++){
+            if(stats.get(i).check_combat_status(this, null) < Stat.STATUSCONFIRMEDOK) ret += stats.get(i).get_combat_status(this, null);
         }
         
         ret += body.get_combat_status(this);
         
         return ret;
     }
-    */
+    
     public String get_overworld_failures(){
         String ret = "";
         int i = 0;
@@ -2944,38 +2943,43 @@ public class Character extends DynamicObject {
         
         return s;
     }
-    
-    public function get_attack_actions():Array{
-        var attacks:Array = new Array();
+    */
+    public ArrayList<CharAction> get_attack_actions(){
+        ArrayList<CharAction> attacks = new ArrayList<>();
         
-        var cclass_count:int = 0;
-        for(cclass_count;cclass_count<Math.ceil(cclass.length/3);cclass_count++){
-            var i:int = 0;
-            for (i;i<cclass[cclass_count*3].attacks.length;i++){
-                if( cclass[cclass_count*3].get_attack(i,this) != null){
-                    attacks[attacks.length] = cclass[cclass_count*3].get_attack_action(i, this);
+        int cclass_count = 0;
+        for(cclass_count=0;cclass_count<cclass.size();cclass_count++){
+            int i = 0;
+            for (i=0;i<cclass.get(cclass_count).getCclass().attacks.size();i++){
+                if( cclass.get(cclass_count).getCclass().get_attack(i,this) != null){
+                    //attacks[attacks.length] = cclass[cclass_count*3].get_attack_action(i, this);
+                    attacks.add(cclass.get(cclass_count).getCclass().get_attack_action(i, this));
                 }else{
-                    attacks[attacks.length] = null;
+                    //attacks[attacks.length] = null;
+                    attacks.add(null);
                 }
             }
         }
         
-        attacks = attacks.concat(skills.get_skill_attack_actions(this));
-        attacks = attacks.concat(body.get_part_attack_actions());
+        //attacks = attacks.concat(skills.get_skill_attack_actions(this));
+        attacks.addAll(skills.get_skill_attack_actions(this));
+        //attacks = attacks.concat(body.get_part_attack_actions());
+        attacks.addAll(body.get_part_attack_actions());
         
         
         //remove any duplicates...
-        i = 0;
-        for(i;i<attacks.length;i++){
-            if(attacks[i] != null){
+        for(int i=0;i<attacks.size();i++){
+            if(attacks.get(i) != null){
                 cclass_count = i + 1;
-                for(cclass_count;cclass_count<attacks.length;cclass_count++){
-                    if(attacks[cclass_count] != null){
-                        if(attacks[i] == attacks[cclass_count]){
-                            attacks[cclass_count] = null;
-                        }else if(attacks[i].get_cclass_origin() == attacks[cclass_count].get_cclass_origin() && attacks[cclass_count].get_cclass_level() == attacks[i].get_cclass_level()
-                        && attacks[i].get_name() == attacks[cclass_count].get_name() && attacks[i].trader_item == attacks[cclass_count].trader_item){
-                            attacks[cclass_count] = null;
+                for(cclass_count=i+1;cclass_count<attacks.size();cclass_count++){
+                    if(attacks.get(cclass_count) != null){
+                        if(attacks.get(i) == attacks.get(cclass_count)){
+                            //attacks.get(cclass_count) = null;
+                            attacks.set(cclass_count,null);
+                        }else if(attacks.get(i).get_cclass_origin() == attacks.get(cclass_count).get_cclass_origin() && attacks.get(cclass_count).get_cclass_level() == attacks.get(i).get_cclass_level()
+                        && attacks.get(i).getName() == attacks.get(cclass_count).getName() && attacks.get(i).trader_item == attacks.get(cclass_count).trader_item){
+                            //attacks[cclass_count] = null;
+                            attacks.set(cclass_count,null);
                         }
                     }
                 }
@@ -2985,12 +2989,12 @@ public class Character extends DynamicObject {
         return attacks;
     }
     
-    public function get_attack_action(attack_id:int):Action{
-        var a:Action = get_attack_actions()[attack_id];
+    public CharAction get_attack_action(int attack_id){
+        CharAction a = get_attack_actions().get(attack_id);
         
         return a;
     }
-    
+    /*
     public function attack(i:int, j:int, k:int, chall_id:String = null, dynamic_id:Array = null,sanitize_for:Character = null):String{
         var ai_flag:int = 0
         var s:String = "";
