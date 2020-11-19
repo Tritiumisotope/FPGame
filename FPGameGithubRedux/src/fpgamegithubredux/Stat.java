@@ -344,7 +344,7 @@ public class Stat {
                             }								
                             
                             //if(temp_calc.get(count) < 0)temp_calc.get(count) = 0;
-                            if((Integer)temp_calc.get(count) < 0)temp_calc.set(count, 0);
+                            if(((Number)temp_calc.get(count)).doubleValue() < 0)temp_calc.set(count, 0);
                             int temp_count = count + 1;
                             for(temp_count=count+1;temp_count< stat_calculation.size();temp_count++){
                                 if(stat_calculation.get(temp_count).equals(stat_calculation.get(count))){
@@ -360,7 +360,10 @@ public class Stat {
                     }
                 }
             }
+            StringCalc2 calculator = new StringCalc2();
+            ret = ret + calculator.calculate(temp_calc);
             
+            /*
             ArrayList<String> char_stack = new ArrayList<>(); // was array with new
             ArrayList<Number> num_stack = new ArrayList<>();//new Array();
             System.out.println(temp_calc);
@@ -427,8 +430,10 @@ public class Stat {
             }else{
                 LOGGER.info("(Stat)We got a stat calculation gone wrong here....\n calc array:" + stat_calculation + "\n temp_calc:" + temp_calc + "\n char_stack:" + char_stack + "\n num_stack:" + num_stack);
             }
+            */
             
         }
+        
         return ret;
     }
     /*
