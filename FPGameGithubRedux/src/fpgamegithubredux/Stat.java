@@ -370,9 +370,11 @@ public class Stat {
                     String temp_char = "";
                     Number num1;
                     Number num2;
-                    if(temp_calc.get(count).equals("(")){
+                    if(((String)temp_calc.get(count)).equals("(")){
+                        System.out.println("Adding (");
                         char_stack.add((String)temp_calc.get(count));
-                    }else if(temp_calc.get(count).equals(")") || temp_calc.get(count) == null){
+                    }else if(((String)temp_calc.get(count)).equals(")") || temp_calc.get(count) == null){
+                        System.out.println("found )");
                         temp_char = char_stack.remove(char_stack.size()-1);//pop();
                         if(temp_char != "("){
                             char_stack.remove(char_stack.size()-1);//pop();
@@ -392,6 +394,7 @@ public class Stat {
                             }
                         }
                     }else{
+                        System.out.println("found: " + ((String)temp_calc.get(count)) + " and it wasn't parentheses");
                         temp_char = char_stack.remove(char_stack.size()-1);//pop();
                         if(temp_char == "("){
                             char_stack.add(temp_char);
@@ -415,6 +418,7 @@ public class Stat {
                         }
                     }
                 }else{
+                    System.out.println("Adding number");
                     num_stack.add((Number)temp_calc.get(count));
                 }					
             }
