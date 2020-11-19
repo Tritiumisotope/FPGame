@@ -318,6 +318,116 @@ public class Stat {
     public double get_stat_value(Character c, int i, Boolean add_equip){
         return get_stat_value(c,i,add_equip,false);
     }
+    //second attempt, also used to be a number
+    public double get_stat_value(Character c,int i,Boolean add_equip,Boolean skip_calc){
+        double ret = statValue.doubleValue();
+        if(i == 1)ret = tempStatValue.doubleValue();
+        if(add_equip)ret += statValue_from_equip;
+        
+        if((always_calc ||!skip_calc) && stat_calculation != null &&stat_calculation.size()>0&& c != null){
+            if(rummage_inventory)ret += c.get_inventory_weight().doubleValue();
+            if(rummage_body)ret += c.get_equip_weight().doubleValue();
+            
+            int count = 0;
+            ArrayList<Object> temp_calc = new ArrayList<>();
+            while(temp_calc.size()<stat_calculation.size()){
+                temp_calc.add(null);
+            }
+            for(count=0;count < stat_calculation.size();count++){
+                if(temp_calc.get(count) == null){
+                    if(stat_calculation.get(count) instanceof String){
+                        if(((String)stat_calculation.get(count)).indexOf("s") >= 0 || ((String)stat_calculation.get(count)).indexOf("k") >= 0){
+                            if(((String)stat_calculation.get(count)).indexOf("s") >= 0){
+                                temp_calc.set(count, c.get_stat(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("s") + 1, ((String)stat_calculation.get(count)).length()))));
+                            }else{
+                                temp_calc.set(count, c.get_skill_by_id(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("k") + 1, ((String)stat_calculation.get(count)).length()))));
+                            }								
+                            
+                            //if(temp_calc.get(count) < 0)temp_calc.get(count) = 0;
+                            if((Integer)temp_calc.get(count) < 0)temp_calc.set(count, 0);
+                            int temp_count = count + 1;
+                            for(temp_count=count+1;temp_count< stat_calculation.size();temp_count++){
+                                if(stat_calculation.get(temp_count).equals(stat_calculation.get(count))){
+                                    //temp_calc[temp_count] = temp_calc.get(count);
+                                    temp_calc.set(temp_count, temp_calc.get(count));
+                                }
+                            }
+                        }else{
+                            temp_calc.set(count, stat_calculation.get(count));
+                        }
+                    }else{
+                        temp_calc.set(count, stat_calculation.get(count));
+                    }
+                }
+            }
+            
+            ArrayList<String> char_stack = new ArrayList<>(); // was array with new
+            ArrayList<Number> num_stack = new ArrayList<>();//new Array();
+            System.out.println(temp_calc);
+            count = 0;
+            for(count=0; count <= temp_calc.size(); count ++){
+                if(temp_calc.get(count) instanceof String || temp_calc.get(count) == null){
+                    String temp_char = "";
+                    Number num1;
+                    Number num2;
+                    if(temp_calc.get(count).equals("(")){
+                        char_stack.add((String)temp_calc.get(count));
+                    }else if(temp_calc.get(count).equals(")") || temp_calc.get(count) == null){
+                        temp_char = char_stack.remove(char_stack.size()-1);//pop();
+                        if(temp_char != "("){
+                            char_stack.remove(char_stack.size()-1);//pop();
+                            num2 = num_stack.remove(num_stack.size()-1);//pop();
+                            num1 = num_stack.remove(num_stack.size()-1);//pop();
+                            if(temp_char == "*"){
+                                num_stack.add(num1.doubleValue()*num2.doubleValue());
+                            }else if(temp_char == "/"){
+                                num_stack.add(num1.doubleValue()/num2.doubleValue());
+                            }else if(temp_char == "+"){
+                                num_stack.add(num1.doubleValue()+num2.doubleValue());
+                            }else if(temp_char == "-"){
+                                num_stack.add(num1.doubleValue()-num2.doubleValue());
+                            }else{
+                                num_stack.add(num1);
+                                num_stack.add(num2);
+                            }
+                        }
+                    }else{
+                        temp_char = char_stack.remove(char_stack.size()-1);//pop();
+                        if(temp_char == "("){
+                            char_stack.add(temp_char);
+                            char_stack.add((String)temp_calc.get(count));
+                        }else{
+                            char_stack.add((String)temp_calc.get(count));
+                            num2 = num_stack.remove(num_stack.size()-1);//pop();
+                            num1 = num_stack.remove(num_stack.size()-1);//pop();
+                            if(temp_char == "*"){
+                                num_stack.add(num1.doubleValue()*num2.doubleValue());
+                            }else if(temp_char == "/"){
+                                num_stack.add(num1.doubleValue()/num2.doubleValue());
+                            }else if(temp_char == "+"){
+                                num_stack.add(num1.doubleValue()+num2.doubleValue());
+                            }else if(temp_char == "-"){
+                                num_stack.add(num1.doubleValue()-num2.doubleValue());
+                            }else{
+                                if(temp_char != null)num_stack.add(num1);
+                                num_stack.add(num2);
+                            }
+                        }
+                    }
+                }else{
+                    num_stack.add((Number)temp_calc.get(count));
+                }					
+            }
+            if(char_stack.size() == 0 && num_stack.size()== 1){
+                ret += num_stack.get(0).doubleValue();
+            }else{
+                LOGGER.info("(Stat)We got a stat calculation gone wrong here....\n calc array:" + stat_calculation + "\n temp_calc:" + temp_calc + "\n char_stack:" + char_stack + "\n num_stack:" + num_stack);
+            }
+            
+        }
+        return ret;
+    }
+    /*
     public double get_stat_value(Character c, int i, Boolean add_equip, Boolean skip_calc){//Number
         // i:int = 1, add_equip:Boolean = true, skip_calc:Boolean = false
         double ret = statValue.doubleValue();
@@ -344,7 +454,7 @@ public class Stat {
                         if(SUPERDEBUG)System.out.println("String is: " + ((String)stat_calculation.get(count)));
                         if(((String)stat_calculation.get(count)).indexOf("s") >= 0 || ((String)stat_calculation.get(count)).indexOf("k") >= 0){
                             if(((String)stat_calculation.get(count)).indexOf("s") >= 0){
-                                //temp_calc[count] = c.get_stat(int(stat_calculation[count].substr(stat_calculation[count].indexOf("s") + 1, stat_calculation[count].length)));
+                                //temp_calc[count] = c.get_stat(int(stat_calculation.get(count).substr(stat_calculation.get(count).indexOf("s") + 1, stat_calculation.get(count).length)));
                                 //replaced by below
                                 if(SUPERDEBUG)System.out.println("The s option, Raw stat_calculation.get(count): " + ((String)stat_calculation.get(count)));
                                 if(SUPERDEBUG)System.out.print("Trying to get the substring: ");
@@ -506,6 +616,7 @@ public class Stat {
         if(SUPERDEBUG)System.out.println("returning: "+ ret);
         return ret;
     }
+    */
     public int get_id(){
         return statID;
     }
