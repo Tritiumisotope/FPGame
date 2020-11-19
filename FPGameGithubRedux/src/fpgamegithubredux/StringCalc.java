@@ -27,8 +27,9 @@ public class StringCalc {
                     StringCalc innerCalc = new StringCalc();
                     int offset = 0;
                     //how many deep
-                    /*
+                    
                     ArrayList<Object> prior = new ArrayList<>(calculation.subList(0,count));
+                    /*
                     ArrayList<Object> checkMulti = new ArrayList<>(calculation.subList(count,calculation.size()));
                     System.out.println("checkMulti before while loop is: "+ checkMulti);
                     while(checkMulti.indexOf("(")==0 && checkMulti.get(1).equals("(") && checkMulti.indexOf("(")<checkMulti.indexOf(")")){
