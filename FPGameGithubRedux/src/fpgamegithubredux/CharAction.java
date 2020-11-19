@@ -57,7 +57,7 @@ public class CharAction {
     public CharAction(){
         name = "";
         challenges = new ArrayList<>();
-        dialogue = "";
+        dialogue = "null";//was "", but original .as was "null"
         status_change = "";
         auto_trigger_id = -1;
         consequences = new ArrayList<>();
@@ -287,7 +287,7 @@ public class CharAction {
         String ret = dialogue;
 
         triggeringChar.setBusy();
-        if(status_change != "")triggeringChar.status = status_change;
+        if(!status_change.equals(""))triggeringChar.status = status_change;
         
         Character temp_char = (Character)originator;
         
@@ -295,11 +295,11 @@ public class CharAction {
             ret = temp_char.sanitize(triggeringChar.sanitize(ret,sanitize_for),sanitize_for);
         }
         
-        if (ret == "null"){
+        if (ret.equals("null")){
             if(temp_char != null)temp_char.setBusy();
             if(alchemy_flag){
                 ret = "<a href=\"event:alchemy\">Begin Alchemy</a>";
-                if(temp_char != null && temp_char.previous_action_output == "" && temp_char != triggeringChar){
+                if(temp_char != null && temp_char.previous_action_output.equals("") && temp_char != triggeringChar){
                     temp_char.previous_action_output = triggeringChar.getName() + " is looking to use your <a href=\"event:alchemy\">alchemy</a> skills.";
                 }
             }else if(enchant_flag){
@@ -315,11 +315,11 @@ public class CharAction {
                 ret = "<a href=\"event:dismantle\">Begin Dismantling</a>";					
             }else if(talk_flag){
                 ret = temp_char.sanitize(triggeringChar.sanitize(temp_char.talk(triggeringChar),triggeringChar),triggeringChar);
-                if(temp_char.previous_action_output == ""){
+                if(temp_char.previous_action_output.equals("")){
                     
                     temp_char.previous_action_output = triggeringChar.sanitize(temp_char.sanitize("</n2> walks up and interrupts what you were doing.\n\n"+triggeringChar.talk(temp_char),temp_char),temp_char);
                     
-                    if(status_change != "")temp_char.status = status_change;
+                    if(!status_change.equals(""))temp_char.status = status_change;
                 }
             }else{
                 //show combat options
@@ -334,8 +334,9 @@ public class CharAction {
                     }else{
                         triggeringChar.personality.new_relationship(temp_char,triggeringChar, Relationship.aggressive_change);
                         triggeringChar.personality.make_aggressive(temp_char);
-                        //temp_char.personality.new_relationship(c,temp_char, Relationship.aggressive_change);
-                        //temp_char.personality.make_aggressive(c);
+                        //TODO old comments
+                        //temp_char.personality.new_relationship(c,temp_char, Relationship.aggressive_change)
+                        //temp_char.personality.make_aggressive(c)
                     }
                     triggeringChar.setBusy();
                     temp_char.setBusy();
@@ -369,7 +370,7 @@ public class CharAction {
             rest_action(triggeringChar);
         }
         
-
+        //OLD CODE
         //here we weave the challenges in, replacing their tags (</c1></c2>...</cn>) in the dialogue
         /*
         for(Challenge c : challenges){
@@ -403,20 +404,17 @@ public class CharAction {
             c.waitTime = -FPGameGithub.T1_HOUR*8;
         }
     }
-    public void set_requirement(int stat_id,int req){
-        set_requirement(stat_id, req, true);
+    public void set_requirement(int statID,int req){
+        set_requirement(statID, req, true);
     }
-    public void set_requirement(int stat_id,int req,Boolean req_rmv){//default true
-        //requirement[requirement.length] = stat_id
-        requirement.add(stat_id);
-        //requirement_amount[requirement_amount.length] = req
-        requirement_amount.add(req);
-        //requirement_remove[requirement_remove.length] = req_rmv
-        requirement_remove.add(req_rmv);
+    public void set_requirement(int statID,int req,Boolean reqRmv){//default true
+        requirement.add(statID);//[.length]
+        requirement_amount.add(req);//[.length]
+        requirement_remove.add(reqRmv);//[.length]
     }//TODO verify
     
-    public void set_blowback(int stat_id,int req){
-        blowback = stat_id;
+    public void set_blowback(int statID,int req){
+        blowback = statID;
         blowback_amount = req;
     }
     
@@ -459,7 +457,7 @@ public class CharAction {
         if (item_req != null){
             int j = 0;
             for (j=0;j<c1.possessions.size();j++){
-                if (c1.possessions.get(j).name == item_req.name){
+                if (c1.possessions.get(j).name.equals(item_req.name)){
                     cont = true;
                     break;
                 }
@@ -507,6 +505,21 @@ public class CharAction {
         if(tempChall != null){
             ret = tempChall.roll(attacker, defender);
         }
+        /*TODO this is pasted from .AS
+        			if(c.get_room_challenge() > 0){
+				var con:Consequence = consequences[chall_id];
+				if(con != null && con is Room_Consequence){
+					if((con as Room_Consequence).join_area > -1 || (con as Room_Consequence).move_area > -1){
+						trace("(Action.roll_challenge)Join or Move area detected... may be an issue, but just passing in the move and join rooms anyway.");
+					}
+					ret = c.roll(c1, c2, (con as Room_Consequence).move_room, (con as Room_Consequence).join_room);					
+				}else{
+					ret = c.roll(c1,c2);
+				}
+			}else{
+				ret = c.roll(c1, c2);
+            }
+            */
 
         return ret;
     }
@@ -661,7 +674,7 @@ public class CharAction {
                             }
                         }else if(attack_flag == attack_type_party_target_party_conseq){
                             if(reactiveCharacter.party == null){
-                                //target_list[target_list.length] = reactiveCharacter;
+                                //target_list[target_list.length] = reactiveCharacter
                                 target_list.add(reactiveCharacter);
                             }else{
                                 target_list = reactiveCharacter.party.get_members();
@@ -772,7 +785,7 @@ public class CharAction {
             
             if (roll >= 0 && requirement.get(0) != null && !no_requirement){
                 //need to meet the item requirement
-                //s += origin.apply_affect_by_id(requirement, -requirement_amount);
+                //s += origin.apply_affect_by_id(requirement, -requirement_amount)
                 //don't know if we should print this
                 int req_count = 0;
                 for(req_count=0;req_count < requirement.size(); req_count++){
@@ -796,7 +809,7 @@ public class CharAction {
                         }
                     }
                 }
-                if(ret.replace("</trigger"+j+">","") != ret){
+                if(!ret.replace("</trigger"+j+">","").equals(ret)){
                        ret = ret.replace("</trigger"+j+">","");
                        next_challenge = j;
                 }
@@ -848,7 +861,7 @@ public class CharAction {
                 if(attack_id != -1 && triggeringCharacter != null && triggeringCharacter.location != null)origin.set_next_attack(triggeringCharacter.location.get_content_id(origin) +","+ Integer.toString(attack_id) +"," + Integer.toString(next_challenge) +"," + triggeringCharacter.location.get_content_id(triggeringCharacter));
             }
         }
-        
+        //TODO old commented code
         /*if(s == ""){
             trace("(Action)Just did a whole challenge without ANY output. Given inputs: " + i + "," + triggeringCharacter + "," + reactiveCharacter + "," + force_tags + "," + dynamic_choice + "," + no_requirement);
             trace("Action name: " + name);
@@ -857,7 +870,7 @@ public class CharAction {
         }*/
         
         return ret;
-    }
+    }//TODO verify above holy shit the out of scope issues on those variables
     public void set_personal(){
         //nothing personal
         personal = !personal;

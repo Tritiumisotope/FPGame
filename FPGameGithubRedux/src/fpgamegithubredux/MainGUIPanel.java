@@ -257,7 +257,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         throw new UnsupportedOperationException(messages[0]); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public String capitalize(String s){
+    public static String capitalize(String s){
         String ret = s;
         System.out.println("capitalize called");
         //var myPattern:RegExp = /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g;  

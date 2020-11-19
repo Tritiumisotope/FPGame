@@ -1,6 +1,8 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
 
 public class Combat_manager {
 
@@ -18,12 +20,12 @@ public class Combat_manager {
         current_int = 0;
         new_participants = "";
     }
-    /*
+    
     public String fire_combat_round(){
         String ret = "";
         Character active_char = next_character();
         Character start_char = active_char;
-        int start_initiative = current_int;
+        int start_initiative = current_int.intValue();
         Boolean continue_flag = true;
         
         while(continue_flag){
@@ -32,53 +34,56 @@ public class Combat_manager {
                                         
             ret += active_char.tick();
                 
-            if(enemy_list[0] != null && active_char != null && active_char.location != null){
-                var active_char_id:int = active_char.location.get_content_id(active_char);
+            if(enemy_list.get(0) != null && active_char != null && active_char.location != null){
+                int active_char_id = active_char.location.get_content_id(active_char);
                 
-                var next_action:Array = active_char.get_next_attack().split(",");
-                var next_action_id:int = -1;
-                var next_target_id:int = -1;
-                var next_chall_id:int = -1;
-                var chall_string:String = null;
-                var dynamic_string:Array = null;
+                String[] next_action = active_char.get_next_attack().split(",");
+                int next_action_id = -1;
+                int next_target_id = -1;
+                int next_chall_id = -1;
+                String chall_string = null;
+                ArrayList<Integer> dynamic_string = new ArrayList<>();//TODO was array, verify
                 
-                if(next_action[0] != null && next_action[0] != ""){
-                    next_target_id = next_action[3];
-                    if(active_char.location.get_content(next_target_id) != null){
-                        next_action_id = next_action[1];
-                        next_chall_id = next_action[2];
-                        if(next_chall_id != -1)chall_string = String(next_chall_id);
+                if(next_action[0] != null && !next_action[0].equals("")){
+                    //next_target_id = next_action[3];
+                    if(active_char.location.getContent(next_target_id) != null){
+                        //next_action_id = next_action[1];
+                        //next_chall_id = next_action[2];
+                        //TODO why is this string ret splitting into ints and shit
+                        if(next_chall_id != -1)chall_string = Integer.toString(next_chall_id);
                     }else{
                         next_target_id = -1;
-                        trace("(Combat_manager)Have a next action, but no target. Suspicious. Should probably cancel the action choice, but doing nothing instead.");
+                        //trace("(Combat_manager)Have a next action, but no target. Suspicious. Should probably cancel the action choice, but doing nothing instead.");
                     }	
                 }
-                
+                /*TODO Can't use before declaration!!!
                 if(dynamic_choice != -1){
                     if(dynamic_string == null)dynamic_string = new Array();
                     dynamic_string.push(dynamic_choice);
                 }
-                
+                */
                 if(next_action_id < 0){
-                    var rand_enemy:int = active_char.personality.determine_target(enemy_list, active_char);
-                    if(enemy_list[rand_enemy] != null){
-                        next_target_id = active_char.location.get_content_id(enemy_list[rand_enemy]);
-                        next_action_id = active_char.personality.determine_action(enemy_list[rand_enemy], active_char);
+                    int rand_enemy = active_char.personality.determine_target(enemy_list, active_char);
+                    if(enemy_list.get(rand_enemy) != null){
+                        next_target_id = active_char.location.get_content_id(enemy_list.get(rand_enemy));
+                        next_action_id = active_char.personality.determine_action(enemy_list.get(rand_enemy), active_char);
                         
                         //Need to catch dynamic choices, and make them....
-                        var dynamic_choice:int = -1;
-                        var temp_action:Action = active_char.get_attack_action(next_action_id);
+                        //TODO declared after first use...wat
+                        int dynamic_choice = -1;
+                        CharAction temp_action = active_char.get_attack_action(next_action_id);
                         if(temp_action == null){
-                            trace("(Combat_manager.fire_combat_round)Failed to get an attack action. Not sure why. Skipping character.");
-                        }else if(temp_action.consequences[0] is Dynamic_Consequence && temp_action.consequences[0].consequence_list_type != Dynamic_Consequence.list_nolist){
+                            //trace("(Combat_manager.fire_combat_round)Failed to get an attack action. Not sure why. Skipping character.");
+                        }else if(temp_action.consequences.get(0) instanceof DynamicConsequence && ((DynamicConsequence)temp_action.consequences.get(0)).consequence_list_type != DynamicConsequence.list_nolist){
                             next_chall_id = 0;
                             dynamic_choice = active_char.personality.determine_dynamic(next_target_id, next_action_id, active_char);
                         }
                         if(temp_action != null){
-                            if(next_chall_id != -1)chall_string = String(next_chall_id);
+                            if(next_chall_id != -1)chall_string = Integer.toString(next_chall_id);
                             if(dynamic_choice != -1){
-                                if(dynamic_string == null)dynamic_string = new Array();
-                                dynamic_string.push(dynamic_choice);
+                                if(dynamic_string == null)dynamic_string = new ArrayList<>();
+                                //dynamic_string.push(dynamic_choice)
+                                dynamic_string.add(dynamic_choice);
                             }else{
                                 dynamic_string = null;
                             }
@@ -93,7 +98,7 @@ public class Combat_manager {
             
             ret += update_participants();
             
-            if(start_initiative == get_next_init(current_int) || !active_combat() || get_init(start_char) < 0){
+            if(start_initiative == get_next_init(current_int.intValue()) || !active_combat() || get_init(start_char) < 0){
                 continue_flag = false;
             }else{
                 active_char = next_character();
@@ -103,14 +108,13 @@ public class Combat_manager {
         
         return ret;
     }
-    *//*
-    public function get_description(c:Character):String{
-        var ret:String = "";
+    
+    public String get_description(Character c){
+        String ret = "";
         
-        var i:int = 0;
-        for(i;i<participants.length;i++){
-            if(c.personality.relationship_exists(participants[c])){
-                trace("(Combat_manager.get_description)Oh, I know someone in this combat! Should probably be adding their name to the tag, but meh.");
+        for(int i = 0;i<participants.size();i++){
+            if(c.personality.relationship_exists(participants.get(i))){//this was participants[c]...BUT WHY
+                //trace("(Combat_manager.get_description)Oh, I know someone in this combat! Should probably be adding their name to the tag, but meh.");
             }
         }
         
@@ -118,7 +122,7 @@ public class Combat_manager {
         
         return ret;
     }
-    */
+    
     public void add_participant(Character c){
         add_participant(c,false);
     }
@@ -189,59 +193,71 @@ public class Combat_manager {
             }
         }
     }
-    /*
-    public function update_participants():Array{
-        var s:Array = new Array;
-        var i:int = 0;
-        for(i;i<participants.length;i++){
-            if(participants[i].location == null){
+    
+    public ArrayList<String> update_participants(){
+        ArrayList<String> s = new ArrayList<>();
+        int i = 0;
+        for(i=0;i<participants.size();i++){
+            if(participants.get(i).location == null){
                 //s[s.length] = participants[i].get_name() + " has died.";
-                participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
-                initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                //above was commented
+                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
+                participants.remove(i);
+                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                initiative.remove(i);
                 i--;
                 continue;
             }
             
-            if(participants[i].location.cm != this || !participants[i].get_combat_status()){
-                participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
-                initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+            if(participants.get(i).location.cm != this || !participants.get(i).get_combat_status()){
+                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
+                participants.remove(i);
+                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                initiative.remove(i);
                 i--;
                 continue;
             }
             
-            var ret:Boolean = false;
-            if(participants[i].next_attack != "") ret = true;
+            Boolean ret = false;
+            if(!participants.get(i).next_attack.equals("")) ret = true;
             
-            var k:int = 0;
-            for(k;k<participants.length;k++){
-                if(participants[i].get_aggresive(participants[k]) || participants[k].get_aggresive(participants[i])){
+            int k = 0;
+            for(k=0;k<participants.size();k++){
+                if(participants.get(i).get_aggresive(participants.get(k)) || participants.get(k).get_aggresive(participants.get(i))){
                     ret = true;
                     break;
                 }
             }
             
             if(!ret){
-                s[s.length] = participants[i].get_name() + " is no longer interested in fighting.";
-                participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
-                initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                //s[s.length] = participants[i].get_name() + " is no longer interested in fighting."
+                s.add(participants.get(i).getName() + " is no longer interested in fighting.");
+                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length))
+                participants.remove(i);
+                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length))
+                initiative.remove(i);
                 i--;
                 continue;
             }
             
-            if(participants[i].busy <= 0) participants[i].set_busy();
+            if(participants.get(i).busy <= 0) participants.get(i).setBusy();
             
         }
         
         
-        var temp_new_part:Array = new_participants.split("\n");
+        String[] temp_new_part = new_participants.split("\n");//was array, unknown type
         
-        s = s.concat(temp_new_part);
+        //s = s.concat(temp_new_part)
+        s.addAll(Arrays.asList(temp_new_part));
         
         new_participants = "";
-        return [""];
+        //return ("")
+        //replace above with
+        s = new ArrayList<>();
+        s.add("");
         return s;
     }
-    */
+    
     public Boolean active_combat(){
         Boolean ret = false;
         
@@ -277,11 +293,11 @@ public class Combat_manager {
             var next_char:Character = null;
             var i:int = 0;
             for(i;i<initiative.length;i++){
-                if(initiative[i] == current_int){
+                if(initiative.get(i) == current_int){
                     next_char = participants[i];
                     break;
                 }else{
-                    if(Math.round(initiative[i]/4) == current_int || Math.round(initiative[i]/8) == current_int){
+                    if(Math.round(initiative.get(i)/4) == current_int || Math.round(initiative.get(i)/8) == current_int){
                         next_char = participants[i];
                     }
                 }
@@ -307,11 +323,11 @@ public class Combat_manager {
             var next_char:Character = null;
             var i:int = 0;
             for(i;i<initiative.length;i++){
-                if(initiative[i] == next_int){
+                if(initiative.get(i) == next_int){
                     next_char = participants[i];
                     break;
                 }else{
-                    if(Math.round(initiative[i]/4) == next_int || Math.round(initiative[i]/8) == next_int){
+                    if(Math.round(initiative.get(i)/4) == next_int || Math.round(initiative.get(i)/8) == next_int){
                         next_char = participants[i];
                     }
                 }
@@ -320,18 +336,17 @@ public class Combat_manager {
         }
         return ret;
     }
-    
-    public function next_character():Character{
-        var ret:Character;
-        var next_int:int = get_next_init();
-        var i:int = 0;
-        for(i;i<initiative.length;i++){
-            if(initiative[i] == next_int){
-                ret = participants[i];
+    */
+    public Character next_character(){
+        Character ret = null;
+        int next_int = get_next_init();
+        for(int i =0;i<initiative.size();i++){
+            if(initiative.get(i) == next_int){
+                ret = participants.get(i);
                 break;
             }else{
-                if(Math.round(initiative[i]/4) == next_int || Math.round(initiative[i]/8) == next_int){
-                    ret = participants[i];
+                if(Math.round(initiative.get(i)/4) == next_int || Math.round(initiative.get(i)/8) == next_int){
+                    ret = participants.get(i);
                 }
             }
         }
@@ -339,15 +354,18 @@ public class Combat_manager {
         
         return ret;
     }
-    
-    private function get_next_init(curr_init:int = 0):int{
-        var start_init:int = current_int;
+    private int get_next_init(){
+        return get_next_init(0);
+    }
+    private int get_next_init(int curr_init){
+        //def 0
+        int start_init = current_int.intValue();
         if(curr_init>=1) start_init = curr_init;
-        var lowest_init:Boolean = true;
-        var i:int = 0;
-        for(i;i<initiative.length;i++){
-            if((Math.round(initiative[i]/8) < start_init && Math.round(initiative[i]/8) >= 1) ||
-               (Math.round(initiative[i]/4) < start_init && Math.round(initiative[i]/4) >= 1) || initiative[i] < start_init ){//nothing to see here
+        Boolean lowest_init = true;
+        int i = 0;
+        for(i=0;i<initiative.size();i++){
+            if((Math.round(initiative.get(i)/8) < start_init && Math.round(initiative.get(i)/8) >= 1) ||
+               (Math.round(initiative.get(i)/4) < start_init && Math.round(initiative.get(i)/4) >= 1) || initiative.get(i) < start_init ){//nothing to see here
                 lowest_init = false;
                 break;
             }
@@ -357,14 +375,14 @@ public class Combat_manager {
             start_init = 10000;//blarg, hardcoding
         }
         
-        var next_int:int = 0;
-        var multi_act_char_int:int = 0;
+        int next_int = 0;
+        int multi_act_char_int = 0;
         i = 0;
-        for(i;i<initiative.length;i++){
-            if(initiative[i] > next_int && initiative[i] < start_init) next_int = initiative[i];
+        for(i=0;i<initiative.size();i++){
+            if(initiative.get(i) > next_int && initiative.get(i) < start_init) next_int = initiative.get(i);
             
-            if((Math.round(initiative[i]/4) < start_init && Math.round(initiative[i]/4) > multi_act_char_int) || (Math.round(initiative[i]/8) < start_init && Math.round(initiative[i]/8) > multi_act_char_int)){
-                multi_act_char_int = initiative[i];
+            if((Math.round(initiative.get(i)/4) < start_init && Math.round(initiative.get(i)/4) > multi_act_char_int) || (Math.round(initiative.get(i)/8) < start_init && Math.round(initiative.get(i)/8) > multi_act_char_int)){
+                multi_act_char_int = initiative.get(i);
             }
         }
         
@@ -374,8 +392,8 @@ public class Combat_manager {
         
         //NOW find which character that was...
         i = 0;
-        for(i;i<initiative.length;i++){
-            if(initiative[i] == next_int){
+        for(i=0;i<initiative.size();i++){
+            if(initiative.get(i) == next_int){
                 if(next_int >= start_init){
                     if(Math.round(next_int/4) >= start_init){
                         next_int = Math.round(next_int/8);
@@ -388,7 +406,7 @@ public class Combat_manager {
         }
         return next_int;
     }
-    */
+    
     public ArrayList<Character> get_enemies(Character c){
         ArrayList<Character> enemy_list = new ArrayList<>();
         if(c != null){

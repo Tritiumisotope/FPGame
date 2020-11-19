@@ -43,37 +43,37 @@ public class Area extends StaticObject{
     public Area(){
         new Area("");
     }
-    public Area(String d) {//String d
+    public Area(String d) {//default d = ""
         set_description(d);
         rooms = new ArrayList<>();//new Array()
         map = "";
         room_list = new ArrayList<>();
-        templateRooms = new ArrayList<>();//template_rooms = null;//new Array()
-        templateFloorRange = new ArrayList<>();//template_floor_range = null;//new Array()
+        templateRooms = new ArrayList<>();//new Array()
+        templateFloorRange = new ArrayList<>();//new Array()
         legend = new ArrayList<>();//new Array()
-        legendFloor = new ArrayList<>();//legend_floor = null;//new Array()
+        legendFloor = new ArrayList<>();//new Array()
         connectRooms = new ArrayList<>();//new Array()
         world = null;
         playerDiscovered = false;
         mapColor = new Color(255,255,255);
-        tempOffset = new int[3];//temp_offset = null;//new Array()
+        tempOffset = new int[3];//null()
         fillerTemplate = new ArrayList<>();//new Array()
         fillerType = new ArrayList<>();//new Array()
-        fillerFloorRange = new ArrayList<>();//filler_floor_range = null;//new Array()
+        fillerFloorRange = new ArrayList<>();//new Array()
         dynamicBuildTemplate = new ArrayList<>();//new Array()
         dynamicBuildUp = true;
-        dynamicBuildFloorRange=new ArrayList<>();//dynamicBuildFloorRange = null;//new Array()
+        dynamicBuildFloorRange=new ArrayList<>();//new Array()
 
         
         spawnCreatures = new ArrayList<>();//new Array()
         npcSpawnThreshold = -1;
         
-        weathers = new ArrayList<>();//weathers = null;//new Array()
+        weathers = new ArrayList<>();//new Array()
         current_weather = 0;
         current_weather_length = 0;
         totalActionsTaken = FPGameGithub.T1_DAY/4 - 1;
         
-        conversations = new ArrayList<>();//conversations = null;//new Array()
+        conversations = new ArrayList<>();//new Array()
         
         backgroundImageID = -1;
         moveTimeMod = 1;
@@ -97,8 +97,7 @@ public class Area extends StaticObject{
     }
     
     public void new_conversation_topic(Conversation_topic ct){
-        //conversations[conversations.length] = ct
-        conversations.add(ct);
+        conversations.add(ct);//conversations[conversations.length] = ct
     }
     
     
@@ -107,13 +106,13 @@ public class Area extends StaticObject{
     }
 
     public void new_weather(Area_weather aw){
-        weathers.add(aw);//weathers[weathers.length] = aw\
+        weathers.add(aw);//weathers[weathers.length] = aw
     }
     
     public String get_outdoor_description(){
         String ret = "";
         
-        if(weathers.get(current_weather) != null){//if weathers[current_weather] != null
+        if(weathers.get(current_weather) != null){
             ret = weathers.get(current_weather).get_description(totalActionsTaken%FPGameGithub.T1_DAY);//ret = weathers[current_weather].get_description(totalActionsTaken%Main.t1_day
         }
         
@@ -122,7 +121,7 @@ public class Area extends StaticObject{
     }
     
     public void add_creature_spawn(Character_template c){
-        spawnCreatures.add(c); //spawn_creatures[spawn_creatures.length] = c
+        spawnCreatures.add(c);//spawn_creatures[spawn_creatures.length] = c
     }
     
     public void set_spawn_threshold(int i){
@@ -153,7 +152,6 @@ public class Area extends StaticObject{
     
     public Room get_connect_room(){
         Room r = null;
-        
         if(connectRooms.get(connectRooms.size() - 1) != null) r = connectRooms.get(connectRooms.size() - 1);
         //connectRooms = Arrays.copyOfRange(connectRooms,0,connectRooms.size()-1);//connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
         connectRooms = (ArrayList<Room>)connectRooms.subList(0,connectRooms.size()-1);//TODO verify
@@ -180,11 +178,13 @@ public class Area extends StaticObject{
                 }
             }
             if(found){
-                int[] numbers = new int[3];
-                numbers[0] =x;
-                numbers[1] =y;
-                numbers[2] =z;
-                return numbers;
+                /*
+                int[] numbers = new int[3]
+                numbers[0] =x
+                numbers[1] =y
+                numbers[2] =z
+                */
+                return new int[]{x,y,z};
             }
         }
         return new int[3];
@@ -266,7 +266,7 @@ public class Area extends StaticObject{
                 return 1;
             }
             
-            int[] temp_room_list = new int[0];
+            ArrayList<Integer> temp_room_list = new ArrayList<>();
             
             int i = 0;
             for(i=0;i<room_list.size();i++){
@@ -279,12 +279,12 @@ public class Area extends StaticObject{
                 }
                 
                 if(!check){
-                    temp_room_list[temp_room_list.length] = i;
+                    temp_room_list.add(i);//temp_room_list[temp_room_list.length] = i
                 }
                 
             }
             
-            int wakka = temp_room_list[(int)Math.round(Math.random()*(temp_room_list.length-1))];
+            int wakka = temp_room_list.get((int)Math.round(Math.random()*(temp_room_list.size()-1)));
             lr = room_list.get(wakka);
         }
         
@@ -380,7 +380,7 @@ public class Area extends StaticObject{
                 if(new_y < -1)LOGGER.info("(Area.existing_exit_add)Shifting on the y-axis... but not enough.");
                 for(x=0;x<rooms.size();x++){//.length
                     if(rooms.get(x) != null){//[]
-                        //new_y = rooms.get(x].length;//should this be max y?
+                        //new_y = rooms.get(x).size();//should this be max y?
                         for(new_y=rooms.get(x).size();new_y >= 1;new_y--){//[].length
                             rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [][]
                         }
@@ -449,7 +449,6 @@ public class Area extends StaticObject{
         return existing_exit_check( r, new_x, new_y, new_z, max_same_room, null);
     }
     public Boolean existing_exit_check(Room r,int new_x,int new_y,int new_z,int max_same_room, ArrayList<Room> already_checked){
-
         //already checked = null
         Boolean other_rooms_ok = true;
         if(rooms.get(new_x)  != null){
@@ -519,7 +518,7 @@ public class Area extends StaticObject{
                         }
                     }
                     this.tempOffset = offset;
-                    //TODO
+                    //was commented by why not get it back?
                     LOGGER.info("(Area.existing_exit_check)Assigned direction " + offset + " to exit named " + r.exitNames[counter]);
                 }
                 
@@ -613,7 +612,8 @@ public class Area extends StaticObject{
                 default:
                 break;
             }
-            switch (z_jiggle){
+            //TODO why was this commented?
+            /*switch (z_jiggle){
                 case 0:
                 new_z--;
                 break;
@@ -622,7 +622,7 @@ public class Area extends StaticObject{
                 break;
                 default:
                 break;
-            }
+            }*/
             
             if(new_x < 0 && !restrict_edges){ 
                 for(new_x = rooms.size();new_x >= 0;new_x--){//.length
@@ -958,7 +958,7 @@ public class Area extends StaticObject{
         
         if(ret_array[0] == 0 && ret_array[1] == 0 && ret_array[2] == 0&&tempOffset != null){
             ret_array = tempOffset;
-            //TODO
+            //TODO verify
         }
         return ret_array;
     }
@@ -1556,7 +1556,7 @@ public class Area extends StaticObject{
                                                                 String temp_string = r.template.get_propagating_description();
                                                                 //temp_string = temp_string.slice(0, temp_string.indexOf(pathPlaceHldr))
                                                                 temp_string = temp_string.substring(0,temp_string.indexOf(pathPlaceHldr));
-                                                                if(prop_room.description.indexOf(temp_string) >=0){//TODO all above and below string slices
+                                                                if(prop_room.description.indexOf(temp_string) >=0){//TODO verify all above and below string slices
                                                                     //String multi_desc = prop_room.description.slice(0,prop_room.description.indexOf(temp_string))
                                                                     String multi_desc = prop_room.description.substring(0,prop_room.description.indexOf(temp_string));
                                                                     //need to find out what the previous path was....
@@ -1830,7 +1830,6 @@ public class Area extends StaticObject{
         //may need to remove entry from legend and legend_floor arrays... only real way to know is to check if this rooms custom name is used anywhere else on the floor
         Boolean no_remove= false;
         int i = 0;
-        
         for(i=0;i<room_list.size();i++){
             if(c.location != room_list.get(i)&& room_list.get(i).custom_name.equals(c.location.custom_name)){
                 no_remove = true;
@@ -2028,7 +2027,7 @@ public class Area extends StaticObject{
             if(room_list.get(room_num).attached_to_other_area()) return get_random_room(true);
         }
         
-        return room_list.get(room_num);//room_list[room_num];//TODO
+        return room_list.get(room_num);
         
     }
     public ArrayList<Room> get_edge_rooms(){
@@ -2156,15 +2155,13 @@ public class Area extends StaticObject{
         int i;
         output = "";
         for (i = 0; i<rooms.size();i++){
-            //output += rooms[i].getRoomDescription();//HOW?!
+            //output += rooms.get(i).getRoomDescription();//HOW?!
         }
         return output;
     }
     
     public void tick(Character c){
-        
         current_weather_length++;
-        
         if(weathers.get(current_weather) != null && current_weather_length > weathers.get(current_weather).get_min_length()){
             current_weather = (int)Math.round(Math.random()*(weathers.size()-1));
             current_weather_length = 0;
@@ -2173,21 +2170,19 @@ public class Area extends StaticObject{
         int npc_count = 0;
         int q;
         int i = 0;
-        
         for(i=0;i<room_list.size();i++){
             if(room_list.get(i)!= null){
                 String tick_happenings = "";
-                //room_list.get(i).last_area_tick = totalActionsTaken;
+                room_list.get(i).lastAreaTick = totalActionsTaken;
                 if(room_list.get(i).cm != null){
-                    /*
+                    
                     if(!room_list.get(i).cm.active_combat()){
                         room_list.get(i).cm = null;
                     }else if(room_list.get(i).cm.get_init(c) == -1){//see if the player is one of the participants... if not, have the fight proceed.
                         Combat_manager temp_cm = room_list.get(i).cm;
-                        //tick_happenings += temp_cm.fire_combat_round();
-                        //TODO
+                        tick_happenings += temp_cm.fire_combat_round();
                     }
-                    */
+                    
                 }
                 if(room_list.get(i).contents != null){
                     for(q=0;q<room_list.get(i).contents.size();q++){
@@ -2198,15 +2193,14 @@ public class Area extends StaticObject{
                                 npc_count++;
                                 Boolean already_busy = false;
                                 if(room_list.get(i).cm != null){
-                                    /*
+                                    
                                     if(room_list.get(i).cm.get_init(temp) >= 0){
                                         already_busy = true;
                                     }
-                                    */
+                                    
                                 }
                                 if(!temp.ai_already_moved && !already_busy){
-                                    //tick_happenings += temp.tick();
-                                    //TODO
+                                    tick_happenings += temp.tick();
                                 }
                                 temp.ai_already_moved = !temp.ai_already_moved;//should only be doing this if moving into room[i+n]
                             }
@@ -2251,7 +2245,7 @@ public class Area extends StaticObject{
                 if(spawnCreatures.size() > 1)spawn_choice = (int)Math.round(Math.random() *(spawnCreatures.size() - 1));
                 Character new_char = spawnCreatures.get(spawn_choice).gen_char();
                 new_char.newLocation(new Room());//(get_random_room(), true)
-                //TODO update newLocation
+                //TODO verify
                 
             }else{
                 //use the template_rooms spawns

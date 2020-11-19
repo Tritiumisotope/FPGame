@@ -620,7 +620,7 @@ public class Character extends DynamicObject {
     public String talk(Character c,int topic,int topic_step,int challenge_num){
         return talk(c, topic, topic_step, challenge_num,null);
     }
-    public String talk(Character c,int topic,int topic_step,int challenge_num,ArrayList<Object> dynamic_choice){
+    public String talk(Character c,int topic,int topic_step,int challenge_num,ArrayList<Integer> dynamic_choice){
         //def -1,0,-1,null
         setBusy();
         return personality.talk(c, this, topic, topic_step, challenge_num, dynamic_choice);			
@@ -2994,26 +2994,31 @@ public class Character extends DynamicObject {
         
         return a;
     }
-    /*
-    public function attack(i:int, j:int, k:int, chall_id:String = null, dynamic_id:Array = null,sanitize_for:Character = null):String{
-        var ai_flag:int = 0
-        var s:String = "";
-        var enemy:Character = null;
-        if(location.get_content(k) is Character)enemy = location.get_content(k) as Character;
+    public String attack(int i,int j,int k,String chall_id,
+    ArrayList<Integer> dynamic_id){
+        return attack(i, j, k, chall_id, dynamic_id, null);
+    }
+    public String attack(int i,int j,int k,String chall_id,
+    ArrayList<Integer> dynamic_id,Character sanitize_for){
+        //def chall_id = null, dyn_id = null, sanitize_for = null
+        int ai_flag = 0;
+        String s = "";
+        Character enemy = null;
+        if(location.getContent(k) instanceof Character)enemy = (Character)location.getContent(k);
         if(enemy == null){
-            trace("(Character.attack())Failed to find enemy with id: " + k);
+            //trace("(Character.attack())Failed to find enemy with id: " + k);
             return "";
         }
-        var enemy_combat_status:Boolean = enemy.get_combat_status();
+        Boolean enemy_combat_status = enemy.get_combat_status();
         
-        var action:Action = get_attack_action(j);
+        CharAction action = get_attack_action(j);
         if(action == null){
-            trace("(CHARACTER)Couldn't find attack... should have checked both character class and body parts for it. Looking for attack id:" + j);
-            trace(show_combat_options(enemy));
+            //trace("(CHARACTER)Couldn't find attack... should have checked both character class and body parts for it. Looking for attack id:" + j);
+            //trace(show_combat_options(enemy));
             return "";
         }
         
-        var enemy_is_PC:Boolean = true;
+        Boolean enemy_is_PC = true;
         if(sanitize_for != null){
             if(get_party() != null){
                 if(party.member_of(sanitize_for))enemy_is_PC = false;
@@ -3023,9 +3028,9 @@ public class Character extends DynamicObject {
         }
         
         if(dynamic_id != null && chall_id != null){
-            s += action.challenge(int(chall_id), enemy,this, 0, dynamic_id,true,sanitize_for);
+            s += action.challenge(Integer.parseInt(chall_id), enemy,this, 0, dynamic_id,true,sanitize_for);
         }else if(chall_id != null){
-            s += action.challenge(int(chall_id), enemy,this,0,null,true,sanitize_for);
+            s += action.challenge(Integer.parseInt(chall_id), enemy,this,0,null,true,sanitize_for);
         }else{
             if(action.dialogue == "null"){
                 s += action.challenge(0, enemy,this,0,null,false,sanitize_for);
@@ -3034,8 +3039,8 @@ public class Character extends DynamicObject {
                 s += action.trigger(enemy,0,sanitize_for);
             }
         }
-        var show_chal_out:Boolean = (s.indexOf("</a>") < 0 && !(action.consequences[int(chall_id)] is Dynamic_Consequence && action.consequences[int(chall_id)].consequence_list_type != Dynamic_Consequence.list_nolist));
-        var temp_output:String = "";
+        Boolean show_chal_out = (s.indexOf("</a>") < 0 && !(action.consequences.get(Integer.parseInt(chall_id)) instanceof DynamicConsequence && ((DynamicConsequence)action.consequences.get(Integer.parseInt(chall_id))).consequence_list_type != DynamicConsequence.list_nolist));
+        String temp_output = "";
         if(show_chal_out){
             temp_output += get_challenge_output();
         }
@@ -3047,7 +3052,7 @@ public class Character extends DynamicObject {
         }
         
         if(enemy != this){
-            var enemy_output:String = "";
+            String enemy_output = "";
             
             if(enemy.challenge_output != "" && show_chal_out){
                 if(enemy_is_PC || enemy.location == null){
@@ -3071,10 +3076,11 @@ public class Character extends DynamicObject {
         }
         
         while(s.indexOf("event:challenge") >= 0){//replace with combat tags
-            var start_index:int = s.indexOf("\"event:challenge");
-            var end_index:int = s.indexOf(">",start_index);
-            var chall_split:Array = s.substr(start_index,end_index-start_index).split(",");
-            s = s.substr(0,start_index) + "\"event:combat," + i + "," + j + "," + k + "," + chall_split[3] + s.substr(end_index,s.length);				
+            int start_index = s.indexOf("\"event:challenge");
+            int end_index = s.indexOf(">",start_index);
+            //below was just unknown array
+            String[] chall_split = s.substring(start_index,end_index-start_index).split(",");
+            s = s.substring(0,start_index) + "\"event:combat," + i + "," + j + "," + k + "," + chall_split[3] + s.substring(end_index,s.length());				
         }
         
         if (enemy.location != null && !enemy.get_combat_status() && enemy_combat_status){ 
@@ -3094,13 +3100,13 @@ public class Character extends DynamicObject {
             
             s += enemy.incapacitate();
             if(party != null){
-                party.advance_objectives(Quest.incapacitate_action, [enemy]);
+                party.advance_objectives(Quest.incapacitate_action, new ArrayList<>(Arrays.asList(enemy)));//[enemy]
             }else{
-                personality.advance_objectives(Quest.incapacitate_action, [enemy], this);
+                personality.advance_objectives(Quest.incapacitate_action, new ArrayList<>(Arrays.asList(enemy)), this);
             }
             
             if(sanitize_for != null){
-                s = sanitize(enemy.sanitize(s,sanitize_for),sanitize_for)
+                s = sanitize(enemy.sanitize(s,sanitize_for),sanitize_for);
             }				
             return s;
         }
@@ -3120,9 +3126,9 @@ public class Character extends DynamicObject {
                 }
             }
             if(party != null){
-                party.advance_objectives(Quest.kill_action, [enemy]);
+                party.advance_objectives(Quest.kill_action, new ArrayList<>(Arrays.asList(enemy)));
             }else{
-                personality.advance_objectives(Quest.kill_action, [enemy], this);
+                personality.advance_objectives(Quest.kill_action, new ArrayList<>(Arrays.asList(enemy)), this);
             }
             
         }else{
@@ -3138,26 +3144,26 @@ public class Character extends DynamicObject {
         }
         
         if(sanitize_for != null){
-            s = sanitize(enemy.sanitize(s,sanitize_for),sanitize_for)
+            s = sanitize(enemy.sanitize(s,sanitize_for),sanitize_for);
         }
         
         return s;
     }
     
-    public function incapacitate():String{
-        var s:String = "";
+    public String incapacitate(){
+        String s = "";
         
         s = get_combat_failures();
         return s;
     }														
     
-    public function die():String{
+    public String die(){
         if(location != null){
-            var temp_loc:Room = location;
+            Room temp_loc = location;
             location = null;
-            temp_loc.remove_content(this);
+            temp_loc.removeContent(this);
             //create a container
-            var cont:Container = new Container();
+            Container cont = new Container();
             cont.set_name("body");
             cont.set_description("There is a <a href=\"event:inspect,</id>,0\">body</a> on the ground. ");
             cont.add_sub_descriptions("It is the body of " + name + ".");
@@ -3167,13 +3173,13 @@ public class Character extends DynamicObject {
             
             body.drop_equipment(this);//add equipment to inventory
             //add items from inventory to body..
-            var i:int = 0;
-            for (i;i<possessions.size();i++){
-                cont.add_content(possessions[i]);
+            int i = 0;
+            for (i=0;i<possessions.size();i++){
+                cont.add_content(possessions.get(i));
             }
             if(this.get_gold() > 0){
-                var item:Item = new Item("Gold");
-                item.set_value(this.get_gold());
+                Item item = new Item("Gold");
+                item.setValue(this.get_gold());
                 cont.add_content(item);
             }
             
@@ -3185,12 +3191,12 @@ public class Character extends DynamicObject {
             party = null;
         }
         if(personality.job != null){
-            trace("(Character.die)Should be figuring out what to do with this now dead characters job. Doing nothing instead. ");
+            //trace("(Character.die)Should be figuring out what to do with this now dead characters job. Doing nothing instead. ");
         }
         
         return "";
     }
-    */
+    
     public String alchemy(String i,String j){
         String ret = "";
         int k = 0;
@@ -4418,7 +4424,12 @@ public class Character extends DynamicObject {
                         chara = (Character)this.location.getContent(Integer.parseInt(tempArray.get(1)));
                         if(tempArray.get(5) != null){
                             //previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)), tempArray.slice(5, tempArray.size()));
-                            previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)), new ArrayList<>(tempArray.subList(5, tempArray.size())));
+                            ArrayList<String> tempTempArray = new ArrayList<>(tempArray.subList(5, tempArray.size()));
+                            ArrayList<Integer> tempIntArray = new ArrayList<>();
+                            for(int i=0;i<tempTempArray.size();i++){
+                                tempIntArray.add(Integer.parseInt(tempTempArray.get(i)));
+                            }
+                            previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)), tempIntArray);
                         }else if(tempArray.get(4) != null){
                             previous_action_output = chara.talk(this, Integer.parseInt(tempArray.get(2)), Integer.parseInt(tempArray.get(3)), Integer.parseInt(tempArray.get(4)));
                         }else{

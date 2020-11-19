@@ -59,7 +59,6 @@ public class AlchemyItem extends Item {
 
             ArrayList<Double> effect_amounts = new ArrayList<>();
             int x = 0;
-
             for(x=0;x<type_array.size();x++){
                 int y = 0;
                 changes = new ArrayList<>();
@@ -323,15 +322,16 @@ public class AlchemyItem extends Item {
             ArrayList<StatAction> sa_changes = new ArrayList<>();//ArrayList<StatAction> sa_changes = this.statActionAdd.concat(item2.statActionAdd)
             sa_changes.addAll(this.statActionAdd);
             sa_changes.addAll(item2.statActionAdd);
-            /*TODO WAT?! can't be, defined as stat_action
+            
             for(i=0;i<sa_changes.size();i++){
-                if(sa_changes.get(i) instanceof CharAction){
-                    if(Math.random() >= 0.5){
-                        item.new_stat_action(sa_changes.get(i-1),sa_changes.get(i));
-                    }
+                //if(sa_changes.get(i) instanceof CharAction){
+                //Now that I made a StatAction class...
+                if(Math.random() >= 0.5){
+                    item.new_stat_action(sa_changes.get(i).statID(),sa_changes.get(i).charAction());
                 }
+                //}
             }
-            */
+            
             				
         }
         
@@ -345,8 +345,7 @@ public class AlchemyItem extends Item {
             if(item.effects.get(max_effect_id) == null && item.effects.get(i) != null)max_effect_id = i;
         }
         if(max_effect_id >= 0 &&FPalaceHelper.get_stat_by_id(max_effect_id) != null){
-            //item.name = Main.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).get_name() + " Potion")
-            //TODO
+            item.name = MainGUIPanel.capitalize(FPalaceHelper.get_stat_by_id(max_effect_id).getName() + " Potion");
         }
         
         if(skill > 0){
@@ -401,7 +400,7 @@ public class AlchemyItem extends Item {
             ident_chance = 2*ident_effectiveness.get(ident_effectiveness.size() - 1)/(identDifficulty);
             ident_roll = ident_effectiveness.get(ident_effectiveness.size() - 1);
             //ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1)
-            //ident_effectiveness = Arrays.copyOfRange(ident_effectiveness,0, ident_effectiveness.size()-1)//TODO verify
+            //ident_effectiveness = Arrays.copyOfRange(ident_effectiveness,0, ident_effectiveness.size()-1)
             ident_effectiveness.remove(ident_effectiveness.size());//TODO verify
         }
         

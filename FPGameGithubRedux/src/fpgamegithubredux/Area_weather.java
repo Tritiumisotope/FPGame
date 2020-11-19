@@ -29,11 +29,11 @@ public class Area_weather {
             daytime_status_time.add(time);//daytime_status_time[daytime_status_time.length] = time
 		}
 		
-		public String get_description(int current_day_count){
+		public String get_description(int currentDayCount){
 			String ret = "";
 			int i = 0;
 			for(i=0;i<daytime_status.size();i++){
-				if(current_day_count >= daytime_status_time.get(i))ret = daytime_status.get(i);
+				if(currentDayCount >= daytime_status_time.get(i))ret = daytime_status.get(i);
 			}
 			return ret;
 		}

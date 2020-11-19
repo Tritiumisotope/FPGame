@@ -147,8 +147,8 @@ public class Personality {
 				ArrayList<Integer> temp = new ArrayList<>();
 				temp.add(0);
 				curr_obj_step.add(temp);//curr_obj_step[curr_obj_step.length] = [0]
-				//curr_obj_start_tick.add(c.get_tick);//curr_obj_start_tick[curr_obj_start_tick.length] = c.get_tick()
-				//*TODO
+				curr_obj_start_tick.add(c.get_tick());//curr_obj_start_tick[curr_obj_start_tick.length] = c.get_tick()
+				
 			}
 		
 		}
@@ -287,7 +287,6 @@ public class Personality {
 				for(i=0;i<relationships.size();i++){
 					if(relationships.get(i).relationship_with == c){
 						Relationship temp_rel = relationships.get(i);
-						//TODO
 						if(temp_rel.get_introduced()){
 							if(c_self.get_surname().equals("") || check_relationship(c, c_self) > Personality.friends){
 								ret = c_self.getName();
@@ -597,7 +596,7 @@ public class Personality {
 			return ret;
 		}
 		
-		public String talk(Character c,Character c_self,int topic_num,int topic_step,int challenge_num,ArrayList<Object> dynamic_choice){
+		public String talk(Character c,Character c_self,int topic_num,int topic_step,int challenge_num,ArrayList<Integer> dynamic_choice){
 			//challenge_num=-1, dynamic_choice = null
 			String s = "";
 			
@@ -628,7 +627,7 @@ public class Personality {
 				Boolean add_flag = true;
 				ArrayList<Conversation_topic> init_topics = c.personality.get_topics(c);
 				for(i=0;i<init_topics.size();i++){
-					if(init_topics.get(i).get_topic_name() == new_topic.get_topic_name()){
+					if(init_topics.get(i).get_topic_name().equals(new_topic.get_topic_name())){
 						add_flag = false;
 						break;
 					}
@@ -644,9 +643,9 @@ public class Personality {
 					CharAction a = (CharAction)o;
 					if(challenge_num == -1){
 						a.set_originator(c_self);
-						//s += a.trigger(c, 1) + "\n";					
+						s += a.trigger(c, 1) + "\n";					
 					}else{
-						//s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
+						s += a.challenge(challenge_num,c,c_self,1, dynamic_choice);   
 						//TODO real methods
 					}
 				
@@ -732,13 +731,14 @@ public class Personality {
 		public void add_conversation_topic(Conversation_topic ct){
 			topics.add(ct); //topics[topics.length] = ct
 		}
-		/*
-		public int determine_target(enemies:Array, c_self:Character):int{
+		
+		public int determine_target(ArrayList<Character> enemies,Character c_self){
+			//enemies was an array of unknown
 			int ret = 0;//Math.round(Math.random()*(enemies.length-1));
-			var min_like:int = 0;
-			var i:int = 0;
-			for(i;i<enemies.length;i++){
-				if(enemies[i].personality == this){//don't target myself... for reasons...
+			int min_like = 0;
+			int i = 0;
+			for(i=0;i<enemies.size();i++){
+				if(enemies.get(i).personality == this){//don't target myself... for reasons...
 					if(ret == i){
 						if(ret <= 0){
 							ret++;
@@ -748,7 +748,7 @@ public class Personality {
 					}
 					continue;
 				}else{
-					var temp_check:int = check_relationship(enemies[i],c_self);
+					int temp_check = check_relationship(enemies.get(i),c_self);
 					if(temp_check < min_like){
 						ret = i;
 						min_like = temp_check;
@@ -757,52 +757,58 @@ public class Personality {
 			}
 			return ret;
 		}
-		/*
-		public function determine_action(c:Character, self:Character):int{
-			var actions:Array = self.get_attack_actions();
-			var choice_target:Character;
-			var rand:int = 0;//Math.round(Math.random()*(actions.length-1));//this is not a good way of making a choice...
+		
+		public int determine_action(Character c,Character self){
+			ArrayList<CharAction> actions = self.get_attack_actions();
+			Character choice_target;
+			int rand = 0;//Math.round(Math.random()*(actions.length-1));//this is not a good way of making a choice...
 			//return rand;
 			//evaluate an attacks for the character
-			var action_value:int = 0;
-			var top_three:Array = new Array();
-			var top_three_val:Array = new Array();
-			var i:int = 0;
-			for(i;i<actions.length;i++){
-				if(actions[i] != null){
-					if(actions[i].consequences[0] instanceof Dynamic_Consequence && actions[i].consequences[0].consequence_list_type == Dynamic_Consequence.list_inventory){
+			int action_value = 0;
+			ArrayList<Integer> top_three = new ArrayList<>();//was unknown array type
+			top_three.add(null);//I hate this!
+			top_three.add(null);
+			top_three.add(null);
+			ArrayList<Integer> top_three_val = new ArrayList<>();//same
+			top_three_val.add(null);//I hate this!
+			top_three_val.add(null);
+			top_three_val.add(null);
+			int i = 0;
+			for(i=0;i<actions.size();i++){
+				if(actions.get(i) != null){
+					if(actions.get(i).consequences.get(0) instanceof DynamicConsequence && ((DynamicConsequence)actions.get(i).consequences.get(0)).consequence_list_type == DynamicConsequence.list_inventory){
 						choice_target = self;
 					}else{
 						choice_target = c;
 					}
-					action_value = determine_action_consequence(actions[i], self, choice_target);
-					LOGGER.info(actions[i].get_name() + " " + action_value);
-					if(top_three_val[0] == null){
-						top_three[0] = i;
-						top_three_val[0] = action_value;
-						top_three[1] = i;
-						top_three_val[1] = action_value;
-						top_three[2] = i;
-						top_three_val[2] = action_value;
-					}else if(action_value >= top_three_val[0]){
-						top_three[2] = top_three[1];
-						top_three_val[2] = top_three_val[1];
-						top_three[1] = top_three[0];
-						top_three_val[1] = top_three_val[0];
-						top_three[0] = i;
-						top_three_val[0] = action_value;
-					}else if(top_three[0] == top_three[1] || action_value >= top_three_val[1]){
-						top_three[2] = top_three[1];
-						top_three_val[2] = top_three_val[1];
-						top_three[1] = i;
-						top_three_val[1] = action_value;
+					action_value = determine_action_consequence(actions.get(i), self, choice_target);
+					LOGGER.info(actions.get(i).getName() + " " + action_value);
+					if(top_three_val.get(0) == null){
+						top_three.set(0, i);
+						top_three_val.set(0, action_value);
+						top_three.set(1, i);
+						top_three_val.set(1, action_value);
+						top_three.set(2, i);
+						top_three_val.set(2, action_value);
+					}else if(action_value >= top_three_val.get(0)){
+						top_three.set(2, top_three.get(1));
+						top_three_val.set(2, top_three_val.get(1));
+						top_three.set(1, top_three.get(0));
+						top_three_val.set(1, top_three_val.get(0));
+						top_three.set(0, i);
+						top_three_val.set(0, action_value);
+					}else if(top_three.get(0).equals(top_three.get(1)) || action_value >= top_three_val.get(1)){
+						top_three.set(2, top_three.get(1));
+						top_three_val.set(2, top_three_val.get(1));
+						top_three.set(1, i);
+						top_three_val.set(1, action_value);
 					}
 				}				
 			}
-			rand = top_three[Math.round(Math.random()*(top_three.length-1))];
+			rand = top_three.get((int)Math.round(Math.random()*(top_three.size()-1)));
 			return rand;
 		}
-		*/
+		
 		public int determine_action_consequence(CharAction act, Character self){
 			return determine_action_consequence(act,self,null);
 		}
@@ -947,70 +953,73 @@ public class Personality {
 			return ret;
 		}
 		
-		/*
-		public function determine_dynamic(enemy_id:int, attack_id:int, self:Character):int{
-			var ret:int = 0;
+		
+		public int determine_dynamic(int enemy_id,int attack_id,Character self){
+			int ret = 0;
 			
-			var temp_action:Action = self.get_attack_action(attack_id);
-			var temp_conseq:Dynamic_Consequence = temp_action.consequences[0];//should be searching through for the dynamic consequence... just assuming 0 
-			var temp_enemy:Character = self.location.get_content(enemy_id) as Character;
+			CharAction temp_action = self.get_attack_action(attack_id);
+			//BELOW MIGHT FAIL
+			DynamicConsequence temp_conseq = (DynamicConsequence)temp_action.consequences.get(0);//should be searching through for the dynamic consequence... just assuming 0 
+			Character temp_enemy = (Character)self.location.getContent(enemy_id);
 			
-			if(temp_conseq.consequence_list_type == Dynamic_Consequence.list_inventory){
+			if(temp_conseq.consequence_list_type == DynamicConsequence.list_inventory){
 				//go through the inventory, and see if determine what we think are the consequences of it's use
-				var con_ratings:Array = new Array();
-				var pos_count:int = 0;
-				for(pos_count;pos_count < self.possessions.length ;pos_count++){
-					var temp_item:Item = self.possessions[pos_count];
-					con_ratings[pos_count] = determine_item_consequences(temp_item, self);
+				ArrayList<Integer> con_ratings = new ArrayList<>();//array, unknown type
+				int pos_count = 0;
+				for(pos_count=0;pos_count < self.possessions.size() ;pos_count++){
+					Item temp_item = self.possessions.get(pos_count);
+					//con_ratings[pos_count] = determine_item_consequences(temp_item, self);
+					//adding from 0 so...
+					con_ratings.add(determine_item_consequences(temp_item,self));	
 				}
 				
 				if(temp_enemy != self && check_relationship(temp_enemy,self) < 0){
 					//if using on someone we dislike, we want negative consequences
-					var curr_min:int = con_ratings[0];
-					var min_id:int = 0;
+					int curr_min = con_ratings.get(0);
+					int min_id = 0;
 					pos_count = 1;
-					for(pos_count;pos_count<con_ratings.length;pos_count++){
-						if(con_ratings[pos_count] < curr_min){
-							curr_min = con_ratings[pos_count];
+					for(pos_count=1;pos_count<con_ratings.size();pos_count++){
+						if(con_ratings.get(pos_count) < curr_min){
+							curr_min = con_ratings.get(pos_count);
 							min_id = pos_count;
 						}
 					}
 					return min_id;
 				}else{
 					//if using on someone we like, we want posititve consequences
-					var curr_max:int = con_ratings[0];
-					var max_id:int = 0;
+					int curr_max = con_ratings.get(0);
+					int max_id = 0;
 					pos_count = 1;
-					for(pos_count;pos_count<con_ratings.length;pos_count++){
-						if(con_ratings[pos_count] > curr_max){
-							curr_max = con_ratings[pos_count];
+					for(pos_count=1;pos_count<con_ratings.size();pos_count++){
+						if(con_ratings.get(pos_count) > curr_max){
+							curr_max = con_ratings.get(pos_count);
 							max_id = pos_count;
 						}
 					}
 					return max_id;
 				}
 				
-			}else if(temp_conseq.consequence_list_type == Dynamic_Consequence.list_noncrit_parts){
-				var con_count:int = 0;
-				var part_count:int = 0;
-				for(con_count;con_count < temp_enemy.body.parts.length;con_count++){
-					if(!temp_enemy.body.parts[con_count].crit_part()){
+			}else if(temp_conseq.consequence_list_type == DynamicConsequence.list_noncrit_parts){
+				int con_count = 0;
+				int part_count = 0;
+				for(con_count=0;con_count < temp_enemy.body.parts.size();con_count++){
+					if(!temp_enemy.body.parts.get(con_count).crit_part()){
 						part_count++;
 					}
 				}
-				ret = Math.round(Math.random()*part_count);
-			}else if(temp_conseq.consequence_list_type == Dynamic_Consequence.list_parts){
-				con_count = 0;
-				part_count= 0;
-				for(con_count;con_count < temp_enemy.body.parts.length;con_count++){
+				ret = (int)Math.round(Math.random()*part_count);
+			}else if(temp_conseq.consequence_list_type == DynamicConsequence.list_parts){
+				int con_count = 0;
+				int part_count= 0;
+				for(con_count=0;con_count < temp_enemy.body.parts.size();con_count++){
 					part_count++;
 				}
-				ret = Math.round(Math.random()*part_count);
+				ret = (int)Math.round(Math.random()*part_count);
 			}
 			
 			return ret;
 		}
-		*/
+		
 		public int determine_overworld_action(ArrayList<String> option_set, Character c){//was array
 			int ret = 0;
 			
