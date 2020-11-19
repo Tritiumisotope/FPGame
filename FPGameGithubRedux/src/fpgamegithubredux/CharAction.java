@@ -38,7 +38,7 @@ public class CharAction {
     public Item trader_item = null;
     public Boolean personal = false;
     public Boolean party_use = false;
-    public Boolean rest_flag;
+    public Boolean rest_flag = false;
     public int attack_flag = -1;
 	public String attack_type = "";
 	public int attack_order = -1;
