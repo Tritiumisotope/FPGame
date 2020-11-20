@@ -2,6 +2,8 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 
+import java.util.logging.Logger;
+
 public class Sex extends DynamicObject {
 
     public String pronoun;
@@ -18,13 +20,12 @@ public class Sex extends DynamicObject {
     public ArrayList<Integer> damage_type_strengths;
     public ArrayList<Integer> damage_type_weaknesses;
 
+    
     public Sex() {
         name = "";
         bonus = new ArrayList<>();//new Number[0]
         age_stat = new ArrayList<>();//new int[0]
-        ArrayList<Double> dubtemp = new ArrayList<>();
-        age_stat_change = new ArrayList<>();//new double[0][0]
-        age_stat_change.add(dubtemp);
+        age_stat_change = new ArrayList<ArrayList<Double>>();//new double[0][0]
         social_topics = new ArrayList<>();
         pronoun = "";
         noun = "";
@@ -118,25 +119,25 @@ public class Sex extends DynamicObject {
         for (i=0;i<age_stat.size();i++){
             int j;// = starting_age
             double percent_change = 0;//was Number
-            if(age_stat_change.get(i) != null){
+            if(age_stat_change.get(i) != null && age_stat_change.get(i).size() > 0){
                 Number curr_stat_val;
                 if(age_change > 0){
                     curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
                     //j++//starting_age+1
 
                     for(j=starting_age+1;j<= ending_age;j++){
-                        if (age_stat_change.get(i).get(j) != null){
-                            percent_change = age_stat_change.get(i).get(j);
+                        if(j >= age_stat_change.get(i).size()){
+                            percent_change = age_stat_change.get(i).get(age_stat_change.get(i).size()-1);
                             percent_change = curr_stat_val.doubleValue()*percent_change;
                             curr_stat_val = curr_stat_val.doubleValue() + percent_change;
-                        }else if(j >= age_stat_change.get(i).size()){
-                            percent_change = age_stat_change.get(i).get(age_stat_change.get(i).size()-1);
+                        }else if (age_stat_change.get(i).get(j) != null){
+                            percent_change = age_stat_change.get(i).get(j);
                             percent_change = curr_stat_val.doubleValue()*percent_change;
                             curr_stat_val = curr_stat_val.doubleValue() + percent_change;
                         }
                     }
                     //TODO
-                    //c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
+                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
                 }else if(age_change < 0){
                     curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
                     
@@ -148,7 +149,7 @@ public class Sex extends DynamicObject {
                         }
                     }
                     //TODO
-                    //c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
+                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
                 }
             }
         }
@@ -168,6 +169,7 @@ public class Sex extends DynamicObject {
         for(int i=0;i<stat_change.length;i++){
             dia1.add(stat_change[i]);
         }
+        
         age_stat.add(stat_id);
         age_stat_change.add(dia1);
     }

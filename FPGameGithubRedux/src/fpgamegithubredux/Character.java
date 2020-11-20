@@ -253,6 +253,7 @@ public class Character extends DynamicObject {
                     challenge_output += temp_array.get(i) + "~<br>~";   
                 }else if(challenge_output.indexOf(temp_array.get(i)) >= 0){
                     //we may need to tick up the count for this stat...
+                    /*
                     if(challenge_output.charAt(challenge_output.indexOf(temp_array.get(i)) - 1) == '\"'){
                         int start_string = challenge_output.indexOf(temp_array.get(i)) - 3;
                         while(challenge_output.charAt(start_string) != ',' && start_string >= 0)start_string--;
@@ -274,6 +275,7 @@ public class Character extends DynamicObject {
                             }
                         }
                     }
+                    */
                 }
             }
         }
