@@ -230,7 +230,7 @@ public class Equipment extends Item {
 			int i = 0;
 			for(i=0;i<temp.size();i++){
 				for(int j=i+1;j<temp.size();j++){
-					//if(temp.get(j) == temp.get(i)) temp = temp.slice(0,j).concat(temp.slice(j+1,temp.length))
+					//temp = temp.slice(0,j).concat(temp.slice(j+1,temp.length))
 					if(temp.get(j).equals(temp.get(i))) temp.remove(j);
 				}
 			}
@@ -242,12 +242,9 @@ public class Equipment extends Item {
 			set_equip_condition(stat_id, max, -1);
 		}
 		public void set_equip_condition(int stat_id,int max,int min){//dedault min -1
-			//stat_req[stat_req.length] = stat_id
-			//stat_min[stat_min.length] = min
-			//stat_max[stat_max.length] = max
-			stat_req.set(stat_req.size(), stat_id);
-			stat_min.set(stat_min.size(), min);
-			stat_max.set(stat_max.size(), max);
+			stat_req.set(stat_req.size(), stat_id);	//stat_req[stat_req.length] = stat_id
+			stat_min.set(stat_min.size(), min);//stat_min[stat_min.length] = min
+			stat_max.set(stat_max.size(), max);//stat_max[stat_max.length] = max
 
 		}
 		
@@ -267,25 +264,20 @@ public class Equipment extends Item {
 		public String remove_effects(Character c,Boolean effects_only){//default false
 			String s = "";
 			int i = 0;
-			/*TODO CHaracter
 			for(i=0;i<effects.size();i++){
-				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, -effects.get(i));//c.apply_affect_by_id(i,-effects[i],0,null, Body.change_stats_total);
+				//comment on this line original to AS
+				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, -effects.get(i));//c.apply_affect_by_id(i,-effects[i],0,null, Body.change_stats_total)
 			}
-			*/
-			/*
 			for(i=0;i<skill_id.size();i++){
 				if(skill_bonus.get(i) != 0)s += c.set_skill_bonus(skill_id.get(i), -skill_bonus.get(i));
 			}
-			*/
 			if(!effects_only){
-				/*TODO
 				if(statActionAdd.size() > 0){
 					i = 0;
-					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
-						c.remove_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
+					for(i=0;i<Math.ceil(statActionAdd.size());i++){
+						c.remove_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
 				}
-				*/
 				for (i=0;i<remove_consequence.size();i++){
 					if (remove_consequence.get(i) != null){
 						if(remove_consequence.get(i) instanceof Consequence){
@@ -324,14 +316,12 @@ public class Equipment extends Item {
 						}
 					}
 				}
-				/*TODO add_stat_action Character
 				if(statActionAdd.size() > 0){
 					i = 0;
 					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
-						c.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
+						c.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
 				}
-				*/
 			}
 			/*TODO
 			for(i=0;i<effects.size();i++){
@@ -482,7 +472,7 @@ public class Equipment extends Item {
 		}
 		
 		@Override 
-		public Item copyItem(){
+		public Item copyItem(){//Should this just return Equipment?
 			Equipment temp = new Equipment();
 			temp.name = this.name;
 			temp.droppedDescription = this.droppedDescription;

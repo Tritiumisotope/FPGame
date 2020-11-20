@@ -255,36 +255,46 @@ public class Weapon extends Item {
         
         return ret;			
     }
-    /*
+    
     @Override 
-    public Item copyItem(){
-        Weapon = new Weapon();
+    public Item copyItem(){//should this just return Weapon?
+        Weapon temp = new Weapon();
         temp.name = this.name;
         temp.num_hold_slots_req = this.num_hold_slots_req;
         temp.attack_action = this.attack_action;
         temp.stat_req = this.stat_req;
         temp.stat_min = this.stat_min;
-        temp.dropped_description = this.dropped_description;
+        temp.droppedDescription = this.droppedDescription;
         temp.value = this.value;
-        var count:int = 0;
-        for(count;count<effects.length;count++){
+        //int count = 0;
+        /*
+        for(count=0;count<effects.size();count++){
             temp.effects[count] = this.effects[count];
         }
-        temp.use_description = this.use_description;
+        */
+        temp.effects = new ArrayList<>(this.effects);
+        temp.useDescription = this.useDescription;
+        /*
         count = 0;
         for(count;count<changeEffects.length;count++){
             temp.changeEffects[count] = this.changeEffects[count];
         }
+        */
+        //TODO verify both
+        temp.changeEffects = new ArrayList<>(this.changeEffects);
         temp.propogate = this.propogate;
-        temp.inventory_description = inventory_description;
+        temp.inventoryDescription = inventoryDescription;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
+        /*
         count = 0;
         for(count;count < statActionAdd.size();count++){
             temp.statActionAdd[count] = this.statActionAdd[count];
         }
-        temp.num_uses = this.num_uses;
-        
+        */
+        temp.statActionAdd = new ArrayList<>(this.statActionAdd);
+        temp.numUses = this.numUses;
+        /*
         count = 0;
         for(count;count<skill_id.length;count++){
             temp.skill_id[count] = this.skill_id[count];
@@ -293,23 +303,26 @@ public class Weapon extends Item {
         for(count;count<skill_bonus.length;count++){
             temp.skill_bonus[count] = this.skill_bonus[count];
         }
+        */
+        temp.skill_id = new ArrayList<>(this.skill_id);
+        temp.skill_bonus = new ArrayList<>(this.skill_bonus);
         
-        temp.image_id = this.image_id;
+        temp.imageID = this.imageID;
         
         temp.enchantment_level = this.enchantment_level;
         
         temp.topic = this.topic;
         
-        temp.crafting_requirements = this.crafting_requirements;
+        temp.craftingRequirements = new ArrayList<>(this.craftingRequirements);
         
         temp.upgrade_slot_ids = upgrade_slot_ids;
-        temp.upgrade_items = new Array();
+        temp.upgrade_items = new ArrayList<>();
         
-        temp.tick_count = 0;
-        temp.destroy_tick = this.destroy_tick;
-        temp.spawn_char = this.spawn_char;
+        temp.tickCount = 0;
+        temp.destroyTick = this.destroyTick;
+        temp.spawnChar = this.spawnChar;
         
         return temp;
     }
-    */
+    
 }

@@ -927,78 +927,80 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    /*
-    public function re_equip(curr_state:int = 0):String{
+    public String re_equip(){
+        return re_equip(0);
+    }
+    public String re_equip(int curr_state){//def 0
         if(curr_state != 0) return "";
         if(equip_state == 1) return "";
         equip_state = 1;
-        var s:String = ""
-        var i:int = 0;
-        for(i;i<body.parts.length;i++){
-            var j:int = 0;
-            if(body.parts[i].get_hold() != null){
-                var w:Weapon = body.parts[i].get_hold();
-                for(j;j<w.stat_req.length;j++){
-                    if(w.stat_min[j] > get_stat(w.stat_req[j])){
-                        set_challenge_output("<b></n>s change has caused </noun> " + w.getName() + " to fall from </noun> " + body.parts[i].get_name() + "!</b> ");
+        String s = "";
+        int i = 0;
+        for(i=0;i<body.parts.size();i++){
+            int j = 0;
+            if(body.parts.get(i).get_hold() != null){
+                Weapon w = body.parts.get(i).get_hold();
+                for(j=0;j<w.stat_req.size();j++){
+                    if(w.stat_min.get(j) > get_stat(w.stat_req.get(j)).doubleValue()){
+                        set_challenge_output("<b></n>s change has caused </noun> " + w.getName() + " to fall from </noun> " + body.parts.get(i).getName() + "!</b> ");
                         if(location!= null){
                             unhold(w);
-                            var k:int = 0;
-                            for(k;k<possessions.size();k++){
-                                if(possessions[k] == w){
+                            int k = 0;
+                            for(k=0;k<possessions.size();k++){
+                                if(possessions.get(k) == w){
                                     drop(k);
                                     break;
                                 }
                             }
-                            location.new_content(w);
+                            location.newContent(w);
                         }   
                     }
                 }
             }
             
-            if(body.parts[i].equip != null){
-                for(j;j<body.parts[i].equip.length;j++){
-                    var e:Equipment = body.parts[i].equip[j];
+            if(body.parts.get(i).equip != null){
+                for(j=0;j<body.parts.get(i).equip.size();j++){
+                    Equipment e = body.parts.get(i).equip.get(j);
                     if(e != null){
-                        var count:int = 0;					
-                        for (count;count<e.stat_req.length;count++){
-                            if( e.stat_min[count] > get_stat(e.stat_req.get(count)) || get_stat(e.stat_req.get(count)) > e.stat_max.get(count)) {
+                        int count = 0;					
+                        for (count=0;count<e.stat_req.size();count++){
+                            if( e.stat_min.get(count) > get_stat(e.stat_req.get(count)).intValue() || get_stat(e.stat_req.get(count)).intValue() > e.stat_max.get(count)) {
                                 //Need to figure out what happened... did we outgrow the garment, or shrink below it's requirement?
-                                k = 0;
-                                if(get_stat(e.stat_req.get(count)) > e.stat_max.get(count)){						
-                                    set_challenge_output("<b></n>s change has torn </noun> " + e.getName() + " to shreds! </b>")
+                                int k = 0;
+                                if(get_stat(e.stat_req.get(count)).intValue() > e.stat_max.get(count)){						
+                                    set_challenge_output("<b></n>s change has torn </noun> " + e.getName() + " to shreds! </b>");
                                     unequip(e);
-                                    for(k;k<possessions.size();k++){
-                                        if(possessions[k] == e){
+                                    for(k=0;k<possessions.size();k++){
+                                        if(possessions.get(k) == e){
                                             drop(k);
                                             break;
                                         }
                                     }
                                 }else{
-                                    set_challenge_output("<b></n>s change has caused </noun> " + e.getName() + " to fall from </noun> " + body.parts[i].get_name() + "! </b>")
+                                    set_challenge_output("<b></n>s change has caused </noun> " + e.getName() + " to fall from </noun> " + body.parts.get(i).getName() + "! </b>");
                                     unequip(e);
                                     if(location!= null){
-                                        for(k;k<possessions.size();k++){
-                                            if(possessions[k] == e){
+                                        for(k=0;k<possessions.size();k++){
+                                            if(possessions.get(k) == e){
                                                 drop(k);
                                                 break;
                                             }
                                         }
-                                        location.new_content(e);
+                                        location.newContent(e);
                                     }
                                 }
                                 break;
                             }
                         }
                     }
-                    if(body.parts[i] == null) break;
+                    if(body.parts.get(i) == null) break;
                 }
             }
         }
         equip_state = 0;
         return s;
     }
-    *//*
+    /*
     public function new_race(i:int, r:Race):String{
 			var ret:String = "<br>";
 			if (i >= 0 && i < body.parts.length) {
@@ -1321,42 +1323,41 @@ public class Character extends DynamicObject {
 			
 			return ret;
 		}
-		
-		public function apply_equip_affect_by_id(id:int, change_amt:Number):String{
-			var ret:String = "";
-			
-			var count:int = 0;
-			var i:int = 0;
-			for(i;i<stat_id.length;i++){
-				if(stat_id[i] == id)count++;
-			}
-			count += body.part_count_by_stat(this, id);
-			
-			change_amt = change_amt/count;
-			i = 0;
-			for(i;i<stat_id.length;i++){
-				if(stat_id[i] == id){
-					ret += stat[i].get_equip_change(change_amt, this);
-				}
-			}
-			
-			ret += body.get_equip_effects(id, change_amt, this);
-			
-			if(equip_state == 0){
-				get_combat_status();//will remove dead parts, if there are any
-				if(!body.alive(this) && location != null)ret += die();
-				ret += re_equip(equip_state);
-				ret += body.check_state(this);
-			}
-			
-			if(ret != ""){
-				set_challenge_output("<sid"+id+","+change_amt+",0,\""+ret+"\">");
-				
-			}
-			
-			return ret;
+    */
+    public String apply_equip_affect_by_id(int id,Number change_amt){
+        String ret = "";
+        
+        int count = 0;
+        int i = 0;
+        for(i=0;i<statID.size();i++){
+            if(statID.get(i) == id)count++;
         }
-        */
+        count += body.part_count_by_stat(this, id);
+        
+        change_amt = change_amt.doubleValue()/count;
+        i = 0;
+        for(i=0;i<statID.size();i++){
+            if(statID.get(i) == id){
+                ret += stats.get(i).get_equip_change(change_amt, this);
+            }
+        }
+        
+        ret += body.get_equip_effects(id, change_amt, this);
+        
+        if(equip_state == 0){
+            get_combat_status();//will remove dead parts, if there are any
+            if(!body.alive(this) && location != null)ret += die();
+            ret += re_equip(equip_state);
+            ret += body.check_state(this);
+        }
+        
+        if(ret != ""){
+            set_challenge_output("<sid"+id+","+change_amt+",0,\""+ret+"\">");
+            
+        }
+        
+        return ret;
+    }
     public String apply_affect_by_id(int i,Number k){
         return apply_affect_by_id(i,k, 0, null, 0, false, -1,-1);
     }

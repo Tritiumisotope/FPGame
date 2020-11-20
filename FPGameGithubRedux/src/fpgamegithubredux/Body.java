@@ -201,7 +201,7 @@ public class Body {
                     body_ret = false;
                     break;
                 }else{
-                    //c.set_challenge_output("<b></n> has broken </noun> " + parts.get(i).getName()+". </b>");
+                    c.set_challenge_output("<b></n> has broken </noun> " + parts.get(i).getName()+". </b>");
                     remove_part_by_count(i, c);
                     //TODO remove part, set_challenge_output
                     i--;
@@ -458,7 +458,6 @@ public class Body {
             c.equip_state = 0;
         }
         temp_array.add(p);//this is the first element anyway//temp_array.set(0,p) //temp_array[0] = p
-        i = 0;
         for(i=0;i<parts.size();i++){
             LOGGER.info("Parts scan, part: " + i);
             if(parts.get(i) != null){
@@ -474,7 +473,7 @@ public class Body {
                 if(!added && parts.get(i - 1) != null && parts.get(i) != null){
                     if(p.get_part_id() >= parts.get(i - 1).get_part_id()
                     && p.get_part_id() < parts.get(i).get_part_id() ){
-                        //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()));
+                        //parts = parts.slice(0, i).concat(temp_array).concat(parts.slice(i, parts.size()))
                         parts.addAll(i, temp_array);//TODO confirm
                         i++;
                         added = true;
@@ -482,7 +481,7 @@ public class Body {
                 
                 }else if(!added && parts.get(i - 1) == null){
                     if(p.get_part_id() < parts.get(i).get_part_id()){
-                        //parts = temp_array.concat(parts);
+                        //parts = temp_array.concat(parts)
                         temp_array.addAll(parts);
                         parts = new ArrayList<>(temp_array);
                         added = true;
@@ -496,14 +495,12 @@ public class Body {
         
         if(i >= parts.size() && parts.size() > 2){
             if(name_in_use > 0){
-                i = 0;
                 int lowest = 100;
                 int lowest_id = -1;
                 for(i=0;i<p.can_connect_to.size();i++){
                     ArrayList<BodyPart> temp_connect_part = get_part_by_id(p.can_connect_to.get(i));
                     if(temp_connect_part.size() > 0){
                         int already_connected_count = 0;
-                        j = 0;
                         for(j=0;j<temp_connect_part.size();j++){
                             int k = 0;
                             for(k=0;k<temp_connect_part.get(j).can_connect_to.size();k++){
@@ -535,11 +532,11 @@ public class Body {
         //go through the equipment and see if any of it should be covering/equiped on the new part
         //made equivalent evalution below
         if(p.covered_by.size()==0 && p.equip.size()==0){//if(!(p.covered_by.get(0) != null || p.equip.get(0) != null)){
-            i = 0;
             for(i=0;i<equip_array.size();i++){
                 temp_e = (Equipment)equip_array.get(i);
                 j = 0;
-                /*temp_array = temp_e.get_cover_slots();
+                /*
+                temp_array = temp_e.get_cover_slots();
                 //TODO why is this not int
                 for(j=0;j<temp_array.size();j++){
                     if(temp_array.get(j) == p.get_part_id()){
@@ -550,7 +547,7 @@ public class Body {
                 
                 j = 0;
                 temp_array = temp_e.get_equip_slots();
-                for(j=0;j<temp_array.length;j++){
+                for(j=0;j<temp_array.size();j++){
                     if(temp_array.get(j) == p.get_part_id()){
                         p.set_equip(temp_e);
                         break;
@@ -642,7 +639,7 @@ public class Body {
                 if(!temp_string.equals("")) s = temp_string;
                 
             }else if(part_id == target_parts_one_by_one){
-                //trace("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
+                LOGGER.info("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
             }
         }
         
@@ -767,7 +764,7 @@ public class Body {
                 if(ret_part == null){
                     ret_part = parts.get(i);
                 }else{
-                    //trace("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
+                    LOGGER.info("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
                     break;
                 }
             }
@@ -817,40 +814,31 @@ public class Body {
         String ret = "";
         if(e != null){
             //"</n> removes the " + e.get_name() + ".";
-            //TODO WTF
+            //TODO WTF not a variable
             int i = 0;
             for (i=0;i<parts.size();i++){
                 int j = 0;
                 for(j=0;j<parts.get(i).equip.size();j++){
                     if(parts.get(i).equip.get(j) == e){
-                        //parts.get(i).equip = parts.get(i).equip.slice(0,j).concat(parts.get(i).equip.slice(j+1,parts.get(i).equip.length));
-                        /*
-                        ArrayList<Equipment> temp = new ArrayList<>();
-                        temp.addAll(parts.get(i).equip.subList(0,j));
-                        temp.addAll(parts.get(i).equip.subList(j+1,parts.get(i).equip.size()));
-                        parts.get(i).equip =temp;
-                        */
-                        //TODO above or below?!
+                        //parts.get(i).equip = parts.get(i).equip.slice(0,j).concat(parts.get(i).equip.slice(j+1,parts.get(i).equip.length))
+                        //TODO verify
                         parts.get(i).equip.remove(j);
-                        //TODO
                         j--;
                     }
                 }
                 for(j=0;j<parts.get(i).covered_by.size();j++){
                     if(parts.get(i).covered_by.get(j) == e){
-                        //parts.get(i).covered_by = parts.get(i).covered_by.slice(0,j).concat(parts.get(i).covered_by.slice(j+1,parts.get(i).covered_by.size()));
-                        //TODO
+                        //parts.get(i).covered_by = parts.get(i).covered_by.slice(0,j).concat(parts.get(i).covered_by.slice(j+1,parts.get(i).covered_by.size()))
+                        parts.get(i).covered_by.remove(j);
                         j--;
                     }
                 }
-                if(parts.get(i) == null); //trace("wha?" + i);
+                if(parts.get(i) == null) LOGGER.info("wha?" + i);
             }
             c.equip_state = 1;
-            //ret += e.remove_effects(c);
-            //TODO
+            ret += e.remove_effects(c);
             c.equip_state = 0;
-            //c.add_to_possessions(e);
-            //TODO
+            c.addToPossessions(e);
             
             check_combat_status(true,c);
         }
@@ -938,12 +926,10 @@ public class Body {
                 if(temp.doubleValue() > -1 && (part_id == target_all_parts ||  part_id == parts.get(k).get_part_id())){
                     if(multi_part_process == get_stat_total){
                         skip_calc = true;
-                        //ret += temp;
-                        ret = ret.doubleValue() + temp.doubleValue();
+                        ret = ret.doubleValue() + temp.doubleValue();//ret += temp
                     }else if(multi_part_process == get_stat_min){
                         if(!found_flag){
-                            //ret += temp;
-                            ret = ret.doubleValue() + temp.doubleValue();
+                            ret = ret.doubleValue() + temp.doubleValue();//ret += temp
                         }else{
                             if(temp.doubleValue() < ret.doubleValue()){
                                 ret = temp;
@@ -951,8 +937,7 @@ public class Body {
                         }
                     }else if(multi_part_process == get_stat_max){
                         if(!found_flag){
-                            //ret += temp;
-                            ret = ret.doubleValue() + temp.doubleValue();
+                            ret = ret.doubleValue() + temp.doubleValue();//ret += temp
                         }else{
                             if(temp.doubleValue() > ret.doubleValue()){
                                 ret = temp;
@@ -967,7 +952,7 @@ public class Body {
                     }
                 }
             }else if(temp.doubleValue() > -1 && part_id == target_parts_one_by_one){
-                //trace("(Body)No clue what I'm doing here");
+                LOGGER.info("(Body)No clue what I'm doing here");
             }
         }
         return ret;
@@ -1447,10 +1432,10 @@ public class Body {
             for(j=0;j<parts.get(i).stat_id.size();j++){
                 while(ret.indexOf("</s"+parts.get(i).stat_id.get(j)+">") >= 0){
                     //should be checking if this stat is shared across multiple parts... just getting the total
-                    //ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">", String(c_self.get_stat(parts.get(i).stat_id.get(j)).toFixed(parts.get(i).stat_description.get(j).show_decimals)));
-                    //TODO toFixed
+                    //ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">", String(c_self.get_stat(parts.get(i).stat_id.get(j)).toFixed(parts.get(i).stat_description.get(j).show_decimals)))
+                    //TODO toFixed check
                     double temp = c_self.get_stat(parts.get(i).stat_id.get(j)).doubleValue();
-                    BigDecimal decimal = new BigDecimal(temp); 
+                    BigDecimal decimal = BigDecimal.valueOf(temp); 
                     decimal.setScale(parts.get(i).stat_description.get(j).show_decimals);//TODO set rounding mode?
                     ret = ret.replace("</s"+parts.get(i).stat_id.get(j)+">",decimal.toString());
                 }
@@ -1474,34 +1459,35 @@ public class Body {
     private String target_change(){
         return arguments[0].substr(0,2).concat(arguments[0].substr(3,arguments.get(0).length));
     }*/
-    /*
-    public function clone(b:Body, c:Character):void{
+    
+    public void copyBody(Body b, Character c){
         int i = 0;
-        for (i;i<b.parts.size();i++){
-            var p:Body_part = new Body_part();
-            p.clone(b.parts.get(i));
+        for (i=0;i<b.parts.size();i++){
+            BodyPart p = new BodyPart();
+            p.bodyPartCopy(b.parts.get(i));
             add_part(p,c);
         }
         
         //Need to go through the equipment, clone it, resize it, and re-equip it in the same order it was previously equiped in...
-        var temp_equip_array:Array = new Array();
-        var item_id:int = -1;
+        ArrayList<Equipment> temp_equip_array = new ArrayList<>();
+        int item_id = -1;
         i = 0;
-        for (i;i<parts.size();i++){
+        for (i=0;i<parts.size();i++){
             if(parts.get(i) != null){
-                while(parts.get(i).get_equip()[0] != null){
-                    var old_e:Equipment = parts.get(i).get_equip()[0];
-                    var new_e:Equipment = old_e.clone() as Equipment;
+                while(parts.get(i).get_equip().get(0) != null){
+                    Equipment old_e = parts.get(i).get_equip().get(0);
+                    Equipment new_e = (Equipment)((Equipment)old_e).copyItem();
                     
                     unequip(old_e, c);
                     
                     item_id = -1;
-                    for(item_id;item_id<c.possessions.length;item_id++){
-                        if(c.possessions[item_id] == old_e) break;
+                    for(item_id=-1;item_id<c.possessions.size();item_id++){
+                        if(c.possessions.get(item_id) == old_e) break;
                     }
                     c.drop(item_id);
                     
-                    temp_equip_array[temp_equip_array.length] = new_e;
+                    //temp_equip_array[temp_equip_array.length] = new_e;
+                    temp_equip_array.add(new_e);
 
                     if(parts.get(i) == null)break;
                 }
@@ -1509,20 +1495,22 @@ public class Body {
                 if(parts.get(i) == null)break;
                 
                 if(parts.get(i).get_hold() != null){
-                    var old_hold:Weapon = parts.get(i).get_hold();
-                    var new_w:Weapon = old_hold.clone() as Weapon;
+                    Weapon old_hold = parts.get(i).get_hold();
+                    Weapon new_w = (Weapon)((Weapon)old_hold).copyItem();
                     unhold(old_hold, c);
                     
-                    var j:int = 0;
-                    for(j;j<new_w.stat_req.length;j++){
-                        if(c.get_stat(new_w.stat_req[j]) < new_w.stat_min[j]){
-                            new_w.stat_min[j] = c.get_stat(new_w.stat_req[j]);
+                    int j = 0;
+                    for(j=0;j<new_w.stat_req.size();j++){
+                        if(c.get_stat(new_w.stat_req.get(j)).intValue() < new_w.stat_min.get(j)){
+                            //new_w.stat_min.get(j) = c.get_stat(new_w.stat_req.get(j));
+                            //starts at 0, but stat_req and stat_min are both full, so...
+                            new_w.stat_min.set(j, c.get_stat(new_w.stat_req.get(j)).intValue());
                         }
                     }
                     
                     item_id = -1;
-                    for(item_id;item_id<c.possessions.length;item_id++){
-                        if(c.possessions[item_id] == old_hold) break;
+                    for(item_id=-1;item_id<c.possessions.size();item_id++){
+                        if(c.possessions.get(item_id) == old_hold) break;
                     }
                     c.drop(item_id);
                     
@@ -1541,32 +1529,37 @@ public class Body {
         }
         */
         //Make sure the equipment/weapons are still usable after the stat jiggle
-        /*
+        
         i = 0;
-        for(i=0;i<temp_equip_array.length;i++){
-            new_e = temp_equip_array[i];
-            j = 0;
-            for(j;j<new_e.stat_req.length;j++){
-                var change_amount:Number = 0;
-                var k:int = 0;
-                if(c.get_stat(new_e.stat_req[j]) < new_e.stat_min[j]){
-                    change_amount =  new_e.stat_min[j] - c.get_stat(new_e.stat_req[j]);
-                    new_e.stat_min[j] = c.get_stat(new_e.stat_req[j]) - change_amount;
-                    new_e.stat_max[j] = new_e.stat_max[j] - change_amount;
-                    for(k;k<new_e.cover_stat.length;k++){
-                        if(new_e.cover_stat[k] == new_e.stat_req[j]){
-                            new_e.cover_min[k] = new_e.cover_min[k] - change_amount;
+        for(i=0;i<temp_equip_array.size();i++){
+            Equipment new_e = temp_equip_array.get(i);
+            int j = 0;
+            for(j=0;j<new_e.stat_req.size();j++){
+                Number change_amount = 0;
+                int k = 0;
+                if(c.get_stat(new_e.stat_req.get(j)).intValue() < new_e.stat_min.get(j)){
+                    change_amount =  new_e.stat_min.get(j) - c.get_stat(new_e.stat_req.get(j)).intValue();
+                    //new_e.stat_min.get(j) = c.get_stat(new_e.stat_req.get(j)) - change_amount
+                    new_e.stat_min.set(j, c.get_stat(new_e.stat_req.get(j)).intValue() - change_amount.intValue());
+                    //new_e.stat_max.get(j) = new_e.stat_max.get(j) - change_amount
+                    new_e.stat_max.set(j, new_e.stat_max.get(j) - change_amount.intValue());
+                    for(k=0;k<new_e.cover_stat.size();k++){
+                        if(new_e.cover_stat.get(k).equals(new_e.stat_req.get(j))){
+                            //new_e.cover_min[k] = new_e.cover_min[k] - change_amount
+                            new_e.cover_min.set(k, new_e.cover_min.get(k) - change_amount.intValue());
                         }
                     }
                 }
                 
-                if(c.get_stat(new_e.stat_req[j]) > new_e.stat_max[j]){
-                    change_amount =  c.get_stat(new_e.stat_req[j]) - new_e.stat_max[j];
-                    new_e.stat_max[j] = c.get_stat(new_e.stat_req[j]) + change_amount;
-                    if(new_e.stat_min[j]>=0)new_e.stat_min[j] = new_e.stat_min[j] + change_amount;
-                    for(k;k<new_e.cover_stat.length;k++){
-                        if(new_e.cover_stat[k] == new_e.stat_req[j]){
-                            new_e.cover_min[k] = new_e.cover_min[k] + change_amount;
+                if(c.get_stat(new_e.stat_req.get(j)).intValue() > new_e.stat_max.get(j)){
+                    change_amount =  c.get_stat(new_e.stat_req.get(j)).intValue() - new_e.stat_max.get(j);
+                    //new_e.stat_max[j] = c.get_stat(new_e.stat_req.get(j)) + change_amount
+                    new_e.stat_max.set(j, c.get_stat(new_e.stat_req.get(j)).intValue() + change_amount.intValue());
+                    if(new_e.stat_min.get(j)>=0)new_e.stat_min.set(j, new_e.stat_min.get(j) + change_amount.intValue());//new_e.stat_min.get(j) = new_e.stat_min.get(j) + change_amount;
+                    for(k=0;k<new_e.cover_stat.size();k++){
+                        if(new_e.cover_stat.get(k).equals(new_e.stat_req.get(j))){
+                            //new_e.cover_min[k] = new_e.cover_min[k] + change_amount
+                            new_e.cover_min.set(k, new_e.cover_min.get(k) + change_amount.intValue());
                         }
                     }
                 }
@@ -1576,5 +1569,5 @@ public class Body {
         
         check_state(c);
     }
-    */
+    
 }
