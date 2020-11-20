@@ -215,7 +215,7 @@ public class BodyPart extends DynamicObject {
 public String getName(){
         String ret =  name;//=name
         if(part_count == 0){
-
+            //do nothing
         }else if(part_count%10 == 1&&part_count!=11){
             ret = (part_count) + "st " + name;
         }else if(part_count%10 == 2&&part_count!=12){
@@ -407,7 +407,7 @@ public String getName(){
                     while(other_cover.indexOf("</bpn>") >= 0)other_cover = other_cover.replace("</bpn>", other_bp.getName());
                     ret = cover + other_cover;
                 }else{
-                    ret += cover;
+                    ret += cover;//TODO when is other_cover ever null?
                 }
             }else{
                 ret = cover;
@@ -738,9 +738,9 @@ public String getName(){
                 }					
                 
                 s += stat_description.get(j).get_change_magnitude(k.doubleValue(),c,temp,this);
+                //original AS comments
                 //if(temp == 0 && stat_description.get(j).stat_value < 0){
-                    //if not a temp, and we're setting less than 0, should we destroy the part? 
-                    
+                    //if not a temp, and we're setting less than 0, should we destroy the part?  
                 //}
                 break;
             }

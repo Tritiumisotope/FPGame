@@ -1,8 +1,11 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Character_template {
+
+		private static final Logger LOGGER = Logger.getLogger(Character_template.class.getName());
     
 		public Character char_to_clone;
 		public ArrayList<Integer> stats;
@@ -21,18 +24,18 @@ public class Character_template {
 			char_to_clone = c;
 		}
 		
-		public void set_stat_jiggle(int stat_id,Number stat_min,Number stat_max){
-            stats.add(stat_id);//stats[stats.length] = stat_id
-			mins.add(stat_min);//mins[mins.length] = stat_min
-			maxs.add(stat_max);//maxs[maxs.length] = stat_max
+		public void set_stat_jiggle(int statID,Number statMin,Number statMax){
+            stats.add(statID);//stats[stats.length] = stat_id
+			mins.add(statMin);//mins[mins.length] = stat_min
+			maxs.add(statMax);//maxs[maxs.length] = stat_max
 		}
 		public Character gen_char(){
                 return gen_char(0,null);
         }
-        public Character gen_char(int level_adjust){
-            return gen_char(level_adjust,null);
+        public Character gen_char(int levelAdjust){
+            return gen_char(levelAdjust,null);
         }
-		public Character gen_char(int level_adjust, Room r){//def 0, null
+		public Character gen_char(int levelAdjust, Room r){//def 0, null
 			Character ret = new Character();
             //ret.clone(char_to_clone)
             //TODO clone method in Character
@@ -60,117 +63,116 @@ public class Character_template {
                 }
                 
 			}
-			String char_name = "";
+			String charName = "";
 			if(ret.name.equals("")){
                 
                 
 				if(ret.get_primary_race() != null){
 					if(ret.sex.get_noun().equals("his")){
-						char_name = ret.get_primary_race().get_random_male_name();
+						charName = ret.get_primary_race().get_random_male_name();
 					}else{
-						char_name = ret.get_primary_race().get_random_female_name();
+						charName = ret.get_primary_race().get_random_female_name();
 					}
 					
-					char_name += " " + ret.get_primary_race().get_random_surname();
+					charName += " " + ret.get_primary_race().get_random_surname();
 				}else{
-					char_name = char_to_clone.getName();
+					charName = char_to_clone.getName();
                 }
-                ret.set_name(ret.set_surname(char_name,true));
+                ret.set_name(ret.set_surname(charName,true));
                 
 			}
             
 			for(i=0;i<stats.size();i++){
-				Number curr_stat_value = ret.get_stat(stats.get(i),0,0,-1,false);
-				if(curr_stat_value.doubleValue() < 0){
-					//trace("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats.get(i) + ". Character name: " + char_name);
+				Number currStatValue = ret.get_stat(stats.get(i),0,0,-1,false);
+				if(currStatValue.doubleValue() < 0){
+					LOGGER.info("(Character_template.gen_char)Attempting to adjust a stat that either doesn't exist, or is at -1. Stat id:" + stats.get(i) + ". Character name: " + charName);
 				}else{
-					Number rand = curr_stat_value;//TODO WHY?!
-					if(curr_stat_value.doubleValue() > maxs.get(i).doubleValue() || curr_stat_value.doubleValue() < mins.get(i).doubleValue()){
-						//mid shoulb be between min and max is average...
+					Number rand = currStatValue;//TODO WHY?!
+					if(currStatValue.doubleValue() > maxs.get(i).doubleValue() || currStatValue.doubleValue() < mins.get(i).doubleValue()){
+						//mid should be between min and max is average...
 						rand = Math.random()*(maxs.get(i).doubleValue() - mins.get(i).doubleValue()) + mins.get(i).doubleValue();
 					}else{
 						//current value is average...
 						rand = Math.random();
 						if(rand.doubleValue() > 0.5){
-							rand = ((rand.doubleValue()-0.5)*2)*(maxs.get(i).doubleValue() - curr_stat_value.doubleValue()) + curr_stat_value.doubleValue();
+							rand = ((rand.doubleValue()-0.5)*2)*(maxs.get(i).doubleValue() - currStatValue.doubleValue()) + currStatValue.doubleValue();
 						}else{
-							rand = (rand.doubleValue()*2)*(curr_stat_value.doubleValue() - mins.get(i).doubleValue()) + mins.get(i).doubleValue();
+							rand = (rand.doubleValue()*2)*(currStatValue.doubleValue() - mins.get(i).doubleValue()) + mins.get(i).doubleValue();
 						}
 					}
-					if(curr_stat_value.doubleValue() > 0){
-						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - curr_stat_value.doubleValue(),0,null, Body.prorate_change_total);
+					if(currStatValue.doubleValue() > 0){
+						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - currStatValue.doubleValue(),0,null, Body.prorate_change_total);
 					}else{
-						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - curr_stat_value.doubleValue(),0,null, Body.change_stats_total);
+						ret.apply_affect_by_id(stats.get(i),rand.doubleValue() - currStatValue.doubleValue(),0,null, Body.change_stats_total);
 					}
 				}				
             }
             
 			
-			if(level_adjust > 0){
-                ArrayList<Integer> skill_list= new ArrayList<>();
+			if(levelAdjust > 0){
+                ArrayList<Integer> skillList= new ArrayList<>();
                 
-				skill_list.addAll(ret.get_current_class().class_skills); //skill_list = skill_list.concat(ret.get_current_class().class_skills)
-				skill_list.addAll(ret.skills.skill_ids);// skill_list = skill_list.concat(ret.skills.skill_ids)
-				for(i=0;i<level_adjust;i++){
+				skillList.addAll(ret.get_current_class().class_skills); //skill_list = skill_list.concat(ret.get_current_class().class_skills)
+				skillList.addAll(ret.skills.skill_ids);// skill_list = skill_list.concat(ret.skills.skill_ids)
+				for(i=0;i<levelAdjust;i++){
 					ret.set_xp(ret.nxt_lvl_xp - ret.xp);
 					//spend xp to upgrade skills... should get trained/class skills, and spend xp to increase whatever is cheapest until it's all spent
-					Boolean xp_to_spend = true;
-					ArrayList<Integer> skill_costs = new ArrayList<>();
-					while(xp_to_spend){
-						xp_to_spend = false;
-						int lowest_cost_index = 0;
-						int skill_count = 0;
-						for(skill_count=0;skill_count<skill_list.size();skill_count++){
-							skill_costs.set(skill_count, ret.skills.get_skill_cost(ret,skill_list.get(skill_count),1));
-							if(skill_costs.get(skill_count) < skill_costs.get(lowest_cost_index))lowest_cost_index = skill_count;
-							if(skill_costs.get(skill_count) <= ret.xp) xp_to_spend = true;
+					Boolean xpToSpend = true;
+					ArrayList<Integer> skillCosts = new ArrayList<>();
+					while(xpToSpend){
+						xpToSpend = false;
+						int lowestCostIndex = 0;
+						int skillCount = 0;
+						for(skillCount=0;skillCount<skillList.size();skillCount++){
+							skillCosts.set(skillCount, ret.skills.get_skill_cost(ret,skillList.get(skillCount),1));
+							if(skillCosts.get(skillCount) < skillCosts.get(lowestCostIndex))lowestCostIndex = skillCount;
+							if(skillCosts.get(skillCount) <= ret.xp) xpToSpend = true;
 						}
-						//if(xp_to_spend)ret.increase_skill_by_id(skill_list.get(lowest_cost_index));
-						//TODO CHaracter
+						if(xpToSpend)ret.increase_skill_by_id(skillList.get(lowestCostIndex));
 					}
 					
 					
                 }	
                 	
-			}else if(level_adjust < 0){
-				//trace("(Character_template.gen_char)Should be lowering an npcs level. Doing nothing.");
+			}else if(levelAdjust < 0){
+				LOGGER.info("(Character_template.gen_char)Should be lowering an npcs level. Doing nothing.");
 			}
 			
 			if(ret.stat_points > 0){
             
-				Boolean xp_to_spend = true;
-				ArrayList<Integer> skill_list = new ArrayList<>();
+				Boolean xpToSpend = true;
+				ArrayList<Integer> skillList = new ArrayList<>();
 				int[] first = {FPalaceHelper.str_id,FPalaceHelper.dex_id,FPalaceHelper.con_id,FPalaceHelper.sex_appeal_id,FPalaceHelper.will_id,FPalaceHelper.wis_id,FPalaceHelper.int_id,FPalaceHelper.cha_id};
 				for(int arrels : first){
-					skill_list.add(first[arrels]);
+					skillList.add(first[arrels]);
 					}
-				ArrayList<Integer> skill_costs = new ArrayList<>();					
-				while(xp_to_spend){
-					xp_to_spend = false;
-					int lowest_cost_index = 0;
-					int skill_count = 0;
-					for(skill_count=0;skill_count<skill_list.size();skill_count++){
-						skill_costs.set(skill_count, ret.get_current_class().get_stat_cost(skill_list.get(skill_count)));
-						if(skill_costs.get(skill_count) < skill_costs.get(lowest_cost_index))lowest_cost_index = skill_count;
-						if(skill_costs.get(skill_count) <= ret.stat_points) xp_to_spend = true;
+				ArrayList<Integer> skillCosts = new ArrayList<>();					
+				while(xpToSpend){
+					xpToSpend = false;
+					int lowestCostIndex = 0;
+					int skillCount = 0;
+					for(skillCount=0;skillCount<skillList.size();skillCount++){
+						skillCosts.set(skillCount, ret.get_current_class().get_stat_cost(skillList.get(skillCount)));
+						if(skillCosts.get(skillCount) < skillCosts.get(lowestCostIndex))lowestCostIndex = skillCount;
+						if(skillCosts.get(skillCount) <= ret.stat_points) xpToSpend = true;
 					}
-					if(xp_to_spend){
-						ret.apply_affect_by_id(skill_list.get(lowest_cost_index),1,0,null, Body.change_stats_total);
-						ret.stat_points -= ret.get_current_class().get_stat_cost(skill_list.get(lowest_cost_index));
+					if(xpToSpend){
+						ret.apply_affect_by_id(skillList.get(lowestCostIndex),1,0,null, Body.change_stats_total);
+						ret.stat_points -= ret.get_current_class().get_stat_cost(skillList.get(lowestCostIndex));
 					}
                 }
                 
 			}
 			
-			//if(!ret.body.alive(ret))trace("(Character_template.gen_char) Just made a dead character"); 
+			if(!ret.body.alive(ret))LOGGER.info("(Character_template.gen_char) Just made a dead character"); 
 			return ret;
 		}
 		
 		public Character_template copyCharTemp(){
 			Character_template ret = new Character_template();
-			Character temp_char = new Character();
-			//temp_char.copyCharacter(this.char_to_clone);
-			ret.set_char_to_clone(temp_char);
+			Character tempChar = new Character();
+			tempChar.copyCharacter(this.char_to_clone);
+			ret.set_char_to_clone(tempChar);
 			int i = 0;
 			for(i=0;i<stats.size();i++){
 				ret.set_stat_jiggle(stats.get(i),mins.get(i),maxs.get(i));			

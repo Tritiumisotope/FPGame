@@ -25,15 +25,15 @@ public class Character_class extends DynamicObject {
         
     }
     
-    public void add_class_skill(int skill_id){
-        class_skills.add(skill_id); //class_skills[class_skills.length] = skill_id
+    public void add_class_skill(int skillID){
+        class_skills.add(skillID); //class_skills[class_skills.length] = skill_id
     }
     
-    public Boolean is_class_skill(int skill_id){
+    public Boolean is_class_skill(int skillID){
         Boolean ret = false;
         int i = 0;
         for(i=0;i<class_skills.size();i++){
-            if(class_skills.get(i) == skill_id){
+            if(class_skills.get(i) == skillID){
                 ret = true;
                 break;
             }
@@ -75,24 +75,24 @@ public class Character_class extends DynamicObject {
         return null;
     }
     
-    public void set_bonus(int stat_id, Number i){
-        if(stat_id >= bonus.size()){
-            for(int count = bonus.size();count<= stat_id;count++){
-                if(count == stat_id){
+    public void set_bonus(int statID, Number i){
+        if(statID >= bonus.size()){
+            for(int count = bonus.size();count<= statID;count++){
+                if(count == statID){
                     bonus.add(i);
                 }else{
                     bonus.add(null);
                 }
             }
         }else{
-            bonus.set(stat_id,i); //bonus.get(stat_id) = i
+            bonus.set(statID,i); //bonus.get(stat_id) = i
         }       
     }
     
-    public int get_stat_cost(int stat_id){//was uint
+    public int get_stat_cost(int statID){//was uint
         int ret = 3;//was uint
-        if(bonus.get(stat_id) != null){
-            if(bonus.get(stat_id).intValue() <= 2) ret = ret - bonus.get(stat_id).intValue();
+        if(bonus.get(statID) != null){
+            if(bonus.get(statID).intValue() <= 2) ret = ret - bonus.get(statID).intValue();
         }
         return ret;
     }
@@ -110,7 +110,7 @@ public class Character_class extends DynamicObject {
                     break;
                 }
             }
-            if(!found && action_lvl_req.get(i) <= c.get_class_lvl(this)){
+            if(Boolean.FALSE.equals(found) && action_lvl_req.get(i) <= c.get_class_lvl(this)){
                 c.add_action(actions.get(i));
                 if(!actions.get(i).name.equals(""))ret += "<\n> learns " + actions.get(i).name;
             }

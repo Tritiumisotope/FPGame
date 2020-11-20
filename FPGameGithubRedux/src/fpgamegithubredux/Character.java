@@ -217,29 +217,29 @@ public class Character extends DynamicObject {
     public void set_challenge_output(String s){
         //attempt to remove duplicate warnings and empty space
         if(s.indexOf("<sid") >= 0){
-            //String stat_id = s.slice(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")));
+            //String stat_id = s.slice(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")))
             String stat_id = s.substring(s.indexOf("<sid"), s.indexOf(",",s.indexOf("<sid")));
             if(challenge_output.indexOf(stat_id) >= 0){
                 int chall_out_index = challenge_output.indexOf(stat_id);//TODO verify this whole crazy method
                 //OK, we've already got some output for this stat... let's modify the quantity
-                //Number new_quant = Number(s.slice(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)));
+                //Number new_quant = Number(s.slice(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)))
                 Number new_quant = (Number)Double.parseDouble(s.substring(s.indexOf(",",s.indexOf("<sid"))+1, s.indexOf(",", s.indexOf(",",s.indexOf("<sid")) + 1)));
-                //Number old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                //Number old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)))
                 Number old_quant = (Number)Double.parseDouble(challenge_output.substring(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
                 if((old_quant.doubleValue() > 0 && new_quant.doubleValue() < 0) || (old_quant.doubleValue() < 0 && new_quant.doubleValue() > 0)){
                     if(!(challenge_output.indexOf(stat_id,chall_out_index+1) >= 0)){
                         challenge_output += s + "~<br>~";
                     }else{
                         chall_out_index = challenge_output.indexOf(stat_id,chall_out_index+1);
-                        //old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
+                        //old_quant = Number(challenge_output.slice(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)))
                         old_quant = (Number)Double.parseDouble(challenge_output.substring(challenge_output.indexOf(",",chall_out_index)+1, challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1)));
                         old_quant = old_quant.doubleValue() + new_quant.doubleValue();
-                        //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length);
+                        //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length)
                         challenge_output = challenge_output.substring(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.substring(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
                     }
                 }else{
                     old_quant = old_quant.doubleValue() + new_quant.doubleValue();
-                    //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
+                    //challenge_output = challenge_output.slice(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.slice(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length())
                     challenge_output = challenge_output.substring(0,challenge_output.indexOf(",",chall_out_index)+1) + old_quant + challenge_output.substring(challenge_output.indexOf(",", challenge_output.indexOf(",",chall_out_index)+1),challenge_output.length());
                 }
             }else{
@@ -386,24 +386,23 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-    /*
-    public function judge_relative_skill(c:Character):String{
-        var my_skill_tot:int = FPalace_skills.get_total_skill_value(this, FPalace_skills.fight_id);
-        var other_skill_tot:int = FPalace_skills.get_total_skill_value(c, FPalace_skills.fight_id);
+    public String judge_relative_skill(Character c){
+        int my_skill_tot = FPalace_skills.get_total_skill_value(this, FPalace_skills.fight_id);
+        int other_skill_tot = FPalace_skills.get_total_skill_value(c, FPalace_skills.fight_id);
         
         
-        var ratio:Number = 1;
+        Number ratio = 1;
         if(other_skill_tot > 0){
             ratio = my_skill_tot/other_skill_tot;
         }else{
             ratio = my_skill_tot/1;
         }
         
-        var ret:String = "";
+        String ret = "";
         
-        if(ratio < 0.90){
+        if(ratio.doubleValue() < 0.90){
             ret = "<font color='#8C1717'></pronoun> looks tougher than you.</font>";
-        }else if(ratio > 1.1){
+        }else if(ratio.doubleValue() > 1.1){
             ret = "<font color='#7CFC00'></pronoun> looks weaker than you.</font>";
         }else{
             ret = "<font color='#66CCCC'></pronoun> looks about equal with you.</font>";
@@ -412,23 +411,23 @@ public class Character extends DynamicObject {
         return ret;
     }
     
-    public function get_skill_by_id(skill_id:int):int{
+    public int get_skill_by_id(int skill_id){
         return skills.get_skill_value(this, skill_id);
     }
     
-    public function get_skill_rank_by_id(skill_id:int):int{
+    public int get_skill_rank_by_id(int skill_id){
         return skills.get_skill_ranks(skill_id);
     }
     
-    public function set_skills_by_id(skill_id:int, change_amount:int):String{
-        var ret:String = "";
+    public String set_skills_by_id(int skill_id,int change_amount){
+        String ret = "";
         if(FPalace_skills.get_skill_by_id(skill_id) != null){
-            personality.advance_objectives(Quest.skill_action, [skill_id], this);
+            personality.advance_objectives(Quest.skill_action, new ArrayList<>(Arrays.asList(skill_id)), this);
             ret += sanitize(skills.set_skill_value(this, skill_id, change_amount));
         }
         return ret;
     }
-    */
+    
     public String increase_skill_by_id(int skill_id){
         return increase_skill_by_id(skill_id,1);
     }
@@ -569,16 +568,15 @@ public class Character extends DynamicObject {
                 Character i_char = (Character)(temp_char.location.getContent(i));
                 CharAction temp_action = i_char.get_action(k);
                 if(temp_action != null){
-                    /*TODO true CharAction challenge and get_challenge_output
+                    //*TODO true get_challenge_output
                     ret = temp_char.sanitize(temp_action.challenge(j,i_char,temp_char,0, m));
                     ret = i_char.sanitize(ret);
-                    if(temp_char.challenge_output != ""){
+                    if(!temp_char.challenge_output.equals("")){
                         ret += temp_char.sanitize(temp_char.get_challenge_output());
                     }
-                    if(i_char.challenge_output != ""){
+                    if(!i_char.challenge_output.equals("")){
                         ret += i_char.sanitize(i_char.get_challenge_output());
                     }
-                    */
                 }
             }
         }
@@ -594,13 +592,14 @@ public class Character extends DynamicObject {
         }
     }
     
-    /*TODO make work, dummy other
-    public void newStat(int id, Stat s, Number c){//def 0
-        stat_id[stat_id.length] = id;
-        s.set_stat_value(c);
-        stat[stat.length] = s;
+    public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
+    public void newStat(int newStatID, Stat newStat, Double statVal){
+        if(!statID.contains(newStatID)){
+            statID.add(newStatID);
+            newStat.setStatValue(statVal);
+            stats.add(newStat);
+        }
     }
-    */
     
     public void set_party(Party p){
         personality.advance_objectives(Quest.party_action,new ArrayList<Object>(Arrays.asList(p)), this);
@@ -1004,90 +1003,91 @@ public class Character extends DynamicObject {
     }
     /*
     public function new_race(i:int, r:Race):String{
-			var ret:String = "<br>";
-			if (i >= 0 && i < body.parts.length) {
-				if(body.parts[i].race != null){
-					body.parts[i].race.reverse_bonuses(this, body.parts[i],true);
-					body.parts[i].set_race(r);
-					body.parts[i].race.apply_bonuses(this, body.parts[i],true);
-					if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
-					
-				}else{
-					body.parts[i].race.reverse_bonuses(this, body.parts[i]);
-					body.parts[i].set_race(r);
-					body.parts[i].race.apply_bonuses(this, body.parts[i]);
-					if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
-				}
-			}
-			return ret;
+        var ret:String = "<br>";
+        if (i >= 0 && i < body.parts.length) {
+            if(body.parts[i].race != null){
+                body.parts[i].race.reverse_bonuses(this, body.parts[i],true);
+                body.parts[i].set_race(r);
+                body.parts[i].race.apply_bonuses(this, body.parts[i],true);
+                if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+                
+            }else{
+                body.parts[i].race.reverse_bonuses(this, body.parts[i]);
+                body.parts[i].set_race(r);
+                body.parts[i].race.apply_bonuses(this, body.parts[i]);
+                if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+            }
         }
-        */
-        public String new_location(Room r){
-            return new_location(r,false,false,false);
+        return ret;
+    }
+    */
+    public String new_location(Room r){
+        return new_location(r,false,false,false);
+    }
+    public String new_location(Room r,Boolean skip_check){
+        return new_location(r, skip_check,false, false);
+    }
+    public String new_location(Room r,Boolean skip_check,Boolean is_player){
+        return new_location(r, skip_check, is_player,false);
+    }
+    public String new_location(Room r,Boolean skip_check,Boolean is_player,Boolean ignore_party){
+        //def false, false, false
+        String ret = "";
+        Room init_r = null;
+        if(location == null)skip_check = true;
+        Boolean move_flag = true;
+        if(this.party != null){
+            if(this.party.get_leader() != this){
+                if(party.get_leader().location == location || party.get_leader().location == r){
+                    //ret += sanitize("</n> stays with </noun> party.<br>")
+                    //original comment from AS
+                    if(party.get_leader().location == location)move_flag = false;
+                }
+            }
         }
-        public String new_location(Room r,Boolean skip_check){
-            return new_location(r, skip_check,false, false);
+        
+        if(move_flag){
+            if(location != null){
+                location.removeContent(this);
+                init_r = location;
+            }
+            location = r;
+            if(r != null){
+                r.newContent(this,init_r);
+                if(location.area != null){
+                    if((init_r != null && location.area != init_r.area) || init_r == null)personality.advance_objectives(Quest.area_action,  new ArrayList<Object>(Arrays.asList(new int[]{location.area.id})), this);
+                }
+                personality.advance_objectives(Quest.room_action, new ArrayList<Object>(Arrays.asList(new Room[]{location})), this);
+            }
+            status = " is standing here";							
         }
-        public String new_location(Room r,Boolean skip_check,Boolean is_player){
-            return new_location(r, skip_check, is_player,false);
+        
+        if(this.party != null && !ignore_party){
+            if(this.party.get_leader() == this){
+                int k = 1;
+                move_flag = true;
+                for(k=1;k<this.party.members.size();k++){
+                    if(this.party.members.get(k).location == init_r){
+                        ret += this.party.members.get(k).new_location(r, skip_check, is_player);
+                        if(this.party.members.get(k).location != location){
+                            move_flag = false;
+                        }
+                    }
+                }
+                if(!move_flag){
+                    k = 0;
+                    for(k=0;k<this.party.members.size();k++){
+                        if(this.party.members.get(k).location != init_r){
+                            this.party.members.get(k).new_location(init_r, true, is_player, true);
+                        }
+                    }
+                    ret += "the party stops.<br>";
+                }
+            }
         }
-        public String new_location(Room r,Boolean skip_check,Boolean is_player,Boolean ignore_party){
-            //def false, false, false
-            String ret = "";
-		    Room init_r = null;
-			if(location == null)skip_check = true;
-			Boolean move_flag = true;
-			if(this.party != null){
-				if(this.party.get_leader() != this){
-					if(party.get_leader().location == location || party.get_leader().location == r){
-						//ret += sanitize("</n> stays with </noun> party.<br>");
-						if(party.get_leader().location == location)move_flag = false;
-					}
-				}
-			}
-			
-			if(move_flag){
-				if(location != null){
-					location.removeContent(this);
-					init_r = location;
-				}
-				location = r;
-				if(r != null){
-					r.newContent(this,init_r);
-					if(location.area != null){
-						if((init_r != null && location.area != init_r.area) || init_r == null)personality.advance_objectives(Quest.area_action,  new ArrayList<Object>(Arrays.asList(new int[]{location.area.id})), this);
-					}
-					personality.advance_objectives(Quest.room_action, new ArrayList<Object>(Arrays.asList(new Room[]{location})), this);
-				}
-				status = " is standing here";							
-			}
-			
-			if(this.party != null && !ignore_party){
-				if(this.party.get_leader() == this){
-					int k = 1;
-					move_flag = true;
-					for(k=1;k<this.party.members.size();k++){
-						if(this.party.members.get(k).location == init_r){
-							ret += this.party.members.get(k).new_location(r, skip_check, is_player);
-							if(this.party.members.get(k).location != location){
-								move_flag = false;
-							}
-						}
-					}
-					if(!move_flag){
-						k = 0;
-						for(k=0;k<this.party.members.size();k++){
-							if(this.party.members.get(k).location != init_r){
-								this.party.members.get(k).new_location(init_r, true, is_player, true);
-							}
-						}
-						ret += "the party stops.<br>";
-					}
-				}
-			}
-			return ret;
-		}
-		
+        return ret;
+    }
+    
     public String go_to_new_location(int i,int is_player,int no_look){//def is = 0, no = 0
         String ret = "";
         Boolean look_flag = true;
@@ -1141,17 +1141,8 @@ public class Character extends DynamicObject {
     }
 		
     
-    //TODO dummy later, ignore for now
-    public void newStat(int newStatID, Stat newStat){newStat(newStatID, newStat, 0.0);}
-    public void newStat(int newStatID, Stat newStat, Double statVal){
-        if(!statID.contains(newStatID)){
-            statID.add(newStatID);
-            newStat.setStatValue(statVal);
-            stats.add(newStat);
-        }
-    }
-    //TODO undemo
-    public double getStat(int statID){
+
+    public double getStat(int statID){//dummy version, remove later
         double ret = -1.0;
         for(Stat tempStat : stats){
             if(tempStat.statID == statID){
@@ -2258,13 +2249,6 @@ public class Character extends DynamicObject {
         }
 
         return ret;
-    }
-    public int get_skill_by_id(int skill_id){//dummy
-        return skills.get_skill_value(this, skill_id);
-    }
-    
-    public int get_skill_rank_by_id(int skill_id){//dummy
-        return skills.get_skill_ranks(skill_id);
     }
 
 
@@ -5392,96 +5376,100 @@ public class Character extends DynamicObject {
         
         return ret_sprite;
     }
-
-    public function clone(c:Character):void{
-        if(!c.body.alive(c))trace("(Character.clone) Trying to clone a dead character..."); 
+    */
+    public void copyCharacter(Character c){
+        if(!c.body.alive(c))LOGGER.info("(Character.clone) Trying to clone a dead character..."); 
         
         name = c.name;
         gold = c.gold;
         
-        gold = Math.ceil(Math.random()*c.get_gold() + c.get_gold()/2);
+        gold = (int)Math.ceil(Math.random()*c.get_gold() + c.get_gold()/2);
         set_sex(c.sex);
         status = c.status;
         
-        var i:int = 0;
-        for (i;i<c.possessions.size();i++){
-            var item:Item = c.possessions[i].clone();
-            possessions[possessions.size()] = item;
+        int i = 0;
+        for (i=0;i<c.possessions.size();i++){
+            Item item = c.possessions.get(i).copyItem();
+            //possessions[possessions.size()] = item;
+            possessions.add(item);
         }
         
-        actions = new Array();
+        actions = new ArrayList<>();
         i = 0;
-        for(i;i<c.actions.size();i++){
-            var a:Action = new Action();
-            a.clone(c.actions[i]);
+        for(i=0;i<c.actions.size();i++){
+            CharAction a = new CharAction();
+            a.copyCharAction(c.actions.get(i));
             add_action(a);
         }
         
         i = 0;
-        for(i;i<c.stat.length;i++){
-            stat_id[i] = c.stat_id[i];
-            stat[i] = new Stat(stat_id[i]);
-            stat[i].clone(c.stat[i]);
+        for(i=0;i<c.stats.size();i++){
+            //stat_id[i] = c.statID.get(i);
+            statID.add(c.statID.get(i));//TODO this is empty, no?
+            //stat[i] = new Stat(stat_id[i]);
+            stats.add(new Stat(statID.get(i)));//also empty?
+            stats.get(i).statCopy(c.stats.get(i));
         }
         
         i = 0;
-        for(i;i<c.cclass.length;i++){
-            cclass[i] = c.cclass[i];
+        for(i=0;i<c.cclass.size();i++){
+            //cclass[i] = c.cclass[i];
+            cclass.add(c.cclass.get(i));
         }
         
-        body.clone(c.body, this);
+        body.copyBody(c.body, this);
         
         i = 0;
-        for(i;i<c.skills.skill_ids.length;i++){
-            var y:Number = Math.random();
-            if (y <= 0.5){
-                y = -y;
+        for(i=0;i<c.skills.skill_ids.size();i++){
+            Number y = Math.random();
+            if (y.doubleValue() <= 0.5){
+                y = -y.doubleValue();
             }else{
-                y = y - 0.5;
+                y = y.doubleValue() - 0.5;
             }
             
-            y = y * c.skills.skill_ranks[i];
-            skills.set_skill_value(this, c.skills.skill_ids[i], Math.round(c.skills.skill_ranks[i] + y));
-            skills.set_bonus(c.skills.skill_ids[i],c.skills.bonus_mod[i]);
+            y = y.doubleValue() * c.skills.skill_ranks.get(i);
+            skills.set_skill_value(this, c.skills.skill_ids.get(i), (int)Math.round(c.skills.skill_ranks.get(i) + y.doubleValue()));
+            skills.set_bonus(c.skills.skill_ids.get(i),c.skills.bonus_mod.get(i));
         }
         
-        set_xp(Math.ceil(Math.random()*c.xp + c.xp/2));
+        set_xp((int)Math.ceil(Math.random()*c.xp + c.xp/2));
         
         reset_stats();
                     
         ai_move = c.ai_move;
         
-        total_actions_taken = Math.round(Math.random()*Main.t1_year);
+        total_actions_taken = (int)Math.round(Math.random()*FPGameGithub.T1_YEAR);
         busy = 0;
         
         i = 0;
-        for(i;i<c.personality.likes.length;i++){//ending up with some duplicates here thanks to the ones added in personality initialization
-            personality.add_like(c.personality.likes[i]);
+        for(i=0;i<c.personality.likes.size();i++){//ending up with some duplicates here thanks to the ones added in personality initialization
+            personality.add_like(c.personality.likes.get(i));
         }
         
         i = 0;
-        for(i;i<c.personality.dislikes.length;i++){
-            personality.add_dislike(c.personality.dislikes[i]);
+        for(i=0;i<c.personality.dislikes.size();i++){
+            personality.add_dislike(c.personality.dislikes.get(i));
         }
         
         i = 0;
-        for(i;i<c.personality.topics.length;i++){
-            personality.add_conversation_topic(c.personality.topics[i]);
+        for(i=0;i<c.personality.topics.size();i++){
+            personality.add_conversation_topic(c.personality.topics.get(i));
         }
         
         i = 0;
-        for(i;i<c.personality.mob_allegiances.length;i++){
-            personality.new_allegiance(c.personality.mob_allegiances[i], this);
+        for(i=0;i<c.personality.mob_allegiances.size();i++){
+            personality.new_allegiance(c.personality.mob_allegiances.get(i), this);
         }
         
         i = 0;
-        for(i;i<c.personality.objectives.length;i++){
-            personality.new_objective(c.personality.objectives[i], this);
+        for(i=0;i<c.personality.objectives.size();i++){
+            personality.new_objective(c.personality.objectives.get(i), this);
         }
         
         i = 0;
-        for(i;i<c.personality.attraction_traits.length;i++){
-            personality.add_attraction(c.personality.attraction_traits[i]);
+        for(i=0;i<c.personality.attraction_traits.size();i++){
+            personality.add_attraction(c.personality.attraction_traits.get(i));
         }
         
         if(c.personality.job != null)personality.set_job(c.personality.job, this);
@@ -5493,10 +5481,8 @@ public class Character extends DynamicObject {
         apply_affect_by_id(FPalaceHelper.curr_hp_id, get_stat(FPalaceHelper.max_hp_id));
         apply_affect_by_id(FPalaceHelper.curr_mp_id, get_stat(FPalaceHelper.max_mp_id));
         apply_affect_by_id(FPalaceHelper.curr_fatigue_id, get_stat(FPalaceHelper.max_fatigue_id));
-        if(!body.alive(this))trace("(Character.clone) Just made a dead character"); 
+        if(!body.alive(this))LOGGER.info("(Character.clone) Just made a dead character"); 
         
     }
     
-}
-*/
 }

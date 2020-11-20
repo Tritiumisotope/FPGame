@@ -46,16 +46,16 @@ public class BodyPartState {
 			}
 			
 			//if we didn't set a stat to effect, should effect all of them
-			if (stat_effected.size() == 0) return mod;//[]]
+			if (stat_effected.isEmpty()) return mod;//[]], was size == 0
 			
 			return 1;
 		}
 		public void new_ratio_stat(int i){
             new_ratio_stat(i, false);
         }
-		public void new_ratio_stat(int i,Boolean static_val){
+		public void new_ratio_stat(int i,Boolean staticVal){
 			ratio_stat.add(i); //ratio_stat[ratio_stat.length] = i
-			static_ratio_stat.add(static_val); //static_ratio_stat[static_ratio_stat.length] = static_val
+			static_ratio_stat.add(staticVal); //static_ratio_stat[static_ratio_stat.length] = static_val
 		}//TODO figure out why there is an add
 		public void new_comparison(String op, Number rat, Number mo,
          String out){
@@ -66,18 +66,18 @@ public class BodyPartState {
 			 new_comparison(op,rat,mo,out,desc,false,false);
 		 }
 		 public void new_comparison(String op, Number rat, Number mo,
-         String out, String desc,Boolean rat_is_stat_id){
-			new_comparison(op,rat,mo,out,desc,rat_is_stat_id,false);
+         String out, String desc,Boolean ratIsStatID){
+			new_comparison(op,rat,mo,out,desc,ratIsStatID,false);
 		 }
         public void new_comparison(String op, Number rat, Number mo,
-         String out, String desc,Boolean rat_is_stat_id,Boolean mod_is_stat_id){//default ">=", 0,1,"","",false, false
+         String out, String desc,Boolean ratIsStatID,Boolean modIsStatID){//default ">=", 0,1,"","",false, false
 			operations.add(op); //operations[operations.length] = op
 			comparisons.add(rat.intValue()); //comparisons[comparisons.length] = rat.intValue()
 			mod_changes.add(mo.intValue()); //mod_changes[mod_changes.length] = mo.intValue()
 			outputs.add(out); //outputs[outputs.size()] = out
 			descriptions.add(desc);//descriptions[descriptions.length] = desc
-			rat_stat_id.add(rat_is_stat_id); //rat_stat_id[rat_stat_id.length] = rat_is_stat_id
-			mod_stat_id.add(mod_is_stat_id); //mod_stat_id[mod_stat_id.length] = mod_is_stat_id
+			rat_stat_id.add(ratIsStatID); //rat_stat_id[rat_stat_id.length] = rat_is_stat_id
+			mod_stat_id.add(modIsStatID); //mod_stat_id[mod_stat_id.length] = mod_is_stat_id
 		}
 		
 		public void set_stat_effected(int i){
@@ -87,14 +87,14 @@ public class BodyPartState {
 		public String get_current_state_description(Character c,BodyPart bp){
 			String s = "";
 			double operator= 1;//was number
-			if(static_ratio_stat.get(0)){
+			if(Boolean.TRUE.equals(static_ratio_stat.get(0))){
 				operator = ratio_stat.get(0);
 			}else{
 				operator = bp.get_stat(c, ratio_stat.get(0)).doubleValue();
 				if(operator < 0 && c != null)operator = c.getStat(ratio_stat.get(0));
 			}
 			double denominator = 1;//was Number
-			if(static_ratio_stat.get(1)){
+			if(Boolean.TRUE.equals(static_ratio_stat.get(1))){
 				denominator = ratio_stat.get(1);
 			}else{
 				denominator = bp.get_stat(c, ratio_stat.get(1)).doubleValue();
@@ -102,41 +102,41 @@ public class BodyPartState {
 			}
 			int i = 0;
 			for (i=0;i<outputs.size();i++){
-			    double mod_use = mod_changes.get(i);//was Number
-				if(mod_stat_id.get(i) && c != null){
-					mod_use = bp.get_stat(c, mod_changes.get(i)).intValue();
-					if(mod_use < 0)mod_use = c.getStat(mod_changes.get(i));
+			    double modUse = mod_changes.get(i);//was Number
+				if(Boolean.TRUE.equals(mod_stat_id.get(i)) && c != null){
+					modUse = bp.get_stat(c, mod_changes.get(i)).intValue();
+					if(modUse < 0)modUse = c.getStat(mod_changes.get(i));
 				}
 				
-				double compare_use= comparisons.get(i);//was Number
-				if(rat_stat_id.get(i) && c != null){
-					compare_use = bp.get_stat(c, comparisons.get(i)).doubleValue();
-					if(compare_use < 0)compare_use = c.getStat(comparisons.get(i));
+				double compareUse= comparisons.get(i);//was Number
+				if(Boolean.TRUE.equals(rat_stat_id.get(i)) && c != null){
+					compareUse = bp.get_stat(c, comparisons.get(i)).doubleValue();
+					if(compareUse < 0)compareUse = c.getStat(comparisons.get(i));
 				}
-				if(c != null && mod_changes.get(i) == -1)mod_use = compare_use + operator/denominator;
-				if (mod.doubleValue() != mod_use)mod = mod_use;
+				if(c != null && mod_changes.get(i) == -1)modUse = compareUse + operator/denominator;
+				if (mod.doubleValue() != modUse)mod = modUse;
 				if (operations.get(i).equals(">=")){//==
-					if(operator/denominator >= compare_use){
+					if(operator/denominator >= compareUse){
 						return descriptions.get(i);
 					}
 				}else if(operations.get(i).equals("<=")){
-					if(operator/denominator <= compare_use){
+					if(operator/denominator <= compareUse){
 						return descriptions.get(i);
 					}
 				}else if(operations.get(i).equals("==")){
-					if(operator/denominator == compare_use){
+					if(operator/denominator == compareUse){
 						return descriptions.get(i);
 					}
 				}else if(operations.get(i).equals("<")){
-					if(operator/denominator < compare_use){
+					if(operator/denominator < compareUse){
 						return descriptions.get(i);
 					}
 				}else if(operations.get(i).equals(">")){
-					if(operator/denominator > compare_use){
+					if(operator/denominator > compareUse){
 						return descriptions.get(i);
 					}
 				}else if(operations.get(i).equals("!=")){
-					if(operator/denominator != compare_use){
+					if(operator/denominator != compareUse){
 						return descriptions.get(i);
 					}
 				}else{
@@ -161,7 +161,7 @@ public class BodyPartState {
 				//the change to the modifier(may need to have multiple modifiers... one for each stat!)
                 double operator = 1;//Number
                 double denominator = 1;//Number
-				if(static_ratio_stat.get(0)){
+				if(Boolean.TRUE.equals(static_ratio_stat.get(0))){
                     operator = ratio_stat.get(0);
                     denominator = (double)bp.get_stat(c, ratio_stat.get(1));
 					if(denominator <= 0)denominator = c.getStat(ratio_stat.get(1)); 
@@ -180,84 +180,84 @@ public class BodyPartState {
 				int i = 0;
 				String s = "";
 				for(i=0;i<operations.size();i++){
-				    int compare_use = comparisons.get(i);//Number
-					if(rat_stat_id.get(i)){
-						compare_use = bp.get_stat(c, comparisons.get(i)).intValue();
-						if(compare_use < 0)compare_use = (int)c.getStat(comparisons.get(i));
+				    int compareUse = comparisons.get(i);//Number
+					if(Boolean.TRUE.equals(rat_stat_id.get(i))){
+						compareUse = bp.get_stat(c, comparisons.get(i)).intValue();
+						if(compareUse < 0)compareUse = (int)c.getStat(comparisons.get(i));
 					}
-					int mod_use = mod_changes.get(i);//number
-					if(mod_stat_id.get(i)){
-						mod_use = bp.get_stat(c, mod_changes.get(i)).intValue();
-						if(mod_use < 0)mod_use = (int)c.getStat(mod_changes.get(i));
+					int modUse = mod_changes.get(i);//number
+					if(Boolean.TRUE.equals(mod_stat_id.get(i))){
+						modUse = bp.get_stat(c, mod_changes.get(i)).intValue();
+						if(modUse < 0)modUse = (int)c.getStat(mod_changes.get(i));
 					}					
 					
 					if (operations.get(i).equals(">=")){
-						if(operator/denominator >= compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator >= compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals("<=")){
-						if(operator/denominator <= compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator <= compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals("==")){
-						if(operator/denominator == compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator == compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals("<")){
-						if(operator/denominator < compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator < compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals(">")){
-						if(operator/denominator > compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator > compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals("!=")){
-						if(operator/denominator != compare_use){
-							if(mod.intValue() != mod_use){
-								mod = mod_use;
+						if(operator/denominator != compareUse){
+							if(mod.intValue() != modUse){
+								mod = modUse;
 								s += outputs.get(i);
 							}
 							return s;
 						}
 					}else if(operations.get(i).equals("^")){
-						if(mod.intValue() < compare_use + operator/denominator){
-							if(mod.intValue() != compare_use + operator/denominator && mod.intValue() != mod_use){
+						if(mod.intValue() < compareUse + operator/denominator){
+							if(mod.intValue() != compareUse + operator/denominator && mod.intValue() != modUse){
 								if(mod_changes.get(i) == -1){
-									mod = compare_use + operator/denominator;
+									mod = compareUse + operator/denominator;
 								}else{
-									mod = mod_use;
+									mod = modUse;
 								}
 								s += outputs.get(i);
 							}
 							return s;
 						}
-					}else if(operations.get(i).equals("v")&&mod.intValue() > compare_use + operator/denominator && mod.intValue() != mod_use){
+					}else if(operations.get(i).equals("v")&&mod.intValue() > compareUse + operator/denominator && mod.intValue() != modUse){
 						
-							if(mod.intValue() != compare_use + operator/denominator){
-								if(mod_use == -1){
-									mod = compare_use + operator/denominator;
+							if(mod.intValue() != compareUse + operator/denominator){
+								if(modUse == -1){
+									mod = compareUse + operator/denominator;
 								}else{
-									mod = mod_use;
+									mod = modUse;
 								}
 								s += outputs.get(i);
 							}

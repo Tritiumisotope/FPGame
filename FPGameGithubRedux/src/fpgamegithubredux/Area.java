@@ -189,10 +189,10 @@ public class Area extends StaticObject{
         }
         return new int[3];
     }
-    public int place_room(Room r, Room lr, int max_same_room){//3/5 vars
-        return place_room(r, lr, max_same_room,null,false);
+    public int place_room(Room r, Room lr, int maxSameRoom){//3/5 vars
+        return place_room(r, lr, maxSameRoom,null,false);
     }
-    public int place_room(Room r, Room lr, int max_same_room,ArrayList<Room> exempt_rooms, Boolean restrict_edges){
+    public int place_room(Room r, Room lr, int maxSameRoom,ArrayList<Room> exemptRooms, Boolean restrictEdges){
         //lr = null, max_same_room = -1, exempt rooms = null, restrict edges = false
         if (r == null) return 1;
         int[] temp = new int[3];//Array temp, also no need to initialize, it gets filled by find_room?
@@ -209,7 +209,7 @@ public class Area extends StaticObject{
             rooms.add(twoDRoom);//TODO figure out if this stupid shit works
             if(r.exits.size() > 0){
                 
-                if(existing_exit_check(r, 0, 0, 0, max_same_room)){
+                if(existing_exit_check(r, 0, 0, 0, maxSameRoom)){
                     temp = find_room(r);
                     existing_exit_add(r, lr, temp[0], temp[1], 0, "");
                 }else{
@@ -220,12 +220,12 @@ public class Area extends StaticObject{
             return 1;
         }
         
-        if(lr == null && exempt_rooms == null){
+        if(lr == null && exemptRooms == null){
             lr = this.get_random_room();
-            exempt_rooms = new ArrayList<>();//new array()
+            exemptRooms = new ArrayList<>();//new array()
         }else if(lr == null){
-            if(exempt_rooms == null) exempt_rooms = new ArrayList<>();//new Array
-            if (exempt_rooms.size() >= room_list.size()){
+            if(exemptRooms == null) exemptRooms = new ArrayList<>();//new Array
+            if (exemptRooms.size() >= room_list.size()){
                 //There is no one to attach to for our poor friend. Guess he gets to be a loner
                 Boolean placed = false;
                 int max = 0;
@@ -236,22 +236,22 @@ public class Area extends StaticObject{
                 counter = 0;
                 while (!placed){
                     counter++; 
-                    int rand_x = (int)Math.round(Math.random() * (rooms.size()-1));//.length
-                    int rand_y= (int)Math.round(Math.random() * max);
-                    int rand_z = 0;
-                    if(rooms.get(rand_x).get(rand_y) == null)rooms.get(rand_x).set(rand_y, new ArrayList<Room>());//new Array(), [][]
+                    int randX = (int)Math.round(Math.random() * (rooms.size()-1));//.length
+                    int randY = (int)Math.round(Math.random() * max);
+                    int randZ = 0;
+                    if(rooms.get(randX).get(randY) == null)rooms.get(randX).set(randY, new ArrayList<Room>());//new Array(), [][]
                     //TODO verify above
                        
-                    if(rooms.get(rand_x).get(rand_y).get(rand_z) == null){//now the innermost! was [][][]
+                    if(rooms.get(randX).get(randY).get(randZ) == null){//now the innermost! was [][][]
                         if(r.exits.size() > 0){
                             
-                            if(existing_exit_check(r, rand_x, rand_y, rand_z, max_same_room)){
-                                existing_exit_add(r, lr, rand_x, rand_y, rand_z, null);
+                            if(existing_exit_check(r, randX, randY, randZ, maxSameRoom)){
+                                existing_exit_add(r, lr, randX, randY, randZ, null);
                                 placed = true;
                             }
                             
                         }else{
-                            existing_exit_add(r, null, rand_x, rand_y, rand_z, null);
+                            existing_exit_add(r, null, randX, randY, randZ, null);
                             placed = true;
                         }
                     }
@@ -271,8 +271,8 @@ public class Area extends StaticObject{
             int i = 0;
             for(i=0;i<room_list.size();i++){
                 Boolean check = false;
-                for(int k=0;k<exempt_rooms.size();k++){
-                    if(room_list.get(k) == exempt_rooms.get(i)){
+                for(int k=0;k<exemptRooms.size();k++){
+                    if(room_list.get(k) == exemptRooms.get(i)){
                         check = true;
                         break;
                     }
@@ -298,13 +298,13 @@ public class Area extends StaticObject{
                     int y = temp[1];//[1]
                     int z = temp[2];//[2]
                     
-                    int[] connect_status = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges);//var connect_status:Array = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges)
+                    int[] connect_status = is_good_connect(x, y, z, r, lr, maxSameRoom, -1, -1, -1, restrictEdges);//var connect_status:Array = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges)
 
                     if(connect_status[0] == -1){
-                        exempt_rooms.add(lr);//was concat in return call
-                        return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
+                        exemptRooms.add(lr);//was concat in return call
+                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                     }else if(connect_status[0] == -2){
-                        return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
+                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                     }
                     
                     temp = find_room(lr);
@@ -321,7 +321,7 @@ public class Area extends StaticObject{
                     String from_path = get_direction(x, y, z, new_x, new_y, new_z);
                     
                     if(r.exits.size() > 0){
-                        other_rooms_ok = existing_exit_check(r, new_x, new_y, new_z, max_same_room);
+                        other_rooms_ok = existing_exit_check(r, new_x, new_y, new_z, maxSameRoom);
                         if(other_rooms_ok){
                             temp = find_room(lr);
                             x = temp[0];//[0]
@@ -336,8 +336,8 @@ public class Area extends StaticObject{
                     
                     if(!other_rooms_ok){
                         //return place_room(r, null, max_same_room, exempt_rooms.concat(lr), restrict_edges)
-                        exempt_rooms.add(lr);
-                        return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
+                        exemptRooms.add(lr);
+                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                     }
                     
                     if(lr.new_exit(r, from_path) > -1){
@@ -348,12 +348,12 @@ public class Area extends StaticObject{
                         
                         return 1;
                     }else{
-                        return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
+                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                     }
                     
                 }else{
                     LOGGER.info("(Area)Failed to find a room while placing...");
-                    return place_room(r, null, max_same_room, exempt_rooms, restrict_edges);
+                    return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                 }
             }
         
@@ -584,13 +584,13 @@ public class Area extends StaticObject{
         
         int x_jiggle;
         int y_jiggle;
-        int z_jiggle;
+        //int z_jiggle
         count = 0;
         while(new_x == x && new_y == y){
             count++;
             x_jiggle = (int)(Math.random()*3);
             y_jiggle = (int)(Math.random()*3);
-            z_jiggle = (int)(Math.random()*3);
+            //z_jiggle = (int)(Math.random()*3)
             
             switch (x_jiggle){
                 case 0:
@@ -2243,15 +2243,15 @@ public class Area extends StaticObject{
             if(spawnCreatures.size() > 0){
                 int spawn_choice = 0;
                 if(spawnCreatures.size() > 1)spawn_choice = (int)Math.round(Math.random() *(spawnCreatures.size() - 1));
-                Character new_char = spawnCreatures.get(spawn_choice).gen_char();
-                new_char.newLocation(new Room());//(get_random_room(), true)
-                //TODO verify
+                Character newChar = spawnCreatures.get(spawn_choice).gen_char();
+                newChar.newLocation(new Room());//(get_random_room(), true)
+                //TODO verify, and why set this in here? do I need to take this outside?
                 
             }else{
                 //use the template_rooms spawns
-                Room temp_room = get_random_room();
-                if(temp_room.template != null){
-                    temp_room.template.spawn_creatures(temp_room);
+                Room tempRoom = get_random_room();
+                if(tempRoom.template != null){
+                    tempRoom.template.spawn_creatures(tempRoom);
                 }
             }
         }

@@ -109,57 +109,57 @@ public class Challenge {
         defense_hold = !defense_hold;
     }
     
-    public void set_room_challenge(int chall_type){
-        room_challenge = chall_type;
+    public void set_room_challenge(int challType){
+        room_challenge = challType;
     }
     
     public int get_room_challenge(){
         return room_challenge;
     }
-    public void set_attack_stat(int stat_id){
-        set_attack_stat(stat_id, -1, 0);
+    public void set_attack_stat(int statID){
+        set_attack_stat(statID, -1, 0);
     }
-    public void set_attack_stat(int stat_id, int static_atk){
-        set_attack_stat(stat_id, static_atk, 0);
+    public void set_attack_stat(int statID, int staticAtk){
+        set_attack_stat(statID, staticAtk, 0);
     }
-    public void set_attack_stat(int stat_id,int static_atk,int multi_part_process){//def atk = -1, multi = 0
-        if (stat_id != -1){
-            attack_stat = stat_id;
-            attack_part_process = multi_part_process;
+    public void set_attack_stat(int statID, int staticAtk, int multiPartProcess){//def atk = -1, multi = 0
+        if (statID != -1){
+            attack_stat = statID;
+            attack_part_process = multiPartProcess;
         }else{
-            attack_stat = static_atk;
+            attack_stat = staticAtk;
             static_attack = true;
         }
     }
     public void set_attack_equip_slot_check(int i){
         set_attack_equip_slot_check(i, false);
     }
-    public void set_attack_equip_slot_check(int i,Boolean part_count){//default false
+    public void set_attack_equip_slot_check(int i,Boolean partCount){//default false
         attack_equip_slot = i;
-        attack_equip_slot_count = part_count;
+        attack_equip_slot_count = partCount;
     }
 		
-    public void set_defense_stat(int stat_id){
-        set_defense_stat(stat_id,-1,0);
+    public void set_defense_stat(int statID){
+        set_defense_stat(statID,-1,0);
     }
-    public void set_defense_stat(Number stat_id, Number static_atk){
-        set_defense_stat(stat_id,static_atk,0);
+    public void set_defense_stat(Number statID, Number staticAtk){
+        set_defense_stat(statID,staticAtk,0);
     }
-    public void set_defense_stat(Number stat_id, Number static_atk, int multi_part_process){//default -1,0
-        if (stat_id.intValue() != -1){
-            defense_stat = stat_id.intValue();
-            defense_part_process = multi_part_process;
+    public void set_defense_stat(Number statID, Number staticAtk, int multiPartProcess){//default -1,0
+        if (statID.intValue() != -1){
+            defense_stat = statID.intValue();
+            defense_part_process = multiPartProcess;
         }else{
-            defense_stat = static_atk.intValue();
+            defense_stat = staticAtk.intValue();
             static_defense = true;
         }
     }
     public void set_defense_equip_slot_check(int i){
         set_defense_equip_slot_check(i, false);
     }
-    public void set_defense_equip_slot_check(int i,Boolean part_count){//default false
+    public void set_defense_equip_slot_check(int i,Boolean partCount){//default false
         defense_equip_slot = i;
-        defense_equip_slot_count = part_count;
+        defense_equip_slot_count = partCount;
     }
     
     public void static_defense_climb(int i){
@@ -174,7 +174,7 @@ public class Challenge {
     public String getText(){
         return tag;
     }
-    public int roll(Character attacker, Character defender){
+    public int roll(Character attacker, Character defender){//TODO real method?
         int ret = 0;
         int attackerRoll;
         int defenderRoll;
