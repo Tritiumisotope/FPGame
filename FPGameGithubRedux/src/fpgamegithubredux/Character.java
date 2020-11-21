@@ -249,7 +249,7 @@ public class Character extends DynamicObject {
             ArrayList<String> temp_array = new ArrayList<>(Arrays.asList(s.split("<br>")));
             int i = 0;
             for(i=0;i<temp_array.size();i++){
-                if(!(challenge_output.indexOf(temp_array.get(i)) >= 0) && temp_array.get(i) != null && temp_array.get(i) != ""){
+                if(!(challenge_output.indexOf(temp_array.get(i)) >= 0) && temp_array.get(i) != null && !temp_array.get(i).equals("")){
                     challenge_output += temp_array.get(i) + "~<br>~";   
                 }else if(challenge_output.indexOf(temp_array.get(i)) >= 0){
                     //we may need to tick up the count for this stat...
@@ -325,10 +325,10 @@ public class Character extends DynamicObject {
                     }
                 }
             }else{
-                if(temp_array.get(i) != null && temp_array.get(i) != "")ret += temp_array.get(i);
+                if(temp_array.get(i) != null && !temp_array.get(i).equals(""))ret += temp_array.get(i);
             }
         }
-        if(ret!="")ret += "<br><br>";
+        if(!ret.equals(""))ret += "<br><br>";
         if(location == null)ret = "</n> has died. <br><br>";
         challenge_output = "";
         return ret;
@@ -553,7 +553,7 @@ public class Character extends DynamicObject {
         String ret = "";
         if (i == -1){	
             ret = location.fireChallenge(k, j, this, m);
-            if(challenge_output != ""){
+            if(!challenge_output.equals("")){
                 ret += get_challenge_output();
             }
             ret = this.sanitize(ret);
@@ -673,7 +673,7 @@ public class Character extends DynamicObject {
         ArrayList<CharAction> temp_array = new ArrayList<>(get_all_overworld_actions());
         int i = 0;
         for(i=0;i<temp_array.size();i++){
-            if(temp_array.get(i) != null && temp_array.get(i).attack_type == type_name){
+            if(temp_array.get(i) != null && temp_array.get(i).attack_type.equals(type_name)){
                 if(ret.indexOf(">"+temp_array.get(i).getName() +"<") >= 0)continue;
                 if(temp_array.get(i).get_party_use() && party != null){
                     ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
@@ -824,7 +824,7 @@ public class Character extends DynamicObject {
             ArrayList<CharAction> temp_array = get_all_overworld_actions();
             for (k=0;k<temp_array.size();k++){
                     if(temp_array.get(k) != null && location != null){
-                        if(temp_array.get(k).getName() != "" && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
+                        if(!temp_array.get(k).getName().equals("") && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                     }
             }
         }
@@ -1344,7 +1344,7 @@ public class Character extends DynamicObject {
             ret += body.check_state(this);
         }
         
-        if(ret != ""){
+        if(!ret.equals("")){
             set_challenge_output("<sid"+id+","+change_amt+",0,\""+ret+"\">");
             
         }
@@ -1424,13 +1424,13 @@ public class Character extends DynamicObject {
                 s += body.get_effects(i,k,this, temp,body_app_method,count,Body.target_all_parts,effect_type);
             }
         }else if(part_id == Body.target_parts_one_by_one){
-            //trace("(Character) Should be eroding stat from part by part, instead of all at once.. doing nothing");
+            LOGGER.info("(Character) Should be eroding stat from part by part, instead of all at once.. doing nothing");
             //not sure what to do here yet...
         }else if(part_id >= 0){
             //we have a specific part id to apply this affect to...
             if(!char_only)s += body.get_effects(i,k,this, temp,body_app_method,0, part_id,effect_type);
         }else{
-            //trace("(Character) got passed a part id of "+ part_id + " and I have no idea what to do with it");
+            LOGGER.info("(Character) got passed a part id of "+ part_id + " and I have no idea what to do with it");
         }
         
         //deal with the relationship garbage - this should really happen when an action is attempted, not when it's successful....
@@ -2449,7 +2449,7 @@ public class Character extends DynamicObject {
 					if(location.get_content(o) != null){
 						return location.get_content(o).appearance(j, this);
 					}else{
-						//trace("(Character)looking at null content... id: " + o);
+						LOGGER.info("(Character)looking at null content... id: " + o);
 					}
 				}
 				ret = location.get_room_description(this);
@@ -2479,11 +2479,11 @@ public class Character extends DynamicObject {
 					ret += "<br><font color='#0000FF'><a href=\"event:loot,"+i+",-3\">Store</a></font>";
 				}
 				
-				if(temp_cont.bury_action == null && temp_cont.bury != ""){
+				if(temp_cont.bury_action == null && !temp_cont.bury.equals("")){
 					int count = 0;
 					for (count=0;count<actions.size();count++){
 						if(actions.get(count) != null && location != null){
-							if(actions.get(count).getName() != "" && actions.get(count).get_bury()){
+							if(actions.get(count).getName().equals("") && actions.get(count).get_bury()){
 								ret += "<br><a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(count)+","+Integer.toString(i)+"\"><font color='#0000FF'>"+ actions.get(count).getName() +"</font></a>";
 							}
 						}
@@ -2585,7 +2585,7 @@ public class Character extends DynamicObject {
         Item item = location.itemLoss(i);
         if (item != null){
             personality.advance_objectives(Quest.pick_up_action, new ArrayList<>(Arrays.asList(item)), this);//[item]
-            if (item.getName().toLowerCase() == "gold"){
+            if (item.getName().toLowerCase().equals("gold")){
                 set_gold(item.getValue(null, null));
                 return sanitize("</n> got " + item.getValue(null, null) + " gold coins.<br>", null) + look();
             }else{
@@ -2606,7 +2606,7 @@ public class Character extends DynamicObject {
             Item item = location.take_from_sub_content(i,k);
             personality.advance_objectives(Quest.pick_up_action, new ArrayList<>(Arrays.asList(item)), this);
             if (item != null){
-                if (item.getName().toLowerCase() == "gold"){
+                if (item.getName().toLowerCase().equals("gold")){
                     set_gold(item.getValue(null, null));
                     return sanitize("</n> got " + item.getValue(null, null) + " gold coins.", null) + back_string;
                 }else{
@@ -2833,13 +2833,13 @@ public class Character extends DynamicObject {
     */
     public String set_character_class(Character_class c){
         String ret = "";
-        if(c != null && c.getName() != "") ret += "</n> has begun to follow the path of the " + c.getName() + ". ";
+        if(c != null && !c.getName().equals("")) ret += "</n> has begun to follow the path of the " + c.getName() + ". ";
         personality.advance_objectives(Quest.class_action,new ArrayList<>(Arrays.asList(c)), this);
         Boolean found = false;
         int i = 0;
         for(i=0;i<Math.ceil(cclass.size());i++){
             cclass.get(i).setBool(false);//cclass[i*3 + 2] = false;
-            if(cclass.get(i).getCclass() == c || (cclass.get(i).getCclass()).getName() == c.getName()){
+            if(cclass.get(i).getCclass() == c || (cclass.get(i).getCclass()).getName().equals(c.getName())){
                 cclass.get(i).setBool(true);//cclass[i*3 + 2] = true;
                 lvl = cclass.get(i).getLevel();
                 found = true;
@@ -2865,14 +2865,13 @@ public class Character extends DynamicObject {
                 }
                 if(!found && c.action_lvl_req.get(i) <= 1){
                     add_action(c.actions.get(i));
-                    if(c.actions.get(i).name != "")ret += "<<br>> learns " + c.actions.get(i).name;
+                    if(!c.actions.get(i).name.equals(""))ret += "<<br>> learns " + c.actions.get(i).name;
                 }
             }
         }
         xp = 1;
         nxt_lvl_xp = 100;
         
-        i = 1;
         for(i=1;i<lvl;i++)nxt_lvl_xp = nxt_lvl_xp * 3;
         
         return ret;
@@ -2963,7 +2962,7 @@ public class Character extends DynamicObject {
                         if(attacks.get(i) == attacks.get(cclass_count)){
                             //attacks.get(cclass_count) = null;
                             attacks.set(cclass_count,null);
-                        }else if(attacks.get(i).get_cclass_origin() == attacks.get(cclass_count).get_cclass_origin() && attacks.get(cclass_count).get_cclass_level() == attacks.get(i).get_cclass_level()
+                        }else if(attacks.get(i).get_cclass_origin().equals(attacks.get(cclass_count).get_cclass_origin()) && attacks.get(cclass_count).get_cclass_level() == attacks.get(i).get_cclass_level()
                         && attacks.get(i).getName() == attacks.get(cclass_count).getName() && attacks.get(i).trader_item == attacks.get(cclass_count).trader_item){
                             //attacks[cclass_count] = null;
                             attacks.set(cclass_count,null);
@@ -2993,15 +2992,15 @@ public class Character extends DynamicObject {
         Character enemy = null;
         if(location.getContent(k) instanceof Character)enemy = (Character)location.getContent(k);
         if(enemy == null){
-            //trace("(Character.attack())Failed to find enemy with id: " + k);
+            LOGGER.info("(Character.attack())Failed to find enemy with id: " + k);
             return "";
         }
         Boolean enemy_combat_status = enemy.get_combat_status();
         
         CharAction action = get_attack_action(j);
         if(action == null){
-            //trace("(CHARACTER)Couldn't find attack... should have checked both character class and body parts for it. Looking for attack id:" + j);
-            //trace(show_combat_options(enemy));
+            LOGGER.info("(CHARACTER)Couldn't find attack... should have checked both character class and body parts for it. Looking for attack id:" + j);
+            //LOGGER.info(show_combat_options(enemy));
             return "";
         }
         
@@ -3178,7 +3177,7 @@ public class Character extends DynamicObject {
             party = null;
         }
         if(personality.job != null){
-            //trace("(Character.die)Should be figuring out what to do with this now dead characters job. Doing nothing instead. ");
+            LOGGER.info("(Character.die)Should be figuring out what to do with this now dead characters job. Doing nothing instead. ");
         }
         
         return "";
@@ -4472,7 +4471,7 @@ public class Character extends DynamicObject {
         
         if(busy <= 0){
             setBusy();//well, you tried
-            //trace("(Character.AI)Character just did action without setting any busy..." + previous_action_output + " " + ret + " " + options);
+            LOGGER.info("(Character.AI)Character just did action without setting any busy..." + previous_action_output + " " + ret + " " + options);
         }
         
         return ret;
@@ -4897,15 +4896,15 @@ public class Character extends DynamicObject {
     
     public String impregnate(Character c,Boolean preg_to_tick){//def null,false
         String ret = "";
-        //trace("(CHARACTER)impregnate attempt on " + get_name());
+        LOGGER.info("(CHARACTER)impregnate attempt on " + getName());
         if(c != null){
-            //trace("by " + c.get_name());
+            LOGGER.info("by " + c.getName());
             //assume the character passed in is the father, and that this is the mother for now
             Number impreg_volume = c.get_stat(FPalaceHelper.cum_volume_id);
             ret += consume(FPalaceHelper.cum_volume_id,c);
             //make sure no one is infertile
             if(c.getStat(FPalaceHelper.semen_fertility_id) < 0.0 || getStat(FPalaceHelper.egg_fertility_id) < 0.0 || body.get_pregnant_race().preg_effect == null){
-                //trace("but one of them is infertile...");
+                LOGGER.info("but one of them is infertile...");
                 return ret;
             }
             
@@ -4913,7 +4912,7 @@ public class Character extends DynamicObject {
             int i = 0;
             for(i=0;i<currentTickEffects.size();i++){
                 if(currentTickEffects.get(i).get_id()  == TickEffect.pregnant_status){
-                    //trace("but "+get_name()+" is already pregnant!");
+                    LOGGER.info("but "+getName()+" is already pregnant!");
                     return ret;
                 }
             }
@@ -4921,7 +4920,7 @@ public class Character extends DynamicObject {
             Number semen_fertility = c.get_stat(FPalaceHelper.semen_fertility_id);
             Number n = Math.log(((semen_fertility.doubleValue() + egg_fertility.doubleValue()) * impreg_volume.doubleValue()))*egg_fertility.doubleValue();
             
-            //trace("child probability is " + n + " impreg volume:" + impreg_volume +"mL semen fertility:"+ semen_fertility + " egg fertility:"+egg_fertility);
+            LOGGER.info("child probability is " + n + " impreg volume:" + impreg_volume +"mL semen fertility:"+ semen_fertility + " egg fertility:"+egg_fertility);
             
             sex.reverse_bonuses(this);
             c.sex.reverse_bonuses(c);
@@ -5025,7 +5024,7 @@ public class Character extends DynamicObject {
                     baby.apply_affect_by_id(FPalaceHelper.lust_id, -baby.get_stat(FPalaceHelper.lust_id).doubleValue(),0,null,Body.change_stats_total);
                     
                     baby.apply_affect_by_id(FPalaceHelper.age_id,-baby.get_stat(FPalaceHelper.age_id).doubleValue());
-                    //trace(baby.appearance(1));
+                    LOGGER.info(baby.appearance(1));
                     baby.set_move(Math.max(c.ai_move, ai_move));
                     baby.personality.new_relationship(this,baby,Relationship.initial_reaction_change, 20);
                     child_array.add(baby);//child_array[child_array.length] = baby
