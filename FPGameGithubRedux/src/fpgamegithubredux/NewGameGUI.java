@@ -365,6 +365,7 @@ public class NewGameGUI implements ActionListener {
         if(age_flag != 23){
             newPlayer.apply_affect_by_id(FPalaceHelper.age_id,age_flag-23,0,null,Body.change_stats_total);
         }
+        /*
         Room tempRoom = new Room();
 
         Item tempItem = new Item();
@@ -374,12 +375,15 @@ public class NewGameGUI implements ActionListener {
         tempRoom.newContent(tempItem);
 
         tempRoom.newContent(FPalace_items.bandages());
+        */
         World temp_world = new World();
-        //temp_world = FPalace_content.new_world(temp_world);
-
+        temp_world = FPalace_content.new_world(temp_world);
+        Room tempRoom = temp_world.areas.get(0).get_random_room();
+        /*
         Character tempChar = new Character();
         tempChar.location = tempRoom;
         tempRoom.newContent(tempChar);
+        */
         
         newPlayer.location = tempRoom;
         tempRoom.newContent(newPlayer);

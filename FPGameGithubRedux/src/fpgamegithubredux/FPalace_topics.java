@@ -2174,12 +2174,12 @@ public class FPalace_topics {
 			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
-			dia1.add(first[i]);
+			dia1.add(i);
 			}
 			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
-			dia2.add(second[i]);
+			dia2.add(i);
 			}
 			ct.add_action(a, dia1, dia2, false, Conversation_topic.being_told_topic);
 			
@@ -2704,12 +2704,12 @@ public class FPalace_topics {
 			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
-			dia1.add(first[i]);
+			dia1.add(i);
 			}
 			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 0};
 			for(int i : second){
-			dia2.add(second[i]);
+			dia2.add(i);
 			}
 						
 			ct.add_action(a, dia1,dia2,false, Conversation_topic.ask_topic);
@@ -3513,12 +3513,12 @@ public class FPalace_topics {
 			ArrayList<Integer> dia1 = new ArrayList<>(Arrays.asList());
 			int[] first = {FPalaceHelper.int_id, Character.relations_affect_id};
 			for(int i : first){
-			dia1.add(first[i]);
+			dia1.add(i);
 			}
 			ArrayList<Integer> dia2 = new ArrayList<>(Arrays.asList());
 			int[] second = new int[]{5, 10};
 			for(int i : second){
-			dia2.add(second[i]);
+			dia2.add(i);
 			}
 			ct.add_action(a, dia1,dia2,false, Conversation_topic.being_told_topic);
 			

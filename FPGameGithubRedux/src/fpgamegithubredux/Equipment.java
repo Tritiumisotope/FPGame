@@ -242,9 +242,9 @@ public class Equipment extends Item {
 			set_equip_condition(stat_id, max, -1);
 		}
 		public void set_equip_condition(int stat_id,int max,int min){//dedault min -1
-			stat_req.set(stat_req.size(), stat_id);	//stat_req[stat_req.length] = stat_id
-			stat_min.set(stat_min.size(), min);//stat_min[stat_min.length] = min
-			stat_max.set(stat_max.size(), max);//stat_max[stat_max.length] = max
+			stat_req.add(stat_id);	//stat_req[stat_req.length] = stat_id
+			stat_min.add(min);//stat_min[stat_min.length] = min
+			stat_max.add(max);//stat_max[stat_max.length] = max
 
 		}
 		

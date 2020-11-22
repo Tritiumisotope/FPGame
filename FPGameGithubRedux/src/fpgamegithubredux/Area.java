@@ -267,7 +267,7 @@ public class Area extends StaticObject{
             for(i=0;i<room_list.size();i++){
                 Boolean check = false;
                 for(int k=0;k<exemptRooms.size();k++){
-                    if(room_list.get(k) == exemptRooms.get(i)){
+                    if(room_list.get(i) == exemptRooms.get(k)){
                         check = true;
                         break;
                     }
@@ -451,9 +451,9 @@ public class Area extends StaticObject{
     public Boolean existing_exit_check(Room r,int new_x,int new_y,int new_z,int max_same_room, ArrayList<Room> already_checked){
         //already checked = null
         Boolean other_rooms_ok = true;
-        if(rooms.get(new_x)  != null){
-            if(rooms.get(new_x).get(new_y) != null){
-                if(rooms.get(new_x).get(new_y).get(new_z) != null){//TODO will this return null if get x or y are?
+        if(new_x < rooms.size() && rooms.get(new_x)  != null){
+            if(new_y < rooms.get(new_x).size() && rooms.get(new_x).get(new_y) != null){
+                if(new_z < rooms.get(new_x).get(new_y).size() && rooms.get(new_x).get(new_y).get(new_z) != null){
                     if(rooms.get(new_x).get(new_y).get(new_z) != r)other_rooms_ok = false;
                 }
             }
@@ -650,7 +650,11 @@ public class Area extends StaticObject{
                     if(rooms.get(x) == null) rooms.set(x, new ArrayList<>());//new Array()
                     for(new_y= rooms.get(x).size();new_y >= 0;new_y--){
                         if(new_y >= rooms.get(x).size()){
-                            rooms.get(x).add(rooms.get(x).get(new_y - 1));
+                            if(new_y-1 >= 0){
+                                rooms.get(x).add(rooms.get(x).get(new_y - 1));
+                            }else{
+                                rooms.get(x).add(new ArrayList<>());
+                            }
                         }else{
                             if(new_y-1>=0){
                                 rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [] []
@@ -755,7 +759,7 @@ public class Area extends StaticObject{
                         if(rooms.get(x) == null) rooms.set(x, new ArrayList<>());//new Array()
                         if(rooms.get(new_x) == null) rooms.set(new_x, new ArrayList<>());//new Array()
                         
-                        if(rooms.get(x).get(new_y) != null && rooms.get(x).get(new_y).get(z) != null && rooms.get(new_x).get(y) != null && 
+                        if(new_y <rooms.get(x).size() && z < rooms.get(x).get(new_y).size() && y < rooms.get(new_x).size() && z < rooms.get(new_x).get(y).size() && rooms.get(x).get(new_y) != null && rooms.get(x).get(new_y).get(z) != null && rooms.get(new_x).get(y) != null && 
                         rooms.get(new_x).get(y).get(z) != null && (same_room_count < temp_max_same || temp_max_same == -1) && good_exit){
                             
                             if(rooms.get(x).get(new_y).get(z).get_exit_id(rooms.get(new_x).get(y).get(z)) == -1){
@@ -779,22 +783,22 @@ public class Area extends StaticObject{
                 new_z = z;
                 if (count > 10){
                     if (rooms.get(x+1) == null) rooms.set(x+1, new ArrayList<>());//new Array()
-                    if (rooms.get(x-1) == null) rooms.set(x-1, new ArrayList<>());//new Array()
+                    if (x-1 >= 0 && rooms.get(x-1) == null) rooms.set(x-1, new ArrayList<>());//new Array()
                     //fine, i'll pick the damn room
                     
                     if(rooms.get(x+1).get(y) == null && existing_exit_check(r,  x+1, y, new_z, max_same_room)){
                             new_x = x+1;
                     }
-                    if(rooms.get(x+1).get(y+1) == null && existing_exit_check(r,  x+1, y+1, new_z, max_same_room)){
+                    if((x+1 >= rooms.size() || y+1 >= rooms.get(x+1).size() || rooms.get(x+1).get(y+1) == null) && existing_exit_check(r,  x+1, y+1, new_z, max_same_room)){
                             new_x = x+1;
                             new_y = y+1;
                     }
-                    if(rooms.get(x).get(y+1) == null && existing_exit_check(r,  x, y+1, new_z, max_same_room)){
+                    if((x >= rooms.size() || y+1 >= rooms.get(x).size() || rooms.get(x).get(y+1) == null) && existing_exit_check(r,  x, y+1, new_z, max_same_room)){
                             new_y = y+1;
                     }
                     
                     if(x-1 >=0){
-                        if(rooms.get(x-1).get(y+1) == null && existing_exit_check(r,  x-1, y+1, new_z, max_same_room)){
+                        if((y+1 >= rooms.get(x-1).size() || rooms.get(x-1).get(y+1) == null) && existing_exit_check(r,  x-1, y+1, new_z, max_same_room)){
                                 new_y = y+1;
                                 new_x = x-1;
                         }else if(rooms.get(x-1).get(y) == null && existing_exit_check(r,  x-1, y, new_z, max_same_room)){
@@ -847,6 +851,7 @@ public class Area extends StaticObject{
         }
         
         if(rooms.get(new_x) == null) rooms.set(new_x, new ArrayList<>());//new Array()
+        while(rooms.get(new_x).size() <= new_y) rooms.get(new_x).add(new ArrayList<>());//new Array()
         if(rooms.get(new_x).get(new_y) == null) rooms.get(new_x).set(new_y, new ArrayList<>());//new Array()
         
         //TODO Unused?
@@ -1363,7 +1368,7 @@ public class Area extends StaticObject{
         for(x=0;x<rooms.size();x++){
             if(x == 0 || x == rooms.size() - 1){
                 for(y=0;y<max_y;y++){
-                    if(rooms.get(x) != null && rooms.get(x).get(y) != null){
+                    if(rooms.get(x) != null && y < rooms.get(x).size() && rooms.get(x).get(y) != null){
                         for(z=0;z<rooms.get(x).get(y).size();z++){
                             if(rooms.get(x).get(y).get(z) != null){
                                 if(x == 0){
@@ -1386,7 +1391,7 @@ public class Area extends StaticObject{
                     }
                 }
             }
-            if(rooms.get(x) != null && rooms.get(x).get(max_y-1) != null){
+            if(x < rooms.size() && rooms.get(x) != null && rooms.get(x).size() > max_y-1 && max_y-1 >= 0 && rooms.get(x).get(max_y-1) != null){
                 for(z=0;z<rooms.get(x).get(max_y-1).size();z++){
                     if(rooms.get(x).get(max_y-1).get(z) != null){
                         top_x_good = true;
@@ -1454,7 +1459,7 @@ public class Area extends StaticObject{
                 
             }			
             
-            connected_rooms.add(unconnected_rooms.remove(unconnected_rooms.size()));//TODO check off by 1 //connected_rooms[connected_rooms.length] = unconnected_rooms.pop()
+            connected_rooms.add(unconnected_rooms.remove(unconnected_rooms.size()-1));//TODO check off by 1 //connected_rooms[connected_rooms.length] = unconnected_rooms.pop()
         }else if(unconnected_rooms == null){
             unconnected_rooms = null;//new Array()
         }		
@@ -1487,7 +1492,9 @@ public class Area extends StaticObject{
                     if(temp_loc1[2] == temp_loc2[2] && Math.abs(temp_loc1[0] - temp_loc2[0]) <= 1 && Math.abs(temp_loc1[1] - temp_loc2[1]) <= 1){//all .get(x) were [x]
                         
                         if(unconnected_rooms.get(j).get_exit_id(connected_rooms.get(i)) < 0 && 
-                        (rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2])!= null && 
+                        (temp_loc1[0] < rooms.size() && temp_loc2[0] < rooms.size() && temp_loc1[1] < rooms.get(temp_loc2[0]).size() && temp_loc2[1] < rooms.get(temp_loc1[0]).size() &&
+                        temp_loc1[2] < rooms.get(temp_loc1[0]).get(temp_loc2[1]).size() && temp_loc1[2] <  rooms.get(temp_loc2[0]).get(temp_loc1[1]).size() &&
+                        rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2])!= null && 
                         rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2]) != null && 
                         rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0)){
                             //need a new connection

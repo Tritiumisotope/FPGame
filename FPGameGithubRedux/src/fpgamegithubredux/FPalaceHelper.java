@@ -793,7 +793,7 @@ public class FPalaceHelper{
 		public static String get_stat_name_by_id(int stat_id){
 			String ret = "?";
 			if(stat_names == null){
-				stat_names =new Stat[0]; // new Array()
+				stat_names =new Stat[49]; // new Array()
 				stat_names[str_id] = stat_strength();
 				stat_names[dex_id] = stat_dexterity();
 				stat_names[con_id] = stat_finalitution();

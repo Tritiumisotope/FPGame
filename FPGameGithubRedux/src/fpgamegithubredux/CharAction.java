@@ -28,7 +28,7 @@ public class CharAction {
     public int blowback;
     public int blowback_amount;
     protected Item item_req;
-    protected Boolean force_failure;
+    protected Boolean force_failure = false;
     public Boolean alchemy_flag= false;
     public Boolean enchant_flag = false;
     public Boolean sewing_flag = false;
