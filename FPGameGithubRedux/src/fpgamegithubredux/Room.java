@@ -634,7 +634,7 @@ public class Room extends StaticObject{
             for (i=0;i<exit_names.size();i++){
                 if (d.equals(exit_names.get(i)) || e == exits.get(i)) return -1;
             }
-            for(i=0;i<=exit_names.size();i++){
+            for(i=0;i<exit_names.size();i++){
                 if(exit_names.get(i) == null){
                     exit_names.set(i, d);
                     exits.set(i, e);

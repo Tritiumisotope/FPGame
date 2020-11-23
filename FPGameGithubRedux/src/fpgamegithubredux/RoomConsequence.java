@@ -35,7 +35,7 @@ public class RoomConsequence extends Consequence{
 		}
 		
 		public void add_room_action(CharActionObject a){
-            actions_to_add.set(actions_to_add.size(),a);//actions_to_add[actions_to_add.length] = a
+            actions_to_add.add(a);//actions_to_add[actions_to_add.length] = a
 		}
 		public void generate_new_floor(){
             generate_new_floor(0);

@@ -250,12 +250,12 @@ public class Stat {
 				if(check_combat.get(i)){
 					int compare = -1;
 					int temp_stat_val = (int)get_stat_value(c);
-					if(check_total.get(i)) temp_stat_val = (int)c.get_stat(statID);
+					if(check_total.get(i)) temp_stat_val = c.get_stat(statID).intValue();
 					if(check_against.get(i) < 0){
 						compare = -check_against.get(i) - 1;
 					}else{
 						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
-						if(compare < 0 || check_total.get(i)) compare = (int)c.get_stat(check_against.get(i));
+						if(compare < 0 || check_total.get(i)) compare = c.get_stat(check_against.get(i)).intValue();
 					}
 					
 					if(check_condition.get(i).equals(">")){
@@ -872,7 +872,7 @@ public class Stat {
                 min = -min_stat_id - 2;
                 if(get_stat_value(c, 0,false,true) < min) flag = true;
             }else if(bp == null){
-                min = (int)c.get_stat(min_stat_id);
+                min = c.get_stat(min_stat_id).intValue();
                 if(c.get_stat(statID, 0,0,-1,false).intValue() < min) flag = true;
             }else{
                 if(bp.get_stat(c, min_stat_id).intValue() > -1){

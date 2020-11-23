@@ -1380,13 +1380,14 @@ public class Character extends DynamicObject {
                 //if(i == stat_id[j]){
                 if(i == statID.get(j)){
                     count++;
-                    if(stats.get(j).age){
-                        k = Math.ceil(k.doubleValue()/get_primary_race().get_aging_mod().doubleValue());
-                        sex.age(this,k.intValue());
-                        s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);
-                    }//TODO so much
+                    
                     
                     if(body_app_method == Body.change_stats_individual){
+                        if(stats.get(j).age){
+                            k = Math.ceil(k.doubleValue()/get_primary_race().get_aging_mod().doubleValue());
+                            LOGGER.info("Aging character by " + k.intValue() + " years.");
+                            sex.age(this,k.intValue());                            
+                        }//TODO 
                         s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);				
                     }else if(body_app_method == Body.change_first_stat && !found){
                         s += stats.get(j).get_change_magnitude(k.doubleValue(),this,temp);
