@@ -1,7 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Sex extends DynamicObject {
@@ -49,16 +49,20 @@ public class Sex extends DynamicObject {
     }
 
     public void set_default_orient(Trait[] attract,Trait[] disgust){
-        ArrayList<Trait> dia1 = new ArrayList<>();
+        ArrayList<Trait> dia1 = new ArrayList<>(Arrays.asList(attract));
+        /*
         Trait[] first = attract;
         for(int i=0;i<first.length;i++){
         dia1.add(first[i]);
         }
-        ArrayList<Trait> dia2 = new ArrayList<>();
+        */
+        ArrayList<Trait> dia2 = new ArrayList<>(Arrays.asList(disgust));
+        /*
         Trait[] second = disgust;
         for(int i=0;i<second.length;i++){
         dia2.add(second[i]);
         }
+        */
         default_orient.set(0,dia1);
         default_orient.set(1,dia2);
     }
