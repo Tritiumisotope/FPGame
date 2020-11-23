@@ -2240,11 +2240,20 @@ public class Character extends DynamicObject {
                 if(tempObject instanceof Character){
                     ret = ((Character)tempObject).appearance(lookID, this);
                 }
-            }else{
-                ret = location.getRoomDescription(this);
+            }
+            ret = location.getRoomDescription(this);
+            ret = sanitize(get_challenge_output()) + ret;
+            if(party != null && party.members != null){
+                if(party.get_leader() == this){
+                    int i = 0;
+                    for(i=0;i<party.members.size();i++){
+                        if(party.members.get(i) != null && party.members.get(i) != this){
+                            ret = party.members.get(i).sanitize(party.members.get(i).get_challenge_output(), this) + ret;
+                        }
+                    }
+                }
             }
         }
-
         return ret;
     }
 
