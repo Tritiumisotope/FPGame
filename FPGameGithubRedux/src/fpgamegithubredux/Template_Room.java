@@ -265,15 +265,45 @@ public class Template_Room extends StaticObject {
         hidden_exit_challenge = ch;
         hidden_exit_consequence = con;
     }
-    
+    public ArrayList<String> get_avail_exits(Room r){
+        ArrayList<String> full_arr = new ArrayList<>(Arrays.asList("North", "North-East",
+         "East", "South-East", "South", "South-West", "West", "North-West"));  //indices 0 to 7
+        Boolean[] Able = new Boolean[]{true,true,true,true,true,true,true,true}; //indices 0 to 7            
+        int exit_idx;//can be 0 to 7 by definition
+        for(int i=0;i<r.exit_names.size();i++){
+            exit_idx = full_arr.indexOf(r.exit_names.get(i));
+            Able[exit_idx]=false;
+            for(int j = 0; j<same_exit_offset;j++){
+                if(exit_idx+j<8){//0 to 7 is ok
+                    Able[exit_idx+j]=false;
+                }else{
+                    Able[exit_idx+j-8]=false;//max index is size -1,but indices start at 0, so... 
+                    //example 7(North-West)+2 = 9, which becomes 1, the second index, North-East
+                }
+                if(exit_idx-j>=0){//0 to 7 is ok
+                    Able[exit_idx-j]=false;
+                }else{
+                    Able[exit_idx-j+8]=false;
+                    //example 0(North)-2 = -2, which becomes 6, or West
+                }
+            }
+        }
+        ArrayList<String> ret_arr = new ArrayList<>();
+        for(int i=0;i<full_arr.size();i++){
+            if(Able[i]==true){
+                ret_arr.add(full_arr.get(i));
+            }
+        }
+        return ret_arr;
+    }
+    /*deleted if above works
     public ArrayList<String> get_avail_exits(Room r){
         ArrayList<String> ret_arr = new ArrayList<>(Arrays.asList("North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"));                
-        int i= 0;
-        for(i=0;i<r.exit_names.size();i++){
-            int k = 0;
-            if(ret_arr.size()<=0) break;
-            for(k=0;k<ret_arr.size();k++){
-                if(r.exit_names.get(i).equals(ret_arr.get(k))){
+        int exit_idx;
+        for(int i=0;i<r.exit_names.size();i++){
+            for(int k=0;k<ret_arr.size();k++){
+                if(r.exit_names.get(i).equals(ret_arr.get(k))){//one is matched
+                    
                     if(ret_arr.size() > 0 && (k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size())){
                         if(k-same_exit_offset < 0){
                             //ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset)
@@ -295,12 +325,33 @@ public class Template_Room extends StaticObject {
                         temp_arr.addAll(ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
                         ret_arr = new ArrayList<>(temp_arr);//TODO verify all three!!!
                     }
+                    
+                    exit_idx = ret_arr.indexOf(r.exit_names.get(i));
+                    ret_arr.remove(exit_idx);
+                    for(int j = 0;j<same_exit_offset;j++){
+                        if(exit_idx<ret_arr.size()){//remove higher
+                            ret_arr.remove(exit_idx);//this is always the next highest after the previous deletion or deletion loop
+                        }else{
+                            ret_arr.remove(0);//wrap-around
+                            exit_idx--;//list shrunk from below, so our center shifted
+                        }
+                        if(exit_idx-1>0){//remove lower
+                            ret_arr.remove(exit_idx-1);
+                            exit_idx--;//list shrunk from below, center shifted
+                        }else{
+                            ret_arr.remove(ret_arr.size()-1);//wrap-around
+                        }
+                        if(ret_arr.size()<2)break;//cant do another loop!
+                    }
                     break;
                 }
             }
+            if(ret_arr.size()<=0) break;
         }
         return ret_arr;
+        
     }
+    */
     
     public void add_other_room(Template_Room t){
         other_rooms.add(t); //other_rooms[other_rooms.length] = t

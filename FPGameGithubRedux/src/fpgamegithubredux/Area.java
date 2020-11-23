@@ -533,7 +533,7 @@ public class Area extends StaticObject{
                         LOGGER.info("figZ is: " + figured_new_z);
                         LOGGER.info("newZ is: " + new_z);
                         LOGGER.info("offsetZ is: " + offset[2]);
-                        if(rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
+                        if(/*TODO good additions?*/ figured_new_z>-1 && rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
                             other_rooms_ok = false;
                         }
                     }
