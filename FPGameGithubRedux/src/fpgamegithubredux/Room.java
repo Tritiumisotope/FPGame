@@ -13,7 +13,7 @@ public class Room extends StaticObject{
     protected Area area;
     public Template_Room template;
 
-    protected String[] exitNames;//DUMMY
+    //protected String[] exitNames;//DUMMY
     protected static final String[] REUSED = new String[]{"somewhere", " arrives from "};
 
     protected ArrayList<CharAction> actions;
@@ -725,7 +725,7 @@ public class Room extends StaticObject{
     public String getExitName(Room r){
         int i;
         for(i=0;i<exits.size();i++){
-            if(exits.get(i) == r) return exitNames[i];
+            if(exits.get(i) == r) return exit_names.get(i);
         }
         
         return REUSED[0];

@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Template_Room extends StaticObject {
     
@@ -266,15 +267,11 @@ public class Template_Room extends StaticObject {
     }
     
     public ArrayList<String> get_avail_exits(Room r){
-        ArrayList<String> ret_arr = new ArrayList<>();
-        String[] first = new String[]{"North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"};;
-        for(int i=0;i<first.length;i++){
-        ret_arr.add(first[i]);
-        }
-                
+        ArrayList<String> ret_arr = new ArrayList<>(Arrays.asList("North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"));                
         int i= 0;
         for(i=0;i<r.exit_names.size();i++){
             int k = 0;
+            if(ret_arr.size()<=0) break;
             for(k=0;k<ret_arr.size();k++){
                 if(r.exit_names.get(i).equals(ret_arr.get(k))){
                     if(ret_arr.size() > 0 && (k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size())){
@@ -284,9 +281,15 @@ public class Template_Room extends StaticObject {
                         }
                         if(k+1+same_exit_offset >= ret_arr.size()){
                             //ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset)
+                            System.out.println(ret_arr);
+                            System.out.println(k);
+                            System.out.println(same_exit_offset);
+                            System.out.println(ret_arr.size());
+                            System.out.println(k+1+same_exit_offset - ret_arr.size());
+                            System.out.println(k-same_exit_offset);
                             ret_arr = new ArrayList<>(ret_arr.subList(k+1+same_exit_offset - ret_arr.size(),k-same_exit_offset));
                         }
-                    }else{
+                    }else if(ret_arr.size()>0){
                         //ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length))
                         ArrayList<String> temp_arr = new ArrayList<>(ret_arr.subList(0,k-same_exit_offset));
                         temp_arr.addAll(ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
@@ -295,7 +298,6 @@ public class Template_Room extends StaticObject {
                     break;
                 }
             }
-            if(ret_arr.size()<=0) break;
         }
         return ret_arr;
     }

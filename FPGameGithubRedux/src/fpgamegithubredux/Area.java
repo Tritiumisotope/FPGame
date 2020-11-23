@@ -420,7 +420,7 @@ public class Area extends StaticObject{
             for(counter=0;counter<r.exits.size();counter++){
                 //figure out the offset based on the name
                 if(r.exits.get(counter).area == null && r.exits.get(counter) != lr){
-                    int[] offset = get_offset_by_name(r.exitNames[counter]);
+                    int[] offset = get_offset_by_name(r.exit_names.get(counter));
                     int figured_new_x = new_x + offset[0];
                     int figured_new_y = new_y + offset[1];
                     int figured_new_z = new_z + offset[2];
@@ -430,7 +430,7 @@ public class Area extends StaticObject{
                     //room_list[room_list.size()] = r.exits.get(counter)
                     room_list.set(room_list.size(),r.exits.get(counter));
                     
-                    existing_exit_add(r.exits.get(counter), r, figured_new_x, figured_new_y, figured_new_z, r.exitNames[counter]);
+                    existing_exit_add(r.exits.get(counter), r, figured_new_x, figured_new_y, figured_new_z, r.exit_names.get(counter));
                     int[] temp_arr = find_room(r);
                     
                     if(temp_arr != null){
@@ -473,7 +473,9 @@ public class Area extends StaticObject{
             for(counter=0;counter<r.exits.size();counter++){
                 if(r.exits.get(counter).area != null) continue;
                 //figure out the offset based on the name
-                int[] offset = get_offset_by_name(r.exitNames[counter]);//TODO this is always 3 elements?
+                LOGGER.info("Room is"+r);
+                LOGGER.info("exit names are"+r.exit_names);
+                int[] offset = get_offset_by_name(r.exit_names.get(counter));//TODO this is always 3 elements?
                 //need to check if we need to assign a new offset
                 if(offset[0] == 0 && offset[1] == 0 && offset[2] == 0){
                     Boolean loop_flag = true;
@@ -509,7 +511,7 @@ public class Area extends StaticObject{
                         int exit_exits = 0;
                         for(exit_exits=0;exit_exits<r.exits.get(counter).exits.size();exit_exits++){
                             if(r.exits.get(counter).exits.get(exit_exits) == r)continue;
-                            int[] exit_exit_offset = get_offset_by_name(r.exits.get(counter).exitNames[exit_exits]);
+                            int[] exit_exit_offset = get_offset_by_name(r.exits.get(counter).exit_names.get(exit_exits));
                             if(offset[0] == -exit_exit_offset[0] && offset[1] == -exit_exit_offset[1] && offset[2] == -exit_exit_offset[2]){
                                 loop_flag = true;
                                 break;
@@ -519,7 +521,7 @@ public class Area extends StaticObject{
                     }
                     this.tempOffset = offset;
                     //was commented by why not get it back?
-                    LOGGER.info("(Area.existing_exit_check)Assigned direction " + offset + " to exit named " + r.exitNames[counter]);
+                    LOGGER.info("(Area.existing_exit_check)Assigned direction " + offset + " to exit named " + r.exit_names.get(counter));
                 }
                 
                 int figured_new_x = new_x + offset[0];
@@ -528,6 +530,9 @@ public class Area extends StaticObject{
                 
                 if(rooms.get(figured_new_x) != null){
                     if(rooms.get(figured_new_x).get(figured_new_y) != null){
+                        LOGGER.info("figZ is: " + figured_new_z);
+                        LOGGER.info("newZ is: " + new_z);
+                        LOGGER.info("offsetZ is: " + offset[2]);
                         if(rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
                             other_rooms_ok = false;
                         }
@@ -940,7 +945,7 @@ public class Area extends StaticObject{
     
     public int[] get_offset_by_name(String s){
         int[] ret_array = new int[]{0,0,0};
-
+        LOGGER.info("Got here!");
         if(s==null)return ret_array;
         
         if(s.indexOf("North") >= 0){
@@ -1702,43 +1707,43 @@ public class Area extends StaticObject{
                 */
             }
             
-            for (k=0;k<r.exitNames.length;k++){
-                if(r.exitNames[k].equals("North")){
+            for (k=0;k<r.exit_names.size();k++){
+                if(r.exit_names.get(k).equals("North")){
                     temp[1] = "|";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[1] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("East")){
+                }else if(r.exit_names.get(k).equals("East")){
                     temp[6] = "-";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[6] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("West")){
+                }else if(r.exit_names.get(k).equals("West")){
                     temp[4] = "-";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[4] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("North-East")){
+                }else if(r.exit_names.get(k).equals("North-East")){
                     temp[2] = "/";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[2] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("North-West")){
+                }else if(r.exit_names.get(k).equals("North-West")){
                     temp[0] = "\\";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[0] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("South-West")){
+                }else if(r.exit_names.get(k).equals("South-West")){
                     temp[8] = "/";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[8] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("South-East")){
+                }else if(r.exit_names.get(k).equals("South-East")){
                     temp[10] = "\\";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[10] = get_legend_id(r.exits.get(k).area.description,floor_num);
                     }
-                }else if(r.exitNames[k].equals("South")){
+                }else if(r.exit_names.get(k).equals("South")){
                     temp[9] = "|";
                     if(r.area != r.exits.get(k).area && r.exits.get(k).area != null){
                         temp[9] = get_legend_id(r.exits.get(k).area.description,floor_num);
