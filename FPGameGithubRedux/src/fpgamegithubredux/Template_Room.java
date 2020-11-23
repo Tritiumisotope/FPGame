@@ -277,19 +277,19 @@ public class Template_Room extends StaticObject {
             int k = 0;
             for(k=0;k<ret_arr.size();k++){
                 if(r.exit_names.get(i).equals(ret_arr.get(k))){
-                    if(k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size()){
+                    if(ret_arr.size() > 0 && (k-same_exit_offset < 0 || k+1+same_exit_offset >= ret_arr.size())){
                         if(k-same_exit_offset < 0){
                             //ret_arr = ret_arr.slice(k+1+same_exit_offset,ret_arr.length - k-same_exit_offset)
-                            ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size() - k-same_exit_offset);
+                            ret_arr = new ArrayList<>(ret_arr.subList(k+1+same_exit_offset,ret_arr.size() - k-same_exit_offset));
                         }
                         if(k+1+same_exit_offset >= ret_arr.size()){
                             //ret_arr = ret_arr.slice(k+1+same_exit_offset - ret_arr.length,k-same_exit_offset)
-                            ret_arr = (ArrayList<String>)ret_arr.subList(k+1+same_exit_offset - ret_arr.size(),k-same_exit_offset);
+                            ret_arr = new ArrayList<>(ret_arr.subList(k+1+same_exit_offset - ret_arr.size(),k-same_exit_offset));
                         }
                     }else{
                         //ret_arr = ret_arr.slice(0,k-same_exit_offset).concat(ret_arr.slice(k+1+same_exit_offset,ret_arr.length))
-                        ArrayList<String> temp_arr = new ArrayList<>((ArrayList<String>)ret_arr.subList(0,k-same_exit_offset));
-                        temp_arr.addAll((ArrayList<String>)ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
+                        ArrayList<String> temp_arr = new ArrayList<>(ret_arr.subList(0,k-same_exit_offset));
+                        temp_arr.addAll(ret_arr.subList(k+1+same_exit_offset,ret_arr.size()));
                         ret_arr = new ArrayList<>(temp_arr);//TODO verify all three!!!
                     }
                     break;
