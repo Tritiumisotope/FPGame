@@ -575,7 +575,7 @@ public class Item {
         if(destroyTick <= tickCount && destroyTick > 0){
             if(spawnChar != null){
                 desc += "the " + getDroppedDescription() + "breaks open. ";
-                spawnChar.newLocation(currentRoom);
+                spawnChar.new_location(currentRoom);
             }
             if(character != null){
                 for(int i=0;i<character.possessions.size()-1;i++){

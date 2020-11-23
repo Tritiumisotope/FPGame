@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class StringCalc2 {
     // instance variables
+    private static final Boolean SUPERDEBUG = false;
 
 
     public StringCalc2()
@@ -16,11 +17,11 @@ public class StringCalc2 {
     
     public double calculate(ArrayList<Object> in) {
         double ret = 0;
-        System.out.println("Calculation starting! in is: "+ in);
+        if(SUPERDEBUG)System.out.println("Calculation starting! in is: "+ in);
         while( in.contains("(") && in.contains(")")){//Strip out P
             in = parenSplit(in);
         }
-        System.out.println("final calculation is: "+in);
+        if(SUPERDEBUG)System.out.println("final calculation is: "+in);
         ret = nonParenCalc(in);
 
         return ret;
@@ -32,7 +33,7 @@ public class StringCalc2 {
             lParenIDX--;
         }
         ArrayList<Object> inner = new ArrayList<>(in.subList(lParenIDX+1,rParenIDX));
-        System.out.println("inner calculation is: "+inner);
+        if(SUPERDEBUG)System.out.println("inner calculation is: "+inner);
         ArrayList<Object> prior = new ArrayList<>(in.subList(0,lParenIDX));
         ArrayList<Object> remainder = new ArrayList<>(in.subList(rParenIDX+1,in.size()));
         in = new ArrayList<>();
@@ -68,7 +69,7 @@ public class StringCalc2 {
 
                 }
             }else if(in.indexOf("*")>-1){//only multiplication left
-                System.out.println("Only multiply remains.");
+                if(SUPERDEBUG)System.out.println("Only multiply remains.");
                 int oploc = in.indexOf("*");
                 num1 = (Number)in.get(oploc-1);
                 num2 = (Number)in.get(oploc+1);
@@ -135,10 +136,10 @@ public class StringCalc2 {
             }
         }//all add and subtract done!
         if(in.size() == 1){
-            System.out.println("calc success! Output is: " + in.get(0));
+            if(SUPERDEBUG)System.out.println("calc success! Output is: " + in.get(0));
             return (double)in.get(0);
         }else{
-            System.out.println("calc failure!");
+            if(SUPERDEBUG)System.out.println("calc failure!");
             return 0;
         }
 

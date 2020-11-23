@@ -676,12 +676,12 @@ public class Character extends DynamicObject {
             if(temp_array.get(i) != null && temp_array.get(i).attack_type.equals(type_name)){
                 if(ret.indexOf(">"+temp_array.get(i).getName() +"<") >= 0)continue;
                 if(temp_array.get(i).get_party_use() && party != null){
-                    ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
+                    ret += "<a href=\"event:action," + location.getContentID(this) + "," +Integer.toString(i) + ",-1\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
                 }else{
                     if(init_char == this){
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) +"\"><font color='#0000FF'>"+ temp_array.get(i).getName() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.getContentID(this) + "," +Integer.toString(i) +"\"><font color='#0000FF'>"+ temp_array.get(i).getName() +"</font></a>    "; 
                     }else{
-                        ret += "<a href=\"event:action," + location.get_content_id(this) + "," +Integer.toString(i) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
+                        ret += "<a href=\"event:action," + location.getContentID(this) + "," +Integer.toString(i) + "," + location.getContentID(this) + "\"><font color='#0000FF'>"+temp_array.get(i).getName() +"</font></a>    "; 
                     }
                 }
             }
@@ -701,17 +701,17 @@ public class Character extends DynamicObject {
                     if(temp_array[k].get_party_use() || temp_array[k].get_personal()){
                         if(temp_array[k].attack_type != ""){
                             if(s.indexOf(temp_array[k].attack_type) < 0){
-                                s += "<a href=\"event:act_by_type," + location.get_content_id(this) + "," + temp_array[k].attack_type + "\"><font color='#0000FF'>"+ temp_array[k].attack_type +"</font></a>    "; 
+                                s += "<a href=\"event:act_by_type," + location.getContentID(this) + "," + temp_array[k].attack_type + "\"><font color='#0000FF'>"+ temp_array[k].attack_type +"</font></a>    "; 
                             }
                         }else{
                             if(temp_array[k].get_party_use() && party != null){
-                                s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) + ",-1\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
+                                s += "<a href=\"event:action," + location.getContentID(this) + "," + String(k) + ",-1\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
                             }else{
-                                s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) + "," + location.get_content_id(this) + "\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
+                                s += "<a href=\"event:action," + location.getContentID(this) + "," + String(k) + "," + location.getContentID(this) + "\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
                             }
                         }
                     }else{
-                        s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
+                        s += "<a href=\"event:action," + location.getContentID(this) + "," + String(k) +"\"><font color='#0000FF'>"+temp_array[k].get_name() +"</font></a>    "; 
                     }
                 }
             }
@@ -730,13 +730,13 @@ public class Character extends DynamicObject {
                     if(get_name() != "" && (temp_array[k].get_personal() || temp_array[k].get_party_use())){
                         if(temp_array[k].attack_type != ""){
                             if(s.indexOf(temp_array[k].attack_type) < 0){
-                                s += "<a href=\"event:act_by_type," + location.get_content_id(this) + "," + temp_array[k].attack_type + "\"><font color='#0000FF'>"+ temp_array[k].attack_type +"</font></a>    "; 
+                                s += "<a href=\"event:act_by_type," + location.getContentID(this) + "," + temp_array[k].attack_type + "\"><font color='#0000FF'>"+ temp_array[k].attack_type +"</font></a>    "; 
                             }
                         }else{
                             if(temp_array[k].get_party_use() && party != null){
-                                s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +",-1\"><font color='#0000FF'>"+ temp_array[k].get_name() +"</font></a>    "; 
+                                s += "<a href=\"event:action," + location.getContentID(this) + "," + String(k) +",-1\"><font color='#0000FF'>"+ temp_array[k].get_name() +"</font></a>    "; 
                             }else{
-                                s += "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\"><font color='#0000FF'>"+ temp_array[k].get_name() +"</font></a>    "; 
+                                s += "<a href=\"event:action," + location.getContentID(this) + "," + String(k) +"\"><font color='#0000FF'>"+ temp_array[k].get_name() +"</font></a>    "; 
                             }
                         }
                     }
@@ -819,12 +819,12 @@ public class Character extends DynamicObject {
             if(stats.get(k).get_description(this).length() > 0) s += stats.get(k).get_description(this);
             }
         s += body.get_parts_appearance(this) + "<br>"; 
-        if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.get_content_id(this) +"\">Back</a></font>";
+        if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.getContentID(this) +"\">Back</a></font>";
         }else{
             ArrayList<CharAction> temp_array = get_all_overworld_actions();
             for (k=0;k<temp_array.size();k++){
                     if(temp_array.get(k) != null && location != null){
-                        if(!temp_array.get(k).getName().equals("") && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
+                        if(!temp_array.get(k).getName().equals("") && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                     }
             }
         }
@@ -2191,7 +2191,7 @@ public class Character extends DynamicObject {
         s+= getName() +" now has "+ stat_points +" stat points to spend. <br>";
         
         if(curr_class != null){				
-            //s+= sanitize(curr_class.level_up(this), null);
+            s+= sanitize(curr_class.level_up(this), null);
             //TODO
         }
         
@@ -2223,10 +2223,6 @@ public class Character extends DynamicObject {
         return ret;
     }
     */
-    public String newLocation(Room newRoom){
-        //TODO dummy out
-        return "";
-    }
     public void drop(int item){
         //TODO dummy out
         if(item >= 0 && item < possessions.size()){
@@ -2485,7 +2481,7 @@ public class Character extends DynamicObject {
 					for (count=0;count<actions.size();count++){
 						if(actions.get(count) != null && location != null){
 							if(actions.get(count).getName().equals("") && actions.get(count).get_bury()){
-								ret += "<br><a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(count)+","+Integer.toString(i)+"\"><font color='#0000FF'>"+ actions.get(count).getName() +"</font></a>";
+								ret += "<br><a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(count)+","+Integer.toString(i)+"\"><font color='#0000FF'>"+ actions.get(count).getName() +"</font></a>";
 							}
 						}
 					}
@@ -2922,9 +2918,9 @@ public class Character extends DynamicObject {
         var i:int = 0;
         for (i;i<attack_array.length;i++){
             if(attack_array[i]!=null && o!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +"," + location.get_content_id(o) +"\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.getContentID(this) +","+Integer.toString(i) +"," + location.getContentID(o) +"\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
             }else if(attack_array[i]!=null){
-                s += "<a href=\"event:combat,"+ location.get_content_id(this) +","+Integer.toString(i) +",-1\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
+                s += "<a href=\"event:combat,"+ location.getContentID(this) +","+Integer.toString(i) +",-1\">" + attack_array[i].get_name() + "</a><br>";//<font color='#0000FF'></font>
             }
         }
         
@@ -4085,7 +4081,7 @@ public class Character extends DynamicObject {
                     }
                     
                     int item_value = 1;
-                    if(char_id != location.get_content_id(this)){
+                    if(char_id != location.getContentID(this)){
                         item_value = possessions.get(i).getValue((Character)location.getContent(char_id),this);
                         s += "<tr><tc>"+item_count+"x "+ possessions.get(i).getName()+"</tc>";
                         s += "<a href=\"event:sell,"+ char_id +","+i+"\"><tc>x1 " + item_value + "gp</tc></a>";
@@ -4145,11 +4141,11 @@ public class Character extends DynamicObject {
                             if(temp_array.get(k).getName() != "" && !temp_array.get(k).get_bury()){
                                 if(getName() != "" && (temp_array.get(k).get_personal() || temp_array.get(k).get_party_use())){
                                     if(temp_array.get(k).get_party_use() && party != null){
-                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +",-1\">";
-                                        action_choices.add("<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +",-1\">"); 
+                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.getContentID(this) + "," + String(k) +",-1\">";
+                                        action_choices.add("<a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(k) +",-1\">"); 
                                     }else{
-                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.get_content_id(this) + "," + String(k) +"\">"; 
-                                        action_choices.add("<a href=\"event:action," + location.get_content_id(this) + "," + Integer.toString(k) +"\">"); 
+                                        //action_choices[action_choices.length] = "<a href=\"event:action," + location.getContentID(this) + "," + String(k) +"\">"; 
+                                        action_choices.add("<a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(k) +"\">"); 
                                     }
                                 }
                             }
@@ -4489,12 +4485,12 @@ public class Character extends DynamicObject {
             if(currentTickEffects.get(i) != null){
                 ret += currentTickEffects.get(i).tick(this) + "<br>";
                 if(currentTickEffects.get(i) != null && currentTickEffects.get(i).ticks_left() <= 0){//this effect is done
-                    //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                    //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length))
                     currentTickEffects.remove(i);
                     i--;
                 }
             }else{
-                //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length))
                 currentTickEffects.remove(i);
                 i--;
             }
@@ -4508,7 +4504,7 @@ public class Character extends DynamicObject {
         }
         
         if(busy <= 0 && location != null)global_ret += AI();
-        //while(busy <= 0 && location != null)global_ret += AI();
+        //while(busy <= 0 && location != null)global_ret += AI()
         
         if(waitTime%FPGameGithub.T1_HOUR == 0 && waitTime > 0){
             reset_stats(-1, (int)get_stat(FPalaceHelper.con_id).doubleValue()/10);
@@ -4516,7 +4512,7 @@ public class Character extends DynamicObject {
             ret += apply_affect_by_id(FPalaceHelper.curr_mp_id, 5, 0, null, Body.change_stats_total);
             ret += apply_affect_by_id(FPalaceHelper.curr_fatigue_id, -1,0, null, Body.change_stats_total);
         }
-        //personality.advance_objectives(Quest.wait_action, [location,waitTime], this);
+        //personality.advance_objectives(Quest.wait_action, [location,waitTime], this)
         personality.advance_objectives(Quest.wait_action, new ArrayList<>(Arrays.asList(location,waitTime)), this);			
         
         if(busy > 0){
@@ -4970,9 +4966,9 @@ public class Character extends DynamicObject {
                     for(i=0;i<both_parts.size();i++){
                         
                         if(Math.random() <= 0.5){//
-                            part_array1.add(both_parts.get(i)[0]); //part_array1[part_array1.length] = both_parts[i][0];
+                            part_array1.add(both_parts.get(i)[0]); //part_array1[part_array1.length] = both_parts[i][0]
                         }else{
-                            part_array1.add(both_parts.get(i)[1]);//part_array1[part_array1.length] = both_parts[i][1];
+                            part_array1.add(both_parts.get(i)[1]);//part_array1[part_array1.length] = both_parts[i][1]
                         }
                     }
                     
@@ -4985,7 +4981,7 @@ public class Character extends DynamicObject {
                         part_array1.addAll(dad_parts);
                     }else{
                         //Part bonanza!
-                        //part_array1 = part_array1.concat(dad_parts.concat(mom_parts));
+                        //part_array1 = part_array1.concat(dad_parts.concat(mom_parts))
                         part_array1.addAll(dad_parts);//TODO verify dad then mom
                         part_array1.addAll(mom_parts);
                     }
@@ -5390,7 +5386,7 @@ public class Character extends DynamicObject {
         int i = 0;
         for (i=0;i<c.possessions.size();i++){
             Item item = c.possessions.get(i).copyItem();
-            //possessions[possessions.size()] = item;
+            //possessions[possessions.size()] = item
             possessions.add(item);
         }
         
@@ -5404,16 +5400,16 @@ public class Character extends DynamicObject {
         
         i = 0;
         for(i=0;i<c.stats.size();i++){
-            //stat_id[i] = c.statID.get(i);
+            //stat_id[i] = c.statID.get(i)
             statID.add(c.statID.get(i));//TODO this is empty, no?
-            //stat[i] = new Stat(stat_id[i]);
+            //stat[i] = new Stat(stat_id[i])
             stats.add(new Stat(statID.get(i)));//also empty?
             stats.get(i).statCopy(c.stats.get(i));
         }
         
         i = 0;
         for(i=0;i<c.cclass.size();i++){
-            //cclass[i] = c.cclass[i];
+            //cclass[i] = c.cclass[i]
             cclass.add(c.cclass.get(i));
         }
         

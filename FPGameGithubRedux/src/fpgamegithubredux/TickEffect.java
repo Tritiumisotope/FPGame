@@ -119,7 +119,7 @@ public class TickEffect {
         
         if(end_tick >= 0 && current_tick >= end_tick){
             if(character_effect != null){
-                character_effect.newLocation(c.location);
+                character_effect.new_location(c.location);
                 character_effect = null;
             }
             if(end_consequence != null)ret += end_consequence.trigger(1, c, c);

@@ -2455,11 +2455,7 @@ public class FPalace_topics {
 			consequence = new Consequence();
 			consequence.addConsequence(Character.relations_affect_id,10, "It's simple! They just have to go under <ctref0>.",0,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			dia2 = new ArrayList<>();
-			second = new int[]{5, 5};
-			for(int i : second){
-			dia2.add(second[i]);
-			}
+			dia2 = new ArrayList<>(Arrays.asList(5,5));
 			ct.add_action(a, dia1, dia2, false, Conversation_topic.being_told_topic,FPalaceHelper.get_chastity_mob());//want to set a mob alignment here...
 			
 			ct.add_topic_reference_by_name("The Blade");
@@ -3551,11 +3547,7 @@ public class FPalace_topics {
 			consequence.addConsequence(Character.relations_affect_id,10, "You tell </n2> about the strange sexual greeting that amazonians offer. </pronoun2> seems intrigued by your story. ",0,0,0,-1, true);
 			consequence.addConsequence(Character.relations_affect_id,-5, "</n2> looks incredulous as you do your best to tell </objnoun2> about the horrible rape an amazon is likely to greet them with. ",-1,0,0,-1, true);
 			a.addChallenge(challenge,consequence);
-			dia2 = new ArrayList<>();
-			 second = new int[]{5, 0};
-			for(int i : second){
-			dia2.add(i);
-			}
+			dia2 = new ArrayList<>(Arrays.asList(5,0));
 			ct.add_action(a, dia1,dia2, false, Conversation_topic.telling_topic);
 						
 			return ct;

@@ -41,32 +41,7 @@ public class Room extends StaticObject{
     public int combat_image_id;
 
     public Room(){
-        exits = new ArrayList<>();
-        exit_names = new ArrayList<>();
-        contents = new ArrayList<>();
-        static_contents = new ArrayList<>();
-
-        actions = new ArrayList<>();
-        action_max_times = new ArrayList<>();
-        action_current_num_times = new ArrayList<>();
-        exit_actions = new ArrayList<>();
-        description = "This is a room. There is something <a0> about it.";
-
-        CharAction tempAction = new CharAction();
-        tempAction.name = "strange";
-        tempAction.dialogue = "You </c0> around.";
-
-        Challenge tempChal = new Challenge();
-        tempChal.setText("look");
-
-        Consequence tempConseq = new Consequence();
-        tempConseq.addConsequence(0, 0.0, "It looks like someone has completely disinfected everything in this room. The smell is horrible. ", 0);
-        tempConseq.addConsequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
-        tempConseq.addConsequence(0, 0.0, "You decide the ground looks nice. ", -1);
-
-        tempAction.addChallenge(tempChal, tempConseq);
-
-        addAction(tempAction);
+        this("This is a room. There is something <a0> about it.");
     }
     public Room(String d){
         exits = new ArrayList<>();
@@ -95,6 +70,21 @@ public class Room extends StaticObject{
         tempAction.addChallenge(tempChal, tempConseq);
 
         addAction(tempAction);
+
+        show_area_effects = false;
+			
+        discovered_difficulty = 10;
+        sight_difficulty = 10;
+        locate_difficulty = 10;
+        
+        template = null;
+        
+        lastTick = "";
+        nextTick = "";
+        lastAreaTick = 0;
+        background_image_id = -1;
+        combat_image_id = -1;
+        custom_name = "";
     }
     public void set_custom_name(String s){
         custom_name = s;
@@ -223,8 +213,7 @@ public class Room extends StaticObject{
     }
     
     public int get_exit_id(Room r){
-        int i = 0;
-        for(i=0;i<exits.size();i++){
+        for(int i=0;i<exits.size();i++){
             if(exits.get(i) == r){
                 return i;
             }
@@ -272,6 +261,29 @@ public class Room extends StaticObject{
         String ret;
         StringBuilder bld = new StringBuilder();
         bld.append("<br>" + description + "<br>");//ret = "<br>" + description + "<br>"
+        String output = "";
+        for (int i=0;i<static_contents.size();i++){
+            if (static_contents.get(i) != null){
+                output = output + static_contents.get(i).get_description();
+                if (i == static_contents.size() -1){
+                    output = output + "\n";
+                }
+            }
+        }
+        
+        if(show_area_effects){
+            output += area.get_outdoor_description();
+        }
+        
+        for(int i=0; i<descriptions.size();i++){
+             while (!output.equals(output.replace("<s"+i+">","<a href=\"event:inspect,-1," + Integer.toString(i) +"\"><i>"))) output = output.replace("<s"+i+">","<a href=\"event:inspect,-1," + Integer.toString(i) +"\"><i>");
+            while (!output.equals(output.replace("</s"+i+">","</i></a>"))) output = output.replace("</s"+i+">","</i></a>");
+        }
+        bld.append(output);            
+        bld.append(get_exits());
+        
+        
+        
         bld.append("The room contains: ");//ret += "The room contains: "
         Boolean nothing = true;
         if(!contents.isEmpty()){
@@ -305,170 +317,175 @@ public class Room extends StaticObject{
 
         return ret;
     }
+    
     /*Original
-    public function get_room_description(c:Character = null):String{
-			var output:String;
-			var i:int;
-			
-			output =  "\n" + description + "\n" 
-			
-			for (i=0;i<static_contents.length;i++){
-				if (static_contents[i] != null){
-					output = output + static_contents[i].get_description();
-					if (i == static_contents.length -1){
-						output = output + "\n";
-					}
-				}
-			}
-			
-			if(show_area_effects){
-				output += area.get_outdoor_description();
-			}
-			
-			for(i=0; i<descriptions.length;i++){
-			 	while (output != output.replace("<s"+i+">","<a href=\"event:inspect,-1," + String(i) +"\"><i>")) output = output.replace("<s"+i+">","<a href=\"event:inspect,-1," + String(i) +"\"><i>");
-				while (output != output.replace("</s"+i+">","</i></a>")) output = output.replace("</s"+i+">","</i></a>");
-			}
-						
-			output +=  get_exits();
-			
-			if (contents.length > 0) output = output + "\nThe room contains: ";
-			var content_string:String = "";
-			var nothing:Boolean = false;
-			for (i=0;i<contents.length;i++){
-				
-				if(contents[i] != null){
-					if (contents[i] is Character){
-						var temp:Character;
-						temp = contents[i];
-						
-						if(temp == c)continue;
-						if(c.party != null){
-							if(c.party.member_of(temp))continue;
-						}
-						var already_in_combat:Boolean = false;
-						if(cm != null){
-							if(cm.get_init(temp) >= 0) already_in_combat = true;
-							if(cm.get_init(c) >= 0) already_in_combat = false;
-						}
-						
-						if((temp.get_aggresive(c)/*||c.get_aggresive(temp)*//*) && c.get_combat_status() && temp.get_combat_status() && (temp.busy <= 0 || !already_in_combat)){
-							var rand_enemy:int = c.location.get_content_id(c);
-							var rand:int = temp.personality.determine_action(c, temp);
-							if(rand >= 0){
-								if(cm == null) cm = new Combat_manager();
-								cm.add_participant(temp);
-								cm.add_participant(c);
-								c.set_busy();
-								temp.set_busy();
-								var dynamic_choice:int = -1;
-								var chall_id:int = -1;
-								var temp_action:Action = temp.get_attack_action(rand);
-								if(temp_action.consequences[0] is Dynamic_Consequence && temp_action.consequences[0].consequence_list_type != Dynamic_Consequence.list_nolist){
-									chall_id = 0;
-									dynamic_choice = temp.personality.determine_dynamic(rand_enemy, rand, temp);
-								}
-								
-								if(dynamic_choice == -1){
-									output = "\n<a href=\"event:combat,"+c.location.get_content_id(temp)+","+rand+","+rand_enemy+"\"><i>" + temp.personality.get_name(c,temp) + " is attacking.</i></a>";
-								}else{
-									output = "\n<a href=\"event:combat,"+c.location.get_content_id(temp)+","+rand+","+rand_enemy+","+chall_id+","+dynamic_choice+"\"><i>" + temp.personality.get_name(c,temp) + " is attacking.</i></a>";
-								}
-								
-								return output;
-							}else{
-								trace("(Room.get_room_description)That's odd... should be starting combat, but couldn't figure out an attack");
-							}
-						}
-						
-						if(cm != null && cm.get_init(temp) > -1 && cm.active_combat()){
-							//character is part of combat... skip 'em
-							continue;
-						}else if(temp.party == null){
-							
-							if (nothing){
-								content_string = content_string + ", ";
-								//if(i == contents.length -3) output += " and";
-							}
-							
-							content_string += "<a href=\"event:look," + String(i) +"\">" +temp.get_status(c) + "</a>";
-						}else{
-							if(temp.party.get_leader() == temp){
-								
-								if (nothing){
-									content_string = content_string + ", ";
-									//if(i == contents.length -3) output += " and";
-								}
-								
-								content_string += temp.party.get_status(c);
-							}else{
-								continue;
-							}
-						}
-					}else if(contents[i] is Item){
-						var temp2:Item;
-						temp2 = contents[i];
-						if(content_string.indexOf(temp2.get_dropped_description()) >= 0){
-							if(content_string.charAt(content_string.indexOf(temp2.get_dropped_description())-2) == "x"){
-								var char_loc:int;
-								char_loc = content_string.indexOf(temp2.get_dropped_description())-1;
-								
-								while(content_string.charAt(char_loc) != ">" && char_loc >= 0){
-									char_loc--;
-								}
-								char_loc++;
-								
-								var item_count:int = int(content_string.substr(char_loc, content_string.indexOf(temp2.get_dropped_description())-2-char_loc));
-								item_count ++;
-								
-								content_string = content_string.substr(0,char_loc) + item_count + "x " + content_string.substr(content_string.indexOf(temp2.get_dropped_description()),content_string.length - content_string.indexOf(temp2.get_dropped_description()));
-							}else{
-								content_string = content_string.substr(0,content_string.indexOf(temp2.get_dropped_description())) + "2x " + content_string.substr(content_string.indexOf(temp2.get_dropped_description()),content_string.length - content_string.indexOf(temp2.get_dropped_description()));
-							}
-						}else{
-							if (nothing){
-								content_string = content_string + ", ";
-								//if(i == contents.length -3) output += " and";
-							}
-							content_string = content_string + "<a href=\"event:pick_up," + String(i) +"\">" + temp2.get_dropped_description() + "</a>";
-						}
-					}
-					nothing = true;
-				}
-			}
-			
-			if(cm != null && cm.active_combat()){
-				if (nothing){
-					content_string = cm.get_description(c)  + ", " + content_string;
-					//if(i == contents.length -3) output += " and";
-				}else{
-					nothing = true;
-					content_string = cm.get_description(c) + content_string;
-				}
-			}
-			
-			if (!nothing){
-				content_string += "Nothing!";
-			}else{
-				content_string += ".";
-			}
-			
-			output += content_string;
-			
-			var j:int = 0;
-			for (j;j<actions.length;j++){
-				 if(actions[j] != null) {					
-					if (action_max_times[j] > action_current_num_times[j] || action_max_times[j] == -1){
-						output = output.replace("<a"+j+">","<a href=\"event:action,-1," + String(j) +"\"><i>"+actions[j].get_name() +"</i></a>"); 						
-					}else{
-						output = output.replace("<a"+j+">",actions[j].get_name()); 
-					}
-				 }
-			 }
-						
-			return output;
-        }//TODO delete earlier demo version, fix this version 
-        */
+    public String getRoomDescription(){
+        return getRoomDescription(null);
+    }
+    public String getRoomDescription(Character c){
+        String output;
+        int i;
+        
+        output =  "\n" + description + "\n"; 
+        
+        for (i=0;i<static_contents.size();i++){
+            if (static_contents.get(i) != null){
+                output = output + static_contents[i].get_description();
+                if (i == static_contents.length -1){
+                    output = output + "\n";
+                }
+            }
+        }
+        
+        if(show_area_effects){
+            output += area.get_outdoor_description();
+        }
+        
+        for(i=0; i<descriptions.length;i++){
+            while (output != output.replace("<s"+i+">","<a href=\"event:inspect,-1," + String(i) +"\"><i>")) output = output.replace("<s"+i+">","<a href=\"event:inspect,-1," + String(i) +"\"><i>");
+            while (output != output.replace("</s"+i+">","</i></a>")) output = output.replace("</s"+i+">","</i></a>");
+        }
+                    
+        output +=  get_exits();
+        
+        if (contents.length > 0) output = output + "\nThe room contains: ";
+        var content_string:String = "";
+        var nothing:Boolean = false;
+        for (i=0;i<contents.length;i++){
+            
+            if(contents[i] != null){
+                if (contents[i] is Character){
+                    var temp:Character;
+                    temp = contents[i];
+                    
+                    if(temp == c)continue;
+                    if(c.party != null){
+                        if(c.party.member_of(temp))continue;
+                    }
+                    var already_in_combat:Boolean = false;
+                    if(cm != null){
+                        if(cm.get_init(temp) >= 0) already_in_combat = true;
+                        if(cm.get_init(c) >= 0) already_in_combat = false;
+                    }
+                    
+                    if((temp.get_aggresive(c)/*||c.get_aggresive(temp)*//*) && c.get_combat_status() && temp.get_combat_status() && (temp.busy <= 0 || !already_in_combat)){
+                        var rand_enemy:int = c.location.get_content_id(c);
+                        var rand:int = temp.personality.determine_action(c, temp);
+                        if(rand >= 0){
+                            if(cm == null) cm = new Combat_manager();
+                            cm.add_participant(temp);
+                            cm.add_participant(c);
+                            c.set_busy();
+                            temp.set_busy();
+                            var dynamic_choice:int = -1;
+                            var chall_id:int = -1;
+                            var temp_action:Action = temp.get_attack_action(rand);
+                            if(temp_action.consequences[0] is Dynamic_Consequence && temp_action.consequences[0].consequence_list_type != Dynamic_Consequence.list_nolist){
+                                chall_id = 0;
+                                dynamic_choice = temp.personality.determine_dynamic(rand_enemy, rand, temp);
+                            }
+                            
+                            if(dynamic_choice == -1){
+                                output = "\n<a href=\"event:combat,"+c.location.get_content_id(temp)+","+rand+","+rand_enemy+"\"><i>" + temp.personality.get_name(c,temp) + " is attacking.</i></a>";
+                            }else{
+                                output = "\n<a href=\"event:combat,"+c.location.get_content_id(temp)+","+rand+","+rand_enemy+","+chall_id+","+dynamic_choice+"\"><i>" + temp.personality.get_name(c,temp) + " is attacking.</i></a>";
+                            }
+                            
+                            return output;
+                        }else{
+                            trace("(Room.get_room_description)That's odd... should be starting combat, but couldn't figure out an attack");
+                        }
+                    }
+                    
+                    if(cm != null && cm.get_init(temp) > -1 && cm.active_combat()){
+                        //character is part of combat... skip 'em
+                        continue;
+                    }else if(temp.party == null){
+                        
+                        if (nothing){
+                            content_string = content_string + ", ";
+                            //if(i == contents.length -3) output += " and";
+                        }
+                        
+                        content_string += "<a href=\"event:look," + String(i) +"\">" +temp.get_status(c) + "</a>";
+                    }else{
+                        if(temp.party.get_leader() == temp){
+                            
+                            if (nothing){
+                                content_string = content_string + ", ";
+                                //if(i == contents.length -3) output += " and";
+                            }
+                            
+                            content_string += temp.party.get_status(c);
+                        }else{
+                            continue;
+                        }
+                    }
+                }else if(contents[i] is Item){
+                    var temp2:Item;
+                    temp2 = contents[i];
+                    if(content_string.indexOf(temp2.get_dropped_description()) >= 0){
+                        if(content_string.charAt(content_string.indexOf(temp2.get_dropped_description())-2) == "x"){
+                            var char_loc:int;
+                            char_loc = content_string.indexOf(temp2.get_dropped_description())-1;
+                            
+                            while(content_string.charAt(char_loc) != ">" && char_loc >= 0){
+                                char_loc--;
+                            }
+                            char_loc++;
+                            
+                            var item_count:int = int(content_string.substr(char_loc, content_string.indexOf(temp2.get_dropped_description())-2-char_loc));
+                            item_count ++;
+                            
+                            content_string = content_string.substr(0,char_loc) + item_count + "x " + content_string.substr(content_string.indexOf(temp2.get_dropped_description()),content_string.length - content_string.indexOf(temp2.get_dropped_description()));
+                        }else{
+                            content_string = content_string.substr(0,content_string.indexOf(temp2.get_dropped_description())) + "2x " + content_string.substr(content_string.indexOf(temp2.get_dropped_description()),content_string.length - content_string.indexOf(temp2.get_dropped_description()));
+                        }
+                    }else{
+                        if (nothing){
+                            content_string = content_string + ", ";
+                            //if(i == contents.length -3) output += " and";
+                        }
+                        content_string = content_string + "<a href=\"event:pick_up," + String(i) +"\">" + temp2.get_dropped_description() + "</a>";
+                    }
+                }
+                nothing = true;
+            }
+        }
+        
+        if(cm != null && cm.active_combat()){
+            if (nothing){
+                content_string = cm.get_description(c)  + ", " + content_string;
+                //if(i == contents.length -3) output += " and";
+            }else{
+                nothing = true;
+                content_string = cm.get_description(c) + content_string;
+            }
+        }
+        
+        if (!nothing){
+            content_string += "Nothing!";
+        }else{
+            content_string += ".";
+        }
+        
+        output += content_string;
+        
+        var j:int = 0;
+        for (j;j<actions.length;j++){
+                if(actions[j] != null) {					
+                if (action_max_times[j] > action_current_num_times[j] || action_max_times[j] == -1){
+                    output = output.replace("<a"+j+">","<a href=\"event:action,-1," + String(j) +"\"><i>"+actions[j].get_name() +"</i></a>"); 						
+                }else{
+                    output = output.replace("<a"+j+">",actions[j].get_name()); 
+                }
+                }
+            }
+                    
+        return output;
+    }//TODO delete earlier demo version, fix this version 
+    */
+        
 
     public void addAction(CharAction a){
         addAction(a, -1);
@@ -479,48 +496,20 @@ public class Room extends StaticObject{
         actions.add(newAction);
         action_max_times.add(num_times);//These two chouldn't hurt
         action_current_num_times.add(0);
-        /*TODO uncomment at your leisure
         for(int i=0;i<exit_actions.size();i++){
             if(exit_actions.get(i) != null)exit_actions.get(i).set_id(i + actions.size());
         }
-        */
     }
-    /*Original version
-    public void add_action(CharAction a,int num_times){//def -1
-        a.set_id(actions.length);
-        actions[actions.length] = a;
-        action_max_times[action_max_times.length] = num_times;
-        action_current_num_times[action_current_num_times.length] = 0;
-        
-        var i:int = 0;
-        for(i;i<exit_actions.length;i++){
-            if(exit_actions[i] != null)exit_actions[i].set_id(i + actions.length);
-        }
-    }
-    */
 
     public CharAction getAction(int actionID){//rest commented in
         if(actionID>=0 && actionID < actions.size()){
-            //action_current_num_times.set(actionID, action_current_num_times.get(actionID+1));
+            action_current_num_times.set(actionID, action_current_num_times.get(actionID+1));
             return actions.get(actionID);
-            /*TODO uncomment at leisure
         }else if(actionID>=0){
             return exit_actions.get(actionID - actions.size());
-            */
         }
         return null;
     }
-    /*Original
-    public CharAction get_action(int i){
-        if(i>=0 && i< actions.length){
-            action_current_num_times[i]++;
-            return actions[i];
-        }else if(i>=0){
-            return exit_actions[i - actions.length];
-        }
-        return null;
-    }
-    */
 
     public String fireChallenge(int actionID, int challengeID, Character triggeringCharacter){
         return fireChallenge(actionID, challengeID, triggeringCharacter,null);
@@ -528,11 +517,8 @@ public class Room extends StaticObject{
     public String fireChallenge(int actionID, int challengeID, Character triggeringCharacter,ArrayList<Integer> dynamic_choice){
         String ret = "";
         CharAction tempAction = getAction(actionID);
-
         if(tempAction != null){
-            /*TODO true challenge in CharAction
             ret = tempAction.challenge(challengeID, triggeringCharacter,null,0,dynamic_choice);
-            
             if(ret.indexOf("</replace>") >= 0){
                 tempAction = tempAction.consequences.get(challengeID).replace_action;
                 if(tempAction != null){
@@ -540,18 +526,12 @@ public class Room extends StaticObject{
                 }
                 
                 while(ret.indexOf("</replace>") >= 0)ret = ret.replace("</replace>", "");
-             }
-             */
+            }
         }
-
         return ret;
     }//dummy version, commented rest in
-    public int get_content_id(DynamicObject o){
-        int i = 0;
-        for (i=0;i<contents.size();i++){
-            if (contents.get(i) == o) return i;
-        }
-        return -1;
+    public int getContentID(Object o){
+        return contents.indexOf(o);
     }
     public String get_content_sub_description(int i, int k){
         String s = "";
@@ -576,16 +556,22 @@ public class Room extends StaticObject{
         return s;
         
     }
+
+
+    public Object getContent(int objID){
+        if (contents.size() > objID && objID >= 0)return contents.get(objID);
+        return null;
+    }
     
     public void remove_exit(Room e){
         int i = 0;
         for(i=0;i<exits.size();i++){
             if(exits.get(i) == e){
-                //exit_names = exit_names.slice(0,i).concat(exit_names.slice(i+1,exit_names.length));
+                //exit_names = exit_names.slice(0,i).concat(exit_names.slice(i+1,exit_names.length))
                 exit_names.remove(i);
-                //exits = exits.slice(0,i).concat(exits.slice(i+1,exits.length));
+                //exits = exits.slice(0,i).concat(exits.slice(i+1,exits.length))
                 exits.remove(i);
-                //exit_actions = exit_actions.slice(0,i).concat(exit_actions.slice(i+1,exit_actions.length));
+                //exit_actions = exit_actions.slice(0,i).concat(exit_actions.slice(i+1,exit_actions.length))
                 exit_actions.remove(i);
                 break;
             }
@@ -620,6 +606,7 @@ public class Room extends StaticObject{
                     }
                 }
                 if (b) continue;
+                //TODO just do a contains?
                 
                 if (e.new_exit(this,not_dir_list[i]) != -1){
                     exit_names.add(dir_list[i]); //exit_names[exit_names.length] = dir_list[i]
@@ -630,9 +617,11 @@ public class Room extends StaticObject{
                     break;
                 }
             }
-        }else{
+        }else{//defined direction
             for (i=0;i<exit_names.size();i++){
                 if (d.equals(exit_names.get(i)) || e == exits.get(i)) return -1;
+                //TODO is this an Already Connected check?
+                LOGGER.info("Already Connected!");
             }
             for(i=0;i<exit_names.size();i++){
                 if(exit_names.get(i) == null){
@@ -734,14 +723,6 @@ public class Room extends StaticObject{
                 break;
             }
         }
-    }
-
-    public int getContentID(Object o){
-        return contents.indexOf(o);
-    }
-
-    public Object getContent(int objID){
-        return contents.get(objID);
     }
 
     public Item itemLoss(int contentID){//same as original from here down (original line 697)

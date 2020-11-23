@@ -2251,7 +2251,7 @@ public class Area extends StaticObject{
                 int spawn_choice = 0;
                 if(spawnCreatures.size() > 1)spawn_choice = (int)Math.round(Math.random() *(spawnCreatures.size() - 1));
                 Character newChar = spawnCreatures.get(spawn_choice).gen_char();
-                newChar.newLocation(new Room());//(get_random_room(), true)
+                newChar.new_location(get_random_room(),true);//(get_random_room(), true)
                 //TODO verify, and why set this in here? do I need to take this outside?
                 
             }else{

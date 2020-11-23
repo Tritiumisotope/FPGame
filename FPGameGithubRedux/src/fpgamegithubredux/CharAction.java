@@ -309,8 +309,8 @@ public class CharAction {
             }else if(craft_flag){
                 ret = "<a href=\"event:craft\">Begin Crafting</a>";
             }else if(trade_flag){
-                ret = "<a href=\"event:buy,"+ triggeringChar.location.get_content_id(temp_char) +"\">Buy</a>\t<a href=\"event:sell,"+ triggeringChar.location.get_content_id(temp_char) +"\">Sell</a>";
-                ret += "\n\n<font color='#0000FF'><a href=\"event:look," + triggeringChar.location.get_content_id(temp_char) +"\">Back</a></font>";
+                ret = "<a href=\"event:buy,"+ triggeringChar.location.getContentID(temp_char) +"\">Buy</a>\t<a href=\"event:sell,"+ triggeringChar.location.getContentID(temp_char) +"\">Sell</a>";
+                ret += "\n\n<font color='#0000FF'><a href=\"event:look," + triggeringChar.location.getContentID(temp_char) +"\">Back</a></font>";
             }else if(dismantle_flag){
                 ret = "<a href=\"event:dismantle\">Begin Dismantling</a>";					
             }else if(talk_flag){
@@ -341,11 +341,11 @@ public class CharAction {
                     triggeringChar.setBusy();
                     temp_char.setBusy();
                                             
-                    ret = "<a href=\"event:combat,"+triggeringChar.location.get_content_id(triggeringChar)+",-1,-1\">BEGIN COMBAT</a>";
+                    ret = "<a href=\"event:combat,"+triggeringChar.location.getContentID(triggeringChar)+",-1,-1\">BEGIN COMBAT</a>";
                 }else{
                     ret = temp_char.sanitize(temp_char.get_combat_failures(),triggeringChar) + "\n\n";
                     //should give the option to start combat anyway...
-                    ret += "<a href=\"event:combat,"+triggeringChar.location.get_content_id(triggeringChar)+",-1,"+triggeringChar.location.get_content_id(temp_char)+"\">BEGIN COMBAT</a>";
+                    ret += "<a href=\"event:combat,"+triggeringChar.location.getContentID(triggeringChar)+",-1,"+triggeringChar.location.getContentID(temp_char)+"\">BEGIN COMBAT</a>";
                 }
             }
         }else{
@@ -353,10 +353,10 @@ public class CharAction {
             if(force_tags == 0){
                 int i = 0;
                 for(i=0;i<challenges.size();i++){
-                    int cont_id = triggeringChar.location.get_content_id(temp_char);
+                    int cont_id = triggeringChar.location.getContentID(temp_char);
                     if(temp_char == null) cont_id = -1;
                     Challenge temp = challenges.get(i);
-                    while(ret.indexOf("</c"+ Integer.toString(i) +">") > -1)ret = ret.replace("</c"+ Integer.toString(i) +">", "<a href=\"event:challenge,"+ cont_id +","+ Integer.toString(charID) +"," + Integer.toString(i) +"," + triggeringChar.location.get_content_id(triggeringChar) + "\"><i>" + temp.getText() + "</i></a>");
+                    while(ret.indexOf("</c"+ Integer.toString(i) +">") > -1)ret = ret.replace("</c"+ Integer.toString(i) +">", "<a href=\"event:challenge,"+ cont_id +","+ Integer.toString(charID) +"," + Integer.toString(i) +"," + triggeringChar.location.getContentID(triggeringChar) + "\"><i>" + temp.getText() + "</i></a>");
                 }
             }
         }
@@ -630,7 +630,7 @@ public class CharAction {
             int roll = 0;
             if(dynamic_choice == null || dynamic_choice.get(0) == null || !(con instanceof DynamicConsequence)){
                 Boolean pass_requirements = false;
-                if(requirement.get(0) != null && !no_requirement){
+                if(!requirement.isEmpty() && requirement.get(0) != null && !no_requirement){
                     int req_count = 0;
                     for(req_count=0;req_count<requirement.size();req_count++){
                         if(origin.get_stat(requirement.get(req_count)).intValue() >= requirement_amount.get(req_count)){
@@ -805,7 +805,7 @@ public class CharAction {
                             ret = ret.replace("</c"+ Integer.toString(j) +">", "<a href=\"event:challenge,-1,"+ Integer.toString(charID) +"," + Integer.toString(j) +"\"><i>" + temp.getText() + "</i></a>");
                         }
                         if (temp != null && origin != null && triggeringCharacter.location != null){
-                            ret = ret.replace("</c"+ Integer.toString(j) +">", "<a href=\"event:challenge,"+ triggeringCharacter.location.get_content_id(origin) +","+ Integer.toString(charID) +"," + Integer.toString(j) +"," + triggeringCharacter.location.get_content_id(triggeringCharacter) + "\"><i>" + temp.getText() + "</i></a>");
+                            ret = ret.replace("</c"+ Integer.toString(j) +">", "<a href=\"event:challenge,"+ triggeringCharacter.location.getContentID(origin) +","+ Integer.toString(charID) +"," + Integer.toString(j) +"," + triggeringCharacter.location.getContentID(triggeringCharacter) + "\"><i>" + temp.getText() + "</i></a>");
                         }
                     }
                 }
@@ -820,13 +820,13 @@ public class CharAction {
                 while(ret.indexOf("</dc") > -1){
                     while(ret.indexOf("</dc" + dynamic_challenge + ">") > -1){
                         if(attack_flag >= 0){
-                            ret = ret.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:combat,"+ triggeringCharacter.location.get_content_id(reactiveCharacter) +"," + Integer.toString(charID) +","  + triggeringCharacter.location.get_content_id(triggeringCharacter) +","+ ((next_challenge>-1)?Integer.toString(next_challenge):Integer.toString(challengeID)) +((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +"," +Integer.toString(dynamic_challenge) + "\">");
+                            ret = ret.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:combat,"+ triggeringCharacter.location.getContentID(reactiveCharacter) +"," + Integer.toString(charID) +","  + triggeringCharacter.location.getContentID(triggeringCharacter) +","+ ((next_challenge>-1)?Integer.toString(next_challenge):Integer.toString(challengeID)) +((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +"," +Integer.toString(dynamic_challenge) + "\">");
                             ret = ret.replace("</dc" + dynamic_challenge + ">", "</a>");
                         }else if (originator == null){
                             ret = ret.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:challenge,-1,"+ Integer.toString(charID) + "," + ((next_challenge>-1)?Integer.toString(next_challenge):Integer.toString(challengeID)) + ((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +"," +Integer.toString(dynamic_challenge) +"\">");//this probably isn't right...
                             ret = ret.replace("</dc" + dynamic_challenge + ">", "</a>");
                         }else if (origin != null && triggeringCharacter.location != null){
-                            ret = ret.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:challenge,"+ triggeringCharacter.location.get_content_id(origin) +","+ Integer.toString(charID) +"," + ((next_challenge>-1)?Integer.toString(next_challenge):Integer.toString(challengeID)) +"," + triggeringCharacter.location.get_content_id(triggeringCharacter) +((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +"," +Integer.toString(dynamic_challenge) + "\">");//this probably isn't right...
+                            ret = ret.replace("<dc" + dynamic_challenge + ">", "<a href=\"event:challenge,"+ triggeringCharacter.location.getContentID(origin) +","+ Integer.toString(charID) +"," + ((next_challenge>-1)?Integer.toString(next_challenge):Integer.toString(challengeID)) +"," + triggeringCharacter.location.getContentID(triggeringCharacter) +((dynamic_choice!=null&&dynamic_choice.get(0)!=null)?","+ dynamic_choice:"") +"," +Integer.toString(dynamic_challenge) + "\">");//this probably isn't right...
                             ret = ret.replace("</dc" + dynamic_challenge + ">", "</a>");
                         }
                     }
@@ -858,7 +858,7 @@ public class CharAction {
                         break;
                     }
                 }
-                if(attack_id != -1 && triggeringCharacter != null && triggeringCharacter.location != null)origin.set_next_attack(triggeringCharacter.location.get_content_id(origin) +","+ Integer.toString(attack_id) +"," + Integer.toString(next_challenge) +"," + triggeringCharacter.location.get_content_id(triggeringCharacter));
+                if(attack_id != -1 && triggeringCharacter != null && triggeringCharacter.location != null)origin.set_next_attack(triggeringCharacter.location.getContentID(origin) +","+ Integer.toString(attack_id) +"," + Integer.toString(next_challenge) +"," + triggeringCharacter.location.getContentID(triggeringCharacter));
             }
         }
         //TODO old commented code

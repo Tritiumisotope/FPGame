@@ -35,7 +35,7 @@ public class Combat_manager {
             ret += active_char.tick();
                 
             if(enemy_list.get(0) != null && active_char != null && active_char.location != null){
-                int active_char_id = active_char.location.get_content_id(active_char);
+                int active_char_id = active_char.location.getContentID(active_char);
                 
                 String[] next_action = active_char.get_next_attack().split(",");
                 int next_action_id = -1;
@@ -65,7 +65,7 @@ public class Combat_manager {
                 if(next_action_id < 0){
                     int rand_enemy = active_char.personality.determine_target(enemy_list, active_char);
                     if(enemy_list.get(rand_enemy) != null){
-                        next_target_id = active_char.location.get_content_id(enemy_list.get(rand_enemy));
+                        next_target_id = active_char.location.getContentID(enemy_list.get(rand_enemy));
                         next_action_id = active_char.personality.determine_action(enemy_list.get(rand_enemy), active_char);
                         
                         //Need to catch dynamic choices, and make them....
@@ -118,7 +118,7 @@ public class Combat_manager {
             }
         }
         
-        ret = "<a href=\"event:combat,"+c.location.get_content_id(c)+",-2,-1\">some folks are fighting here</a>";
+        ret = "<a href=\"event:combat,"+c.location.getContentID(c)+",-2,-1\">some folks are fighting here</a>";
         
         return ret;
     }
