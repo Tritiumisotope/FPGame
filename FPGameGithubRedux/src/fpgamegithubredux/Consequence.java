@@ -218,12 +218,16 @@ public class Consequence {//TODO get count of all below
             int index = consequenceDescription.indexOf(desc);
             int statID = statEffected.get(index);
             int neededRoll = roll_required.get(index);
-
-            if(neededRoll >= 0 && roll.intValue() >= neededRoll && defender.getStat(statID) > -1){
-                bld.append(desc);//ret += desc
-            }
-            if(neededRoll < 0 && roll.intValue() <= neededRoll && defender.getStat(statID) > -1){
-                bld.append(desc);//ret += desc
+            System.out.println(defender);
+            
+            if(defender != null){//TODO null handling better!t
+                System.out.println(defender.getStat(statID));
+                if(neededRoll >= 0 && roll.intValue() >= neededRoll && defender.getStat(statID) > -1){
+                    bld.append(desc);//ret += desc
+                }
+                if(neededRoll < 0 && roll.intValue() <= neededRoll && defender.getStat(statID) > -1){
+                    bld.append(desc);//ret += desc
+                }
             }
         }
 

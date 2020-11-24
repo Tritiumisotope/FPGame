@@ -628,7 +628,9 @@ public class CharAction {
         if (consequences.get(challengeID) != null){
             Consequence con = consequences.get(challengeID);
             int roll = 0;
-            if(dynamic_choice == null || dynamic_choice.get(0) == null || !(con instanceof DynamicConsequence)){
+            //if(dynamic_choice == null || dynamic_choice.get(0) == null || !(con instanceof DynamicConsequence)){
+            System.out.println(dynamic_choice);
+            if(dynamic_choice == null || dynamic_choice.isEmpty() || !(con instanceof DynamicConsequence)){
                 Boolean pass_requirements = false;
                 if(!requirement.isEmpty() && requirement.get(0) != null && !no_requirement){
                     int req_count = 0;
@@ -756,6 +758,7 @@ public class CharAction {
                         if(sanitize_for != null){
                             ret += reactiveCharacter.sanitize(triggeringCharacter.sanitize(triggerConsequence(triggeringCharacter, origin, reactiveCharacter, roll, challengeID),sanitize_for),sanitize_for);
                         }else{
+                            LOGGER.info(triggeringCharacter+" "+ origin+" "+ reactiveCharacter+" "+ roll+" "+ challengeID);
                             ret += triggerConsequence(triggeringCharacter, origin, reactiveCharacter, roll, challengeID);
                         }
                     }						
@@ -783,7 +786,7 @@ public class CharAction {
                 }
             }
             
-            if (roll >= 0 && requirement.get(0) != null && !no_requirement){
+            if (roll >= 0 && !requirement.isEmpty() && !no_requirement){//requirement.get(0) != null
                 //need to meet the item requirement
                 //s += origin.apply_affect_by_id(requirement, -requirement_amount)
                 //don't know if we should print this

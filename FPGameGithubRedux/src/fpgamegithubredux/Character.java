@@ -116,18 +116,21 @@ public class Character extends DynamicObject {
         waitTime = 0;
         previous_action_output = "";
         ///TESTING
+        /*
         Stat tempStat = new Stat();
         tempStat.setName("Fitness");
         tempStat.statID = 0;
         tempStat.statValue = 0;
         
         newStat(tempStat.statID, tempStat);
-        
+        */
+        /*
         CharAction tempAction = new CharAction();
         tempAction.name = "Talk";
         tempAction.dialogue = "</n> takes a moment to talk to </n2>";
         
         actions.add(tempAction);
+        */
         //END TESTING
         //*unsafe additions for now
         newStat(FPalaceHelper.age_id, FPalaceHelper.stat_age(), (double)23);//probably won't move this one
@@ -149,10 +152,10 @@ public class Character extends DynamicObject {
         a.setName("Attack");
         add_action(a);
         
-        a = new CharAction();
-        a.setName("Talk");
-        a.set_talk_flag();
-        add_action(a);
+        CharAction b = new CharAction();
+        b.setName("Talk");
+        b.set_talk_flag();
+        add_action(b);
         
         char_sprite_id = -1;
         char_34sprite_id = -1;

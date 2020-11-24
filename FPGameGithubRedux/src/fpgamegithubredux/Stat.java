@@ -1,5 +1,6 @@
 package fpgamegithubredux;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -690,13 +691,16 @@ public class Stat {
         for(i=0;i<stat_description.size();i++){
             if(current_value >= stat_description_requirement.get(i) && stat_description_requirement.get(i) >= req_met){
                 if(!stat_description.get(i).equals(s))s = stat_description.get(i);
+                //LOGGER.info("i: "+i);
+                //LOGGER.info("stat_description.get(i): "+stat_description.get(i));
+                //LOGGER.info("req_met: "+stat_description_requirement.get(i));
                 req_met = stat_description_requirement.get(i);
             }
         }
-        
-        //s = s.replace("</" + statID + ">",current_value.toFixed(show_decimals));
-        s = s.replace("</" + statID + ">",String.valueOf(current_value));
-        
+        DecimalFormat decimalFormat = new DecimalFormat("0.##");//new
+        s = s.replace("</" + statID + ">",decimalFormat.format(current_value));//current_value.toFixed(show_decimals));
+        s = s.replace("</sd" + statID + ">",get_short_description(current_value));
+        //LOGGER.info("get description: "+s);
         return s;
     }
     

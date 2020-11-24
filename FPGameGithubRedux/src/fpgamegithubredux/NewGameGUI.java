@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -306,8 +308,7 @@ public class NewGameGUI implements ActionListener {
     }
     private void afterName(){
         textField.removeHyperlinkListener(hlListen);
-        textField.setText("You are " + newPlayer.name+", a "+newPlayer.sex.name);
-        //newPlayer = new Character(name, sex, fitness);
+        
 
         Race race = FPalace_races.race_human();
 
@@ -362,6 +363,17 @@ public class NewGameGUI implements ActionListener {
                 newPlayer.apply_affect_by_id(FPalaceHelper.milk_volume_id,-40);
             }
         }
+
+
+        newPlayer.apply_affect_by_id(FPalaceHelper.str_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.dex_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.con_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.sex_appeal_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.int_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.wis_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.will_id,-1,0,null,Body.change_stats_total);
+        newPlayer.apply_affect_by_id(FPalaceHelper.cha_id,-1,0,null,Body.change_stats_total);
+
         if(age_flag != 23){
             newPlayer.apply_affect_by_id(FPalaceHelper.age_id,age_flag-23,0,null,Body.change_stats_total);
         }
@@ -387,13 +399,47 @@ public class NewGameGUI implements ActionListener {
         
         newPlayer.location = tempRoom;
         tempRoom.newContent(newPlayer);
+        newPlayer.location.player_found();
+
+        newPlayer.set_character_class(FPalace_classes.cclass_adventurer());
+			
+			newPlayer.skills.set_skill_value(newPlayer, FPalace_skills.adventure_id, 1);
+			newPlayer.skills.set_skill_value(newPlayer, FPalace_skills.fight_id, 1);
+			newPlayer.skills.set_skill_value(newPlayer, FPalace_skills.knowledge_id, 1);
+			newPlayer.skills.set_skill_value(newPlayer, FPalace_skills.people_id, 1);
+			
+
+        newPlayer.set_xp(9);
+
+        Quest main_quest = new Quest();
+        main_quest.set_name("Getting Home");
+        main_quest.new_objective("Figure out where you are",Quest.talk_action,null);
+        main_quest.add_conversation_topic(FPalace_topics.topic_help(main_quest),0);
+        
+        main_quest.new_objective("Find Century City",Quest.area_action,(10/*Century City Area ID*/));
+        
+        main_quest.new_objective("Learn about the Lost",Quest.talk_action,null);
+        
+        newPlayer.personality.new_objective(main_quest, newPlayer);
+        
+        newPlayer.setBusy();
+        newPlayer.tick();
+        
+        newPlayer.reset_stats();
+        newPlayer.body.check_state(newPlayer);
 
         //newPlayer.apply_affect_by_id(FPalaceHelper.curr_hp_id, -5,0,null,Body.change_stats_total);
-        newPlayer.apply_affect_by_id(FPalaceHelper.curr_hp_id, -0.1);
+        //newPlayer.apply_affect_by_id(FPalaceHelper.curr_hp_id, -0.1);
 
         goBack.setEnabled(true);
         theMainGUI.player = newPlayer;
+        textField.setText("\"Well...\" the gypsy begins, a look of concern upon her face, \"Here is your fortune.\" She pauses again, lowering her voice, and forcing you to lean in to hear. \n\n"
+        + "\"You will lead an interesting life....\" The look of pain that crosses the old womans age distorted face confuses you at first, but it changes and morphs rapidly into a strange seething anger. \"OUT!\" The yell nearly knocks you from your chair, as you find yourself jerking backward.\n\n"
+        +"\"I can't have someone like you here! OUT!\" The gypsy yells again, and you are slathered in spittle and drool as it leaps from her mouth. Your welcome clearly over-stayed, you acquiesce to the womans demands, quickly shuffling out of the crowded cart. It cost nothing, but you still can't help but feel cheated by the strange experience as you walk home.\n\n"
+        +"The strange experience sticks with you through the rest of the day, and as you find yourself falling asleep the gypsies fortune weighs on your mind. A strange nightmare filled sleep envelopes you, the terrible gypsies strange demeanor and gestures amplified and made more monstrous by recollection, until you find yourself leaping from sleep and back to reality, only to find yourself no longer where you fell asleep, the searing light of the sun beating upon your freshly opened eyes. \n\nYou're not quite sure what's going on. ");
+
         theMainGUI.enableButtons();
+
         LOGGER.info(newPlayer.name);
     }
     @Override
