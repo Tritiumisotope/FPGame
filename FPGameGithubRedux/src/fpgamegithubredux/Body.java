@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class Body {
 
     private static final Logger LOGGER = Logger.getLogger(Body.class.getName());
+    private static final Boolean SUPERDEBUG = false;
 
     public static final int change_stats_individual = 0;
     public static final int change_stats_total = 1;
@@ -43,7 +44,7 @@ public class Body {
         Boolean has_vag = false;
         int i = 0;
         for(i=0;i<parts.size();i++){
-            LOGGER.info("Part scanned: " + parts.get(i).get_part_id());
+            if(SUPERDEBUG)LOGGER.info("Part scanned: " + parts.get(i).get_part_id());
             if(c == null){
                 if(parts.get(i).get_part_id() == FPalaceHelper.breasts_slot)has_breasts = true;
                 if(parts.get(i).get_part_id() == FPalaceHelper.cock_slot)has_cock = true;
@@ -150,7 +151,7 @@ public class Body {
         Boolean ret = true;
         
         if(parts.size() <= 0 && c.location != null){
-            LOGGER.info("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
+            if(SUPERDEBUG)LOGGER.info("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
             ret = false;
         }
         int i = 0;
@@ -459,14 +460,14 @@ public class Body {
         }
         temp_array.add(p);//this is the first element anyway//temp_array.set(0,p) //temp_array[0] = p
         for(i=0;i<parts.size();i++){
-            LOGGER.info("Parts scan, part: " + i);
+            if(SUPERDEBUG)LOGGER.info("Parts scan, part: " + i);
             if(parts.get(i) != null){
-                LOGGER.info("Part " + i + " is not null! P.name: " + p.name + ", part name: " + parts.get(i).name);
+                if(SUPERDEBUG)LOGGER.info("Part " + i + " is not null! P.name: " + p.name + ", part name: " + parts.get(i).name);
                 if(parts.get(i).name.contains(p.name)){//parts.get(i).name.indexOf(p.name) >= 0
-                    LOGGER.info("could increment name in use, which is: " + name_in_use);
+                    if(SUPERDEBUG)LOGGER.info("could increment name in use, which is: " + name_in_use);
                     if(name_in_use == 0)parts.get(i).set_part_count(1);
                     name_in_use++;
-                    LOGGER.info("Now name in use is: " + name_in_use);
+                    if(SUPERDEBUG)LOGGER.info("Now name in use is: " + name_in_use);
                 }
             }
             if(i>0){
@@ -521,7 +522,7 @@ public class Body {
                     p.connect_to_part(connect_part_arr.get(0),false,true);
                 }
             }else{
-                LOGGER.info("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.getName()+ " " + p.getName());				
+                if(SUPERDEBUG)LOGGER.info("(Body.add_part)Pretty sure I just failed to connect a body part. " + p.race.getName()+ " " + p.getName());				
             }
         }
         
@@ -639,7 +640,7 @@ public class Body {
                 if(!temp_string.equals("")) s = temp_string;
                 
             }else if(part_id == target_parts_one_by_one){
-                LOGGER.info("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
+                if(SUPERDEBUG)LOGGER.info("(Body.get_effects)I have no idea what I'm doing, ever. It's just a thing.");
             }
         }
         
@@ -764,7 +765,7 @@ public class Body {
                 if(ret_part == null){
                     ret_part = parts.get(i);
                 }else{
-                    LOGGER.info("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
+                    if(SUPERDEBUG)LOGGER.info("(BODY.get_part_by_stat)No check done for multiple parts with the same stat. Returning First found.");
                     break;
                 }
             }
@@ -833,7 +834,7 @@ public class Body {
                         j--;
                     }
                 }
-                if(parts.get(i) == null) LOGGER.info("wha?" + i);
+                if(parts.get(i) == null) if(SUPERDEBUG)LOGGER.info("wha?" + i);
             }
             c.equip_state = 1;
             ret += e.remove_effects(c);
@@ -952,7 +953,7 @@ public class Body {
                     }
                 }
             }else if(temp.doubleValue() > -1 && part_id == target_parts_one_by_one){
-                LOGGER.info("(Body)No clue what I'm doing here");
+                if(SUPERDEBUG)LOGGER.info("(Body)No clue what I'm doing here");
             }
         }
         return ret;

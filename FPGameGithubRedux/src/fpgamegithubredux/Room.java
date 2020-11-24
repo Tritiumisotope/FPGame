@@ -71,6 +71,8 @@ public class Room extends StaticObject{
 
         addAction(tempAction);
 
+        player_discovered = false;
+
         show_area_effects = false;
 			
         discovered_difficulty = 10;

@@ -35,8 +35,11 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     protected boolean optguion = false;
     protected boolean startingagame = false;
     protected StartupGUI startup = new StartupGUI();
+    //world mechanics
     public Character player;
     public World world;
+    public int move_to_id = -1;	
+
     private String[] messages = {"Not Supported Yet"};
     
     public MainGUIPanel(){
@@ -74,6 +77,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         };
         
         textField.addHyperlinkListener(hlListen);
+
+        //this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
   
     }
     private void parseEvent(String result){
@@ -84,7 +89,18 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
          LOGGER.info(result);
          if(result.contains("event:look")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
-             textField.setText(player.look(contentID));                     
+             textField.setText(player.look(contentID));    
+        }else if(result.contains("event:open")&&splitResult.length > 1){
+            int containerID = Integer.parseInt(splitResult[1]); 
+            textField.setText(player.open(containerID)); 
+        }else if(result.contains("event:inspect")&&splitResult.length > 2){
+            int containerID = Integer.parseInt(splitResult[1]);
+            int subDescIdx = Integer.parseInt(splitResult[2]);
+            textField.setText(player.inspect(containerID, subDescIdx));   
+        }else if(result.contains("event:go_to_new_room")&&splitResult.length > 1){
+            int dir = Integer.parseInt(splitResult[1]);  
+            go_to_new_room(dir);    
+            textField.setText(player.go_to_new_location(dir, 1, 1)+"\n"+player.look());//TODO temporary?
          }else if(result.contains("event:pick_up")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
              textField.setText(player.pickUp(contentID));
@@ -292,5 +308,123 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         */
         
         return ret;
+    }
+    public void go_to_new_room(int i){
+        //output = "";
+        move_to_id = i;
+        world_tick();
+    }
+    public void world_tick(){
+        world_tick(0);
+    }
+    public void world_tick(int fake_tick){//def 0
+			
+        if(player != null && world != null){
+            
+            
+            /*var mySound:Sound = new Sound(); 
+            mySound.addEventListener(SampleDataEvent.SAMPLE_DATA, sineWaveGenerator); 
+            
+            function sineWaveGenerator(event:SampleDataEvent):void{
+                var latency:Number = 0;
+                if(sound_music_channel != null)latency = ((event.position/44.1) - sound_music_channel.position);
+                trace(latency);
+                var times_through:int = event.position / 8192;//this times 172.5 gives how many miliseconds have passed
+                var curr_time:Number = times_through * 172.5;
+                
+                var bpm:int = 120;
+                
+                var quarter_note:Number = (1/bpm) * 60 * 1000;
+                
+                for ( var c:int=0; c<  8192; c++ ) {
+                    //see http://www.phy.mtu.edu/~suits/notefreqs.html for note frequencies
+                    
+                    //note every 1024 is something greater than 208 beats per minute
+                    //max note length 8192, and still in excess of 208 beats per minute
+                        //can use c + event.position to keep longer track... I think... confirmed, but no way to loop... setting event.position buggers things up royally
+                            //times_through can be used to loop
+                            
+                    /*if(c < 1024){
+                        event.data.writeFloat(Math.sin(  440 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//440Hz = tuning A
+                        event.data.writeFloat(Math.sin(  440 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 2048){
+                        event.data.writeFloat(Math.sin(  493.88 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//B
+                        event.data.writeFloat(Math.sin(  493.88 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 3072){
+                        event.data.writeFloat(Math.sin(  523.25 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//C
+                        event.data.writeFloat(Math.sin(  523.25 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 4096){
+                        event.data.writeFloat(Math.sin(  587.33 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//D
+                        event.data.writeFloat(Math.sin(  587.33 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 5120){
+                        event.data.writeFloat(Math.sin(  659.26 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//E
+                        event.data.writeFloat(Math.sin(  659.26 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 6144){
+                        event.data.writeFloat(Math.sin(  261.63 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//Middle C
+                        event.data.writeFloat(Math.sin(  261.63 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else if(c < 7168){
+                        event.data.writeFloat(Math.sin(  246.94 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//B
+                        event.data.writeFloat(Math.sin(  246.94 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }else{
+                        event.data.writeFloat(Math.sin(  329.63 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));//E
+                        event.data.writeFloat(Math.sin(  329.63 * (Number(c+event.position) * Math.PI * 2 /44100.0  )   ));
+                    }*//*
+                    
+                    
+                    if(curr_time < quarter_note){
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        
+                    }else if(curr_time < quarter_note*2){
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                    }else if(curr_time < quarter_note*3){
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));							
+                    }else if(curr_time < quarter_note*4){
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));	
+                    }else{
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));
+                        event.data.writeFloat(resonant_freq((Number(c+event.position)),440,0,0));	
+                    }}
+            }
+            
+            if(sound_music_channel != null)sound_music_channel.stop();
+            //sound_music_channel = mySound.play(); //off... hopefully temporarily
+            var intervalIndentifier:uint = setTimeout(stop_sound, 4000 /* milliseconds *//*);
+            
+            
+            function stop_sound():void{
+                if(sound_music_channel != null) sound_music_channel.stop();
+            }
+            */             
+            if(fake_tick > 0)player.busy = fake_tick;
+            
+            if(player.busy > 0){
+                //setting this to < 100 is what gets onEnterFrame to kick off the world movement
+                /*
+                world_gen_progressbar.value = 0;
+                world_gen_progressbar.minimum = 100/player.busy;
+                world_gen_progressbar.setProgress(world_gen_progressbar.value, 100);
+                world_gen_progressbar.visible = true;
+                world_gen_progressbar.enabled = true;
+                
+                Look_button.enabled = false;
+                newgame_button.enabled = false;
+                Inventory_button.enabled = false;
+                appearance.enabled = false;
+                status.enabled = false;
+                skill_button.enabled = false;
+                map_button.enabled = false;
+                if(wait_button.label == "Wait")wait_button.enabled = false;
+                //movieClip_1.enabled = false;
+                save_button.enabled = false;
+                //load_button.enabled = false;
+                //options_button.enabled = false;
+                //text_field.enabled = false;
+                */
+            }
+        }
     }
 }
