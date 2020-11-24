@@ -474,7 +474,7 @@ public String getName(){
     }
     @Override
     public String appearance(int i, Character c){//default 0, null
-         String s = "";
+        String s = "";
         if(!description.equals("")){
             s = description + stat_descriptions(c);
         }else{
@@ -941,7 +941,7 @@ public String getName(){
             b.set_race(null);
             
             for (i=0;i<b.stat_description.size();i++){
-                stat_description.set(i, new Stat(b.stat_description.get(i).statID));
+                stat_description.add(new Stat(b.stat_description.get(i).statID));//was .set
                 stat_description.get(i).statCopy(b.stat_description.get(i));
             }
             /*better way below

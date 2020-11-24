@@ -595,7 +595,7 @@ public class Room extends StaticObject{
         String[] dir_list = new String[]{"North", "East", "West", "North-East", "North-West", "South-West",  "South-East", "South"};
         String[] not_dir_list = new String[]{"South", "West", "East", "South-West", "South-East", "North-East", "North-West", "North"};
         
-        LOGGER.info("Attempting to add an exit to a room");
+        //LOGGER.info("Attempting to add an exit to a room");
         
         if(e == null) return -1;
         
@@ -624,7 +624,7 @@ public class Room extends StaticObject{
             for (i=0;i<exit_names.size();i++){
                 if (d.equals(exit_names.get(i)) || e == exits.get(i)) return -1;
                 //TODO is this an Already Connected check?
-                LOGGER.info("Already Connected!");
+                //LOGGER.info("Already Connected!");
             }
             if(exit_names.size() <= 0){
                 exit_names.add(i,d); //exit_names = exit_names.slice(0,i).concat(d).concat(exit_names.slice(i,exit_names.length))

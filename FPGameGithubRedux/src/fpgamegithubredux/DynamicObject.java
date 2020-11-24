@@ -18,7 +18,12 @@ public class DynamicObject {
 		public String getName(){
 			return name;
 		}
-		
+		public String appearance(){
+			return appearance(0,null);
+		}
+		public String appearance(int i){
+			return appearance(i,null);
+		}
 		public String appearance(int i, Character c){//default 0, null
 			return name;
 		}

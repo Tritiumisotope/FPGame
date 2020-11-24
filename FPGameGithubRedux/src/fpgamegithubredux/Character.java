@@ -489,8 +489,8 @@ public class Character extends DynamicObject {
         return fireAction(i,k,null);
     }
     public String fireAction(int i, int k, String j){//def null
-        System.out.println("New old fire_action");
-        System.out.println("Player/Caller name is: " + this.name);
+        // if(SUPERDEBUG)System.out.println("New old fire_action")
+         if(SUPERDEBUG)System.out.println("Player/Caller name is: " + this.name);
         String ret = "";
         if(location == null) return ret;
         CharAction temp_action = new CharAction();
@@ -499,7 +499,7 @@ public class Character extends DynamicObject {
                 temp_action = location.getAction(k);//location.actions[k];
                 ret = sanitize(temp_action.trigger(this), null);
             }else{
-                System.out.println("Temporary removal, problem?");
+                 if(SUPERDEBUG)System.out.println("Temporary removal, problem?");
                 //temp_action = location.static_contents.get(-i-2).get_action(k,location);
                 //TODO it was written like this in original but static objects dont have a get_action?!
                 ret = sanitize(temp_action.trigger(this), null);
@@ -528,7 +528,7 @@ public class Character extends DynamicObject {
                             ret = ((Character)location.getContent(Integer.parseInt(j)) ).sanitize(temp_action.trigger((Character)location.getContent(Integer.parseInt(j))),this);
                         }
                     }else{
-                        System.out.println("fire action j is null return: "+ret);
+                         if(SUPERDEBUG)System.out.println("fire action j is null return: "+ret);
 
                         ret = sanitize(temp_action.trigger(this), null);
                     }
@@ -542,7 +542,7 @@ public class Character extends DynamicObject {
         
     //dummy
     public String fireChallenge(int contentID, int actionID, int challengeID, int triggeringContentID){
-        System.out.println("Dummy fire challenge called!");
+         if(SUPERDEBUG)System.out.println("Dummy fire challenge called!");
         String ret = "";
             if(contentID<0){
                 ret = location.fireChallenge(actionID, challengeID, this);//TODO THIS?!
@@ -805,28 +805,30 @@ public class Character extends DynamicObject {
         
         return ret;
     }
-
+    @Override
     public String appearance(){return appearance(0, null);}
+    @Override
     public String appearance(int i){return appearance(i, null);}
+    @Override
     public String appearance(int i, Character c){
         String s = "";
         
         s += getStatus(c) + ".<br>";
         
-        //if(c != null)s += c.judge_relative_skill(this) + "<br>";
+        if(c != null)s += c.judge_relative_skill(this) + "<br>";
         
         int k = 0;
         if (i != 0){
-        for (k=0;k<stats.size();k++){
-            if(stats.get(k).get_description(this).length() > 0) s += stats.get(k).get_description(this);
+            for (k=0;k<stats.size();k++){
+                if(stats.get(k).get_description(this).length() > 0) s += stats.get(k).get_description(this);
             }
-        s += body.get_parts_appearance(this) + "<br>"; 
-        if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.getContentID(this) +"\">Back</a></font>";
+            s += body.get_parts_appearance(this) + "<br>"; 
+            if(c != null)s += "<br><br><font color='#0000FF'><a href=\"event:look," + location.getContentID(this) +"\">Back</a></font>";
         }else{
             ArrayList<CharAction> temp_array = get_all_overworld_actions();
             for (k=0;k<temp_array.size();k++){
-                    if(temp_array.get(k) != null && location != null){
-                        if(!temp_array.get(k).getName().equals("") && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())s += "<a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
+                    if(temp_array.get(k) != null && location != null&&(!temp_array.get(k).getName().equals("") && !temp_array.get(k).get_personal() && !temp_array.get(k).get_bury())){
+                        s += "<a href=\"event:action," + location.getContentID(this) + "," + Integer.toString(k) +"\"><font color='#0000FF'>"+temp_array.get(k).getName() +"</font></a>    "; 
                     }
             }
         }
@@ -1974,8 +1976,8 @@ public class Character extends DynamicObject {
                 }
                 			
             }
-            System.out.println("Use Case 0.");
-            System.out.println(ret);
+             if(SUPERDEBUG)System.out.println("Use Case 0.");
+             if(SUPERDEBUG)System.out.println(ret);
             return sanitize(ret);
         }else if(useCase == 1){
             if(found_num > 1 && num_to_move == -1){
@@ -2290,9 +2292,9 @@ public class Character extends DynamicObject {
     }
     public String sanitize(String stringToSanitize, Character callCharacter){//dummy, ignore
         Sex sex_to_use = sex;
-        System.out.println("Character sanitize called!");
-        System.out.println("Call Character: " + callCharacter);
-        System.out.println("Initial: " + stringToSanitize);
+         if(SUPERDEBUG)System.out.println("Character sanitize called!");
+         if(SUPERDEBUG)System.out.println("Call Character: " + callCharacter);
+         if(SUPERDEBUG)System.out.println("Initial: " + stringToSanitize);
         /*possibly obsolete
         int nlineidx=0;
         while(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>") >= 0){
@@ -2302,8 +2304,8 @@ public class Character extends DynamicObject {
                     stringToSanitize.substring(idx1,idx1+1).toUpperCase();
                     nlineidx = idx1;
                 //}
-                System.out.println(nlineidx);
-                System.out.println(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>"));
+                 if(SUPERDEBUG)System.out.println(nlineidx);
+                 if(SUPERDEBUG)System.out.println(stringToSanitize.substring(nlineidx,stringToSanitize.length()).indexOf("<br>"));
 
             }
         }
@@ -2323,8 +2325,7 @@ public class Character extends DynamicObject {
             stringToSanitize = stringToSanitize.replace("</objnoun>",sex_to_use.get_objnoun());
         }
         stringToSanitize = replace_name(stringToSanitize, callCharacter);
-        System.out.println();
-        System.out.println("replace_name result: " + stringToSanitize);
+         if(SUPERDEBUG)System.out.println("replace_name result: " + stringToSanitize);
         while(stringToSanitize.indexOf("</n2>") >= 0){
             stringToSanitize = stringToSanitize.replace("</n2>","</n>");
         }
@@ -2339,7 +2340,7 @@ public class Character extends DynamicObject {
             stringToSanitize = stringToSanitize.replace("</objnoun2>","</objnoun>");
         }
         
-        System.out.println("Return value from character sanitize: "+ stringToSanitize);
+         if(SUPERDEBUG)System.out.println("Return value from character sanitize: "+ stringToSanitize);
         //TODO test this capitalization routine RELIGIOUSLY
         
         return stringToSanitize;
@@ -2665,7 +2666,7 @@ public class Character extends DynamicObject {
     
     public String inventory(){//dummy
         String returnString = "";
-        System.out.println("In inventory");
+         if(SUPERDEBUG)System.out.println("In inventory");
         if(possessions.isEmpty()){
             returnString = "</n>\'s Inventory contains nothing.";
         }else{
@@ -2675,7 +2676,7 @@ public class Character extends DynamicObject {
             }
         }
         if(returnString.charAt(returnString.length()-1) == ',')returnString = returnString.substring(0, returnString.length()-1);
-        System.out.println("Leaving inventory");
+         if(SUPERDEBUG)System.out.println("Leaving inventory");
         return sanitize(returnString);
     }
     /*

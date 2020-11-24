@@ -1408,8 +1408,10 @@ public class Personality {
 				}
 				if(c != null){
 					int k= 0;
-					for(k=0;k<c.personality.mob_allegiances.size();k++){
-						if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(k)){
+					for(k=0;k<c.personality.mob_allegiances.size();k++){//TODO good change?
+						System.out.println("personality mob_allegiance size: "+c.personality.mob_allegiances.size());
+						System.out.println("mob_allegiance size: "+ mob_allegiances.size());
+						if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(i)){
 						   ret +=2;
 						}else{
 							for(j=0;j<mob_allegiances.get(i).allied_mobs.size();j++){

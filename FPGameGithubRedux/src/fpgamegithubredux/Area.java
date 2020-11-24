@@ -482,8 +482,8 @@ public class Area extends StaticObject{
             for(counter=0;counter<r.exits.size();counter++){
                 if(r.exits.get(counter).area != null) continue;
                 //figure out the offset based on the name
-                LOGGER.info("Room is"+r);
-                LOGGER.info("exit names are"+r.exit_names);
+                //LOGGER.info("Room is"+r);
+                //LOGGER.info("exit names are"+r.exit_names);
                 int[] offset = get_offset_by_name(r.exit_names.get(counter));//TODO this is always 3 elements?
                 //need to check if we need to assign a new offset
                 if(offset[0] == 0 && offset[1] == 0 && offset[2] == 0){
@@ -540,9 +540,9 @@ public class Area extends StaticObject{
                 
                 if(figured_new_x < rooms.size() && figured_new_x >= 0 && rooms.get(figured_new_x) != null){
                     if(figured_new_y >= 0 && figured_new_y < rooms.get(figured_new_x).size() && rooms.get(figured_new_x).get(figured_new_y) != null){
-                        LOGGER.info("figZ is: " + figured_new_z);
-                        LOGGER.info("newZ is: " + new_z);
-                        LOGGER.info("offsetZ is: " + offset[2]);
+                        //LOGGER.info("figZ is: " + figured_new_z);
+                        //LOGGER.info("newZ is: " + new_z);
+                        //LOGGER.info("offsetZ is: " + offset[2]);
                         if(figured_new_y >= 0 && figured_new_z >=0 && figured_new_x < rooms.size() && figured_new_y < rooms.get(figured_new_x).size() && figured_new_z < rooms.get(figured_new_x).get(figured_new_y).size() && rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
                             other_rooms_ok = false;
                         }
@@ -957,7 +957,6 @@ public class Area extends StaticObject{
     
     public int[] get_offset_by_name(String s){
         int[] ret_array = new int[]{0,0,0};
-        LOGGER.info("Got here!");
         if(s==null)return ret_array;
         
         if(s.indexOf("North") >= 0){

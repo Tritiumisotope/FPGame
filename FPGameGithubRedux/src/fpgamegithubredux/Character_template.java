@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Character_template {
@@ -37,8 +38,7 @@ public class Character_template {
         }
 		public Character gen_char(int levelAdjust, Room r){//def 0, null
 			Character ret = new Character();
-            //ret.clone(char_to_clone)
-            //TODO clone method in Character
+            ret.copyCharacter(char_to_clone);
 			int i = 0;
 			if(r != null){
                 
@@ -46,19 +46,12 @@ public class Character_template {
 					int j = 0;
 					for(j=0;j<ret.personality.objectives.get(i).objectives.size();j++){
 						if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.area_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
-							ArrayList<Object> temp1 = new ArrayList<>();							//ret.personality.objectives.get(i).objective_targets[j] = [r.area]
-							temp1.add(r.area);
-							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
+							ret.personality.objectives.get(i).objective_targets.set(j,new ArrayList<>(Arrays.asList(r.area)));//ret.personality.objectives.get(i).objective_targets[j] = [r.area]
 						}else if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.room_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
-							ArrayList<Object> temp1 = new ArrayList<>();							//ret.personality.objectives.get(i).objective_targets[j] = [r]
-							temp1.add(r);
-							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
+							ret.personality.objectives.get(i).objective_targets.set(j,new ArrayList<>(Arrays.asList(r)));//ret.personality.objectives.get(i).objective_targets[j] = [r]
 						}else if(ret.personality.objectives.get(i).objective_actions.get(j) == Quest.wait_action && ret.personality.objectives.get(i).objective_targets.get(j) == null){
-							ArrayList<Object> temp1 = new ArrayList<>(); //ret.personality.objectives.get(i).objective_targets[j] = [r]
-							temp1.add(r);
-							ret.personality.objectives.get(i).objective_targets.set(j,temp1);
+							ret.personality.objectives.get(i).objective_targets.set(j,new ArrayList<>(Arrays.asList(r)));//ret.personality.objectives.get(i).objective_targets[j] = [r]
                         }//TODO combine last?
-                        
 					}
                 }
                 

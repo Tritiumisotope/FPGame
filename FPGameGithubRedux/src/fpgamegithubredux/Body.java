@@ -569,10 +569,9 @@ public class Body {
     }
     
     public String get_parts_appearance(Character c){
-        int i = 0;
         String s = "";
-        for (i=0;i<parts.size();i++){
-            BodyPart p= (BodyPart)parts.get(i);//parts.get(i) as Body_part;
+        for (int i=0;i<parts.size();i++){
+            BodyPart p= parts.get(i);//parts.get(i) as Body_part
             if(p != null){
                 Boolean same_id = false;
                 if(i+1<parts.size()){
@@ -1474,20 +1473,22 @@ public class Body {
         int item_id = -1;
         i = 0;
         for (i=0;i<parts.size();i++){
-            if(parts.get(i) != null){
-                while(parts.get(i).get_equip().get(0) != null){
+            if(parts.get(i) != null){//TODO good addition?
+                //System.out.println(parts.get(i).get_equip());
+                //System.out.println(parts.get(i).get_equip().get(0));
+                while(!parts.get(i).get_equip().isEmpty()){//while(parts.get(i).get_equip().get(0) != null){
                     Equipment old_e = parts.get(i).get_equip().get(0);
                     Equipment new_e = (Equipment)((Equipment)old_e).copyItem();
                     
                     unequip(old_e, c);
                     
-                    item_id = -1;
-                    for(item_id=-1;item_id<c.possessions.size();item_id++){
+                    //TODO why was item_id = -1?
+                    for(item_id=0;item_id<c.possessions.size();item_id++){
                         if(c.possessions.get(item_id) == old_e) break;
                     }
                     c.drop(item_id);
                     
-                    //temp_equip_array[temp_equip_array.length] = new_e;
+                    //temp_equip_array[temp_equip_array.length] = new_e
                     temp_equip_array.add(new_e);
 
                     if(parts.get(i) == null)break;
