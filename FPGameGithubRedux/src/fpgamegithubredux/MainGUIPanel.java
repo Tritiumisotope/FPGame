@@ -104,6 +104,10 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
          }else if(result.contains("event:pick_up")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
              textField.setText(player.pickUp(contentID));
+        }else if(result.contains("event:loot")&&splitResult.length > 2){
+            int contentID = Integer.parseInt(splitResult[1]);
+            int lootType = Integer.parseInt(splitResult[2]);
+            textField.setText(player.loot(contentID,lootType));
          }else if(result.contains("event:action")&&splitResult.length > 2){
              int contentID = Integer.parseInt(splitResult[1]);
              int actionID = Integer.parseInt(splitResult[2]);
