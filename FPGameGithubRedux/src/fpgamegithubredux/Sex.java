@@ -146,7 +146,7 @@ public class Sex extends DynamicObject {
                     curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
                     
                     for(j=starting_age;j> ending_age;j--){//TODO verify j
-                        if (age_stat_change.get(i).get(j) != null){
+                        if (j < age_stat_change.get(i).size() && age_stat_change.get(i).get(j) != null){
                             percent_change = age_stat_change.get(i).get(j);
                             percent_change = curr_stat_val.doubleValue() - (curr_stat_val.doubleValue()/(1 + percent_change));
                             curr_stat_val = curr_stat_val.doubleValue() - percent_change;

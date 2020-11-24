@@ -363,10 +363,14 @@ public class Area extends StaticObject{
                 
                 if(new_x < -1)LOGGER.info("(Area.existing_exit_add)Shifting on the x-axis... but not enough.");
                 for(new_x = rooms.size();new_x >= 1;new_x--){
-                    rooms.set(new_x, rooms.get(new_x - 1));//[] and []
+                    if(new_x >= rooms.size()){
+                        rooms.add(rooms.get(new_x - 1));
+                    }else{
+                        rooms.set(new_x, rooms.get(new_x - 1));//[] and []
+                    }
                 }
                 new_x = 0;
-                rooms.set(new_x,  null);//[] =
+                rooms.set(new_x,  new ArrayList<>());//[] =
                 
             }
             int x = 0;
@@ -377,10 +381,14 @@ public class Area extends StaticObject{
                     if(rooms.get(x) != null){//[]
                         //new_y = rooms.get(x).size();//should this be max y?
                         for(new_y=rooms.get(x).size();new_y >= 1;new_y--){//[].length
-                            rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [][]
+                            if(new_y >= rooms.get(x).size()){
+                                rooms.get(x).add(rooms.get(x).get(new_y - 1));
+                            }else{
+                                rooms.get(x).set(new_y, rooms.get(x).get(new_y - 1));//[][] = [][]                                
+                            }
                         }
                         new_y = 0;
-                        rooms.get(x).set(new_y, null);//[][] =
+                        rooms.get(x).set(new_y, new ArrayList<>());//[][] =
                     }
                 }
                 
@@ -403,6 +411,7 @@ public class Area extends StaticObject{
             }				
         }
         if(rooms.get(new_x) == null)rooms.set(new_x, new ArrayList<>());
+        while(new_y >= rooms.get(new_x).size())rooms.get(new_x).add(new ArrayList<>());
         if(rooms.get(new_x).get(new_y) == null)rooms.get(new_x).set(new_y, new ArrayList<>());
         if(new_z < rooms.get(new_x).get(new_y).size() && rooms.get(new_x).get(new_y).get(new_z) != null && rooms.get(new_x).get(new_y).get(new_z) != r){//[][][]
             String areaMsgOut = ("(Area.existing_exit_add)Over-writing a room on the map at co-ordinates " + new_x + "," + new_y + "," + new_z + " existing_exit_check() has failed us!");
@@ -428,7 +437,7 @@ public class Area extends StaticObject{
                     r.exits.get(counter).area = this;
                     r.exits.get(counter).set_id(room_list.size());
                     //room_list[room_list.size()] = r.exits.get(counter)
-                    room_list.set(room_list.size(),r.exits.get(counter));
+                    room_list.add(r.exits.get(counter));
                     
                     existing_exit_add(r.exits.get(counter), r, figured_new_x, figured_new_y, figured_new_z, r.exit_names.get(counter));
                     int[] temp_arr = find_room(r);
@@ -451,9 +460,9 @@ public class Area extends StaticObject{
     public Boolean existing_exit_check(Room r,int new_x,int new_y,int new_z,int max_same_room, ArrayList<Room> already_checked){
         //already checked = null
         Boolean other_rooms_ok = true;
-        if(new_x < rooms.size() && rooms.get(new_x)  != null){
-            if(new_y < rooms.get(new_x).size() && rooms.get(new_x).get(new_y) != null){
-                if(new_z < rooms.get(new_x).get(new_y).size() && rooms.get(new_x).get(new_y).get(new_z) != null){
+        if(new_x >= 0 && new_x < rooms.size() && rooms.get(new_x)  != null){
+            if(new_y >= 0 && new_y < rooms.get(new_x).size() && rooms.get(new_x).get(new_y) != null){
+                if(new_z >= 0 && new_z < rooms.get(new_x).get(new_y).size() && rooms.get(new_x).get(new_y).get(new_z) != null){
                     if(rooms.get(new_x).get(new_y).get(new_z) != r)other_rooms_ok = false;
                 }
             }
@@ -499,7 +508,7 @@ public class Area extends StaticObject{
                             }
                             rand_direct = rand_direct - ((rand_direct / 3)*3);
                         }
-                        
+                        /*
                         if(rand_direct > 0){
                             if(rand_direct > 1){
                                 offset[2]++;
@@ -507,6 +516,7 @@ public class Area extends StaticObject{
                                 offset[2]--;
                             }
                         }
+                        */
                         //should check to see if this is actually a good exit... just go through the exits OWN exits to make sure none of their offsets is the same as this one
                         int exit_exits = 0;
                         for(exit_exits=0;exit_exits<r.exits.get(counter).exits.size();exit_exits++){
@@ -528,18 +538,20 @@ public class Area extends StaticObject{
                 int figured_new_y = new_y + offset[1];
                 int figured_new_z = new_z + offset[2];
                 
-                if(rooms.get(figured_new_x) != null){
-                    if(rooms.get(figured_new_x).get(figured_new_y) != null){
+                if(figured_new_x < rooms.size() && figured_new_x >= 0 && rooms.get(figured_new_x) != null){
+                    if(figured_new_y >= 0 && figured_new_y < rooms.get(figured_new_x).size() && rooms.get(figured_new_x).get(figured_new_y) != null){
                         LOGGER.info("figZ is: " + figured_new_z);
                         LOGGER.info("newZ is: " + new_z);
                         LOGGER.info("offsetZ is: " + offset[2]);
-                        if(/*TODO good additions?*/ figured_new_z>-1 && rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
+                        if(figured_new_y >= 0 && figured_new_z >=0 && figured_new_x < rooms.size() && figured_new_y < rooms.get(figured_new_x).size() && figured_new_z < rooms.get(figured_new_x).get(figured_new_y).size() && rooms.get(figured_new_x).get(figured_new_y).get(figured_new_z) != null){
                             other_rooms_ok = false;
                         }
                     }
                     
                     //check for an "overpass" exit
-                    if(rooms.get(new_x) != null && rooms.get(figured_new_x).get(new_y) != null && rooms.get(new_x).get(figured_new_y) != null 
+                    if(figured_new_y >= 0 && figured_new_z >= 0 && new_y >= 0 && new_x >=0 && new_x < rooms.size() && figured_new_x < rooms.size() && new_y < rooms.get(figured_new_x).size() && 
+                    figured_new_y < rooms.get(new_x).size() && figured_new_z < rooms.get(figured_new_x).get(new_y).size() && figured_new_z < rooms.get(new_x).get(figured_new_y).size()
+                    &&  rooms.get(new_x) != null && rooms.get(figured_new_x).get(new_y) != null && rooms.get(new_x).get(figured_new_y) != null 
                     && rooms.get(figured_new_x).get(new_y).get(figured_new_z) != null && rooms.get(new_x).get(figured_new_y).get(figured_new_z) != null){
                         if(rooms.get(new_x).get(figured_new_y).get(figured_new_z).get_exit_id(rooms.get(figured_new_x).get(new_y).get(figured_new_z)) >= 0 ){
                             other_rooms_ok = false;
@@ -1408,7 +1420,7 @@ public class Area extends StaticObject{
         
         if(!top_x_good){
             for(x=0;x<rooms.size();x++){
-                if(rooms.get(x) != null && rooms.get(x).size() > max_y-1)rooms.get(x).remove(rooms.get(x).size());//TODO figure out if truly [x].pop()
+                if(rooms.get(x) != null && rooms.get(x).size() > max_y-1)rooms.get(x).remove(rooms.get(x).size()-1);//TODO figure out if truly [x].pop()
             }
         }
         
@@ -1423,7 +1435,7 @@ public class Area extends StaticObject{
         }
         
         if(!right_y_good){
-            rooms.remove(rooms.size());//.pop()
+            rooms.remove(rooms.size()-1);//.pop()
         }
     }
     public void check_connections(){
