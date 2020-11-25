@@ -210,7 +210,6 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void appearancePressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
-        System.out.println("Appearance");
         textField.setText(capitalize(player.appearance(1, null)));//TODO this everywhere with capitalize if doable.
     }
     @Override
@@ -297,14 +296,14 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
 
     public static String capitalize(String s){
         String ret = s;
-        System.out.println("capitalize called");
-        //var myPattern:RegExp = /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g;  
+        //System.out.println("capitalize called")
+        //var myPattern:RegExp = /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g
         Pattern myPattern =  Pattern.compile("(\\. [a-z])|(<br>[a-z])|(\n[a-z])|(! [a-z])|(: [a-z])"); // /(\. [a-z])|(\n[a-z])|(! [a-z])|(: [a-z])/g;  
         Matcher myMatcher = myPattern.matcher(ret);
         while (myMatcher.find()) {
-            System.out.print("Start index: " + myMatcher.start());
-            System.out.print(" End index: " + myMatcher.end() + " ");
-            System.out.println(myMatcher.group());
+            //System.out.print("Start index: " + myMatcher.start())
+            //System.out.print(" End index: " + myMatcher.end() + " ")
+            //System.out.println(myMatcher.group())
             ret = ret.substring(0, myMatcher.end()-1) + ret.substring(myMatcher.end()-1, myMatcher.end()).toUpperCase() + 
             ret.substring(myMatcher.end());
         }
@@ -314,12 +313,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
         */
         myPattern = Pattern.compile("([a-z])");
-        String ret_start= ret.substring(0,1);
-        myMatcher = myPattern.matcher(ret_start);
+        String retStart= ret.substring(0,1);
+        myMatcher = myPattern.matcher(retStart);
         while (myMatcher.find()) {
-            System.out.print("Start index: " + myMatcher.start());
-            System.out.print(" End index: " + myMatcher.end() + " ");
-            System.out.println(myMatcher.group());
+            //System.out.print("Start index: " + myMatcher.start())
+            //System.out.print(" End index: " + myMatcher.end() + " ")
+            //System.out.println(myMatcher.group())
             ret = ret.substring(0, myMatcher.end()-1) + ret.substring(myMatcher.end()-1, myMatcher.end()).toUpperCase() + 
             ret.substring(myMatcher.end());
         }
