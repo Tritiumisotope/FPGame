@@ -147,24 +147,22 @@ public class Race extends DynamicObject {
     }
     
     
-    public Object[] get_new_parts(Character c){
-        Object[] ret = null;
-        //Object[] avail_connect = c.body.get_avail_connect_part();
-        /*
-        int i = 0;        
-        for(i=0;i<parts.length;i++){
-            BodyPart temp_bp = parts[i];
-            if(c.body.part_count_by_name(temp_bp.name) < parts_count[i] && (parts_gender[i] == null || parts_gender[i] == c.sex.name)){
+    public ArrayList<BodyPart> get_new_parts(Character c){
+        ArrayList<BodyPart> ret = new ArrayList<>();
+        ArrayList<Integer> avail_connect = c.body.get_avail_connect_part();
+        for(int i=0;i<parts.size();i++){
+            BodyPart temp_bp = parts.get(i);
+            if(c.body.part_count_by_name(temp_bp.name) < parts_count.get(i) && (parts_gender.get(i) == null || parts_gender.get(i).equals(c.sex.name))){
                 int j= 0;
-                for(j;j<avail_connect.length;j++){
-                    if(avail_connect[j] == temp_bp.get_part_id()){
-                        ret[ret.length] = temp_bp;
+                for(j=0;j<avail_connect.size();j++){
+                    if(avail_connect.get(j) == temp_bp.get_part_id()){
+                        //ret[ret.length] = temp_bp
+                        ret.add(temp_bp);
                         break;
                     }
                 }
             }
         }
-        */
         return ret;
     }
     
@@ -346,7 +344,9 @@ public class Race extends DynamicObject {
         }
     }
     
-    
+    public void reverse_bonuses(Character c,BodyPart p){
+        reverse_bonuses(c, p,false);
+    }
     
     public void reverse_bonuses(Character c,BodyPart p,Boolean delay_effect){//default false
         int i= 0;

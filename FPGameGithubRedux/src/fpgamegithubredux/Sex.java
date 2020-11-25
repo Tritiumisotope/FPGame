@@ -85,7 +85,7 @@ public class Sex extends DynamicObject {
     
     public String get_age_name(Character c){
         String ret = "";
-        int age = (int)c.getStat(FPalaceHelper.age_id);
+        int age = c.get_stat(FPalaceHelper.age_id).intValue();
         int i = 0;
         for(i=0;i<Math.ceil(age_name.size()/2);i++){
             //if(age >= age_name[i*2])ret = age_name[i*2+1]
@@ -118,8 +118,8 @@ public class Sex extends DynamicObject {
             }//TODO verify   
         }
         
-        int starting_age = (int)c.getStat(FPalaceHelper.age_id);
-        int ending_age = (int)c.getStat(FPalaceHelper.age_id) + age_change;
+        int starting_age = c.get_stat(FPalaceHelper.age_id).intValue();
+        int ending_age = c.get_stat(FPalaceHelper.age_id).intValue() + age_change;
         for (i=0;i<age_stat.size();i++){
             int j;// = starting_age
             double percent_change = 0;//was Number

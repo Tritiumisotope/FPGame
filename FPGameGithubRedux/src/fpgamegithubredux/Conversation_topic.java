@@ -238,7 +238,7 @@ public class Conversation_topic {
                             c_self = c_init;
                             c_init = temp_char;
                         }
-                        if(c_self.getStat(stat_check.get(i).get(check_count)) >= check_challenge.get(i).get(check_count)){
+                        if(c_self.get_stat(stat_check.get(i).get(check_count)).doubleValue() >= check_challenge.get(i).get(check_count)){
 
                             if(!party_check.get(i)|| (party_check.get(i) && c_self.party == c_init.party && c_self.party != null)){
                                 ret = i;

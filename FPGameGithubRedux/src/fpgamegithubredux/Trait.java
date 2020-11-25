@@ -74,8 +74,8 @@ public class Trait {
 					if(c.get_primary_race().getName().equals(racial_trait.getName()))ret = true;
 				}
 				if(stat_trait > -1){
-					if(stat_amt.intValue() != 0 && (c.getStat(stat_trait) >= stat_amt.doubleValue() && abv_or_blw) || (c.getStat(stat_trait) <= stat_amt.doubleValue() && !abv_or_blw))ret = true;
-				}else if(stat_amt.intValue() == -1 &&(c.getStat(stat_trait) >= c_self.getStat(stat_trait) && abv_or_blw) || (c.getStat(stat_trait) <= c_self.getStat(stat_trait) && !abv_or_blw)){
+					if(stat_amt.intValue() != 0 && (c.get_stat(stat_trait).doubleValue() >= stat_amt.doubleValue() && abv_or_blw) || (c.get_stat(stat_trait).doubleValue() <= stat_amt.doubleValue() && !abv_or_blw))ret = true;
+				}else if(stat_amt.intValue() == -1 &&(c.get_stat(stat_trait).doubleValue() >= c_self.get_stat(stat_trait).doubleValue() && abv_or_blw) || (c.get_stat(stat_trait).doubleValue() <= c_self.get_stat(stat_trait).doubleValue() && !abv_or_blw)){
 					ret = true;
 				}
 			}			

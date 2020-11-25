@@ -1,5 +1,8 @@
 package fpgamegithubredux;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class FPalace_items {
 
     //Body part change items:
@@ -5185,7 +5188,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(250.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 250.0)));
         tef_con.set_max_damage(5);
         tef_con.addConsequence(-FPalaceHelper.penis_girth_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(FPalaceHelper.curr_hp_id,0, "", -1,0,0,4);
@@ -5201,7 +5204,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(83.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 83.0)));
         tef_con.set_max_damage(15);
         tef_con.addConsequence(-FPalaceHelper.penis_length_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(FPalaceHelper.curr_hp_id,0, "", -1,0,0,5);
@@ -5214,7 +5217,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(250.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 250.0)));
         tef_con.set_max_damage(5);
         tef_con.addConsequence(-FPalaceHelper.breast_size_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(-FPalaceHelper.balls_size_id,Consequence.amt_from_roll_const, "\n", -1);
@@ -5228,7 +5231,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(2.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 2.0)));
         tef_con.set_max_damage(4000);
         tef_con.addConsequence(-FPalaceHelper.cum_volume_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(-FPalaceHelper.milk_volume_id,Consequence.amt_from_roll_const, "\n", -1);
@@ -5242,7 +5245,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(250.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 250.0)));
         tef_con.set_max_damage(5);
         tef_con.addConsequence(-FPalaceHelper.penis_girth_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(FPalaceHelper.curr_hp_id,0, "", -1,0,0,8);
@@ -5255,7 +5258,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(83.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 83.0)));
         tef_con.set_max_damage(15);
         tef_con.addConsequence(-FPalaceHelper.penis_length_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(FPalaceHelper.curr_hp_id,0, "", -1,0,0,9);
@@ -5268,7 +5271,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(250.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 250.0)));
         tef_con.set_max_damage(5);
         tef_con.addConsequence(-FPalaceHelper.breast_size_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(-FPalaceHelper.balls_size_id,Consequence.amt_from_roll_const, "\n", -1);
@@ -5282,7 +5285,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(2.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 2.0)));
         tef_con.set_max_damage(4000);
         tef_con.addConsequence(-FPalaceHelper.cum_volume_id,Consequence.amt_from_roll_const, "\n", -1);
         tef_con.addConsequence(-FPalaceHelper.milk_volume_id,Consequence.amt_from_roll_const, "\n", -1);
@@ -5341,7 +5344,7 @@ public class FPalace_items {
         tef_chall.setVariability(0);
         
         tef_con = new Consequence();
-        tef_con.amt_by_roll_flag(new String[]{"r", "/", Double.toString(250.0)});
+        tef_con.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 250.0)));
         tef_con.set_max_damage(5);
         tef_con.addConsequence(-FPalaceHelper.breast_size_id,Consequence.amt_from_roll_const, "\n", -1,0,0,2);
         

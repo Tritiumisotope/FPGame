@@ -1,5 +1,8 @@
 package fpgamegithubredux;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class FPalace_classes {
 
     public FPalace_classes() {
@@ -894,7 +897,7 @@ public class FPalace_classes {
             
             consequence = new Consequence();
             consequence.addConsequence(-FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const,"</n> looks surprisingly satisfied as the flow of milk from </n2> stops. ", 0);
-            consequence.amt_by_roll_flag(new String[]{"r", "/", Double.toString(25.0)});
+            consequence.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 25.0)));
             consequence.set_consume(FPalaceHelper.milk_volume_id);
             
             a.addChallenge(challenge,consequence);
@@ -1612,7 +1615,7 @@ public class FPalace_classes {
                     challenge2.setText("");
                     challenge2.setVariability(0);
                     consequence2 = new Consequence();
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(4.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 4.0)));
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
                     consequence2.set_max_damage(10);
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "The full weight of </n2>s buttox crashes into </n>. ",0);
@@ -1681,7 +1684,7 @@ public class FPalace_classes {
                     challenge2.setVariability(0);
                     challenge2.setText("");
                     consequence2 = new Consequence();
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(6.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 6.0)));
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "The full weight of </n2>s cock crashes into </n>. ",0);
                     consequence2.addConsequence(-FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "</n> is having a great time. ",5);
@@ -1746,7 +1749,7 @@ public class FPalace_classes {
                     challenge2.setText("");
                     challenge2.setVariability(0);
                     consequence2 = new Consequence();
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(20.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 20.0)));
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "The full weight of </n2>s body crashes into </n>. ",0);
                     consequence2.addConsequence(-FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "</n> is having a great time. ",5);
@@ -1781,7 +1784,7 @@ public class FPalace_classes {
                     challenge2.setText("");
                     consequence2 = new Consequence();
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(2.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 2.0)));
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "It hits </n> with a fair amount of force. ",0);
                     consequence2.addConsequence(-FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "</n> is having a great time. ",5);
                     consequence2.addConsequence(FPalaceHelper.lust_id,5, "</n> manages to avoid getting too much on <noun>, but still ends up blushing from the contact. ",-1);
@@ -1844,7 +1847,7 @@ public class FPalace_classes {
                     challenge2.setVariability(0);
                     consequence2 = new Consequence();
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(20.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 20.0)));
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "It hits </n> with a fair amount of force. ",0);
                     consequence2.addConsequence(-FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "</n> is having a great time. ",5);
                     consequence2.addConsequence(FPalaceHelper.lust_id,5, "</n> manages to avoid getting too much on <noun>, but still ends up blushing from the contact. ",-1);
@@ -1878,7 +1881,7 @@ public class FPalace_classes {
                     challenge2.setVariability(0);
                     consequence2 = new Consequence();
                     consequence2.set_damage_type(FPalaceHelper.lust_damage_type().get_id());
-                    consequence2.amt_by_roll_flag(new String[]{"r", "/", Double.toString(5.0)});
+                    consequence2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 5.0)));
                     consequence2.addConsequence(FPalaceHelper.curr_hp_id,Consequence.amt_from_roll_const, "It hits </n> with a fair amount of force. ",0,0,0,2);
                     consequence2.addConsequence(-FPalaceHelper.lust_id,Consequence.amt_from_roll_const, "</n> is having a great time. ",5);
                     

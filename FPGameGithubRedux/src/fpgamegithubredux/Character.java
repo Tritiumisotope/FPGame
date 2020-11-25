@@ -188,27 +188,29 @@ public class Character extends DynamicObject {
     public String getName(){
         return name;
     }
-    /*
-    public function remove_status_effect_by_id(status_id:int, tick_count:int = -1):String{
+    
+    public String remove_status_effect_by_id(int status_id,int tick_count){//def tick_count = -1
         String ret = "";
         int i = 0;
-        for(i=0;i<currentTickEffects.length;i++){
-            if(currentTickEffects[i].get_id() == status_id){
+        for(i=0;i<currentTickEffects.size();i++){
+            if(currentTickEffects.get(i).get_id() == status_id){
                 if(tick_count == -1){
-                    personality.advance_objectives(Quest.status_remove_action, [status_id],this);
-                    currentTickEffects = currentTickEffects.slice(0,i).concat(currentTickEffects.slice(i+1,currentTickEffects.length));
-                    if(ret.indexOf(TickEffect.get_status_effect_name(status_id))<0)ret += get_name() + " is cured of " + TickEffect.get_status_effect_name(status_id);
+                    personality.advance_objectives(Quest.status_remove_action, new ArrayList<>(Arrays.asList(status_id)),this);
+                    //currentTickEffects = currentTickEffects.slice(0,i).concat(currentTickEffects.slice(i+1,currentTickEffects.size()))
+                    currentTickEffects.remove(i);
+                    if(ret.indexOf(TickEffect.get_status_effect_name(status_id))<0)ret += getName() + " is cured of " + TickEffect.get_status_effect_name(status_id);
                     i--;
                 }else{
-                    var count:int = 0;
-                    for(count;count<tick_count;count++){
-                        var temp_string:Array = currentTickEffects[i].tick(this).split(".");
-                        var effect_count:int = 0;
-                        for(effect_count;effect_count<temp_string.length;effect_count++){
+                    int count = 0;
+                    for(count=0;count<tick_count;count++){
+                        String[] temp_string = currentTickEffects.get(i).tick(this).split(".");
+                        int effect_count = 0;
+                        for(effect_count=0;effect_count<temp_string.length;effect_count++){
                             if(ret.indexOf(temp_string[effect_count]) < 0) ret += temp_string[effect_count]+".";
                         }
-                        if(currentTickEffects[i].ticks_left() <= 0){//this effect is done
-                            currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                        if(currentTickEffects.get(i).ticks_left() <= 0){//this effect is done
+                            //currentTickEffects = currentTickEffects.slice(0, i).concat(currentTickEffects.slice(i+1, currentTickEffects.length));
+                            currentTickEffects.remove(i);
                             i--;
                             break;
                         }
@@ -218,7 +220,6 @@ public class Character extends DynamicObject {
         }
         return ret;
     }
-    */
     public void set_challenge_output(String s){
         //attempt to remove duplicate warnings and empty space
         if(s.indexOf("<sid") >= 0){
@@ -1008,26 +1009,24 @@ public class Character extends DynamicObject {
         equip_state = 0;
         return s;
     }
-    /*
-    public function new_race(i:int, r:Race):String{
-        var ret:String = "<br>";
-        if (i >= 0 && i < body.parts.length) {
-            if(body.parts[i].race != null){
-                body.parts[i].race.reverse_bonuses(this, body.parts[i],true);
-                body.parts[i].set_race(r);
-                body.parts[i].race.apply_bonuses(this, body.parts[i],true);
-                if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+    public String new_race(int i,Race r){
+        String ret = "<br>";
+        if (i >= 0 && i < body.parts.size()) {
+            if(body.parts.get(i).race != null){
+                body.parts.get(i).race.reverse_bonuses(this, body.parts.get(i),true);
+                body.parts.get(i).set_race(r);
+                body.parts.get(i).race.apply_bonuses(this, body.parts.get(i),true);
+                if(body.parts.get(i).getName() != "" && r.getName() != "") ret += "</n>s " + body.parts.get(i).getName() + " appears more " + r.getName()+". ";
                 
             }else{
-                body.parts[i].race.reverse_bonuses(this, body.parts[i]);
-                body.parts[i].set_race(r);
-                body.parts[i].race.apply_bonuses(this, body.parts[i]);
-                if(body.parts[i].get_name() != "" && r.get_name() != "") ret += "</n>s " + body.parts[i].get_name() + " appears more " + r.get_name()+". ";
+                body.parts.get(i).race.reverse_bonuses(this, body.parts.get(i));
+                body.parts.get(i).set_race(r);
+                body.parts.get(i).race.apply_bonuses(this, body.parts.get(i));
+                if(body.parts.get(i).getName() != "" && r.getName() != "") ret += "</n>s " + body.parts.get(i).getName() + " appears more " + r.getName()+". ";
             }
         }
         return ret;
     }
-    */
     public String new_location(Room r){
         return new_location(r,false,false,false);
     }
@@ -1148,7 +1147,7 @@ public class Character extends DynamicObject {
     }
 		
     
-
+    /*
     public double getStat(int statID){//dummy version, remove later
         double ret = -1.0;
         for(Stat tempStat : stats){
@@ -1159,6 +1158,7 @@ public class Character extends DynamicObject {
 
         return ret;
     }
+    */
     public Number get_stat(int i){//Real thing, copied all original methods so far
         return get_stat(i,1,0,-1,true);
     }
@@ -1222,108 +1222,114 @@ public class Character extends DynamicObject {
                   
         return ret;
     }
-    /*
-    		public function apply_change_effect(o:Object, id:int = -1):String{
-			var ret:String = "";
-			
-			if (o is Sex){
-				var new_sex:Sex = o as Sex;
-				new_sex = new_sex.clone();
-				ret += set_sex(new_sex);
-			}else if(o is Character_job){
-				var new_job:Character_job = o as Character_job;
-				ret += personality.set_job(new_job, this);
-			}else if(o is Character_class){
-				var new_cc:Character_class = o as Character_class;
-				new_cc = new_cc.clone();
-				ret += set_character_class(new_cc);
-			}else if(o is Body_part){
-				var new_bp:Body_part = new Body_part();
-				if(id != -1  && body.get_part_by_id(id) != null){
-					var temp_e:Equipment;
-					var equip_array:Array = body.get_equip_array();
-					var count:int = 0;
-					equip_state = 1;
-					for(count;count<equip_array.length;count++){
-						temp_e = equip_array[count];
-						temp_e.remove_effects(this);
-					}
-					equip_state = 0;
-					
-					new_bp.clone(body.get_part_by_id(id) as Body_part);
-					
-					equip_state = 1;
-					count = 0;
-					for(count;count<equip_array.length;count++){
-						temp_e = equip_array[count];
-						temp_e.equip_effects(this);
-					}
-					equip_state = 0;
-					
-					ret += new_body_part(new_bp,false);
-				}else{
-					new_bp.clone(o as Body_part);
-					ret += new_body_part(new_bp);
-				}
-			}else if(o is Race){
-				var part_array:Array = new Array;
-				var temp_race:Race = o as Race;
-				var i:int = 0;
-				var j:int = 0;
-				var desc_exists:Boolean = false;
-				if(id != -1){
-					for(i;i<body.parts.length;i++){
-						if(body.parts[i].race.get_name() != temp_race.get_name() && body.parts[i].get_part_id() == id){
-							j = 0;
-							desc_exists = false;
-							for(j;j<temp_race.desc_part.length;j++){
-								if(temp_race.desc_part[j] == body.parts[i].get_part_id()){
-									desc_exists = true;
-									break;
-								}
-							}
-							if(desc_exists){
-								part_array[part_array.length] = i;
-							}
-						}
-					}
-				}else{
-					for(i;i<body.parts.length;i++){
-						if(body.parts[i].race.get_name() != temp_race.get_name()){
-							j = 0;
-							desc_exists = false;
-							for(j;j<temp_race.desc_part.length;j++){
-								if(temp_race.desc_part[j] == body.parts[i].get_part_id()){
-									desc_exists = true;
-									break;
-								}
-							}
-							if(desc_exists){
-								part_array[part_array.length] = i;
-							}
-						}
-					}
-					part_array = part_array.concat(temp_race.get_new_parts(this));
-				}
-				i = Math.round(Math.random()*(part_array.length-1));
-				if(part_array[i] != null && part_array[i] is Body_part){
-					ret += apply_change_effect(part_array[i]);
-				}else if(part_array[i] != null){
-					ret += new_race(part_array[i], o as Race);
-				}
-			}else if(o is Room){
-				ret += new_location(o as Room);
-			}else if(o is Action){
-				if(id != -1){
-					add_stat_action(id, o as Action);
-				}
-			}
-			
-			ret += re_equip();
-			
-			return ret;
-		}
-    */
+    public String apply_change_effect(Object o){
+        return apply_change_effect(o,-1);
+    }
+    public String apply_change_effect(Object o,int id){//def -1
+        String ret = "";
+        
+        if (o instanceof Sex){
+            Sex new_sex = (Sex)o ;
+            new_sex = new_sex.copySex();
+            ret += set_sex(new_sex);
+        }else if(o instanceof Character_job){
+            Character_job new_job = (Character_job)o;
+            ret += personality.set_job(new_job, this);
+        }else if(o instanceof Character_class){
+            Character_class new_cc = (Character_class)o;
+            new_cc = new_cc.copyClass();
+            ret += set_character_class(new_cc);
+        }else if(o instanceof BodyPart){
+            BodyPart new_bp = new BodyPart();
+            if(id != -1  && body.get_part_by_id(id) != null){
+                Equipment temp_e;
+                ArrayList<Object> equip_array = new ArrayList<>(body.get_equip_array());
+                int count = 0;
+                equip_state = 1;
+                for(count=0;count<equip_array.size();count++){//TODO instanceOfs for non-equipment?
+                    temp_e = (Equipment)equip_array.get(count);
+                    temp_e.remove_effects(this);
+                }
+                equip_state = 0;
+                
+                //new_bp.bodyPartCopy((BodyPart)body.get_part_by_id(id));
+                //TODO let's do for first?
+                new_bp.bodyPartCopy((BodyPart)body.get_part_by_id(id).get(0));
+                
+                equip_state = 1;
+                count = 0;
+                for(count=0;count<equip_array.size();count++){//TODO instanceOfs for non-equipment?
+                    temp_e = (Equipment)equip_array.get(count);
+                    temp_e.equip_effects(this);
+                }
+                equip_state = 0;
+                
+                ret += new_body_part(new_bp,false);
+            }else{
+                new_bp.bodyPartCopy((BodyPart)o);
+                ret += new_body_part(new_bp);
+            }
+        }else if(o instanceof Race){
+            ArrayList<Object> part_array = new ArrayList<>();//was just array
+            Race temp_race = (Race)o;
+            int i = 0;
+            int j = 0;
+            Boolean desc_exists = false;
+            if(id != -1){
+                for(i=0;i<body.parts.size();i++){
+                    if(!body.parts.get(i).race.getName().equals(temp_race.getName()) && body.parts.get(i).get_part_id() == id){
+                        j = 0;
+                        desc_exists = false;
+                        for(j=0;j<temp_race.desc_part.size();j++){
+                            if(temp_race.desc_part.get(j) == body.parts.get(i).get_part_id()){
+                                desc_exists = true;
+                                break;
+                            }
+                        }
+                        if(desc_exists){
+                            //part_array[part_array.length] = i;
+                            part_array.add(i);
+                        }
+                    }
+                }
+            }else{
+                for(i=0;i<body.parts.size();i++){
+                    if(!body.parts.get(i).race.getName().equals(temp_race.getName())){
+                        j = 0;
+                        desc_exists = false;
+                        for(j=0;j<temp_race.desc_part.size();j++){
+                            if(temp_race.desc_part.get(j) == body.parts.get(i).get_part_id()){
+                                desc_exists = true;
+                                break;
+                            }
+                        }
+                        if(desc_exists){
+                            //part_array[part_array.length] = i;
+                            part_array.add(i);
+                        }
+                    }
+                }
+                part_array.addAll(temp_race.get_new_parts(this));//part_array = part_array.concat(temp_race.get_new_parts(this));
+                //TODO is the above Integer or Parts?!
+            }
+            i = (int)Math.round(Math.random()*(part_array.size()-1));
+            if(part_array.get(i) != null && part_array.get(i) instanceof BodyPart){
+                ret += apply_change_effect(part_array.get(i));
+            }else if(part_array.get(i) != null){
+                ret += new_race((int)part_array.get(i), (Race)o);
+            }
+        }else if(o instanceof Room){
+            ret += new_location((Room)o);
+        }else if(o instanceof CharAction){
+            if(id != -1){
+                add_stat_action(id, (CharAction)o);
+            }
+        }
+        
+        ret += re_equip();
+        
+        return ret;
+    }
     public String apply_equip_affect_by_id(int id,Number change_amt){
         String ret = "";
         
@@ -4880,7 +4886,7 @@ public class Character extends DynamicObject {
         //var ticks_to_take:int = ((FPGameGithub.T1_HOUR*2 - Main.t10_min)/-8)*get_stat(FPalaceHelper.con_id) + (FPGameGithub.T1_HOUR*2) + ((((FPGameGithub.T1_HOUR*2)-(Main.t10_min))/8)*10);
         
         //10 con = 1 week to be ready again, 20 con = 3.5 days to be ready again...
-        int ticks_to_take = (int)Math.round((FPGameGithub.T1_WEEK/(getStat(FPalaceHelper.con_id)/10))/(getStat(FPalaceHelper.min_lust_id)+1));
+        int ticks_to_take = (int)Math.round((FPGameGithub.T1_WEEK/(get_stat(FPalaceHelper.con_id).doubleValue()/10))/(get_stat(FPalaceHelper.min_lust_id).doubleValue()+1));
         if(ticks_to_take < 4)ticks_to_take = 4;
         
         int num_consequences = FPGameGithub.T1_WEEK/FPGameGithub.T1_HOUR;
@@ -4905,8 +4911,13 @@ public class Character extends DynamicObject {
         
         return ret;
     }
+    public String impregnate(){
+        return impregnate(null,false);
+    }
     
-    
+    public String impregnate(Character c){
+        return impregnate(c,false);
+    }
     public String impregnate(Character c,Boolean preg_to_tick){//def null,false
         String ret = "";
         if(SUPERDEBUG)LOGGER.info("(CHARACTER)impregnate attempt on " + getName());
@@ -4916,7 +4927,7 @@ public class Character extends DynamicObject {
             Number impreg_volume = c.get_stat(FPalaceHelper.cum_volume_id);
             ret += consume(FPalaceHelper.cum_volume_id,c);
             //make sure no one is infertile
-            if(c.getStat(FPalaceHelper.semen_fertility_id) < 0.0 || getStat(FPalaceHelper.egg_fertility_id) < 0.0 || body.get_pregnant_race().preg_effect == null){
+            if(c.get_stat(FPalaceHelper.semen_fertility_id).doubleValue() < 0.0 || get_stat(FPalaceHelper.egg_fertility_id).doubleValue() < 0.0 || body.get_pregnant_race().preg_effect == null){
                 if(SUPERDEBUG)LOGGER.info("but one of them is infertile...");
                 return ret;
             }
@@ -4963,10 +4974,12 @@ public class Character extends DynamicObject {
                                 if(c.body.parts.get(i).getName().equals(body.parts.get(k).getName())){
                                     //both_parts[both_parts.length] = [body.parts[k],c.body.parts[i]]
                                     both_parts.add(new BodyPart[]{body.parts.get(k),c.body.parts.get(i)}); 
+                                    while(mom_found_parts.size()<=k)mom_found_parts.add(null);
                                     mom_found_parts.set(k,true);//mom_found_parts[k] = true
                                     found = true;
                                 }else if(i >=c.body.parts.size()-1){
-                                    if(mom_found_parts.get(k) == null){
+                                    while(mom_found_parts.size()<=k)mom_found_parts.add(null);
+                                    if(mom_found_parts.get(k) == null){//if(mom_found_parts.get(k) == null){
                                         mom_parts.add(body.parts.get(k));//mom_parts[mom_parts.length] = body.parts[k];
                                     }
                                 }

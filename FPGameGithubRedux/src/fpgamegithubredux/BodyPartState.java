@@ -91,27 +91,27 @@ public class BodyPartState {
 				operator = ratio_stat.get(0);
 			}else{
 				operator = bp.get_stat(c, ratio_stat.get(0)).doubleValue();
-				if(operator < 0 && c != null)operator = c.getStat(ratio_stat.get(0));
+				if(operator < 0 && c != null)operator = c.get_stat(ratio_stat.get(0)).doubleValue();
 			}
 			double denominator = 1;//was Number
 			if(Boolean.TRUE.equals(static_ratio_stat.get(1))){
 				denominator = ratio_stat.get(1);
 			}else{
 				denominator = bp.get_stat(c, ratio_stat.get(1)).doubleValue();
-				if(denominator <= 0 && c != null)denominator = c.getStat(ratio_stat.get(1));
+				if(denominator <= 0 && c != null)denominator = c.get_stat(ratio_stat.get(1)).doubleValue();
 			}
 			int i = 0;
 			for (i=0;i<outputs.size();i++){
 			    double modUse = mod_changes.get(i);//was Number
 				if(Boolean.TRUE.equals(mod_stat_id.get(i)) && c != null){
 					modUse = bp.get_stat(c, mod_changes.get(i)).intValue();
-					if(modUse < 0)modUse = c.getStat(mod_changes.get(i));
+					if(modUse < 0)modUse = c.get_stat(mod_changes.get(i)).doubleValue();
 				}
 				
 				double compareUse= comparisons.get(i);//was Number
 				if(Boolean.TRUE.equals(rat_stat_id.get(i)) && c != null){
 					compareUse = bp.get_stat(c, comparisons.get(i)).doubleValue();
-					if(compareUse < 0)compareUse = c.getStat(comparisons.get(i));
+					if(compareUse < 0)compareUse = c.get_stat(comparisons.get(i)).doubleValue();
 				}
 				if(c != null && mod_changes.get(i) == -1)modUse = compareUse + operator/denominator;
 				if (mod.doubleValue() != modUse)mod = modUse;
@@ -164,11 +164,11 @@ public class BodyPartState {
 				if(Boolean.TRUE.equals(static_ratio_stat.get(0))){
                     operator = ratio_stat.get(0);
                     denominator = (double)bp.get_stat(c, ratio_stat.get(1));
-					if(denominator <= 0)denominator = c.getStat(ratio_stat.get(1)); 
+					if(denominator <= 0)denominator = c.get_stat(ratio_stat.get(1)).doubleValue(); 
 				}else{
                     //operator = bp.get_stat(c, ratio_stat[0]).intValue()
                     denominator = ratio_stat.get(1);
-					if(bp.get_stat(c, ratio_stat.get(0)).intValue() < 0)operator = c.getStat(ratio_stat.get(0));
+					if(bp.get_stat(c, ratio_stat.get(0)).intValue() < 0)operator = c.get_stat(ratio_stat.get(0)).doubleValue();
 				}
 				/*TODO check if simplified by above changes
 				if(static_ratio_stat[1]){
@@ -183,12 +183,12 @@ public class BodyPartState {
 				    int compareUse = comparisons.get(i);//Number
 					if(Boolean.TRUE.equals(rat_stat_id.get(i))){
 						compareUse = bp.get_stat(c, comparisons.get(i)).intValue();
-						if(compareUse < 0)compareUse = (int)c.getStat(comparisons.get(i));
+						if(compareUse < 0)compareUse = c.get_stat(comparisons.get(i)).intValue();
 					}
 					int modUse = mod_changes.get(i);//number
 					if(Boolean.TRUE.equals(mod_stat_id.get(i))){
 						modUse = bp.get_stat(c, mod_changes.get(i)).intValue();
-						if(modUse < 0)modUse = (int)c.getStat(mod_changes.get(i));
+						if(modUse < 0)modUse = c.get_stat(mod_changes.get(i)).intValue();
 					}					
 					
 					if (operations.get(i).equals(">=")){

@@ -1480,7 +1480,7 @@ public class Personality {
 				}
 			}
 			
-			if(c != null)ret += (c.getStat(FPalaceHelper.sex_appeal_id) - 10);
+			if(c != null)ret += (c.get_stat(FPalaceHelper.sex_appeal_id).doubleValue() - 10);
 			
 			return ret;
 		}
