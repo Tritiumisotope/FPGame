@@ -162,32 +162,20 @@ public class Area extends StaticObject{
         int x = 0;
         int y = 0;
         int z = 0;
-        Boolean found = false;
         for (x = 0;x<rooms.size();x++){//TODO check if works without null check, also .length
             if (rooms.get(x) != null){//[]
                 for(y = 0;y<rooms.get(x).size();y++){//[].length
                     if(rooms.get(x).get(y) != null){//[][]
                         for(z=0;z<rooms.get(x).get(y).size();z++){//[][].length
-                            if(rooms.get(x).get(y).get(z) != null && rooms.get(x).get(y).get(z)  == fr){
-                                found = true;
-                                break;
+                            if(rooms.get(x).get(y).get(z) != null && rooms.get(x).get(y).get(z) == fr){
+                                return new int[]{x,y,z};
                             }
                         }
-                    }
-                    if(found) break;
+                    }                    
                 }
-            }
-            if(found){
-                /*
-                int[] numbers = new int[3]
-                numbers[0] =x
-                numbers[1] =y
-                numbers[2] =z
-                */
-                return new int[]{x,y,z};
-            }
+            }            
         }
-        return new int[3];
+        return null;
     }
     public int place_room(Room r, Room lr, int maxSameRoom){//3/5 vars
         return place_room(r, lr, maxSameRoom,null,false);
@@ -508,7 +496,7 @@ public class Area extends StaticObject{
                             }
                             rand_direct = rand_direct - ((rand_direct / 3)*3);
                         }
-                        /*
+                        
                         if(rand_direct > 0){
                             if(rand_direct > 1){
                                 offset[2]++;
@@ -516,7 +504,7 @@ public class Area extends StaticObject{
                                 offset[2]--;
                             }
                         }
-                        */
+                        
                         //should check to see if this is actually a good exit... just go through the exits OWN exits to make sure none of their offsets is the same as this one
                         int exit_exits = 0;
                         for(exit_exits=0;exit_exits<r.exits.get(counter).exits.size();exit_exits++){
@@ -1327,7 +1315,7 @@ public class Area extends StaticObject{
         }
         
         Challenge chall = new Challenge();
-        chall.clone(exit_challenge);
+        chall.copyChall(exit_challenge);
         
         chall.setText(chall.getText().replace(pathPlaceHldr, path));
         
@@ -1881,6 +1869,11 @@ public class Area extends StaticObject{
     }
     
     //now we need to make it so the map makes sense, make a map, etc.
+    public String get_map(){return get_map(0, null, -1, 0, false);}
+    public String get_map(int gen_flag){return get_map(gen_flag, null, -1, 0, false);}
+    public String get_map(int gen_flag,Character c){return get_map(gen_flag, c, -1, 0, false);}
+    public String get_map(int gen_flag,Character c,int sight){return get_map(gen_flag, c, sight, 0, false);}
+    public String get_map(int gen_flag,Character c,int sight,int show_location){return get_map(gen_flag, c, sight, show_location, false);}
     public String get_map(int gen_flag,Character c,int sight,int show_location,Boolean mini_map){
         //gen_flag was 0, c was null, sight was -1, show_location was 0, mini_map was false
         if (!map.equals("") && gen_flag == 0) return map;
@@ -1894,8 +1887,8 @@ public class Area extends StaticObject{
         
         int max_y = 0;
         for(x=0;x<rooms.size();x++){     
-            map_pieces.set(x, new ArrayList<ArrayList<String>>());//map_pieces[x] = new ArrayList<String>()//new Array()
-            map_pieces.get(x).set(rooms.get(x).size() - 1,null);//map_pieces[x][rooms.get(x].length - 1] = null
+            map_pieces.add(new ArrayList<ArrayList<String>>());
+            for(y=0;y<rooms.get(x).size();y++)map_pieces.get(x).add(new ArrayList<String>());//map_pieces[x][rooms.get(x].length - 1] = null
             if(rooms.get(x).size() >= max_y) max_y = rooms.get(x).size();
         }
         
@@ -1915,7 +1908,7 @@ public class Area extends StaticObject{
                 if(temp_a != null){
                     char_x = temp_a[0];//[0]
                     char_y = temp_a[1];//[1]
-                    char_z = temp_a[2];//[2]
+                    char_z = 0;//temp_a[2];//[2]
                     LOGGER.info("(Area)Found Character at " + char_x + "," + char_y + "," + char_z);
                     if(char_z != z) z = char_z;
                 }
@@ -1933,15 +1926,16 @@ public class Area extends StaticObject{
                     break;
                 }
                 
-                if (rooms.get(x).get(y) == null){
+                if(y >= rooms.get(x).size() || rooms.get(x).get(y) == null){                    
                     map_piece_array = new ArrayList<>(Arrays.asList(create_map_piece().split("\n")));
                 }else{
                     if(rooms.get(x) != null){
+                        while(y >= map_pieces.get(x).size())map_pieces.get(x).add(new ArrayList<String>());
                         if(rooms.get(x).get(y) != null){
                             map_pieces.get(x).set(y, new ArrayList<String>());//new Array()
-                            if(rooms.get(x).get(y).get(z) != null){
+                            while(z >= map_pieces.get(x).get(y).size())map_pieces.get(x).get(y).add(create_map_piece());                                    
+                            if(z < rooms.get(x).get(y).size() && rooms.get(x).get(y).get(z) != null){
                                 //if(char_y != -1){//Was commented before
-                                    
                                     if((char_x - sight < x && x < char_x + sight && char_y - sight < y && y < char_y + sight) || (rooms.get(x).get(y).get(z).found() && !mini_map )){
                                         if(gen_flag == 1 &&  show_location != 0){
                                             //map_pieces[x].get(y).get(z) = create_map_piece(rooms.get(x].get(y).get(z),c,mini_map,z)
@@ -1973,23 +1967,25 @@ public class Area extends StaticObject{
                         }
                     }
                     if(map_pieces.get(x).get(y) != null && map_pieces.get(x).get(y).get(z) != null){
-                        map_piece_array = (ArrayList<String>)Arrays.asList(map_pieces.get(x).get(y).get(z).split("\n"));//map_piece_array = map_pieces[x].get(y).get(z).split("\n")
+                        map_piece_array = new ArrayList<String>(Arrays.asList(map_pieces.get(x).get(y).get(z).split("\n")));//map_piece_array = map_pieces[x].get(y).get(z).split("\n")
                     }else{
-                        map_piece_array = (ArrayList<String>)Arrays.asList(create_map_piece().split("\n"));//map_piece_array = create_map_piece().split("\n")
+                        map_piece_array = new ArrayList<String>(Arrays.asList(create_map_piece().split("\n")));//map_piece_array = create_map_piece().split("\n")
                     }
                 }
                 int count = 0;
                 
                 for (count=0;count<3;count++){
-                    if(map_array.get(count + place_holder) != null)	{
-                        map_array.set(count + place_holder, map_array.get(count + place_holder) + map_piece_array.get(count));//map_array[count + place_holder] += map_piece_array[count]
-                    }else{
-                        map_array.set(count + place_holder, map_piece_array.get(count));//map_array[count + place_holder] = map_piece_array[count]
+                    if(count + place_holder < map_array.size()){
+                        if(map_array.get(count + place_holder) != null)	{
+                            map_array.set(count + place_holder, map_array.get(count + place_holder) + map_piece_array.get(count));//map_array[count + place_holder] += map_piece_array[count]
+                        }else{
+                            map_array.set(count + place_holder, map_piece_array.get(count));//map_array[count + place_holder] = map_piece_array[count]
+                        }
                     }
                 }
                 map = "";
                 for(count=0;count<3 + place_holder;count++){
-                    map += map_array.get(count) + "\n";
+                    if(count < map_array.size())map += map_array.get(count) + "\n";
                 }
             }
             if(start_again){

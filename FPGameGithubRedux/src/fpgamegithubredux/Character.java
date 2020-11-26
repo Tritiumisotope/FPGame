@@ -2251,7 +2251,7 @@ public class Character extends DynamicObject {
             if(contentID >= 0){
                 Object tempObject = location.getContent(contentID);
                 if(tempObject instanceof Character){
-                    ret = ((Character)tempObject).appearance(lookID, this);
+                    return ((Character)tempObject).appearance(lookID, this);
                 }
             }
             ret = location.getRoomDescription(this);
@@ -3819,22 +3819,23 @@ public class Character extends DynamicObject {
         
         return sanitize(ret);
     }
-    /*
-    public function get_area_map(area_id:int = -1):String{
-        var i:int = 0;
-        var locate_flag:Boolean = false;
-        var sight:int = 1;
+    
+    public String get_area_map(){return get_area_map(-1);}
+    public String get_area_map(int area_id){
+        int i = 0;
+        Boolean locate_flag = false;
+        int sight = 1;
         
-        var char_for_chal:Character = this;
+        Character char_for_chal = this;
         
         if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.map_sight_id);
             
-        var sight_challenge:Challenge = new Challenge(true);
+        Challenge sight_challenge = new Challenge(true);
         sight_challenge.set_attack_stat(FPalace_skills.map_sight_id);
         sight_challenge.set_defense_stat(-1,location.get_sight_difficulty());
-        sight_challenge.set_variability(5);
+        sight_challenge.setVariability(5);
         
-        var result:int = sight_challenge.roll(char_for_chal);
+        int result = sight_challenge.roll(char_for_chal);
 
         if(result >= 0){
             sight += Math.round(char_for_chal.get_skill_by_id(FPalace_skills.map_sight_id)/location.get_sight_difficulty());
@@ -3844,10 +3845,10 @@ public class Character extends DynamicObject {
             char_for_chal = this;
             if(party != null)char_for_chal = party.get_best_at_skill(FPalace_skills.map_reading_id);
             
-            var locat_challenge:Challenge = new Challenge(true);
+            Challenge locat_challenge = new Challenge(true);
             locat_challenge.set_attack_stat(FPalace_skills.map_reading_id);
             locat_challenge.set_defense_stat(-1,location.get_locate_difficulty());
-            locat_challenge.set_variability(5);
+            locat_challenge.setVariability(5);
             
             result = locat_challenge.roll(char_for_chal);
             
@@ -3862,15 +3863,15 @@ public class Character extends DynamicObject {
             }
         }else{
             if(locate_flag){
-                return location.area.world.areas[area_id].get_map(1,this,0,1);
+                return location.area.world.areas.get(area_id).get_map(1,this,0,1);
             }else{
-                return location.area.world.areas[area_id].get_map(1,this,0);
+                return location.area.world.areas.get(area_id).get_map(1,this,0);
             }
         }			
         
-        return location.area.get_map();
+        //return location.area.get_map();
     }
-    */
+    
     public Item get_possesion_by_id(int i){
         if(i >= possessions.size()){
             ArrayList<CharAction> action_array = new ArrayList<>(get_all_overworld_actions());

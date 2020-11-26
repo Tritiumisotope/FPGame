@@ -381,7 +381,7 @@ public String getName(){
         if(covered_by.size() > 0) {
             Equipment cover_equip = covered_by.get(covered_by.size() -1);
 
-            if(cover_equip.show_other_cover() && covered_by.get(covered_by.size() -2) != null){
+            if(cover_equip.show_other_cover() && covered_by.size() > 2 && covered_by.get(covered_by.size() -2) != null){
                 ret = covered_by.get(covered_by.size() -2).covered_description(c, part_id,this) + cover_equip.covered_description(c, part_id,this) + stat_descriptions(c,1);
             }else{
                 ret = cover_equip.covered_description(c, part_id,this) + stat_descriptions(c,1);
@@ -401,7 +401,7 @@ public String getName(){
          String cover = get_covered_desc(c);
          String other_cover = other_bp.get_covered_desc(c);
         if(cover != null){
-            if(!other_cover.equals(cover)){
+            if(other_cover != null && !other_cover.equals(cover)){
                 while(cover.indexOf("</bpn>") >= 0)cover = cover.replace("</bpn>", getName());
                 if(other_cover != null){
                     while(other_cover.indexOf("</bpn>") >= 0)other_cover = other_cover.replace("</bpn>", other_bp.getName());

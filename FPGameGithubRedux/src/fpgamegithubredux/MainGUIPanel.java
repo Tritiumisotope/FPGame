@@ -93,7 +93,11 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
          
          String[] splitResult = result.split(",");
          LOGGER.info(result);
-         if(result.contains("event:look")&&splitResult.length > 1){
+        if(result.contains("event:look")&&splitResult.length > 2){
+            int contentID = Integer.parseInt(splitResult[1]);
+            int lookID = Integer.parseInt(splitResult[2]);
+            textField.setText(player.look(contentID, lookID));    
+        }else if(result.contains("event:look")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
              textField.setText(player.look(contentID));    
         }else if(result.contains("event:open")&&splitResult.length > 1){
@@ -217,6 +221,12 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         textField.setVisible(true);
         textField.setEnabled(true);
         textField.setText(player.inventory());   
+    }
+    @Override
+    public void mapPressed(){
+        if(player.location != null){
+            textField.setText(player.get_area_map());   
+        }
     }
     @Override
     public void statusPressed(){
