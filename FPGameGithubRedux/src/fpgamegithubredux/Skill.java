@@ -57,15 +57,15 @@ public class Skill {
 			add_action(new_act,0);
 		}
 		public void add_action(CharAction new_act,int bonus_requirement){//default 0
-            actions.set(actions.size(), new_act);//actions[actions.length] = new_act
-			act_bonus_req.set(act_bonus_req.size(), bonus_requirement);//act_bonus_req[act_bonus_req.length] = bonus_requirement
+            actions.add(new_act);//actions[actions.length] = new_act
+			act_bonus_req.add(bonus_requirement);//act_bonus_req[act_bonus_req.length] = bonus_requirement
 		}
 		public void add_attack(CharAction new_atk){
 			add_attack(new_atk,0);
 		}
 		public void add_attack(CharAction new_atk,int bonus_req){//def 0
-            attacks.set(attacks.size(), new_atk);//attacks[attacks.length] = new_atk
-			atk_bonus_req.set(atk_bonus_req.size(), bonus_req);//atk_bonus_req[atk_bonus_req.length] = bonus_req
+            attacks.add(new_atk);//attacks[attacks.length] = new_atk
+			atk_bonus_req.add(bonus_req);//atk_bonus_req[atk_bonus_req.length] = bonus_req
 		}
 		
 		public ArrayList<CharAction>  get_actions(int char_bonus){
@@ -73,7 +73,7 @@ public class Skill {
 			int i = 0;
 			for(i=0;i<actions.size();i++){//.length
                 //REPLACED BELOW//if(char_bonus >= act_bonus_req[i] && actions[i] != null)ret[ret.length] = actions[i]
-                if(char_bonus >= act_bonus_req.get(i) && actions.get(i) != null)ret.set(ret.size(), actions.get(i));
+                if(char_bonus >= act_bonus_req.get(i) && actions.get(i) != null)ret.add(actions.get(i));
 			}
 			return ret;
 		}
@@ -83,7 +83,7 @@ public class Skill {
 			int i = 0;
 			for(i=0;i<attacks.size();i++){//.length
                 //REPLACED BELOW//if(char_bonus >= atk_bonus_req[i] && attacks[i] != null)ret[ret.length] = attacks[i]
-                if(char_bonus >= atk_bonus_req.get(i) && attacks.get(i) != null)ret.set(ret.size(), attacks.get(i));
+                if(char_bonus >= atk_bonus_req.get(i) && attacks.get(i) != null)ret.add(attacks.get(i));
 			}
 			return ret;
 		}
@@ -91,10 +91,8 @@ public class Skill {
 			add_stat_component(stat_id,1);
 		}
 		public void add_stat_component(int stat_id,int ratio){//def ratio = 1
-			
-            
-            stat_list.set(stat_list.size(), stat_id);//stat_list[stat_list.length] = stat_id
-			stat_ratio_list.set(stat_ratio_list.size(), ratio);//stat_ratio_list[stat_ratio_list.length] = ratio
+            stat_list.add(stat_id);//stat_list[stat_list.length] = stat_id
+			stat_ratio_list.add(ratio);//stat_ratio_list[stat_ratio_list.length] = ratio
 		}
         
 }

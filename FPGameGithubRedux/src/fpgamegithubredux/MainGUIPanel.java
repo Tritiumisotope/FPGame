@@ -147,7 +147,48 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                 textField.setText(player.use_item(inventoryID,useCase));
             }else{
                 textField.setText(player.use_item(inventoryID));
-            }            
+            }
+        }else if(result.contains("event:talk")&&splitResult.length>3){
+            if(splitResult.length>5){//tempArray[5] != null){
+                //talk(tempArray[1], tempArray[2], tempArray[3], tempArray[4], tempArray.slice(5, tempArray.length));
+                String[] temp1 = Arrays.copyOfRange(splitResult,5, splitResult.length);
+                ArrayList<Integer> temp2 = new ArrayList<>();
+                for(int i = 0;i<temp1.length;i++){
+                    temp2.add(Integer.parseInt(temp1[i]));
+                }
+                talk(splitResult[1], splitResult[2], splitResult[3], splitResult[4], temp2);//TODO is this right?
+            }else if(splitResult.length==5){//tempArray[4] != null){
+                talk(splitResult[1], splitResult[2], splitResult[3], splitResult[4]);
+            }else{
+                talk(splitResult[1], splitResult[2], splitResult[3]);
+            } 
+        }else if(result.contains("show_skills")&&splitResult.length>2){
+            if(splitResult.length==2){//tempArray[2] == null){
+                show_skills(Integer.parseInt(splitResult[1]));
+            }else if(splitResult.length==3){//tempArray[3] == null){
+                show_skills(Integer.parseInt(splitResult[1]), Integer.parseInt(splitResult[2]));
+            }else{
+                /*
+                String theArray = splitResult[3];
+                System.out.println(theArray);
+                theArray = theArray.replace("[","");
+                theArray = theArray.replace("]","");
+                System.out.println(theArray)
+                */
+                String[] actualArray = Arrays.copyOfRange(splitResult,3, splitResult.length);
+                System.out.println(actualArray.length);
+                ArrayList<Integer> temp2 = new ArrayList<>();
+                for(int i = 0;i<actualArray.length;i++){
+                    System.out.println(actualArray[i]);
+                    actualArray[i] = actualArray[i].replace("[","");
+                    actualArray[i] = actualArray[i].replace("]","");
+                    actualArray[i] = actualArray[i].replace(" ","");
+                    temp2.add(Integer.parseInt(actualArray[i]));
+                }
+                show_skills(Integer.parseInt(splitResult[1]), Integer.parseInt(splitResult[2]), temp2);//was splitResult
+            }
+        }else if(result.contains("cclass_history") && splitResult.length>1){
+            show_cclass_history(Integer.parseInt(splitResult[1]));           
         }else{
              String msg = "(MainGUIPanel.java)got unexpected result: " + result;
              LOGGER.info(msg);
@@ -236,9 +277,14 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     }
     @Override
     public void trainPressed(){
+        //cleanup_gui();
+        show_skills();
+        //if(mini_map > 0){
+            //create_mini_map();
+        //}
         textField.setVisible(true);
         textField.setEnabled(true);
-        textField.setText(player.showAllSkills());  
+        //textField.setText(player.showAllSkills());  
     }
     public void enableButtons(){
         for (int i=0;i<11;i++){
@@ -458,6 +504,59 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             }
         }
     }
+    public void show_cclass_history(){
+        show_cclass_history(0);
+    }
+    public void show_cclass_history(int i){//def 0
+        if(player.location != null){
+            if(player.location.getContent(i) instanceof Character){
+                textField.setText(((Character)player.location.getContent(i)).get_class_history());
+            }
+        }
+    }
+    public void show_skills(){
+        show_skills(0,-1,null);
+    }
+    public void show_skills(int i){
+        show_skills(i, -1,null);
+    }
+    public void show_skills(int i,int j){
+        show_skills(i, j,null);
+    }
+    public void show_skills(int i,int j, ArrayList<Integer> show_children_of){//def 0,-1,null
+        String s = "";
+        int k = 0;
+        
+        Character chara;
+        
+        if(player.party == null){
+            chara = player;
+        }else{
+            chara = player.party.members.get(i);
+            if(i+1<player.party.members.size() && j == -1){
+                s += "<font color='#0000FF'><a href=\"event:show_skills,"+(i+1)+"\">&gt;&gt;</a></font>\n";
+            }
+        }
+        
+        if(j == -1){
+            s += chara.skills.show_all_skills(chara, show_children_of);
+        }else{
+            s += chara.sanitize(chara.increase_skill_by_id(j), player);
+            if(show_children_of != null){
+                s += "\n<font color='#0000FF'><a href=\"event:show_skills,"+i+",-1,"+new ArrayList<>(show_children_of)/*show_children_of.slice(3, show_children_of.size())*/+"\">back</a></font>";
+            }else{
+                s += "\n<font color='#0000FF'><a href=\"event:show_skills,"+i+"\">back</a></font>";
+            }
+        }
+        
+        if (player.party != null && j == -1){
+            if(i>0){
+                s += "\n<font color='#0000FF'><a href=\"event:show_skills,"+(i-1)+"\">&lt;&lt;</a></font>";
+            }
+        }
+
+        textField.setText(s);
+    }
     public void challenge(String i,String k,String j,String l){
         challenge(i, k, j,l,null);
     }
@@ -471,7 +570,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         Room start_locat = player.location;
         s = player.fire_challenge(Integer.parseInt(i), Integer.parseInt(k), Integer.parseInt(j), l, m) + "\n";
         
-        if (s.toUpperCase().indexOf("<A HREF") > 0){
+        if (s.toUpperCase().indexOf("<A HREF") > -1){//TODO was >0?
             /*
             save_button.enabled = false;
             appearance.enabled = false;
@@ -520,6 +619,33 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         newgame_button.label = "New Game";
         */
         textField.setText("You have died.");
+    }
+    public void talk(String i,String j,String k){
+        talk(i, j, k, null,null);
+    }
+    public void talk(String i,String j,String k,String l){
+        talk(i, j, k, l,null);
+    }
+    public void talk(String i,String j,String k,String l,ArrayList<Integer> m){//def l = null, m = null
+        //TODO should dynamic_choice be integer in the character talk? should m?
+        Character temp_char = (Character)player.location.getContent(Integer.parseInt(i));
+        if(temp_char != null){
+            String output = "";
+            if(m != null){
+                output = temp_char.talk(player, Integer.parseInt(j), Integer.parseInt(k), Integer.parseInt(l), m);
+            }else if(l != null){
+                output = temp_char.talk(player, Integer.parseInt(j), Integer.parseInt(k), Integer.parseInt(l));
+            }else{
+                output = temp_char.talk(player, Integer.parseInt(j), Integer.parseInt(k));
+            }
+            output = temp_char.sanitize(player.sanitize(output,player),player);
+            textField.setText(output);
+            //var temp_clip:MovieClip = new MovieClip();
+            //if(temp_char.location == player.location)temp_clip.addChild(temp_char.draw_34self(714,440,player));
+            //temp_clip.addChild(player.draw_34self(174,440,player,true));
+            //this.addChildAt(temp_clip,this.getChildIndex(text_field));				
+        }
+        world_tick();
     }
     /*
     public void new_player(){

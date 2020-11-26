@@ -216,7 +216,7 @@ crafts..............   17    -         | | | water.........   54  178
     
     private static ArrayList<Integer> remove_skill_children(int skill_id,ArrayList<Integer> child_array){//was array return and child
         int i = 0;
-        while(child_array.get(i) != null){//[]
+        while(child_array.size()>i/*.get(i) != null*/){//[]
             if(get_skill_parent(child_array.get(i)) == skill_id){///[]
                 child_array = remove_skill_children(child_array.get(i), child_array);//[]
                 child_array.remove(i);//child_array = child_array.slice(0,i).concat(child_array.slice(i+1, child_array.length))
@@ -234,7 +234,7 @@ crafts..............   17    -         | | | water.........   54  178
         ArrayList<Integer>  all_skills = new ArrayList<>();//was array
         int i = 0;
         for(i=0;i<skill_array.size();i++){//.length
-            all_skills.set(i,skill_array.get(i).get_id());//all_skills[i] = skill_array[i].get_id()
+            all_skills.add(skill_array.get(i).get_id());//all_skills[i] = skill_array[i].get_id()
         }
         
         if(skill_id == -1){
@@ -272,13 +272,13 @@ crafts..............   17    -         | | | water.........   54  178
         ArrayList<Integer>  all_skills = new ArrayList<>(); //var all_skills:Array = new Array
         
         for(i=0;i<skill_array.size();i++){
-            all_skills.set(i,skill_array.get(i).get_id()); //all_skills[i] = skill_array[i].get_id()
+            all_skills.add(skill_array.get(i).get_id()); //all_skills[i] = skill_array[i].get_id()
         }
         if(show_children_of != null){
-            ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-            plchldr.remove(0);//0
-            plchldr.remove(0);//1
-            plchldr.remove(0);//2
+            ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);//no longer has 3 to remove
+            //plchldr.remove(0);//0
+            //plchldr.remove(0);//1
+            //plchldr.remove(0);//2
             if(!plchldr.toString().equals(all_skills.toString())){
                 ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ all_skills +"\">Show all</a>\n";
             }
@@ -303,9 +303,9 @@ crafts..............   17    -         | | | water.........   54  178
                 //}
                 //TODO verify replacement
                 ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-                plchldr.remove(0);//0
-                plchldr.remove(0);//1
-                plchldr.remove(0);//2
+                //plchldr.remove(0);//0
+                //plchldr.remove(0);//1
+                //plchldr.remove(0);//2
                 if(plchldr.toString().equals(trained.toString())){
                     ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
                 }
@@ -328,9 +328,9 @@ crafts..............   17    -         | | | water.........   54  178
             if(primaries != null && primaries.get(0) != null){
                 if(show_children_of != null){
                     ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-                    plchldr.remove(0);//0
-                    plchldr.remove(0);//1
-                    plchldr.remove(0);//2
+                    //plchldr.remove(0);//0
+                    //plchldr.remove(0);//1
+                    //plchldr.remove(0);//2
                     if(!plchldr.toString().equals(primaries.toString())){
                         ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a>\n";
                     }
@@ -357,9 +357,9 @@ crafts..............   17    -         | | | water.........   54  178
             ArrayList<Integer> child_array;
             if(show_children_of != null){
                 ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-                plchldr.remove(0);//0
-                plchldr.remove(0);//1
-                plchldr.remove(0);//2
+                //plchldr.remove(0);//0
+                //plchldr.remove(0);//1
+                //plchldr.remove(0);//2
                 child_array = new ArrayList<>(plchldr);
             }else{
                 child_array = new ArrayList<>();

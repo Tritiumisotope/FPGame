@@ -226,18 +226,21 @@ public class Personality {
 				int i = 0;
 				for(i=0;i<c_self.possessions.size();i++){
 					if(c_self.possessions.get(i).topic != null){
-                        
                         ret_array.add(c_self.possessions.get(i).topic);//ret_array = ret_array.concat(c_self.possessions.get(i).topic)
 					}
 				}
 				ArrayList<Object> temp_array = c_self.body.get_equip_array();
 				for(i=0;i<temp_array.size();i++){
                     if(temp_array.get(i) instanceof Weapon){
-                        Weapon temp = (Weapon)temp_array.get(i);
-                        ret_array.add(temp.topic);
+						Weapon temp = (Weapon)temp_array.get(i);
+						if(temp.topic != null){
+							ret_array.add(temp.topic);
+						}
                     }else{//standard equipment
-                        Equipment temp = (Equipment)temp_array.get(i);
-                        ret_array.add(temp.topic);
+						Equipment temp = (Equipment)temp_array.get(i);
+						if(temp.topic != null){
+							ret_array.add(temp.topic);
+						}
                     }
                     /*TODO check if covered by above
 					if(temp_array.get(i).topic != null){
@@ -245,20 +248,25 @@ public class Personality {
                     }
                     */
 				}
-				
-                ret_array.addAll(c_self.sex.get_topics());//ret_array = ret_array.concat(c_self.sex.get_topics())
-                //replaced by below//if(c_self.location != null && c_self.location.area != null)ret_array = ret_array.concat(c_self.location.area.get_topics()); old
-                if(c_self.location != null && c_self.location.area != null)ret_array.addAll(c_self.location.area.get_topics());
-                if(job != null) ret_array.addAll(job.get_topics()); //if(job != null) ret_array = ret_array.concat(job.get_topics());
+				if(!c_self.sex.get_topics().isEmpty()){
+                	ret_array.addAll(c_self.sex.get_topics());//ret_array = ret_array.concat(c_self.sex.get_topics())
+				}
+				//replaced by below//if(c_self.location != null && c_self.location.area != null)ret_array = ret_array.concat(c_self.location.area.get_topics()); old
+                if(c_self.location != null && c_self.location.area != null&& !c_self.location.area.get_topics().isEmpty())ret_array.addAll(c_self.location.area.get_topics());//TODO add as an array or in order like this?
+                if(job != null&&!job.get_topics().isEmpty()) ret_array.addAll(job.get_topics()); //if(job != null) ret_array = ret_array.concat(job.get_topics());//TODO add as an array or in order like this?
 			}
             int i = 0;
             
 			for(i=0;i<objectives.size();i++){
-				ret_array.addAll(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));//ret_array = ret_array.concat(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));
+				if(!objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)).isEmpty()){
+					ret_array.addAll(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));//ret_array = ret_array.concat(objectives.get(i).get_conversation_topics(curr_obj_step.get(i).get(curr_obj_step.get(i).size()-1)));
+				}
 			}
 			
 			for(i=0;i<mob_allegiances.size();i++){
+				if(!mob_allegiances.get(i).get_topics(c_self).isEmpty()){
                 ret_array.addAll(mob_allegiances.get(i).get_topics(c_self));//ret_array = ret_array.concat(mob_allegiances.get(i).get_topics(c_self));
+				}
 			}
 			
 			//need to remove duplicate topics...
@@ -481,8 +489,11 @@ public class Personality {
 				int place_holder = (char_topics.size()+j);
 				Conversation_topic  ct = init_topics.get(j);//TODO find if this should be in other loop
 				int step;//Ditto
-				if(char_topics.get(exist_count) != null){
+				if(char_topics.get(exist_count) != null && init_topics.get(j) != null){
 					for(exist_count=0;exist_count<char_topics.size();exist_count++){
+						System.out.println(char_topics.get(exist_count).get_topic_name());
+						System.out.println(init_topics.get(j));
+						System.out.println(init_topics.get(j).get_topic_name());
 						if(char_topics.get(exist_count).get_topic_name().equals(init_topics.get(j).get_topic_name())){
 							place_holder = exist_count;
 							ct = char_topics.get(exist_count);
@@ -701,12 +712,10 @@ public class Personality {
 			}
 			
 			if(c.location == c_self.location)s += "\n\n<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+",-1,-1,-1,-1\">Back to topics</a></font>";
-			/*
-			//String c_chall_out = c.get_challenge_output();
-			//TODO
-			if(c_chall_out!="")c_chall_out+="\n";
+			
+			String c_chall_out = c.get_challenge_output();
+			if(!c_chall_out.equals(""))c_chall_out+="\n";
 			s = c_chall_out + s;
-			*/
 			c.setBusy();
 			c_self.setBusy();
 			

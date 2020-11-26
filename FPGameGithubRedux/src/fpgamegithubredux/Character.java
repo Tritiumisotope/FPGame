@@ -2129,7 +2129,7 @@ public class Character extends DynamicObject {
     
     public String set_xp(int i){//was uint
         String s = "";
-        s += getName() + " gains " + i + " experience points.<br>";
+        s += getName() + " gains " + i + " experience points.\n";
         xp += i;
         while(xp >= nxt_lvl_xp){
             s += level_up();

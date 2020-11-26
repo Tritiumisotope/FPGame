@@ -791,8 +791,10 @@ public class Area extends StaticObject{
                     if (x-1 >= 0 && rooms.get(x-1) == null) rooms.set(x-1, new ArrayList<>());//new Array()
                     //fine, i'll pick the damn room
                     System.out.println(rooms.size());
-                    if(rooms.get(x+1).get(y) == null && existing_exit_check(r,  x+1, y, new_z, max_same_room)){
-                            new_x = x+1;
+                    if(rooms.size()>x+1 && rooms.get(x+1).size()>y){//TODO good addition?
+                        if(rooms.get(x+1).get(y) == null && existing_exit_check(r,  x+1, y, new_z, max_same_room)){
+                                new_x = x+1;
+                        }
                     }
                     if((x+1 >= rooms.size() || y+1 >= rooms.get(x+1).size() || rooms.get(x+1).get(y+1) == null) && existing_exit_check(r,  x+1, y+1, new_z, max_same_room)){
                             new_x = x+1;
