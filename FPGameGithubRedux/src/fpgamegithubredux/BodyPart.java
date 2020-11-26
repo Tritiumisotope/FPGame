@@ -192,16 +192,13 @@ public class BodyPart extends DynamicObject {
     
     public void remove_part_connection(BodyPart bp){
         if(bp != null){
-             int i = 0;
-            for(i=0;i<=connected_to.size();i++){//.length
-                if(connected_to.get(0) != null){
-                     int j = 0;
-                     
-                    for(j=0;j<connected_to.get(0).size();j++){//[].length
+            for(int i=0;i<connected_to.size();i++){//.length
+                if(connected_to.get(i) != null){
+                    for(int j=0;j<connected_to.get(i).size();j++){//[].length
                         if(connected_to.get(i).get(j) == bp){//[][]
                             //connected_to[i] = connected_to[i].slice(0,j).concat(connected_to[i].slice(j+1,connected_to[i].length))
-                            connected_to.remove(j);
-                            if(connected_to.get(i).size() == 0)connected_to.set(i, null);
+                            connected_to.get(i).remove(j);
+                            if(connected_to.get(i).size() == 0)connected_to.get(i).add(null);//connected_to.set(i, null);
                             break;
                         }
                     }
@@ -275,11 +272,11 @@ public String getName(){
     }//TODO Verify!
     
     public int check_combat_status(Character c){
-         int ret = 1;//everything is a-ok
+        int ret = 1;//everything is a-ok
         //0 can't move, but still alive
         //-1 somebody killed me
         for(int i=0;i<stat_description.size();i++){
-             int ps = stat_description.get(i).check_combat_status(c, this);
+            int ps = stat_description.get(i).check_combat_status(c, this);
             if(ret > ps)ret = ps;
         }
         

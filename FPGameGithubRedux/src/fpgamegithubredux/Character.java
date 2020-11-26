@@ -7,6 +7,7 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2074,14 +2075,17 @@ public class Character extends DynamicObject {
         if(newItem != null){
             if(SUPERDEBUG)LOGGER.info("valid item passed is:" + newItem.getDroppedDescription());
             if(newItem.getDroppedDescription().equalsIgnoreCase("gold")){
+                /*
                 gold += newItem.value;
                 if(gold < 0)gold = 0;
+                */
+                set_gold(newItem.getValue(null, null));
             }else{
                 possessions.add(newItem);
             }
+            personality.advance_objectives(Quest.pick_up_action, new ArrayList<>(Arrays.asList(newItem)), this);
         }
-        String msg = possessions.get(possessions.size()-1).getDroppedDescription();
-        if(SUPERDEBUG)LOGGER.info(msg);
+        if(SUPERDEBUG)LOGGER.info("Dropped: "+ possessions.get(possessions.size()-1).getDroppedDescription());
     }
     //TODO make sure these are equivalent
     public int get_gold(){
@@ -2213,12 +2217,7 @@ public class Character extends DynamicObject {
         return ret;
     }
     */
-    public void drop(int item){
-        //TODO dummy out
-        if(item >= 0 && item < possessions.size()){
-            possessions.remove(item);
-        }
-    }
+
     public String look(){return look(-1, 0);}
     public String look(int contentID){return look(contentID, 0);}
     public String look(int contentID, int lookID){//dummy
@@ -2647,7 +2646,7 @@ public class Character extends DynamicObject {
         }
         return "";
     }
-    
+    /*
     public String inventory(){//dummy
         String returnString = "";
          if(SUPERDEBUG)System.out.println("In inventory");
@@ -2663,15 +2662,14 @@ public class Character extends DynamicObject {
          if(SUPERDEBUG)System.out.println("Leaving inventory");
         return sanitize(returnString);
     }
-    /*
-    public function inventory():String{
-        var s:String = "";
-        var party_id:int = 0;
-        var i:int;
+    */
+    public String inventory(){
+        String s = "";
+        int party_id = 0;
+        int i;
         if(party != null){
-            i = 0;
-            for(i;i<party.members.size();i++){
-                if(party.members[i] == this){
+            for(i=0;i<party.members.size();i++){
+                if(party.members.get(i) == this){
                     party_id = i;
                     break;
                 }
@@ -2679,65 +2677,68 @@ public class Character extends DynamicObject {
         }
         
         if (possessions.size() <= 0){
-            s = "</n> Inventory contains nothing.";
+            s = "</n>\'s Inventory contains nothing.";
         }else{
-            s = "</n> Inventory contains: ";
-            var skip_array:Array = new Array();
+            s = "</n>\'s Inventory contains: ";
+            ArrayList<Integer> skip_array = new ArrayList<>();
             for (i=0;i<possessions.size();i++){
-                skip_array.sort(Array.NUMERIC);
-                while(i > skip_array[0])skip_array = skip_array.slice(1,skip_array.length);
-                if(i == skip_array[0]){
-                    skip_array = skip_array.slice(1,skip_array.length);
-                    continue;
+
+                if(skip_array.size()>1){//TODO good addition? also what does this do?
+                    //skip_array.sort(Array.NUMERIC)
+                    Collections.sort(skip_array);//TODO correct?
+                    while(i > skip_array.get(0))skip_array.remove(0); // = skip_array.slice(1,skip_array.size())
+                    if(i == skip_array.get(0)){
+                        skip_array.remove(0); //= skip_array.slice(1,skip_array.size())
+                        continue;
+                    }
                 }
-                var item_count:int = 1;
-                var j:int = i+1;
-                for(j;j<possessions.size();j++){
-                    if(possessions[i].same_item(possessions[j])){
+                int item_count = 1;
+                //int j = i+1
+                for(int j=i+1;j<possessions.size();j++){
+                    if(possessions.get(i).sameItem(possessions.get(j))){
                         item_count++;
-                        skip_array[skip_array.length] = j;							
+                        skip_array.add(j);//skip_array[skip_array.length] = j					
                     }						
                 }
                 if(item_count > 1) s += item_count + "x";
-                if(possessions[i] is Equipment){
-                    var e:Equipment = possessions[i];
+                if(possessions.get(i) instanceof Equipment){
+                    Equipment e = (Equipment)possessions.get(i);
                     s += "<a href=\"event:equip," +Integer.toString(i) +","+party_id+",-1,-1\">" + e.getName() + "</a>, ";
-                }else if(possessions[i] is Weapon){
-                    var w:Weapon = possessions[i];
+                }else if(possessions.get(i) instanceof Weapon){
+                    Weapon w = (Weapon)possessions.get(i);
                     s += "<a href=\"event:hold," +Integer.toString(i) +","+party_id+",-1,-1\">" + w.getName() + "</a>, ";
-                }else if (possessions[i] is Item){
-                    var temp:Item = possessions[i];
-                    s += "<a href=\"event:use_item," +Integer.toString(i) +",-1,"+party_id+"\">" + temp.get_name() + "</a>, ";
+                }else if (possessions.get(i) instanceof Item){
+                    Item temp = (Item)possessions.get(i);
+                    s += "<a href=\"event:use_item," +Integer.toString(i) +",-1,"+party_id+"\">" + temp.getName() + "</a>, ";
                 }
             }
         }
         
-        if(s.charAt(s.length - 2) == ","){
-            s = s.substr(0,s.length - 2);
+        if(s.charAt(s.length() - 2) == ','){//if(s.charAt(s.length() - 2) == ","){
+            s = s.substring(0,s.length() - 2);
         }
         
         s+="<br>";
         //Need to display current equipment
-        var found:Boolean = false;
-        var equip_count:int = 0;
+        Boolean found = false;
+        int equip_count = 0;
         s+="Equipment: ";
-        i=0;
-        for(i;i<body.parts.length;i++){
-            if(body.parts[i].equip != null){
-                j = 0;
-                for(j;j<body.parts[i].equip.length;j++){
-                    var layer:String = "";
+        for(i=0;i<body.parts.size();i++){
+            if(body.parts.get(i).equip != null){
+                int j = 0;
+                for(j=0;j<body.parts.get(i).equip.size();j++){
+                    String layer = "";
                     if(j == 0){
                         layer = " - Bottom";
-                    }else if(j == body.parts[i].equip.length - 1){
+                    }else if(j == body.parts.get(i).equip.size() - 1){
                         layer = " - Top";
                     }else{
                         layer = " - Mid";
                     }
                     
-                    if(body.parts[i].equip.length == 1) layer = "";
+                    if(body.parts.get(i).equip.size() == 1) layer = "";
                     //need to be able to un-equip...
-                    s+= "<a href=\"event:unequip," + String(equip_count) +","+party_id+"\">" + body.parts[i].equip[j].get_name() +"</a>("+ body.parts[i].get_name() + layer + "), ";
+                    s+= "<a href=\"event:unequip," + Integer.toString(equip_count) +","+party_id+"\">" + body.parts.get(i).equip.get(j).getName() +"</a>("+ body.parts.get(i).getName() + layer + "), ";
                     equip_count++;
                     found = true;
                 }
@@ -2745,7 +2746,7 @@ public class Character extends DynamicObject {
         }
         
         if(found){
-            s = s.substr(0,s.length - 2);
+            s = s.substring(0,s.length() - 2);
         }else{
             s+= "Nothing!";
         }
@@ -2754,21 +2755,20 @@ public class Character extends DynamicObject {
         //Need to display weapons and other held equipment
         found = false;
         s+="Holding: ";
-        i=0;
-        var hand_hold:int = 0;
-        for(i;i<body.parts.length;i++){
-            if(body.parts[i].hold != null){
+        int hand_hold = 0;
+        for(i=0;i<body.parts.size();i++){
+            if(body.parts.get(i).hold != null){
                 found = true;
                 //need to be able to unhold...
-                if(body.parts[i].hold.get_num_hold() == 1 ){
-                    s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +"), ";
+                if(body.parts.get(i).hold.get_num_hold() == 1 ){
+                    s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts.get(i).hold.getName() +"</a>("+ body.parts.get(i).getName() +"), ";
                 }else{
                     //need to deal with weapons that get held in multiple hands.
                     if(hand_hold == 0){
-                        hand_hold = body.parts[i].hold.get_num_hold();
-                        s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts[i].hold.get_name() +"</a>("+ body.parts[i].get_name() +", ";
+                        hand_hold = body.parts.get(i).hold.get_num_hold();
+                        s+= "<a href=\"event:unhold," +Integer.toString(i) +","+party_id+"\">" + body.parts.get(i).hold.getName() +"</a>("+ body.parts.get(i).getName() +", ";
                     }else{
-                        s+= body.parts[i].get_name() + " ";
+                        s+= body.parts.get(i).getName() + " ";
                     }
                     hand_hold--;
                     if(hand_hold == 0)s+= "), ";
@@ -2777,17 +2777,16 @@ public class Character extends DynamicObject {
         }
         
         if(found){
-            s = s.substr(0,s.length - 2);
+            s = s.substring(0,s.length() - 2);
         }else{
             s+= "Nothing!";
         }
         
         s+= "<br>";
-        s+= "</n> purse contains " + get_gold() + " gold coins.";
+        s+= "</n>\'s purse contains " + get_gold() + " gold coins.";
         
         return sanitize(s, null);
     }
-    */
     public Equipment get_equip_by_count(int sought_count){
         int equip_count = 0;
         int i = 0;
@@ -2803,16 +2802,27 @@ public class Character extends DynamicObject {
         
         return null;
     }
-    /*
-    public function drop(i:int):void{
-        if(i>=possessions.size())return;
-        personality.advance_objectives(Quest.drop_action, [possessions[i]], this);
+    
+    public void drop(int item){
+        if(item>=possessions.size())return;
+        
+        /*
         for (i;i<possessions.size();i++){
-            if(i<possessions.size()-1){
-                possessions[i] = possessions[i+1];
-            }
+            if(i<possessions.size()-1) possessions[i] = possessions[i+1];
         }
         possessions.size()--;
+        */
+        if(item >= 0 && !possessions.isEmpty()){//implicitly item <possessions.size() due to return earlier
+            personality.advance_objectives(Quest.drop_action, new ArrayList<>(Arrays.asList(possessions.get(item))), this);
+            possessions.remove(item);
+        }
+    }
+    /*
+    public void drop(int item){
+        //TODO dummy out
+        if(item >= 0 && item < possessions.size()){
+            possessions.remove(item);
+        }
     }
     */
     public void drop_item(Item i){
