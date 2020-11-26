@@ -605,7 +605,7 @@ public class Consequence {//TODO get count of all below
                 }
             }
             
-            if(char_effect.get(0) != null){
+            if(!char_effect.isEmpty() && char_effect.get(0) != null){
                 Party clone_pty = new Party();
                 for(i=0;i<char_effect.size();i++){
                     if(start_combat && c2 != null && c2.location != null){

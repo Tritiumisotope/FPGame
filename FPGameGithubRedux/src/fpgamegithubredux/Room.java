@@ -55,22 +55,6 @@ public class Room extends StaticObject{
         exit_actions = new ArrayList<>();
         description = d;
 
-        CharAction tempAction = new CharAction();
-        tempAction.name = "strange";
-        tempAction.dialogue = "You </c0> around.";
-
-        Challenge tempChal = new Challenge();
-        tempChal.setText("look");
-
-        Consequence tempConseq = new Consequence();
-        tempConseq.addConsequence(0, 0.0, "It looks like someone has completely disinfected everything in this room. The smell is horrible. ", 0);
-        tempConseq.addConsequence(0, 0.0, "Worse still, you notice everything is giving off its own light. ", 5);
-        tempConseq.addConsequence(0, 0.0, "You decide the ground looks nice. ", -1);
-
-        tempAction.addChallenge(tempChal, tempConseq);
-
-        addAction(tempAction);
-
         player_discovered = false;
 
         show_area_effects = false;
@@ -504,7 +488,7 @@ public class Room extends StaticObject{
 
     public CharAction getAction(int actionID){//rest commented in
         if(actionID>=0 && actionID < actions.size()){
-            action_current_num_times.set(actionID, action_current_num_times.get(actionID+1));
+            action_current_num_times.set(actionID, action_current_num_times.get(actionID)+1);
             return actions.get(actionID);
         }else if(actionID>=0){
             return exit_actions.get(actionID - actions.size());

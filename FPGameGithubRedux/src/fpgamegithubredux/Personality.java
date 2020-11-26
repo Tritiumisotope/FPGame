@@ -264,13 +264,14 @@ public class Personality {
 			//need to remove duplicate topics...
 
 			for(i=0;i<ret_array.size();i++){
-				
-				for(int k=i + 1;k<ret_array.size();k++){
-					if(ret_array.get(i).get_topic_name().equals(ret_array.get(k).get_topic_name())){
-                        //ret_array = ret_array.slice(0, k).concat(ret_array.slice(k+1, ret_array.length));
-                        ret_array.remove(k);
-                        //TODO verify!!!
-						k--;
+				if(ret_array.get(i) != null){
+					for(int k=i+1;k<ret_array.size();k++){
+						if(ret_array.get(k) != null && ret_array.get(i).get_topic_name().equals(ret_array.get(k).get_topic_name())){
+							//ret_array = ret_array.slice(0, k).concat(ret_array.slice(k+1, ret_array.length));
+							ret_array.remove(k);
+							//TODO verify!!!
+							k--;
+						}
 					}
 				}
 			}
@@ -362,7 +363,7 @@ public class Personality {
 					if(step > -1 && ct.get_mention()){
 						int j = 0;
 						for(j=0;j<init_topics.size();j++){
-							if(init_topics.get(j).get_topic_name().equals(ct.get_topic_name())){
+							if(init_topics.get(j) != null && init_topics.get(j).get_topic_name().equals(ct.get_topic_name())){
 								//replaced by below//mention_topics[mention_topics.length] = "<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n"
 								mention_topics.add("<font color='#0000FF'><a href=\"event:talk,"+c.location.getContentID(c_self)+","+i+","+step+",-1\">Listen</a></font>\n");
 								//replaced by below//topic_values[topic_values.size()] = determine_action_consequence(ct.actions.get(step), c_self, c)
@@ -399,7 +400,7 @@ public class Personality {
 					//higher rel_status should make them assume the character already knows things more often
 				if(!know_something_you_dont){
 					for(i=0;i<mention_topics.size();i++){
-						if(topic_values.get(i) > topic_values.get(0)){
+						if(i < topic_values.size() && topic_values.get(i) > topic_values.get(0)){
 							temp_val = topic_values.get(i);
 							temp_string = mention_topics.get(i);
 							topic_values.set(i, topic_values.get(0));//topic_values[i] = topic_values[0]
@@ -416,7 +417,7 @@ public class Personality {
 						}
 					}
 				}else{
-					temp_string = mention_topics.get(i) + "\n";
+					temp_string = mention_topics.get(0) + "\n";
 				}
 			}
 			
@@ -844,7 +845,7 @@ public class Personality {
 						int j = 0;
 						for(j=0;j<temp_con.conseq.size();j++){
 							Character  temp_target= target;
-							if(temp_con.consequenceTarget.get(i) || target == null){
+							if(temp_con.consequenceTarget.get(j) || target == null){
 								temp_target = self;
 							}
 							Number rel_status = check_relationship(temp_target, self);

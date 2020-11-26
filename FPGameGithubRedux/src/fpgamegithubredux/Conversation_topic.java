@@ -137,7 +137,7 @@ public class Conversation_topic {
         int i = 0;
         ArrayList<Conversation_topic> init_topics = c_init.personality.get_topics(c_init);
         for(i=0;i<init_topics.size();i++){
-            if(init_topics.get(i) == this || (init_topics.get(i).dialog_name.equals(this.dialog_name) && init_topics.get(i).actions.size() == this.actions.size())){
+            if(init_topics.get(i) != null && (init_topics.get(i) == this || (init_topics.get(i).dialog_name.equals(this.dialog_name) && init_topics.get(i).actions.size() == this.actions.size()))){
                 initiator_has_topic = true;
                 break;
             }
@@ -152,7 +152,7 @@ public class Conversation_topic {
             Boolean self_has_topic = false;
             ArrayList<Conversation_topic> self_topics = c_self.personality.get_topics(c_self);
             for(i=0;i<self_topics.size();i++){
-                if(self_topics.get(i) == this || (self_topics.get(i).dialog_name.equals(this.dialog_name) && self_topics.get(i).actions.size() == this.actions.size())){
+                if(self_topics.get(i) != null && (self_topics.get(i) == this || (self_topics.get(i).dialog_name.equals(this.dialog_name) && self_topics.get(i).actions.size() == this.actions.size()))){
                     self_has_topic = true;
                     break;
                 }
