@@ -279,7 +279,6 @@ public String getName(){
             int ps = stat_description.get(i).check_combat_status(c, this);
             if(ret > ps)ret = ps;
         }
-        
         return ret;
     }
     

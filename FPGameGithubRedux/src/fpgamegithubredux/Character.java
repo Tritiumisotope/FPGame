@@ -1350,7 +1350,11 @@ public class Character extends DynamicObject {
         
         if(equip_state == 0){
             get_combat_status();//will remove dead parts, if there are any
-            if(!body.alive(this) && location != null)ret += die();
+            if(!body.alive(this) && location != null){
+                LOGGER.info("Player died, body alive?: " + body.alive(this) + 
+                " Location not null?: " + (location != null));
+                ret += die();
+            }
             ret += re_equip(equip_state);
             ret += body.check_state(this);
         }
@@ -1463,7 +1467,11 @@ public class Character extends DynamicObject {
         
         if(equip_state == 0){
             get_combat_status();//will remove dead parts, if there are any
-            if(!body.alive(this) && location != null && !char_only)s += die();
+            if(!body.alive(this) && location != null && !char_only){
+                LOGGER.info("Player died, body alive?: " + body.alive(this) + 
+                " Location not null?: " + (location!= null)+ " not char_only?: " + !char_only);
+                s += die();
+            }
             s += re_equip(equip_state);
             s += body.check_state(this);
         }
@@ -2110,7 +2118,7 @@ public class Character extends DynamicObject {
     
     public String set_xp(int i){//was uint
         String s = "";
-        s += getName() + " gains " + i + " experience points.\n";
+        s += getName() + " gains " + i + " experience points.<br>";
         xp += i;
         while(xp >= nxt_lvl_xp){
             s += level_up();

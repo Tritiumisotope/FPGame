@@ -151,7 +151,7 @@ public class Body {
         Boolean ret = true;
         
         if(parts.size() <= 0 && c.location != null){
-            if(SUPERDEBUG)LOGGER.info("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
+            LOGGER.info("(Body)body has no parts... can't tell if dead, or being created, but the location isn't null, so assuming dead");
             ret = false;
         }
         int i = 0;
@@ -1069,8 +1069,7 @@ public class Body {
                 for(k=0;k<temp_array.size();k++){
                     //should check to see if the attack is already present in the return...
                     if(ret.indexOf(temp_array.get(k).getName()) < 0){
-                        //ret += "<a href=\"event:combat,"+ c.location.getContentID(c) +","+ String(start_id) +"," + c.location.getContentID(target) +"\">" + temp_array.get(k).get_name() + "</a>\n";//<font color='#0000FF'></font>
-                        //TODO
+                        ret += "<a href=\"event:combat,"+ c.location.getContentID(c) +","+ Integer.toString(start_id) +"," + c.location.getContentID(target) +"\">" + temp_array.get(k).getName() + "</a>\n";//<font color='#0000FF'></font>
                     }
                     
                     start_id++;

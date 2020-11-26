@@ -249,14 +249,14 @@ public class Stat {
 			int i = 0;
 			for(i=0;i<check_condition.size();i++){
 				if(check_combat.get(i)){
-					int compare = -1;
-					int temp_stat_val = (int)get_stat_value(c);
+					double compare = -1;
+					double temp_stat_val = get_stat_value(c);
 					if(check_total.get(i)) temp_stat_val = c.get_stat(statID).intValue();
 					if(check_against.get(i) < 0){
-						compare = -check_against.get(i) - 1;
+						compare = -check_against.get(i) - 1.0;
 					}else{
-						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).intValue();
-						if(compare < 0 || check_total.get(i)) compare = c.get_stat(check_against.get(i)).intValue();
+						if(bp != null && !check_total.get(i))compare = bp.get_stat(c, check_against.get(i)).doubleValue();
+						if(compare < 0 || check_total.get(i)) compare = c.get_stat(check_against.get(i)).doubleValue();
 					}
 					
 					if(check_condition.get(i).equals(">")){
@@ -851,16 +851,16 @@ public class Stat {
     private void min_max_check(Character c, BodyPart bp){//default null
         Boolean flag = false;
         if(max_stat_id != -1){				
-            int max;//was number
+            double max;//was number
             if(max_stat_id < 0){
-                max = -max_stat_id - 2;
+                max = -max_stat_id - 2.0;
                 if(get_stat_value(c, 0,false,true) > max) flag = true;
             }else if(bp == null){
-                max = (int)c.get_stat(max_stat_id);
-                if(c.get_stat(statID, 0,0,-1,false).intValue() > max) flag = true;
+                max = c.get_stat(max_stat_id).doubleValue();
+                if(c.get_stat(statID, 0,0,-1,false).doubleValue() > max) flag = true;
             }else{
-                if(bp.get_stat(c, max_stat_id).intValue() > -1){
-                    max = bp.get_stat(c, max_stat_id).intValue();
+                if(bp.get_stat(c, max_stat_id).doubleValue() > -1){
+                    max = bp.get_stat(c, max_stat_id).doubleValue();
                     if(get_stat_value(c, 0,false,true) > max) flag = true;
                 }else{
                     min_max_check(c);
@@ -871,16 +871,16 @@ public class Stat {
         }
         if(min_stat_id != -1){ 
             flag = false;
-            int min;
+            double min;
             if(min_stat_id < 0){
-                min = -min_stat_id - 2;
+                min = -min_stat_id - 2.0;
                 if(get_stat_value(c, 0,false,true) < min) flag = true;
             }else if(bp == null){
-                min = c.get_stat(min_stat_id).intValue();
-                if(c.get_stat(statID, 0,0,-1,false).intValue() < min) flag = true;
+                min = c.get_stat(min_stat_id).doubleValue();
+                if(c.get_stat(statID, 0,0,-1,false).doubleValue() < min) flag = true;
             }else{
-                if(bp.get_stat(c, min_stat_id).intValue() > -1){
-                    min = bp.get_stat(c, min_stat_id).intValue();
+                if(bp.get_stat(c, min_stat_id).doubleValue() > -1){
+                    min = bp.get_stat(c, min_stat_id).doubleValue();
                     if(get_stat_value(c, 0,false,true) < min) flag = true;
                 }else{
                     min_max_check(c);
