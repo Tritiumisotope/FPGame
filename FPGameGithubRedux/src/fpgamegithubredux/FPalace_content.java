@@ -486,7 +486,6 @@ public class FPalace_content {
         last_room.new_exit(tower_to_heaven, "Up");
         tower_to_heaven.new_exit(last_room, "Down");
         
-        loop_int = 0;
         last_room = tower_to_intro;
         
         for (loop_int=0;loop_int<10;loop_int++){
@@ -608,7 +607,7 @@ public class FPalace_content {
         c.setText("door");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(room, /*tower_to_intro*/null);//,"Door");
+        rcon.add_room_effect(room, /*tower_to_intro*/null);//,"Door")
         rcon.set_join_area(23);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -632,7 +631,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_library, /*library_to_into*/null);//,"Door");
+        rcon.add_room_effect(intro_to_library, /*library_to_into*/null);//,"Door")
         rcon.set_join_area(1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -657,7 +656,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_images, /*images_to_intro*/null);//,"Door");
+        rcon.add_room_effect(intro_to_images, /*images_to_intro*/null);//,"Door")
         rcon.set_join_area(3);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -682,7 +681,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_writers, /*writers_to_into*/null);//,"Door");
+        rcon.add_room_effect(intro_to_writers, /*writers_to_into*/null);//,"Door")
         rcon.set_join_area(4);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -707,7 +706,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_artist, /*artist_to_intro*/null);//,"Door");
+        rcon.add_room_effect(intro_to_artist, /*artist_to_intro*/null);//,"Door")
         rcon.set_join_area(5);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -1080,7 +1079,7 @@ public class FPalace_content {
         a2.set_dialogue("As you pass through the door you hear a </c0>. ");
 
         c2 = new Challenge();
-        c2.set_attack_stat(-1,1);//FPalaceHelper.dex_id);
+        c2.set_attack_stat(-1,1);//FPalaceHelper.dex_id) original comment
         c2.set_defense_stat(-1, 27);
         c2.setVariability(4);
         c2.setText("chuckle");
@@ -1502,7 +1501,7 @@ public class FPalace_content {
         rcon.addConsequence(FPalaceHelper.curr_hp_id,0, "\"Done already...\" the voice says disapointedly, and you feel a set of hands begin to work at the bindings on your limbs. You're surprised when you finally catch a glimpse of your torturer and behold a tall blonde in a corset with breasts ready to burst free. She smiles at you disapointedly and tosses some coins your way. \"You look like you need a drink...\" she says, a strange tinge of concern on her voice. \"Let me show you the way to the bar.\"\n It isn't far, and you find yourself being assailed by flashing lights as you enter. The blonde disappears almost immediately back the way you came, a saidstic grin on her face. ",-1);
         rcon.add_room_effect(trans_stripper);
         rcon.add_change_effect(FPalace_classes.cclass_dominatrix()); 
-        //itemcon.add_item_reward(FPalace_items.gold(2),-1);
+        //itemcon.add_item_reward(FPalace_items.gold(2),-1) original comment
         
         a2.addChallenge(c2,rcon);
         
@@ -1668,7 +1667,7 @@ public class FPalace_content {
         c.setText("tugged on");
         RoomConsequence rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(library_to_warehouse, /*library_to_into*/null);//,"Door");
+        rcon.add_room_effect(library_to_warehouse, /*library_to_into*/null);//,"Door") original comments, all of these
         rcon.set_join_area(37);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You tug on the book, and a door opens. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You tug on the book, and a door closes. ",0);
@@ -3707,7 +3706,7 @@ public class FPalace_content {
         Template_Room template_filler = new Template_Room("You're standing in a wasteland of white, no trail or life to be seen. ");
         template_filler.add_item(FPalace_items.snowy_flower(), 0.15);
         template_filler.add_item(FPalace_items.iceberg_lettuce(), 0.1);
-        //template_filler.set_map_room_colour(0x00FF00);
+        template_filler.set_map_room_colour(0x00FF00);
         template_filler.set_discovery_difficulty(15);
         template_filler.set_sight_difficulty(20);
         template_filler.set_locate_difficulty(15);
@@ -4613,7 +4612,7 @@ public class FPalace_content {
         a2.set_dialogue("As you gaze into the circle, you lose control of your own body. A large well endowed demon appears, a </c0> on her lips, one hand on one of her lucious breasts, the other stroking a cock that would have been more at home on a horse. ");
 
         Challenge c2 = new Challenge();
-        c2.set_attack_stat(-1,1);//FPalaceHelper.wis_id);
+        c2.set_attack_stat(-1,1);//FPalaceHelper.wis_id) original comment
         c2.set_defense_stat(-1, 27);
         c2.setVariability(0);
         c2.setText("smile");
@@ -5112,7 +5111,7 @@ public class FPalace_content {
         c.setVariability(0);
         c.setText("click");
         rcon = new RoomConsequence();
-        rcon.add_room_effect(temp_room, tower_ground_floor);//,"Door");
+        rcon.add_room_effect(temp_room, tower_ground_floor);//,"Door") original comment
         rcon.set_always_change();
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -6394,7 +6393,7 @@ public class FPalace_content {
         c.setVariability(0);
         c.setText("click");
         rcon = new RoomConsequence();
-        rcon.add_room_effect(temp_room, safety_deposit);//,"Door");
+        rcon.add_room_effect(temp_room, safety_deposit);//,"Door") original comment
         rcon.set_always_change();
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -6619,7 +6618,7 @@ public class FPalace_content {
         c.setVariability(0);
         c.setText("click");
         rcon = new RoomConsequence();
-        rcon.add_room_effect(temp_room, witch_entrance);//,"Door");
+        rcon.add_room_effect(temp_room, witch_entrance);//,"Door") original comment
         rcon.set_always_change();
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -6803,7 +6802,7 @@ public class FPalace_content {
         c.setVariability(0);
         c.setText("click");
         rcon = new RoomConsequence();
-        rcon.add_room_effect(alchemy_room, hidden_alchemy_room);//,"Door");
+        rcon.add_room_effect(alchemy_room, hidden_alchemy_room);//,"Door") original comment
         rcon.set_always_change();
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -6992,13 +6991,13 @@ public class FPalace_content {
         
         tower.set_filler_template(template_filler, Area.single_connected_filler);
         
-        Template_Room down_template = new Template_Room("You're standing in a well lit hall seemingly made of light. A staircase made of clouds looks to lead to another level. ");
-        down_template.set_discovery_difficulty(15);
-        down_template.add_container(cont,0.10);
-        down_template.set_sight_difficulty(20);
-        down_template.set_locate_difficulty(15);
+        Template_Room downTemplate = new Template_Room("You're standing in a well lit hall seemingly made of light. A staircase made of clouds looks to lead to another level. ");
+        downTemplate.set_discovery_difficulty(15);
+        downTemplate.add_container(cont,0.10);
+        downTemplate.set_sight_difficulty(20);
+        downTemplate.set_locate_difficulty(15);
         
-        tower.set_dynamicBuildTemplate(down_template);						
+        tower.set_dynamicBuildTemplate(downTemplate);						
         
         return tower;
     }

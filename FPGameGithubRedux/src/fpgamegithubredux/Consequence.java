@@ -425,7 +425,7 @@ public class Consequence {//TODO get count of all below
                 
                 if(xp_reward/10 > 0)c.set_xp(xp_reward/10);
                 
-                amt_value = amt_value.doubleValue()*-1;//amt_value *= -1;
+                amt_value = amt_value.doubleValue()*-1;//amt_value *= -1
                 
                 if (showEffects.get(i) == 0){
                     if (amt_by_roll  && conseq.get(i) == Consequence.amt_from_roll_const){
@@ -505,11 +505,11 @@ public class Consequence {//TODO get count of all below
                 
                 if(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)) != null){
                     if(!char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).covered_by.isEmpty()){//TODO not first instance/not get(0) after part_by_id?
-                        //temp_array = temp_array.concat(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).covered_by);
+                        //temp_array = temp_array.concat(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).covered_by)
                         temp_array.addAll(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).covered_by);
                     }
                     if(!char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).get_equip().isEmpty()){//TODO not first instance/not get(0) after part_by_id?
-                        //temp_array = temp_array.concat(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0)get_equip());
+                        //temp_array = temp_array.concat(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0)get_equip())
                         temp_array.addAll(char_to_unequip.body.get_part_by_id(un_equip_slots.get(i)).get(0).get_equip());
                     }
                     
@@ -517,14 +517,13 @@ public class Consequence {//TODO get count of all below
                     int j = 0;
                     for(j=0;j<temp_array.size();j++){
                         Boolean item_found = false;
-                        int k = j + 1;
-                        for(k=j+1;k<temp_array.size();k++){
+                        for(int k=j+1;k<temp_array.size();k++){
                             if(temp_array.get(j) == temp_array.get(k)){
                                 item_found = true;
                                 break;
                             }
                         }
-                        if(item_found)temp_array.set(j,null);//temp_array[j] = null;
+                        if(item_found)temp_array.set(j,null);//temp_array[j] = null
                         //TODO recheck all logic
                     }
                     
@@ -607,7 +606,6 @@ public class Consequence {//TODO get count of all below
             }
             
             if(char_effect.get(0) != null){
-                i = 0;
                 Party clone_pty = new Party();
                 for(i=0;i<char_effect.size();i++){
                     if(start_combat && c2 != null && c2.location != null){

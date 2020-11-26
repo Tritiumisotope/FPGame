@@ -1,6 +1,7 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FPalace_skills {
     	
@@ -175,20 +176,16 @@ crafts..............   17    -         | | | water.........   54  178
     }
     
     public static ArrayList<Skill> get_skill_list(){
-        if (skill_list == null){ 
-            skill_list = new ArrayList<Skill>();
-            /*Skill[] skillArrayDummy = {skill_adventure(), skill_perception(),
-             skill_map_sight(), skill_map_making(), skill_map_reading(), skill_initiative(), skill_fortitude(),
-              skill_swimming(), skill_fight(), skill_melee(), skill_one_handed(), skill_two_handed(), skill_unarmed(), 
-              skill_striking(), skill_grappling(), skill_ranged(), skill_defence(), skill_dodging(), skill_parrying(), 
-              skill_blocking(), skill_toughness(), skill_covert(), skill_theft(), skill_magic(), skill_mental_magic(), 
-              skill_physical_magic(), skill_spiritual_magic(), skill_concentration(), skill_knowledge(), skill_valuing(), 
-              skill_weights(), skill_crafts(), skill_alchemy(), skill_item_alchemy_effects(), skill_items(), skill_item_effects(),
-               skill_sewing(), skill_smithing(), skill_weapon_effects(), skill_equipment_effects(), skill_people(),
-               skill_conversing(),skill_flirting(),skill_intimidating(),skill_sex(),skill_oral(),skill_trade()};
-               for(Skill sk : skillArrayDummy){
-                   skill_list.add(sk);
-               }*/
+        if (skill_list == null){
+            skill_list = new ArrayList<>(Arrays.asList(skill_adventure(), skill_perception(),
+            skill_map_sight(), skill_map_making(), skill_map_reading(), skill_initiative(), skill_fortitude(),
+             skill_swimming(), skill_fight(), skill_melee(), skill_one_handed(), skill_two_handed(), skill_unarmed(), 
+             skill_striking(), skill_grappling(), skill_ranged(), skill_defence(), skill_dodging(), skill_parrying(), 
+             skill_blocking(), skill_toughness(), skill_covert(), skill_theft(), skill_magic(), skill_mental_magic(), 
+             skill_physical_magic(), skill_spiritual_magic(), skill_concentration(), skill_knowledge(), skill_valuing(), 
+             skill_weights(), skill_crafts(), skill_alchemy(), skill_item_alchemy_effects(), skill_items(), skill_item_effects(),
+              skill_sewing(), skill_smithing(), skill_weapon_effects(), skill_equipment_effects(), skill_people(),
+              skill_conversing(),skill_flirting(),skill_intimidating(),skill_sex(),skill_oral(),skill_trade()));
             }
         return skill_list;
     }
@@ -223,7 +220,6 @@ crafts..............   17    -         | | | water.........   54  178
             if(get_skill_parent(child_array.get(i)) == skill_id){///[]
                 child_array = remove_skill_children(child_array.get(i), child_array);//[]
                 child_array.remove(i);//child_array = child_array.slice(0,i).concat(child_array.slice(i+1, child_array.length))
-                //TODO verify slice
             }else{
                 i++;
             }
@@ -400,7 +396,7 @@ crafts..............   17    -         | | | water.........   54  178
                 child_array.add(skill_array.get(i).get_id());//child_array[child_array.length] = skill_array[i].get_id()
             }
             
-            if(child_array.size() > 0){
+            if(!child_array.isEmpty()){//size() > 0
                 if(rc){
                     if(has_children(skill_array.get(i).get_id())){
                         s_name = "<tr><a href=\"event:show_skills,"+char_id+",-1,"+ child_array +"\"><tc>" + s_name + "[-]</tc></a>";

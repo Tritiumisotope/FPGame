@@ -1,5 +1,6 @@
 package fpgamegithubredux;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Equipment extends Item {
@@ -91,15 +92,13 @@ public class Equipment extends Item {
 				if(upgrade_slot_ids.get(i) == ui.upgrade_type_id && upgrade_items.get(i)== null){
 					ret += "</n> attaches the " + ui.getName() + " to the " + getName()+". \n";
 					upgrade_items.set(i,ui);
-					//c.drop_item(ui);
-					//TODO
+					c.drop_item(ui);
 					int effect_count = 0;
 					for(effect_count=0;effect_count<ui.effects.size();effect_count++){
 						if(ui.effects.get(effect_count) != null){
 							add_effect(effect_count, ui.effects.get(effect_count));
 						}
 					}
-					effect_count = 0;
 					for(effect_count=0;effect_count<ui.skill_id.size();effect_count++){
 						set_skill_bonus(ui.skill_id.get(effect_count),ui.skill_bonus.get(effect_count));
 					}
@@ -273,7 +272,6 @@ public class Equipment extends Item {
 			}
 			if(!effects_only){
 				if(statActionAdd.size() > 0){
-					i = 0;
 					for(i=0;i<Math.ceil(statActionAdd.size());i++){
 						c.remove_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
@@ -317,21 +315,18 @@ public class Equipment extends Item {
 					}
 				}
 				if(statActionAdd.size() > 0){
-					i = 0;
 					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
 						c.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
 				}
 			}
-			/*TODO
 			for(i=0;i<effects.size();i++){
 				if(effects.get(i) != null)s += c.apply_equip_affect_by_id(i, effects.get(i));
 			}
-			*//*TODO
+			
 			for(i=0;i<skill_id.size();i++){
 				if(skill_bonus.get(i) != 0)s += c.set_skill_bonus(skill_id.get(i), skill_bonus.get(i));
 			}
-			*/
 			return s;
 		}
 		
@@ -358,10 +353,10 @@ public class Equipment extends Item {
 			int j = 0;
 			for (j=0;j<bp.stat_id.size();j++){
 				if(bp.stat_description.get(j) != null){
-					/*TODO
-					s = s.replace("</" + bp.stat_id[j] + ">",String(bp.get_stat(c, bp.stat_id[j]).toFixed(bp.stat_description[j].show_decimals)));
-					s = s.replace("<sd/" + bp.stat_id[j] + ">",bp.stat_description[j].get_short_description(bp.get_stat(c, bp.stat_id[j])));
-					*/
+					//s = s.replace("</" + bp.stat_id.get(j) + ">",String(bp.get_stat(c, bp.stat_id.get(j)).toFixed(bp.stat_description.get(j).show_decimals)))
+					DecimalFormat decimalFormat = new DecimalFormat("0.##");//show_decimals was ALWAYS 2, anyway
+					s = s.replace("</" + bp.stat_id.get(j) + ">",(decimalFormat.format(bp.get_stat(c, bp.stat_id.get(j)).doubleValue())));
+					s = s.replace("<sd/" + bp.stat_id.get(j) + ">",bp.stat_description.get(j).get_short_description(bp.get_stat(c, bp.stat_id.get(j)).doubleValue()));
 				}
 			}
 			

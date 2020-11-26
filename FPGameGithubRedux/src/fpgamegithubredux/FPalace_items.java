@@ -910,7 +910,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1, 0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            ////c2.amt_by_roll_flag({"r", "/", 100.0});
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.penis_length_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -944,7 +944,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(5);
             Consequence c2 = new Consequence();
-            ////c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.penis_girth_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -978,7 +978,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(5);
             Consequence c2 = new Consequence();
-            ////c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.balls_size_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1012,7 +1012,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(15);
             Consequence c2 = new Consequence();
-            ////c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.bust_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1046,7 +1046,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(15);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 1000.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 1000.0)));
             c2.addConsequence(-FPalaceHelper.erection_ratio_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1080,7 +1080,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10.0)));
             c2.addConsequence(-FPalaceHelper.cum_volume_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1114,7 +1114,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.breast_size_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1146,7 +1146,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10.0)));
             c2.addConsequence(-FPalaceHelper.hips_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1178,7 +1178,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.nipple_size_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1210,7 +1210,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10.0)));
             c2.addConsequence(-FPalaceHelper.hair_length_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1242,7 +1242,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(20);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10.0)));
             c2.addConsequence(-FPalaceHelper.hair_colour_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1274,7 +1274,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(20);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.clit_length,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1306,7 +1306,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(40);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.waist_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1338,7 +1338,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(20);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10.0)));
             c2.addConsequence(-FPalaceHelper.eye_colour_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1369,7 +1369,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.anal_width_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1400,7 +1400,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 100.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 100.0)));
             c2.addConsequence(-FPalaceHelper.vaginal_width_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1431,7 +1431,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 1000.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 1000.0)));
             c2.addConsequence(-FPalaceHelper.semen_fertility_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -1462,7 +1462,7 @@ public class FPalace_items {
             challenge.set_defense_stat(-1,0);
             challenge.setVariability(10);
             Consequence c2 = new Consequence();
-            //c2.amt_by_roll_flag(["r", "/", 10000.0]);
+            c2.amt_by_roll_flag(new ArrayList<>(Arrays.asList("r", "/", 10000.0)));
             c2.addConsequence(-FPalaceHelper.egg_fertility_id,Consequence.amt_from_roll_const, "", 0);
             
             for(int i = 0;i<FPGameGithub.T1_WEEK;i+=FPGameGithub.T1_HOUR)tf.set_tick_consequence(i,c2,challenge);
@@ -5427,7 +5427,7 @@ public class FPalace_items {
         a.set_dialogue("",0);
         
         Challenge tef_chall = new Challenge();
-        tef_chall.set_attack_equip_slot_check(FPalaceHelper.cock_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.penis_length_id);
+        tef_chall.set_attack_equip_slot_check(FPalaceHelper.cock_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.penis_length_id) original comment
         tef_chall.set_defense_stat(-1,1);
         tef_chall.setVariability(0);
         
@@ -5456,7 +5456,7 @@ public class FPalace_items {
         a.set_dialogue("",0);
         
         tef_chall = new Challenge();
-        tef_chall.set_attack_equip_slot_check(FPalaceHelper.balls_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.balls_size_id);
+        tef_chall.set_attack_equip_slot_check(FPalaceHelper.balls_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.balls_size_id) original comment
         tef_chall.set_defense_stat(-1,1);
         tef_chall.setVariability(0);
         
@@ -5485,7 +5485,7 @@ public class FPalace_items {
         a.set_dialogue("",0);
         
         tef_chall = new Challenge();
-        tef_chall.set_attack_equip_slot_check(FPalaceHelper.breasts_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.breast_size_id);
+        tef_chall.set_attack_equip_slot_check(FPalaceHelper.breasts_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.breast_size_id) original comment
         tef_chall.set_defense_stat(-1,1);
         tef_chall.setVariability(0);
         
@@ -5514,7 +5514,7 @@ public class FPalace_items {
         a.set_dialogue("",0);
         
         tef_chall = new Challenge();
-        tef_chall.set_attack_equip_slot_check(FPalaceHelper.vag_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.vaginal_depth_id);
+        tef_chall.set_attack_equip_slot_check(FPalaceHelper.vag_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.vaginal_depth_id) original comment
         tef_chall.set_defense_stat(-1,1);
         tef_chall.setVariability(0);
         
@@ -5543,7 +5543,7 @@ public class FPalace_items {
         a.set_dialogue("",0);
         
         tef_chall = new Challenge();
-        tef_chall.set_attack_equip_slot_check(FPalaceHelper.clit_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.clit_length);
+        tef_chall.set_attack_equip_slot_check(FPalaceHelper.clit_slot,true);//tef_chall.set_attack_stat(FPalaceHelper.clit_length) original comment
         tef_chall.set_defense_stat(-1,1);
         tef_chall.setVariability(0);
         
@@ -6123,7 +6123,7 @@ public class FPalace_items {
         equip.setImageID(FPalaceHelper.unknown_img);
         equip.set_equip_condition(FPalaceHelper.waist_id, 40, 20);
         //equip.set_equip_condition(FPalaceHelper.balls_size_id, 2.5);
-        //TODO why double?
+        //TODO why double? original set_equip_condition took EXCLUSIVELY ints! changed to just 2 below
         equip.set_equip_condition(FPalaceHelper.balls_size_id, 2);
         equip.new_equip_slot(FPalaceHelper.hips_slot,1);
 

@@ -18,7 +18,7 @@ public class FPalace_npcs {
         Character creature= base_herm(FPalace_races.race_human());
         creature.set_name("Vivian");
         creature.set_surname("Armstrong");
-        //creature.set_move();			
+        //creature.set_move() Originally commented			
         creature.set_character_class(FPalace_classes.cclass_gene_splice());
         creature.set_xp(800);
         
@@ -44,12 +44,12 @@ public class FPalace_npcs {
         creature.personality.new_allegiance(FPalaceHelper.get_amazon_mob(), creature);	
         creature.personality.set_job(FPalace_classes.job_expedition_leader(), creature);
         
-        /*
+        /*originally commented
         LOGGER.info("(FPalace_npcs.FPalace_guardian)");
         LOGGER.info(creature.statistics(creature));
         LOGGER.info(creature.appearance(1));
         */
-        //creature.char_sprite_id = FPalaceHelper.test_img;
+        //creature.char_sprite_id = FPalaceHelper.test_img
         
         creature.reset_stats();
         creature.apply_affect_by_id(FPalaceHelper.curr_hp_id, creature.get_stat(FPalaceHelper.max_hp_id),0,null,Body.change_stats_total);
@@ -103,7 +103,7 @@ public class FPalace_npcs {
         creature.personality.determine_orient(creature.sex);
         
         creature.set_name("Legdig");
-        //creature.set_move();			
+        //creature.set_move() originally commented		
         creature.set_character_class(FPalace_classes.cclass_fleshstealer());
         creature.set_xp(400);
         
@@ -138,7 +138,7 @@ public class FPalace_npcs {
         creature.skills.set_skill_value(creature, FPalace_skills.defence_id, 5);
         creature.skills.set_skill_value(creature, FPalace_skills.item_effects_id, 5);
         
-        //creature.char_sprite_id = FPalaceHelper.test_img;
+        //creature.char_sprite_id = FPalaceHelper.test_img
         
         creature.reset_stats();
         creature.apply_affect_by_id(FPalaceHelper.curr_hp_id, creature.get_stat(FPalaceHelper.max_hp_id),0,null,Body.change_stats_total);
@@ -8920,13 +8920,13 @@ public class FPalace_npcs {
             creature.apply_affect_by_id(FPalaceHelper.curr_hp_id, creature.get_stat(FPalaceHelper.max_hp_id),0,null,Body.change_stats_total);
             creature.apply_affect_by_id(FPalaceHelper.curr_mp_id, creature.get_stat(FPalaceHelper.max_mp_id),0,null,Body.change_stats_total);
             creature.apply_affect_by_id(FPalaceHelper.curr_fatigue_id, creature.get_stat(FPalaceHelper.max_fatigue_id),0,null,Body.change_stats_total);
-            /*
+            /*original comment
             LOGGER.info("(FPalace_npcs.polar_bear)");
             LOGGER.info(creature.statistics(creature));
             LOGGER.info(creature.appearance(1));
             */
             template.set_char_to_clone(creature);
-            /*
+            /*original comment
             template.set_stat_jiggle(FPalaceHelper.str_id,7,13);
             template.set_stat_jiggle(FPalaceHelper.dex_id,7,13);
             template.set_stat_jiggle(FPalaceHelper.con_id,7,13);

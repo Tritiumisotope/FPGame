@@ -2015,7 +2015,7 @@ public class FPalace_topics {
 			challenge.setVariability(20);
 			challenge.setText("Will you join my quest?");
 			consequence = new Consequence();
-			//consequence.join_party();
+			consequence.join_party();
 			//TODO
 			consequence.addConsequence(0,0, "</n2> moves closer and touches your arm as </pronoun2> wanders by, smiling in agreement to your proposition. </pronoun2> takes up position following you.",0);
 			consequence.addConsequence(0,0, "</n2> has somehow taken affront to your request and turns away.",-1);
@@ -2066,8 +2066,7 @@ public class FPalace_topics {
 			challenge.setVariability(0);
 			challenge.setText("Will you leave my party?");
 			consequence = new Consequence();
-			//consequence.leave_party();
-			//TODO
+			consequence.leave_party();
 			consequence.addConsequence(0,0, "</n2> moves closer and touches your arm as </pronoun2> agrees. </pronoun2> stops following you.",0);
 			a.addChallenge(challenge,consequence);
 			
@@ -2909,7 +2908,7 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
 
 			return ct;			
 		}
@@ -2989,7 +2988,7 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, Personality.like)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, Personality.like)),false, Conversation_topic.being_told_topic);
 
 			return ct;			
 		}
@@ -3085,7 +3084,7 @@ public class FPalace_topics {
 			
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
             
 			return ct;			
 		}
@@ -3152,7 +3151,7 @@ public class FPalace_topics {
 			iconsequence.add_item_reward(temp_item,0,false,false);
 			a.addChallenge(challenge,iconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
             
 			return ct;
 		}
@@ -3197,7 +3196,7 @@ public class FPalace_topics {
 	
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
     
 			return ct;			
 		}
@@ -3406,7 +3405,7 @@ public class FPalace_topics {
 			qconsequence.addConsequence(FPalaceHelper.curr_hp_id,0, "The Hermit complains about how hard it is to find ingredients. ",-1);
 			a.addChallenge(challenge,qconsequence);
 			
-			ct.add_action(a, new ArrayList<Integer>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
+			ct.add_action(a, new ArrayList<>(Arrays.asList(FPalaceHelper.int_id, Character.relations_affect_id)), new ArrayList<>(Arrays.asList(5, 0)),false, Conversation_topic.being_told_topic);
             
 			return ct;			
 		}
@@ -3479,8 +3478,7 @@ public class FPalace_topics {
 			challenge.setText("");
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "You manage to knock </n2> back!\n",0);
-            //consequence.add_char_effect(null);//Start combat
-            //TODO char_template etc.
+            consequence.add_char_effect(null);//Start combat
 			consequence.addConsequence(FPalaceHelper.lust_id,5, "</n2> manages to get the jump on you, pining you quickly, </noun2> breathing heavy. ",-1,0,0,2);
 	
 			a.addChallenge(challenge,consequence);
@@ -3514,8 +3512,7 @@ public class FPalace_topics {
 			challenge.setText("");
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "You manage to knock </n2> off of you and regain your feet!\n",0);
-			//consequence.add_char_effect(null);//Start combat
-            //TODO char_template etc.
+			consequence.add_char_effect(null);//Start combat
 			consequence.addConsequence(FPalaceHelper.curr_hp_id,0, "</n2> regains </noun2> advantage! ",-1,0,0,2);
 	
 			a.addChallenge(challenge,consequence);

@@ -2839,17 +2839,16 @@ public class Character extends DynamicObject {
         }
         possessions.size()--;
     }
-    
-    public function drop_item(i:Item):void{
-        var count:int = 0;
-        for(count;count<possessions.size();count++){
-            if(possessions[count].same_item(i)){
+    */
+    public void drop_item(Item i){
+        int count = 0;
+        for(count=0;count<possessions.size();count++){
+            if(possessions.get(count).sameItem(i)){
                 drop(count);
                 break;
             }
         }
     }
-    */
     public String set_character_class(Character_class c){
         String ret = "";
         if(c != null && !c.getName().equals("")) ret += "</n> has begun to follow the path of the " + c.getName() + ". ";

@@ -1,8 +1,10 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class DynamicConsequence extends Consequence {
+    private static final Logger LOGGER = Logger.getLogger(DynamicConsequence.class.getName());
 		
     public static int list_nolist = -1;
     public static int list_parts = 0;
@@ -59,7 +61,7 @@ public class DynamicConsequence extends Consequence {
     public String dynamic_choices(Character c, Character c2){//default c2 null
         String s = "";
         if(c2 == null) c2 = c;
-        /*
+        
         BodyPart temp_bp;
         int con_count = 0;
         //TODO location template, location exit_actions, character add_to_possessions
@@ -89,45 +91,47 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_type == DynamicConsequence.list_forage){
             Number skill_amt = c.get_skill_by_id(FPalace_skills.adventure_id)/100;
-            Item temp_item;//needed to copy
+            Item temp_item=null;//needed to copy
             if(c.location != null && c.location.template != null){
-                int i = c.location.template.item.length - 1;
-                for(i=c.location.template.item.length - 1;i>=0;i--){
-                    temp_item = c.location.template.item[i];
-                    if(temp_item != null && Math.random() < c.location.template.item_chance[i] + skill_amt){
+                int i = c.location.template.item.size() - 1;
+                for(i=c.location.template.item.size() - 1;i>=0;i--){
+                    temp_item = c.location.template.item.get(i);
+                    if(temp_item != null && Math.random() < c.location.template.item_chance.get(i).doubleValue() + skill_amt.doubleValue()){
                         break;
                     }
                 }
-                if(consequence_list_text != "") s += consequence_list_text;
+                if(!consequence_list_text.equals("")) s += consequence_list_text;
                 if(temp_item != null){
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", temp_item.getName());
                     temp_item = temp_item.copyItem();//clone
-                    c.add_to_possessions(temp_item);
+                    c.addToPossessions(temp_item);
                 }else{
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
                 }
             }
         }else if(consequence_list_type == DynamicConsequence.list_hunt){
             //could just use template, but they aren't the characters I want to be able to "Hunt"... or spawn more of
-            if(consequence_list_text != "") s += consequence_list_text;
-            if(c.location.exit_actions[0] != null && c.location.exit_actions[0].consequences[0].char_effect != null){
-                Array char_template_list = new Array();
-                for(con_count=0;con_count<c.location.exit_actions[0].consequences.length;con_count++){
-                    char_template_list = char_template_list.concat(c.location.exit_actions[0].consequences[con_count].char_effect);
+            if(!consequence_list_text.equals("")) s += consequence_list_text;
+            if(c.location.exit_actions.get(0) != null && c.location.exit_actions.get(0).consequences.get(0).char_effect != null){
+                ArrayList<Object> char_template_list = new ArrayList<>();
+                for(con_count=0;con_count<c.location.exit_actions.get(0).consequences.size();con_count++){
+                    //char_template_list = char_template_list.concat(c.location.exit_actions.get(0).consequences.get(con_count).char_effect);
+                    char_template_list.add(c.location.exit_actions.get(0).consequences.get(con_count).char_effect);
                 }
-                int rand = Math.round(Math.random()*char_template_list.length-1);
-                while(char_template_list[rand] == null && char_template_list.length > 0){
-                    char_template_list = char_template_list.slice(0,rand).concat(char_template_list.slice(rand+1,char_template_list.length));
-                    rand = Math.round(Math.random()*char_template_list.length-1);
+                int rand = (int)Math.round(Math.random()*char_template_list.size()-1);
+                while(char_template_list.get(rand) == null && char_template_list.size() > 0){
+                    //char_template_list = char_template_list.slice(0,rand).concat(char_template_list.slice(rand+1,char_template_list.size()));
+                    char_template_list.remove(rand);
+                    rand = (int)Math.round(Math.random()*char_template_list.size()-1);
                 }
-                if(char_template_list[rand] != null && !(char_template_list[rand] is Array && char_template_list[rand][0] == null)){
+                if(char_template_list.get(rand) != null && !(char_template_list.get(rand) instanceof ArrayList<?> && ((ArrayList<Character_template>)char_template_list.get(rand)).get(0) == null)){
                     Character new_char = null;
-                    if(char_template_list[rand] instanceof Character_template){//was is
-                        new_char = char_template_list[rand].gen_char();
-                    }else if(char_template_list[rand] instanceof Array){//was is array
-                        new_char = char_template_list[rand][Math.round(Math.random()*(char_template_list[rand].length-1))].gen_char();
+                    if(char_template_list.get(rand) instanceof Character_template){//was is
+                        new_char = ((Character_template)char_template_list.get(rand)).gen_char();
+                    }else if(char_template_list.get(rand) instanceof ArrayList<?>){//was is array
+                        new_char = ((ArrayList<Character_template>)char_template_list.get(rand)).get((int)Math.round(Math.random()*((ArrayList<Character_template>)char_template_list.get(rand)).size()-1)).gen_char();
                     }else{
-                        //trace("(DynamicConsequence.dynamic_choices)I don't know how to hunt this...");
+                        LOGGER.info("(DynamicConsequence.dynamic_choices)I don't know how to hunt this...");
                     }
                     
                     if(c.location != null){
@@ -141,7 +145,7 @@ public class DynamicConsequence extends Consequence {
                     c.personality.make_aggressive(new_char);
                     new_char.personality.new_relationship(c,new_char,Relationship.aggressive_change);
                     new_char.personality.make_aggressive(c);
-                    while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "<a href=\"event:combat,"+c.location.get_content_id(c)+",-1,-1\"><i>"+new_char.get_short_description(c)+"</i></a>");
+                    while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "<a href=\"event:combat,"+c.location.getContentID(c)+",-1,-1\"><i>"+new_char.get_short_description(c)+"</i></a>");
                 }else{
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
                 }
@@ -149,9 +153,8 @@ public class DynamicConsequence extends Consequence {
                 while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
             }
         }else{
-            //if(consequence_list_type != DynamicConsequence.list_nolist)trace("(DynamicConsequence.dynamic_choices)Got an unknown choice type. id: " + consequence_list_type);
+            if(consequence_list_type != DynamicConsequence.list_nolist)LOGGER.info("(DynamicConsequence.dynamic_choices)Got an unknown choice type. id: " + consequence_list_type);
         }
-        */
         return s;
     }
     
@@ -176,26 +179,26 @@ public class DynamicConsequence extends Consequence {
             temp_bp = c.body.parts.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice.get(0), c);
-            //if(temp_bp.crit_part()) ret += c.die();				
+            if(temp_bp.crit_part()) ret += c.die();				
         }else if(consequence_list_action == DynamicConsequence.list_removeandaddpart){
             //wrong in combat, right in overworld...
             temp_bp = c.body.parts.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
             c.body.remove_part_by_count(choice.get(0), c);
-            //if(temp_bp.crit_part()) ret += c.die();
-            //c2.apply_change_effect(temp_bp);
+            if(temp_bp.crit_part()) ret += c.die();
+            c2.apply_change_effect(temp_bp);
         }else if(consequence_list_action == DynamicConsequence.list_useitem){
             //right in combat, don't know about overworld
             temp_item = c2.possessions.get(choice.get(0));
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon){//was is
-                //ret += c2.hold((Weapon)temp_item, 0, -1, true);
+                ret += c2.hold((Weapon)temp_item, 0, -1, true);
             }else if(temp_item instanceof Equipment){//was is
-                //ret += c2.equip((Equipment)temp_item , 0, -1, true);//was as
+                ret += c2.equip((Equipment)temp_item , 0, -1, true);//was as
             }else{
                 if(temp_item != null){
                     ret += temp_item.useItem(c2,choice.get(0));
-                    //if(!temp_item.still_usable())c2.drop(choice.get(0));
+                    if(!temp_item.stillUsable())c2.drop(choice.get(0));
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_useitemonother){
@@ -203,20 +206,21 @@ public class DynamicConsequence extends Consequence {
             temp_item = c2.possessions.get(choice.get(0));//[]
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_item.getName());
             if(temp_item instanceof Weapon || temp_item instanceof Equipment){//was is
-                //trace("(DynamicConsequence.trigger_dynamic)Using some sort of equipment/weapon on another character... not sure what to do");
+                LOGGER.info("(DynamicConsequence.trigger_dynamic)Using some sort of equipment/weapon on another character... not sure what to do");
             }else{
                 if(temp_item != null){
                     if(choiceList.get(1) != null){//[]
                         if(temp_item.changeEffects.get(0) instanceof CharAction){//was is
                             CharAction temp_a = (CharAction)temp_item.changeEffects.get(0);
                             if(temp_item.numUses>0)temp_item.numUses--;
-                            //ret += temp_a.challenge(0,c,c,1,choice.slice(1,choice.length));
-                            //TODO slice
+                            //ret += temp_a.challenge(0,c,c,1,choice.slice(1,choice.length))
+                            ret += temp_a.challenge(0,c,c,1,(ArrayList<Integer>)choice.subList(1,choice.size()));
+                            //TODO verify
                         }
                     }else{
                         ret += temp_item.useItem(c,choice.get(0),1);
                     }
-                    //if(!temp_item.still_usable())c2.drop(choice.get(0));
+                    if(!temp_item.stillUsable())c2.drop(choice.get(0));
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_target_part){
@@ -232,7 +236,7 @@ public class DynamicConsequence extends Consequence {
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
         }else if(consequence_list_action == DynamicConsequence.list_dilute){
             //temp_aitem = c2.possessions.get(choice.get(0));
-            //TODO double list
+            //TODO How do we know this is an Alchemy Item?!
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(temp_aitem != null){
                 //Should go through the use and alchemy effects of the item, and halving them
@@ -241,31 +245,31 @@ public class DynamicConsequence extends Consequence {
                 for(i=0;i<temp_aitem.types.size();i++){
                     //go through and randomly remove types...
                     if(Math.random() < 0.5){
-                        //temp_aitem.types = temp_aitem.types.slice(0,i).concat(temp_aitem.types.slice(i+1,temp_aitem.types.length));
-                        //TODO slice
+                        //temp_aitem.types = temp_aitem.types.slice(0,i).concat(temp_aitem.types.slice(i+1,temp_aitem.types.length))
+                        temp_aitem.types.remove(i);
+                        //TODO verify
                         i--;
                     }
                 }
-                i = 0;
                 for(i=0;i<temp_aitem.effects.size();i++){
                     //go through and halve effects...
                     if(temp_aitem.effects.get(i) != null)temp_aitem.effects.set(i,temp_aitem.effects.get(i)/2);
                 }
-                i = 0;
                 for(i=0;i<temp_aitem.changeEffects.size();i++){
                     //go through and randomly remove change effects...
                     if(Math.random() < 0.5){
-                        //temp_aitem.changeEffects = temp_aitem.changeEffects.slice(0,i).concat(temp_aitem.changeEffects.slice(i+1,temp_aitem.changeEffects.length));
-                        //TODO slice
+                        //temp_aitem.changeEffects = temp_aitem.changeEffects.slice(0,i).concat(temp_aitem.changeEffects.slice(i+1,temp_aitem.changeEffects.length))
+                        temp_aitem.changeEffects.remove(i);
+                        //TODO verify
                         i--;
                     }
                 }
-                i = 0;
                 for(i=0;i<temp_aitem.statActionAdd.size();i++){
                     //go through and randomly remove action adds...
                     if(Math.random() < 0.5){
-                        //temp_aitem.statActionAdd = temp_aitem.statActionAdd.slice(0,i).concat(temp_aitem.statActionAdd.slice(i+1,temp_aitem.statActionAdd.length));
-                        //TODO slice
+                        //temp_aitem.statActionAdd = temp_aitem.statActionAdd.slice(0,i).concat(temp_aitem.statActionAdd.slice(i+1,temp_aitem.statActionAdd.length))
+                        temp_aitem.statActionAdd.remove(i);
+                        //TODO verify
                         i--;
                     }
                 }
@@ -273,7 +277,8 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_action == DynamicConsequence.list_refine){
             //need to list the types available to refine...
-            //temp_aitem = c2.possessions[choice.get(0)];
+            //temp_aitem = c2.possessions.get(choice.get(0));
+            //TODO dont know if Alchemy Item
             int alch_ident = 0;
             Character char_for_chal = c2;
             if(c2.party != null)char_for_chal = c2.party.get_best_at_skill(FPalace_skills.item_alchemy_effects_id);
@@ -288,7 +293,6 @@ public class DynamicConsequence extends Consequence {
                 alch_ident += Math.round((char_for_chal.get_skill_by_id(FPalace_skills.item_alchemy_effects_id)+result)/temp_aitem.getIdentifyDifficulty());
             }
             int i;
-            i = 0;
             for(i=0;i<temp_aitem.types.size();i++){
                 if(temp_aitem.types.get(i) != null){
                     String name_string = "";
@@ -299,12 +303,13 @@ public class DynamicConsequence extends Consequence {
                             name_string = FPalaceHelper.get_stat_name_by_id(-temp_aitem.types.get(i));
                         }
                     }
-                    if(name_string == "")name_string = "?";
+                    if(name_string.equals(""))name_string = "?";
                     ret += "<dc" + i + ">" + name_string + "</dc" + i + ">\n";
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_remove_alchemy){
             //temp_aitem = c2.possessions.get(choice.get(0));//was[[]]
+            //TODO how do we know above is Alchemy item?!
             Challenge alch_challenge = new Challenge(true);
             alch_challenge.set_attack_stat(FPalace_skills.alchemy_id);
             alch_challenge.set_defense_stat(-1,temp_aitem.getIdentifyDifficulty());
@@ -316,9 +321,10 @@ public class DynamicConsequence extends Consequence {
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(result < 0){
                 //temp_aitem.types = temp_aitem.types.slice(0,(type_to_remove>0) ? type_to_remove-1:0).concat(temp_aitem.types.slice(type_to_remove+2,temp_aitem.types.length));
+                //TODO math, also verify below
             }else{
-                //temp_aitem.types = temp_aitem.types.slice(0,type_to_remove).concat(temp_aitem.types.slice(type_to_remove+1,temp_aitem.types.length));
-                //TODO math
+                //temp_aitem.types = temp_aitem.types.slice(0,type_to_remove).concat(temp_aitem.types.slice(type_to_remove+1,temp_aitem.types.length))
+                temp_aitem.types.remove(type_to_remove);
             }
             if(temp_aitem.getName().indexOf("Refined") < 0)temp_aitem.setName("Refined " + temp_aitem.getName());
             if(temp_aitem.getPropogate())temp_aitem.setPropogate();
@@ -333,7 +339,7 @@ public class DynamicConsequence extends Consequence {
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());				
         }else{
             if(consequence_list_action != DynamicConsequence.list_noaction){
-                //trace("(DynamicConsequence.trigger_dynamic)Got an unknown action id... " + consequence_list_action + " came with choices: " + choice);
+                LOGGER.info("(DynamicConsequence.trigger_dynamic)Got an unknown action id... " + consequence_list_action + " came with choices: " + choice);
             }
         }
         
@@ -346,7 +352,7 @@ public class DynamicConsequence extends Consequence {
         DynamicConsequence ret = new DynamicConsequence();
         ret.statEffected = new ArrayList<>(this.statEffected);
         ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
-        /*
+        /*better way below?
         int i = 0;
         for(i=0;i<this.consequenceDescription.size();i++){
             ret.consequenceDescription[i] = this.consequenceDescription[i];

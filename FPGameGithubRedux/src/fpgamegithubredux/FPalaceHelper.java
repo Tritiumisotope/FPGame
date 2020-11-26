@@ -547,18 +547,18 @@ public class FPalaceHelper{
 			return ret;
 		}
 		
-		public static DamageType get_type_by_id(int type_id){
+		public static DamageType get_type_by_id(int typeID){
 			DamageType  ret= null;
 			if(damage_types == null){
-				get_stat_name_by_id(type_id);
+				get_stat_name_by_id(typeID);
 			}
 			
-			if(damage_types[type_id] != null) ret = damage_types[type_id];
+			if(damage_types[typeID] != null) ret = damage_types[typeID];
 			
 			return ret;
 		}
 		
-		public static String get_type_name_by_id(int type_id){
+		public static String get_type_name_by_id(int typeID){
 			String ret = "?";
 			if(damage_types == null){
 				
@@ -575,7 +575,7 @@ public class FPalaceHelper{
 				damage_types[9] = lit_damage_type();
 			}
 			
-			if(damage_types[type_id] != null) ret = damage_types[type_id].get_name();
+			if(damage_types[typeID] != null) ret = damage_types[typeID].get_name();
 			
 			return ret;
 		}
@@ -790,7 +790,7 @@ public class FPalaceHelper{
 		}
 		
 		
-		public static String get_stat_name_by_id(int stat_id){
+		public static String get_stat_name_by_id(int statID){
 			String ret = "?";
 			if(stat_names == null){
 				stat_names =new Stat[49]; // new Array()
@@ -844,7 +844,7 @@ public class FPalaceHelper{
 				stat_names[scale_colour_id] = stat_scale_colour();
 			}
 			
-			if(stat_names[stat_id] != null) ret = stat_names[stat_id].getName();
+			if(stat_names[statID] != null) ret = stat_names[statID].getName();
 			
 			return ret;
 		}

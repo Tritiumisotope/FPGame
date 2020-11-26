@@ -619,7 +619,7 @@ public class FPalace_classes {
             challenge.setText("Part Eater");
             
             DynamicConsequence dconsequence = new DynamicConsequence();
-            dconsequence.set_consequence_list("", DynamicConsequence.list_parts);//, DynamicConsequence.list_useitemonother);
+            dconsequence.set_consequence_list("", DynamicConsequence.list_parts);//, DynamicConsequence.list_useitemonother) original comment
             dconsequence.addConsequence(0,0,"", 0,0,0,1);
             
             a.addChallenge(challenge,dconsequence);
@@ -819,7 +819,7 @@ public class FPalace_classes {
             a.set_requirement(FPalaceHelper.lust_id,10);
             a.set_requirement(FPalaceHelper.curr_mp_id,1);
             a.set_requirement(FPalaceHelper.milk_volume_id,1,false);
-            //a.set_delayed_trigger();
+            //a.set_delayed_trigger() original comment
             
             //Overworld option
             CharAction a2 = new CharAction();
@@ -1365,7 +1365,7 @@ public class FPalace_classes {
             a.set_attack_description("Force a single foe to use an item of your chosing. ");
             a.set_attack_flag(CharAction.attack_type_single_target, "Skills");
             a.set_requirement(FPalaceHelper.curr_fatigue_id,1);
-            //a.set_delayed_trigger();
+            //a.set_delayed_trigger() original comment
             
             challenge = new Challenge(true);
             challenge.set_attack_stat(-1,1);
