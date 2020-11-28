@@ -1419,8 +1419,8 @@ public class Personality {
 				if(c != null){
 					int k= 0;
 					for(k=0;k<c.personality.mob_allegiances.size();k++){//TODO good change?
-						System.out.println("personality mob_allegiance size: "+c.personality.mob_allegiances.size());
-						System.out.println("mob_allegiance size: "+ mob_allegiances.size());
+						//System.out.println("personality mob_allegiance size: "+c.personality.mob_allegiances.size());
+						//System.out.println("mob_allegiance size: "+ mob_allegiances.size());
 						if(c.personality.mob_allegiances.get(k) == mob_allegiances.get(i)){
 						   ret +=2;
 						}else{
@@ -1640,12 +1640,12 @@ public class Personality {
 						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer &&
 						 change_info.get(0)== objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
-								curr_obj_step.get(i).add(current_step+1); //curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_step.get(i).add(current_step+1); //curr_obj_step.get(i).add(current_step+1)
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask author
 								//curr_obj_step.get(i).add( objectives.get(i).next_objective.get(curr_obj_step.get(i)));
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						}else{
 							LOGGER.info("(Personality.advance_objectives)Didn't get an area id as expected.... " + change_info);
@@ -1654,27 +1654,28 @@ public class Personality {
 						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room &&
 						 change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0) && (Integer)change_info.get(1) > 0){
 							if(objectives.get(i).next_objective.get(current_step)< 0){
-								curr_obj_step.get(i).add(current_step+1); //[curr_obj_step.get(i).length] = current_step+1;
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_step.get(i).add(current_step+1); //[curr_obj_step.get(i).length] = current_step+1
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
-						}else{
+						}else if(!(change_info.get(0) instanceof Room) && !(objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room)){
 							LOGGER.info("(Personality.advance_objectives)Didn't get a room and wait time as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.room_action){
-						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
+						if(change_info.get(0) instanceof Room && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room && 
+						change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
 								curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
-						}else{
+						}else if(!(change_info.get(0) instanceof Room) && !(objectives.get(i).objective_targets.get(current_step).get(0) instanceof Room)){
 							LOGGER.info("(Personality.advance_objectives)Didn't get a room as expected.... " + change_info);
 						}
 					}else if(action_type == Quest.class_action){
@@ -1685,11 +1686,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1704,11 +1705,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1723,11 +1724,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1741,11 +1742,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1764,6 +1765,9 @@ public class Personality {
 									}else{
 										//TODO ask Author
 										//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+										//for(int j = 0;j<curr_obj_step.get(i).size();j++){
+											//curr_obj_step.get(i).add(objectives.get(i).next_objective.get(curr_obj_step.get(i).get(j)));
+										//}
 										curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
 									}
 								}
@@ -1778,11 +1782,11 @@ public class Personality {
 							if(temp1.get_primary_race().getName().equals(temp2.get_primary_race().getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1795,11 +1799,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1809,11 +1813,11 @@ public class Personality {
 						if(change_info.get(0) instanceof Party && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Party && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
 								curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						
 						}else{
@@ -1826,11 +1830,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1843,11 +1847,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1857,11 +1861,11 @@ public class Personality {
 						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
 								curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						}else{
 							LOGGER.info("(Personality.advance_objectives)Didn't get an skill id as expected.... " + change_info);
@@ -1870,11 +1874,11 @@ public class Personality {
 						if(change_info.get(0) instanceof TickEffect && objectives.get(i).objective_targets.get(current_step).get(0) instanceof TickEffect && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
 								curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						}else{
 							LOGGER.info("(Personality.advance_objectives)Didn't get a tick effect as expected.... " + change_info);
@@ -1883,11 +1887,11 @@ public class Personality {
 						if(change_info.get(0) instanceof Integer && objectives.get(i).objective_targets.get(current_step).get(0) instanceof Integer && change_info.get(0) == objectives.get(i).objective_targets.get(current_step).get(0)){
 							if(objectives.get(i).next_objective.get(current_step) < 0){
 								curr_obj_step.get(i).add(current_step+1);
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask Author
 								//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						}else{
 							LOGGER.info("(Personality.advance_objectives)Didn't get a status id as expected.... " + change_info);
@@ -1901,11 +1905,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
@@ -1918,11 +1922,11 @@ public class Personality {
 							if(temp1.getName().equals(temp2.getName())){
 								if(objectives.get(i).next_objective.get(current_step) < 0){
 									curr_obj_step.get(i).add(current_step+1);
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
 									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
-									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick();
+									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}
 						}else{
