@@ -274,12 +274,9 @@ crafts..............   17    -         | | | water.........   54  178
         for(i=0;i<skill_array.size();i++){
             all_skills.add(skill_array.get(i).get_id()); //all_skills[i] = skill_array[i].get_id()
         }
+        System.out.println("All skills: "+all_skills);
         if(show_children_of != null){
-            ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);//no longer has 3 to remove
-            //plchldr.remove(0);//0
-            //plchldr.remove(0);//1
-            //plchldr.remove(0);//2
-            if(!plchldr.toString().equals(all_skills.toString())){
+            if(!show_children_of.toString().equals(all_skills.toString())){
                 ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ all_skills +"\">Show all</a>\n";
             }
         }else{
@@ -291,24 +288,17 @@ crafts..............   17    -         | | | water.........   54  178
             trained.add(ss.skill_ids.get(i)); //trained[trained.length] = ss.skill_ids[i]
             int parent_id = get_skill_parent(ss.skill_ids.get(i));
             while(parent_id >= 0){
-                //trained[trained.length] = parent_id;//probably going to get duplicates out of this
-                trained.add(parent_id);
+                if(!trained.contains(parent_id)){//does this prevent dupes?
+                    trained.add(parent_id);//probably going to get duplicates out of this
+                }
                 parent_id = get_skill_parent(parent_id);
             }
         }
         if(trained != null && trained.get(0) != null){
             if(show_children_of != null){
-                //if(show_children_of.slice(3, show_children_of.size()).toString() != trained.toString()){
-                   //ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
-                //}
-                //TODO verify replacement
-                ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-                //plchldr.remove(0);//0
-                //plchldr.remove(0);//1
-                //plchldr.remove(0);//2
-                if(plchldr.toString().equals(trained.toString())){
+                if(!show_children_of.toString().equals(trained.toString())){
                     ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
-                }
+                }//the otherwise here is the only case we do nothing
             }else{
                 ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ trained +"\">Show trained</a>\n";
             }
@@ -321,21 +311,19 @@ crafts..............   17    -         | | | water.........   54  178
                 primaries.add(c.get_current_class().class_skills.get(i)); //primaries[primaries.length] = c.get_current_class().class_skills[i]
                 parent_id = get_skill_parent(c.get_current_class().class_skills.get(i));
                 while(parent_id >= 0){
-                    primaries.add(parent_id); //primaries[primaries.length] = parent_id;//probably going to get duplicates out of this
+                    if(!primaries.contains(parent_id)){//does this prevent dupes?
+                        primaries.add(parent_id); //primaries[primaries.length] = parent_id;//probably going to get duplicates out of this
+                    }
                     parent_id = get_skill_parent(parent_id);
                 }
             }
             if(primaries != null && primaries.get(0) != null){
                 if(show_children_of != null){
-                    ArrayList<Integer> plchldr = new ArrayList<>(show_children_of);
-                    //plchldr.remove(0);//0
-                    //plchldr.remove(0);//1
-                    //plchldr.remove(0);//2
-                    if(!plchldr.toString().equals(primaries.toString())){
-                        ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a>\n";
+                    if(!show_children_of.toString().equals(primaries.toString())){
+                        ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a><br>";
                     }
                 }else{
-                    ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a>\n";
+                    ret += "<a href=\"event:show_skills,"+char_id+",-1,"+ primaries +"\">Show primaries</a><br>";
                 }
             }
         }
@@ -388,11 +376,13 @@ crafts..............   17    -         | | | water.........   54  178
             Boolean rc = false;
             
             if(remove_children >= 0){
+                System.out.println("Child array before remove_skill_childre: "+child_array);
                 child_array = remove_skill_children(child_array.get(remove_children), child_array);
+                System.out.println("Child array after remove_skill_childre: "+child_array);
+                System.out.println("IDX to remove: "+remove_children);
                 child_array.remove(remove_children);//child_array = child_array.slice(0,remove_children).concat(child_array.slice(remove_children+1, child_array.length))
                 rc = true;
             }else{
-                
                 child_array.add(skill_array.get(i).get_id());//child_array[child_array.length] = skill_array[i].get_id()
             }
             
@@ -449,15 +439,13 @@ crafts..............   17    -         | | | water.........   54  178
     
     public static int get_skill_parent(int skill_id){
         int ret = -1;
-        ArrayList<Skill>  skill_array = get_skill_list();
-        int i = 0;
-        for(i=0;i<skill_array.size();i++){//.length
+        ArrayList<Skill> skill_array = get_skill_list();
+        for(int i=0;i<skill_array.size();i++){//.length
             if(skill_array.get(i).get_id() == skill_id){//[]
                 if(skill_array.get(i).get_parent() != -1)ret = skill_array.get(i).get_parent();//[] and []
                 break;
             }
         }
-        
         return ret;
     }
             

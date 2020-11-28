@@ -162,7 +162,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             }else{
                 talk(splitResult[1], splitResult[2], splitResult[3]);
             } 
-        }else if(result.contains("show_skills")&&splitResult.length>2){
+        }else if(result.contains("show_skills")&&splitResult.length>1){
             if(splitResult.length==2){//tempArray[2] == null){
                 show_skills(Integer.parseInt(splitResult[1]));
             }else if(splitResult.length==3){//tempArray[3] == null){
@@ -554,8 +554,9 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                 s += "\n<font color='#0000FF'><a href=\"event:show_skills,"+(i-1)+"\">&lt;&lt;</a></font>";
             }
         }
-
-        textField.setText(s);
+        textField.setContentType("text/html");
+        System.out.println("Trying to set to html...");
+        textField.setText("<html><body><p>"+s+ "</p></body></html>");
     }
     public void challenge(String i,String k,String j,String l){
         challenge(i, k, j,l,null);
