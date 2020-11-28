@@ -462,7 +462,7 @@ public String getName(){
         }
         
         if(race != null){
-            while(ret.indexOf("</r>") >= 0)ret = ret.replace("</r>", race.get_description(part_id, this));
+            while(ret.indexOf("</r>") >= 0)ret = ret.replace("</r>", race.get_description(this));
             while(ret.indexOf("</rn>") >= 0)ret = ret.replace("</rn>", race.getName());
         }
         
@@ -483,7 +483,7 @@ public String getName(){
         }
         if(hold != null) s += "</pronoun> is holding a " + hold.getName() + " in </noun> </bpn>. ";
         if(race != null){
-            while(s.indexOf("</r>") >= 0)s = s.replace("</r>", race.get_description(part_id, this));
+            while(s.indexOf("</r>") >= 0)s = s.replace("</r>", race.get_description(this));
             while(s.indexOf("</rn>") >= 0)s = s.replace("</rn>", race.getName());
         }
         while(s.indexOf("</bpn>") >= 0)s = s.replace("</bpn>", getName());

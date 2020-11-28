@@ -380,7 +380,7 @@ public class Race extends DynamicObject {
     }
     
     
-    public String get_description(int part_id, BodyPart bp){
+    public String get_description(BodyPart bp){
         for (int i=0;i<desc_part.size();i++){
             if(desc_part.get(i) == bp.part_id){
                 return desc.get(i);
