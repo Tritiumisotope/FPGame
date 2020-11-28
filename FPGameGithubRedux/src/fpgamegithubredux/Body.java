@@ -1531,7 +1531,6 @@ public class Body {
         */
         //Make sure the equipment/weapons are still usable after the stat jiggle
         
-        i = 0;
         for(i=0;i<temp_equip_array.size();i++){
             Equipment new_e = temp_equip_array.get(i);
             int j = 0;

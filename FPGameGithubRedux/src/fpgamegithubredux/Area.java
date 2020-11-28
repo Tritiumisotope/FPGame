@@ -8,6 +8,8 @@ import java.awt.Color;
 public class Area extends StaticObject{
     public static int fully_connected_filler = 0;
     public static int single_connected_filler = 1;
+    private static Boolean SUPERDEBUG = false;
+
     private static final Logger LOGGER = Logger.getLogger(Area.class.getName());
     protected ArrayList<ArrayList<ArrayList<Room>>> rooms;//Room[][][] rooms
     protected ArrayList<Room> room_list;
@@ -153,8 +155,8 @@ public class Area extends StaticObject{
     public Room get_connect_room(){
         Room r = null;
         if(connectRooms.get(connectRooms.size() - 1) != null) r = connectRooms.get(connectRooms.size() - 1);
-        //connectRooms = Arrays.copyOfRange(connectRooms,0,connectRooms.size()-1);//connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
-        connectRooms = (ArrayList<Room>)connectRooms.subList(0,connectRooms.size()-1);//TODO verify
+        //connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
+        connectRooms.remove(connectRooms.size()-1);//TODO verify
         return r;
     }
     
@@ -700,7 +702,7 @@ public class Area extends StaticObject{
                 }
             }
             
-            LOGGER.info("new x:" + new_x + " new y:" + new_y + " new z:" + new_z + " x-size:" + rooms.size() + " y-size:" + rooms.get(new_x).size());
+            if(SUPERDEBUG)LOGGER.info("new x:" + new_x + " new y:" + new_y + " new z:" + new_z + " x-size:" + rooms.size() + " y-size:" + rooms.get(new_x).size());
             if(new_z < rooms.get(new_x).get(new_y).size() && rooms.get(new_x).get(new_y).get(new_z) != null){
                 //Let's join them... if they aren't already joined
                 if(new_x != x || new_y != y || new_z != z){
