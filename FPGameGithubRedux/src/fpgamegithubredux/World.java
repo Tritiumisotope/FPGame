@@ -38,7 +38,7 @@ public class World {
     public void set_settings(ArrayList<Object> settings_array){
         settings = settings_array;
     }
-    /*TODO make this work?
+    //*TODO make this work?
     public String[] add_exit_to_piece(String[] map_piece,String exit_name){//TODO fixed size	array
         if(exit_name == "North"){
             map_piece[1] = "|";
@@ -71,6 +71,8 @@ public class World {
         
         ArrayList<String[]> map_pieces = new ArrayList<>();//Array
         ArrayList<ArrayList<Integer>> map = make_integer_map();
+        ArrayList<ArrayList<String[]>> stringMap = new ArrayList<>();
+        
         
         int i;
         for(i=0;i<links.size();i++){
@@ -105,36 +107,54 @@ public class World {
 
         for(i = 0;i<map.size();i++){
             if(map.get(i) != null){
-                int j = 0;
-                for(j=0;j<map.get(i).size();j++){
+                stringMap.add(new ArrayList<>());
+                for(int j=0;j<map.get(i).size();j++){
                     if(map.get(i).get(j) != null){
-                        map.get(i).set(j,map_pieces.get(map.get(i).get(j)));//map[i][j] = map_pieces[map[i][j]];
+                        //map.get(i).set(j,map_pieces.get(map.get(i).get(j)));//map[i][j] = map_pieces[map[i][j]];
+                        stringMap.get(i).add(map_pieces.get(map.get(i).get(j)));
+                        //null-fill stringMap and assign here?
+                    }else{//again with maintaining addresses
+                        stringMap.get(i).add(null);
                     }
                 }
+            }else{//keeping that same exact set of addresses!
+                stringMap.add(null);
             }
         }
         
-        i = 0;
         
-        for(i;i<map.size();i++){
-            if(map[i] != null){
+        for(i=0;i<map.size();i++){
+            if(map.get(i) != null){
                 int line_count = 0;
-                for(line_count;line_count<3;line_count++){
-                    j = 0;
-                    for(j;j<map[i].length;j++){
-                        if(map[i][j] != null){
+                for(line_count=0;line_count<3;line_count++){
+                    int j = 0;
+                    for(j=0;j<map.get(i).size();j++){
+                        if(map.get(i).get(j) != null){
                             if(line_count == 0){
-                                ret += map[i][j][0];
-                                ret += map[i][j][1];
-                                ret += map[i][j][2];
+                                /*use stringMap?
+                                ret += map.get(i).get(j)[0];
+                                ret += map.get(i).get(j)[1];
+                                ret += map.get(i).get(j)[2];
                             }else if(line_count == 1){
-                                ret += map[i][j][4];
-                                ret += map[i][j][5];
-                                ret += map[i][j][6];
+                                ret += map.get(i).get(j)[4];
+                                ret += map.get(i).get(j)[5];
+                                ret += map.get(i).get(j)[6];
                             }else if(line_count == 2){
-                                ret += map[i][j][8];
-                                ret += map[i][j][9];
-                                ret += map[i][j][10];
+                                ret += map.get(i).get(j)[8];
+                                ret += map.get(i).get(j)[9];
+                                ret += map.get(i).get(j)[10];
+                                */
+                                ret += stringMap.get(i).get(j)[0];
+                                ret += stringMap.get(i).get(j)[1];
+                                ret += stringMap.get(i).get(j)[2];
+                            }else if(line_count == 1){
+                                ret += stringMap.get(i).get(j)[4];
+                                ret += stringMap.get(i).get(j)[5];
+                                ret += stringMap.get(i).get(j)[6];
+                            }else if(line_count == 2){
+                                ret += stringMap.get(i).get(j)[8];
+                                ret += stringMap.get(i).get(j)[9];
+                                ret += stringMap.get(i).get(j)[10];
                             }
                         }else{
                             ret += "   ";
@@ -149,7 +169,6 @@ public class World {
         
         return ret;
     }
-    */
     public ArrayList<ArrayList<Integer>> make_integer_map(){
         ArrayList<ArrayList<Integer>> map = new ArrayList<>();
         
@@ -199,7 +218,6 @@ public class World {
                     }
                     //should find empty space... 
                     int max_existing_y = 0;
-                    x = 0;
                     for(x=0;x<map.size();x++){
                         if(map.get(x).size()>max_existing_y)max_existing_y=map.get(x).size();
                     }
@@ -245,8 +263,8 @@ public class World {
                     
                     if(x + temp[0] < 0 || y + temp[1] < 0){
                         if(x + temp[0] < 0){
-                            int count = map.size();
-                            for(count=0;count>0;count--){
+                            //int count = map.size()
+                            for(int count=map.size();count>0;count--){
                                 map.set(count, map.get(count-1));//map[count] = map[count - 1];
                             }
                             map.set(0,null);//map[0] = null;
@@ -284,8 +302,7 @@ public class World {
                     
                     if(x2 + temp[0] < 0 || y2 + temp[1] < 0){
                         if(x2 + temp[0] < 0){
-                            int count = map.size();
-                            for(count= map.size();count>0;count--){
+                            for(int count= map.size();count>0;count--){
                                 map.set(count, map.get(count-1));//map[count] = map[count - 1];
                             }
                             map.set(0,null);//map[0] = null;
@@ -386,8 +403,8 @@ public class World {
                                     r2 = temp_room2;
                                 }
                                 already_tried_area = new ArrayList<>();
-                                if(r1.get_exit_id(r2) >= 0 && r2.get_exit_id(r1) >= 0){
-                                    links.add(new ArrayList<Object>(Arrays.asList(i,k,sub_area_flag, r1.exit_names.get(r1.get_exit_id(r2)), r2.exit_names.get(r2.get_exit_id(r1)))));//links[links.length] = [i,k,sub_area_flag, r1.exit_names[r1.get_exit_id(r2)], r2.exit_names[r2.get_exit_id(r1)]];
+                                if(r1.get_exit_id(r2) >= 0 && r2.get_exit_id(r1) >= 0){//TODO note this is how links are set!
+                                    links.add(new ArrayList<Object>(Arrays.asList(i,k,sub_area_flag, r1.exit_names.get(r1.get_exit_id(r2)), r2.exit_names.get(r2.get_exit_id(r1)))));//links[links.length] = [i,k,sub_area_flag, r1.exit_names[r1.get_exit_id(r2)], r2.exit_names[r2.get_exit_id(r1)]]
                                 }else{
                                     Boolean made = false;
                                     int count3 = 0;
@@ -426,7 +443,6 @@ public class World {
                     int found_area_id = -1;
                     int connect_area_id = -1;
                     int link_area_id = -1;
-                    count = 0;
                     for(count=0;count<links.size();count++){
                         if(!(Boolean)links.get(count).get(2)){
                             if((Integer)links.get(count).get(0) == i || (Integer)links.get(count).get(1) == i){
@@ -455,7 +471,7 @@ public class World {
                     }
                     
                     if(found_area_id >= 0){
-                        already_tried_area.add(found_area_id);//already_tried_area[already_tried_area.length] = found_area_id;
+                        already_tried_area.add(found_area_id);//already_tried_area[already_tried_area.length] = found_area_id
                         if(!already_tried_check(link_area_id))connect_areas(link_area_id,connect_area_id,null,null,false,stay_in_edges);							
                     }else{
                         LOGGER.info("doesn't look like that'll work out though.");
@@ -507,7 +523,6 @@ public class World {
                         r2 = areas.get(k).get_random_room(true);
                         if(r1 != null){
                             temp_exits = get_edge_exits(areas.get(i),r1);
-                            count = 0;
                             for(count=0;count<temp_exits.size();count++){
                                 if(r2.new_exit(r1, neg_direction(temp_exits.get(count))) >= 0){
                                     made = true;
@@ -524,7 +539,6 @@ public class World {
                     if(r1 == null){
                         r1 = areas.get(i).get_random_room(true);
                         temp_exits = get_edge_exits(areas.get(k),r2);
-                        count = 0;
                         for(count=0;count<temp_exits.size();count++){
                             if(r1.new_exit(r2, neg_direction(temp_exits.get(count))) >= 0){
                                 made = true;
@@ -552,7 +566,7 @@ public class World {
             }
             already_tried_area = new ArrayList<>();
             if(r1.get_exit_id(r2) >= 0 && r2.get_exit_id(r1) >= 0){
-                //links[links.length] = [i,k,sub_area_flag, r1.exit_names[r1.get_exit_id(r2)], r2.exit_names[r2.get_exit_id(r1)]];
+                //links[links.length] = [i,k,sub_area_flag, r1.exit_names[r1.get_exit_id(r2)], r2.exit_names[r2.get_exit_id(r1)]]
                 links.add(new ArrayList<>(Arrays.asList(i,k,sub_area_flag, r1.exit_names.get(r1.get_exit_id(r2)), r2.exit_names.get(r2.get_exit_id(r1)))));
             }else{
                 Boolean made = false;
@@ -560,7 +574,7 @@ public class World {
                 for(count3=0;count3<r1.exits.size();count3++){
                     if(r1.exits.get(count3).area == r2.area){
                         made = true;
-                        //links[links.length] = [i,k,sub_area_flag, r1.exit_names[count3], r1.exits[count3].exit_names[r1.exits[count3].get_exit_id(r1)] ];
+                        //links[links.length] = [i,k,sub_area_flag, r1.exit_names[count3], r1.exits[count3].exit_names[r1.exits[count3].get_exit_id(r1)] ]
                         links.add(new ArrayList<>(Arrays.asList(i,k,sub_area_flag, r1.exit_names.get(count3), r1.exits.get(count3).exit_names.get(r1.exits.get(count3).get_exit_id(r1)) )));
                         break;
                     }
@@ -1274,7 +1288,6 @@ public class World {
             if(map.get(x).size() > max_y)max_y = map.get(x).size();
         }
         
-        x = 0;
         for(x=0;x<map.size();x++){
             int y = 0;
             for(y=0;y<max_y;y++){
@@ -1292,7 +1305,7 @@ public class World {
             map = make_integer_map();
             //connect to surrounding areas...
             Boolean placed = false;
-            x = 0;
+
             for(x=0;x<=max_x;x++){
                 if(map.get(x) == null)map.set(x, new ArrayList<>());//map.get(x) = new Array();
                 int y = 0;
@@ -1358,12 +1371,10 @@ public class World {
                 if(placed){
                     map = make_integer_map();
                     
-                    x = 0;
                     for(x=0;x<map.size();x++){
                         if(map.get(x).size() > max_y)max_y = map.get(x).size();
                     }
                     
-                    x = 0;
                     for(x=0;x<map.size();x++){
                         int y = 0;
                         for(y=0;y<max_y;y++){
