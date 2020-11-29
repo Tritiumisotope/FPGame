@@ -457,7 +457,7 @@ public class Template_Room extends StaticObject {
         for(k=0;k<container.size();k++){
             if (Math.random() <= container_chance.get(k).doubleValue() && container.get(k) != null){
                 Container cloneCont1 = new Container();
-                cloneCont1.clone(container.get(k),Math.abs(level_adjust));
+                cloneCont1.copyContainer(container.get(k),Math.abs(level_adjust));
                 new_room.new_static_content(cloneCont1);
             }
         }

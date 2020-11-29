@@ -1,8 +1,10 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Quest {
+    private static final Logger LOGGER = Logger.getLogger(Quest.class.getName());
 		
     public static final int no_action = -1;
     public static final int talk_action = 1;
