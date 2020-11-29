@@ -2,7 +2,6 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 public class Sex extends DynamicObject {
 
@@ -13,7 +12,7 @@ public class Sex extends DynamicObject {
     public ArrayList<Integer> age_stat;
     public ArrayList<ArrayList<Double>> age_stat_change;
     public ArrayList<Conversation_topic> social_topics;//public var social_topics:Array
-    public ArrayList<AgeNamePair> age_name;
+    protected ArrayList<AgeNamePair> age_name;
     
     public ArrayList<ArrayList<Trait>> default_orient;
     
@@ -50,19 +49,7 @@ public class Sex extends DynamicObject {
 
     public void set_default_orient(Trait[] attract,Trait[] disgust){
         ArrayList<Trait> dia1 = new ArrayList<>(Arrays.asList(attract));
-        /*
-        Trait[] first = attract;
-        for(int i=0;i<first.length;i++){
-        dia1.add(first[i]);
-        }
-        */
         ArrayList<Trait> dia2 = new ArrayList<>(Arrays.asList(disgust));
-        /*
-        Trait[] second = disgust;
-        for(int i=0;i<second.length;i++){
-        dia2.add(second[i]);
-        }
-        */
         default_orient.set(0,dia1);
         default_orient.set(1,dia2);
     }
@@ -87,8 +74,8 @@ public class Sex extends DynamicObject {
         String ret = "";
         int age = c.get_stat(FPalaceHelper.age_id).intValue();
         int i = 0;
-        for(i=0;i<Math.ceil(age_name.size()/2);i++){
-            //if(age >= age_name[i*2])ret = age_name[i*2+1]
+        for(i=0;i<age_name.size();i++){
+            //(age >= age_name[i*2])ret = age_name[i*2+1]
             if(age >= age_name.get(i).age())ret = age_name.get(i).name();//TODO verify
         }
         
@@ -122,38 +109,36 @@ public class Sex extends DynamicObject {
         int ending_age = c.get_stat(FPalaceHelper.age_id).intValue() + age_change;
         for (i=0;i<age_stat.size();i++){
             int j;// = starting_age
-            double percent_change = 0;//was Number
-            if(age_stat_change.get(i) != null && age_stat_change.get(i).size() > 0){
-                Number curr_stat_val;
+            double percentChange = 0;//was Number
+            if(age_stat_change.get(i) != null && !age_stat_change.get(i).isEmpty()){//was size()>0
+                Number currStatVal;
                 if(age_change > 0){
-                    curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
+                    currStatVal = c.get_stat(age_stat.get(i),0,0,-1,false);
                     //j++//starting_age+1
 
                     for(j=starting_age+1;j<= ending_age;j++){
                         if(j >= age_stat_change.get(i).size()){
-                            percent_change = age_stat_change.get(i).get(age_stat_change.get(i).size()-1);
-                            percent_change = curr_stat_val.doubleValue()*percent_change;
-                            curr_stat_val = curr_stat_val.doubleValue() + percent_change;
+                            percentChange = age_stat_change.get(i).get(age_stat_change.get(i).size()-1);
+                            percentChange = currStatVal.doubleValue()*percentChange;
+                            currStatVal = currStatVal.doubleValue() + percentChange;
                         }else if (age_stat_change.get(i).get(j) != null){
-                            percent_change = age_stat_change.get(i).get(j);
-                            percent_change = curr_stat_val.doubleValue()*percent_change;
-                            curr_stat_val = curr_stat_val.doubleValue() + percent_change;
+                            percentChange = age_stat_change.get(i).get(j);
+                            percentChange = currStatVal.doubleValue()*percentChange;
+                            currStatVal = currStatVal.doubleValue() + percentChange;
                         }
                     }
-                    //TODO
-                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
+                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), currStatVal.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
                 }else if(age_change < 0){
-                    curr_stat_val = c.get_stat(age_stat.get(i),0,0,-1,false);
+                    currStatVal = c.get_stat(age_stat.get(i),0,0,-1,false);
                     
                     for(j=starting_age;j> ending_age;j--){//TODO verify j
                         if (j < age_stat_change.get(i).size() && age_stat_change.get(i).get(j) != null){
-                            percent_change = age_stat_change.get(i).get(j);
-                            percent_change = curr_stat_val.doubleValue() - (curr_stat_val.doubleValue()/(1 + percent_change));
-                            curr_stat_val = curr_stat_val.doubleValue() - percent_change;
+                            percentChange = age_stat_change.get(i).get(j);
+                            percentChange = currStatVal.doubleValue() - (currStatVal.doubleValue()/(1 + percentChange));
+                            currStatVal = currStatVal.doubleValue() - percentChange;
                         }
                     }
-                    //TODO
-                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), curr_stat_val.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
+                    c.set_challenge_output(c.apply_affect_by_id(age_stat.get(i), currStatVal.doubleValue() - c.get_stat(age_stat.get(i),0).doubleValue(),0,null,Body.prorate_change_total));
                 }
             }
         }
@@ -168,19 +153,19 @@ public class Sex extends DynamicObject {
         
         return;
     }
-    public void new_age_stat(int stat_id, double[] stat_change){
+    public void new_age_stat(int statID, double[] statChange){
         ArrayList<Double> dia1 = new ArrayList<>();
-        for(int i=0;i<stat_change.length;i++){
-            dia1.add(stat_change[i]);
+        for(int i=0;i<statChange.length;i++){
+            dia1.add(statChange[i]);
         }
         
-        age_stat.add(stat_id);
+        age_stat.add(statID);
         age_stat_change.add(dia1);
     }
     
-    public void new_age_stat(int stat_id, ArrayList<Double> stat_change){
-        age_stat.add(stat_id);//age_stat[age_stat.size()] = stat_id
-        age_stat_change.add(stat_change); //age_stat_change[age_stat_change.size()] = stat_change
+    public void new_age_stat(int statID, ArrayList<Double> statChange){
+        age_stat.add(statID);//age_stat[age_stat.size()] = stat_id
+        age_stat_change.add(statChange); //age_stat_change[age_stat_change.size()] = stat_change
     }
     
             
@@ -218,11 +203,11 @@ public class Sex extends DynamicObject {
     public void apply_bonuses(Character c){
         apply_bonuses(c,false);
     }
-    public void apply_bonuses(Character c, Boolean delay_effect){//default false
+    public void apply_bonuses(Character c, Boolean delayEffect){//default false
         int i= 0;
         for(i=0;i<bonus.size();i++){
             if (bonus.get(i)!=(Number)0&&bonus.get(i)!=null){//TODO check if this needs to be an ArrayList, and if added null makes sense
-                if(delay_effect){
+                if(Boolean.TRUE.equals(delayEffect)){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);
                     Consequence consequence = new Consequence();
@@ -248,11 +233,11 @@ public class Sex extends DynamicObject {
     public void reverse_bonuses(Character c){
         reverse_bonuses(c,false);
     }
-    public void reverse_bonuses(Character c, Boolean delay_effect){//default false
+    public void reverse_bonuses(Character c, Boolean delayEffect){//default false
         int i = 0;
         for(i=0;i<bonus.size();i++){
             if (bonus.get(i) != (Number)0 && bonus.get(i) != null){//TODO check if need arraylist
-                if(delay_effect){
+                if(Boolean.TRUE.equals(delayEffect)){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);
                     Consequence consequence= new Consequence();

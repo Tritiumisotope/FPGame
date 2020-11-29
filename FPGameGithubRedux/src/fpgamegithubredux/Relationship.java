@@ -42,11 +42,11 @@ public class Relationship {
         introduced = true;
     }
     
-    public void change_type(int new_type){
-        relationship_type = new_type;
+    public void change_type(int newType){
+        relationship_type = newType;
     }
     
-    public void apply_change(Number k,int change_id){
+    public void apply_change(Number k,int changeID){
         //TODO verify let 0 fail on its own, we have no else!
         //if statement checking if k double value not equal zero
         if(k.doubleValue() > 0){
@@ -75,7 +75,7 @@ public class Relationship {
         }
         //trace("(Relationship)made change of " + k + " ending status:" + relationship_status())
         //close bracket
-        change_reasons.add(change_id);        //change_reasons[change_reasons.length] = change_id
+        change_reasons.add(changeID);        //change_reasons[change_reasons.length] = change_id
     }
     
     public void change_to_aggressive(){

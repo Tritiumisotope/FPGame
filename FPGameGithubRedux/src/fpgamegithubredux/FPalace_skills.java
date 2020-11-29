@@ -471,8 +471,8 @@ crafts..............   17    -         | | | water.........   54  178
                 
                 if(skill_ranks == 0 && skill_array.get(i).get_parent() != -1){//[]
                     int temp = get_skill_value_by_id(c,skill_id, 1) - 1;
-                    int temp_ranks = c.skills.get_skill_ranks(skill_array.get(i).get_parent());//[]
-                    ret = Math.min(temp,temp_ranks);
+                    int tempRanks = c.skills.get_skill_ranks(skill_array.get(i).get_parent());//[]
+                    ret = Math.min(temp,tempRanks);
                 }
                 
                 break;
@@ -748,12 +748,12 @@ crafts..............   17    -         | | | water.........   54  178
             challenge.setText("Knee");
             Consequence consequence = new Consequence();
             consequence.set_damage_type(FPalaceHelper.bludg_damage_type().get_id());
-            Challenge inter_chal = new Challenge(true);
-                inter_chal.set_attack_stat(FPalace_skills.concentration_id);
-                inter_chal.set_defense_stat(-1,4);
-                inter_chal.setVariability(10);
+            Challenge interChal = new Challenge(true);
+                interChal.set_attack_stat(FPalace_skills.concentration_id);
+                interChal.set_defense_stat(-1,4);
+                interChal.setVariability(10);
             
-            consequence.set_interupt_chal(inter_chal);
+            consequence.set_interupt_chal(interChal);
             consequence.addConsequence(FPalaceHelper.curr_hp_id,-3, "</n2> knees </n>. ",0);
             consequence.addConsequence(FPalaceHelper.curr_hp_id,-0.5, "</n2> crushes </n>s balls. ",5,0,0,-1, false, null, FPalaceHelper.balls_slot);//need this to target specific part id...
             consequence.addConsequence(0,0, "</n2> misses as </pronoun2> lashes out with a leg. ",-1);

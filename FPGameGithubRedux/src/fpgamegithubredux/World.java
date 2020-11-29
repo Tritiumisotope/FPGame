@@ -40,21 +40,21 @@ public class World {
     }
     //*TODO make this work?
     public String[] add_exit_to_piece(String[] map_piece,String exit_name){//TODO fixed size	array
-        if(exit_name == "North"){
+        if(exit_name.equals("North")){
             map_piece[1] = "|";
-        }else if(exit_name == "East"){
+        }else if(exit_name.equals("East")){
             map_piece[6] = "-";
-        }else if(exit_name == "West"){
+        }else if(exit_name.equals("West")){
             map_piece[4] = "-";
-        }else if(exit_name == "North-East"){
+        }else if(exit_name.equals("North-East")){
             map_piece[2] = "/";
-        }else if(exit_name == "North-West"){
+        }else if(exit_name.equals("North-West")){
             map_piece[0] = "\\";
-        }else if(exit_name == "South-West"){
+        }else if(exit_name.equals("South-West")){
             map_piece[8] = "/";
-        }else if(exit_name == "South-East"){
+        }else if(exit_name.equals("South-East")){
             map_piece[10] = "\\";
-        }else if(exit_name == "South"){
+        }else if(exit_name.equals("South")){
             map_piece[9] = "|";
         }else{
             map_piece[5] = "@";
@@ -110,7 +110,7 @@ public class World {
                 stringMap.add(new ArrayList<>());
                 for(int j=0;j<map.get(i).size();j++){
                     if(map.get(i).get(j) != null){
-                        //map.get(i).set(j,map_pieces.get(map.get(i).get(j)));//map[i][j] = map_pieces[map[i][j]];
+                        //map.get(i).set(j,map_pieces.get(map.get(i).get(j)));//map[i][j] = map_pieces[map[i][j]]
                         stringMap.get(i).add(map_pieces.get(map.get(i).get(j)));
                         //null-fill stringMap and assign here?
                     }else{//again with maintaining addresses
@@ -172,7 +172,7 @@ public class World {
     public ArrayList<ArrayList<Integer>> make_integer_map(){
         ArrayList<ArrayList<Integer>> map = new ArrayList<>();
         
-        //map[0] = new ArrayList<>();
+        //map[0] = new ArrayList<>()
         map.add(new ArrayList<>());
         
         int i = 0;
@@ -226,8 +226,8 @@ public class World {
                     int y=0;
                     if(x+temp[0] < 0)x++;
                     if(y + temp[1] < 0)y++;
-                    if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array();
-                    if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array();
+                    if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
+                    if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array()
                     while(map.get(x + temp[0]).get(y + temp[1]) != null || map.get(x).get(y) != null || (temp[0] != 0 && temp[1] != 0 && map.get(x+temp[0]) != null && map.get(x+temp[0]).get(y) != null && map.get(x).get(y+temp[1]) != null)){
                         if(y < max_existing_y+1){
                             y++;
@@ -237,20 +237,20 @@ public class World {
                         }
                         if(y + temp[1] < 0)y++;
                         
-                        if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array();
-                        if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array();
+                        if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
+                        if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array()
                     }
                     
-                    if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array();
-                    if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array();
+                    if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
+                    if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array()
                     
                     //should be checking if the exit makes an overpass...
                     if(temp[0] != 0 && temp[1] != 0 && map.get(x+temp[0]) != null && map.get(x+temp[0]).get(y) != null && map.get(x).get(y+temp[1]) != null){
                         LOGGER.info("Should be checking for an overpasss exit... pretty sure I found one. Skipping placement. ");
                     }else{
-                        if(map.get(x).get(y) != null && map.get(x).get(y) != (Integer)links.get(i).get(0))LOGGER.info("(World.make_integer_map1.1)Overwriting an area...");
-                        map.get(x).set(y, (Integer)links.get(i).get(0));//map.get(x).get(y) = links.get(i).get(0);
-                        map.get(x+temp[0]).set(y+temp[1],(Integer)links.get(i).get(1));//map.get(x+temp[0])[y+temp[1]] = links.get(i)[1];
+                        if(map.get(x).get(y) != null && !map.get(x).get(y).equals((Integer)links.get(i).get(0)))LOGGER.info("(World.make_integer_map1.1)Overwriting an area...");
+                        map.get(x).set(y, (Integer)links.get(i).get(0));//map.get(x).get(y) = links.get(i).get(0)
+                        map.get(x+temp[0]).set(y+temp[1],(Integer)links.get(i).get(1));//map.get(x+temp[0])[y+temp[1]] = links.get(i)[1]
                     }
                 }else if(found){
                     int[] temp = areas.get((Integer)links.get(i).get(0)).get_offset_by_name((String)links.get(i).get(3));
@@ -265,9 +265,9 @@ public class World {
                         if(x + temp[0] < 0){
                             //int count = map.size()
                             for(int count=map.size();count>0;count--){
-                                map.set(count, map.get(count-1));//map[count] = map[count - 1];
+                                map.set(count, map.get(count-1));//map[count] = map[count - 1]
                             }
-                            map.set(0,null);//map[0] = null;
+                            map.set(0,null);//map[0] = null
                             x++;
                         }
                         
@@ -275,11 +275,11 @@ public class World {
                             int count = 0;
                             for(count=0;count<map.size();count++){
                                 if(map.get(count) != null){
-                                    int count2 = map.get(count).size();
-                                    for(count2=map.get(count).size();count2>0;count2--){
-                                        map.get(count).set(count2, map.get(count).get(count2 - 1));//map.get(count).get(count2) = map[count][count2 - 1];
+                                    //int count2 = map.get(count).size()
+                                    for(int count2=map.get(count).size();count2>0;count2--){
+                                        map.get(count).set(count2, map.get(count).get(count2 - 1));//map.get(count).get(count2) = map[count][count2 - 1]
                                     }
-                                    map.get(count).set(0,null);//map[count][0] = null;
+                                    map.get(count).set(0,null);//map[count][0] = null
                                     
                                 }
                             }
@@ -288,7 +288,7 @@ public class World {
                     }
                     
                     if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());
-                    if(map.get(x+temp[0]).get(y+temp[1]) != null && map.get(x+temp[0]).get(y+temp[1]) != (Integer)links.get(i).get(1))LOGGER.info("(World.make_integer_map2)Overwriting an area...");
+                    if(map.get(x+temp[0]).get(y+temp[1]) != null && !map.get(x+temp[0]).get(y+temp[1]).equals((Integer)links.get(i).get(1)))LOGGER.info("(World.make_integer_map2)Overwriting an area...");
                     map.get(x+temp[0]).set(y+temp[1], (Integer)links.get(i).get(1));
                     
                 }else if(found2){
@@ -302,10 +302,14 @@ public class World {
                     
                     if(x2 + temp[0] < 0 || y2 + temp[1] < 0){
                         if(x2 + temp[0] < 0){
+                            
                             for(int count= map.size();count>0;count--){
-                                map.set(count, map.get(count-1));//map[count] = map[count - 1];
+                                map.set(count, map.get(count-1));//map[count] = map[count - 1]
                             }
-                            map.set(0,null);//map[0] = null;
+                            map.set(0,null);//map[0] = null
+                            
+                            //map.remove(map.size()-1)
+                            //map.add(0,null)//TODO VERIFY!!!
                             x2++;
                         }
                         
@@ -313,11 +317,11 @@ public class World {
                             int count = 0;
                             for(count=0;count<map.size();count++){
                                 if(map.get(count) != null){
-                                    int count2 = map.get(count).size();
-                                    for(count2= map.get(count).size();count2>0;count2--){
-                                        map.get(count).set(count2, map.get(count).get(count2 - 1));//map[count][count2] = map[count][count2 - 1];
+                                    //int count2 = map.get(count).size()
+                                    for(int count2= map.get(count).size();count2>0;count2--){
+                                        map.get(count).set(count2, map.get(count).get(count2 - 1));//map[count][count2] = map[count][count2 - 1]
                                     }
-                                    map.get(count).set(0, null);//map[count][0] = null;
+                                    map.get(count).set(0, null);//map[count][0] = null
                                     
                                 }
                             }
@@ -339,7 +343,7 @@ public class World {
     public void add_area(Area a){
         a.world = this;
         a.set_id(areas.size());
-        areas.add(a); //areas[areas.length] = a;
+        areas.add(a); //areas[areas.length] = a
         a.remove_empty_edges();
         a.check_connections();
     }
@@ -354,7 +358,6 @@ public class World {
         Room temp_room1 = null;
         Room temp_room2 = null;
         int count;
-        count = 0;
         for(count=0;count<links.size();count++){
             if(((Integer)links.get(count).get(0) == i  && (Integer)links.get(count).get(1) == k) || ((Integer)links.get(count).get(0) == k  && (Integer)links.get(count).get(1) == i))return;
         }
@@ -385,7 +388,6 @@ public class World {
                     ArrayList<String>  area_exit_list = new ArrayList<>();
                     ArrayList<String>  area_exit_list2 = new ArrayList<>();
                     
-                    count = 0;
                     for(count=0;count<area_room_list.size();count++){
                         r2 = area_room_list.get(count);
                         area_exit_list.addAll(remove_existing_edge_exit(get_edge_exits(areas.get(k),r2), areas.get(k), sub_area_flag));
@@ -411,16 +413,15 @@ public class World {
                                     for(count3=0;count3<r1.exits.size();count3++){
                                         if(r1.exits.get(count3).area == r2.area){
                                             made = true;
-                                            //links[links.length] = [i,k,sub_area_flag, r1.exit_names[count3], r1.exits[count3].exit_names[r1.exits[count3].get_exit_id(r1)] ];
+                                            //links[links.length] = [i,k,sub_area_flag, r1.exit_names[count3], r1.exits[count3].exit_names[r1.exits[count3].get_exit_id(r1)] ]
                                             links.add(new ArrayList<>(Arrays.asList(i,k,sub_area_flag, r1.exit_names.get(count3), r1.exits.get(count3).exit_names.get(r1.exits.get(count3).get_exit_id(r1)))));
                                             break;
                                         }
                                     }
                                     if(!made){
-                                        count3 = 0;
                                         for(count3=0;count3<r2.exits.size();count3++){
                                             if(r2.exits.get(count3).area == r1.area){
-                                                //links[links.length] = [i,k,sub_area_flag,  r2.exits[count3].exit_names[r2.exits[count3].get_exit_id(r2)] , r2.exit_names[count3] ];
+                                                //links[links.length] = [i,k,sub_area_flag,  r2.exits[count3].exit_names[r2.exits[count3].get_exit_id(r2)] , r2.exit_names[count3] ]
                                                 links.add(new ArrayList<>(Arrays.asList(i,k,sub_area_flag,  r2.exits.get(count3).exit_names.get(r2.exits.get(count3).get_exit_id(r2)) , r2.exit_names.get(count3))));
                                                 break;
                                             }
@@ -580,7 +581,6 @@ public class World {
                     }
                 }
                 if(!made){
-                    count3 = 0;
                     for(count3=0;count3<r2.exits.size();count3++){
                         if(r2.exits.get(count3).area == r1.area){
                             //links[links.length] = [i,k,sub_area_flag,  r2.exits[count3].exit_names[r2.exits[count3].get_exit_id(r2)] , r2.exit_names[count3] ];
@@ -632,21 +632,20 @@ public class World {
         for(i=0;i<links.size();i++){
             if(((Integer)links.get(i).get(0) == area_id || (Integer)links.get(i).get(1) == area_id) && (Boolean)links.get(i).get(2) == false){
                 if((Integer)links.get(i).get(0) == area_id){
-                    //existing_exits[existing_exits.length] = (String)links.get(i).get(3);
+                    //existing_exits[existing_exits.length] = (String)links.get(i).get(3)
                     existing_exits.add((String)links.get(i).get(3));
                 }else{
-                    //existing_exits[existing_exits.length] = (String)links.get(i).get(4);
+                    //existing_exits[existing_exits.length] = (String)links.get(i).get(4)
                     existing_exits.add((String)links.get(i).get(4));
                 }
             }
         }
         
-        i=0;
         for(i=0;i<existing_exits.size();i++){
             int j = 0;
             for(j=0;j<exit_list.size();j++){
-                if(existing_exits.get(i) == exit_list.get(j)){
-                    //exit_list = exit_list.slice(0,j).concat(exit_list.slice(j+1, exit_list.length));
+                if(existing_exits.get(i).equals(exit_list.get(j))){
+                    //exit_list = exit_list.slice(0,j).concat(exit_list.slice(j+1, exit_list.length))
                     exit_list.remove(j);
                     break;
                 }
@@ -655,12 +654,10 @@ public class World {
         
         if(!sub_area_flag){
             ArrayList<ArrayList<Integer>> map = make_integer_map();
-            //find the area on the map;
+            //find the area on the map
             Boolean found = false;
-            i=0;
             int j = 0;
             for(i=0;i<map.size();i++){
-                
                 for(j=0;j<map.get(i).size();j++){
                     if(map.get(i).get(j) == area_id){
                         found = true;
@@ -688,8 +685,8 @@ public class World {
                         if(map.get(i+temp[0]) != null && map.get(i+temp[0]).get(j) != null && map.get(i).get(j+temp[1]) != null){
                             int link_count = 0;
                             for(link_count=0;link_count<links.size();link_count++){
-                                if(((Integer)links.get(link_count).get(0) == map.get(i+temp[0]).get(j) && (Integer)links.get(link_count).get(1) == map.get(i).get(j+temp[1])) ||
-                                 ((Integer)links.get(link_count).get(1) == map.get(i+temp[0]).get(j) && links.get(link_count).get(0) == map.get(i).get(j+temp[1]))){
+                                if((((Integer)links.get(link_count).get(0)).equals(map.get(i+temp[0]).get(j)) && ((Integer)links.get(link_count).get(1)).equals(map.get(i).get(j+temp[1]))) ||
+                                 (((Integer)links.get(link_count).get(1)).equals(map.get(i+temp[0]).get(j)) && ((Integer)links.get(link_count).get(0)).equals(map.get(i).get(j+temp[1])))){
                                     remove_exit = true;
                                 }
                             }
@@ -705,7 +702,7 @@ public class World {
                     }
                     
                     if(remove_exit){
-                        //exit_list = exit_list.slice(0,k).concat(exit_list.slice(k+1, exit_list.length));
+                        //exit_list = exit_list.slice(0,k).concat(exit_list.slice(k+1, exit_list.length))
                         exit_list.remove(k);
                         k--;
                     }
@@ -730,7 +727,6 @@ public class World {
         
         int[] a1_location = null;
         int[] a2_location = null;
-        x = 0;
         for(x=0;x<map.size();x++){
             int y = 0;
             if(map.get(x) != null){
@@ -749,7 +745,7 @@ public class World {
         
         if(a1_location != null && a2_location != null){
             if(r1_avail_exit.indexOf(Area.get_direction(a1_location[0], a2_location[1], 0, a2_location[0], a1_location[1], 0)) >= 0 && r2_avail_exit.indexOf(Area.get_direction(a2_location[0], a1_location[1], 0, a1_location[0], a2_location[1], 0)) >= 0){ 
-                if(stay_in_edges && a1.description != a2.description){
+                if(stay_in_edges && !a1.description.equals(a2.description)){
                     ocean_spread(r1, Area.get_direction(a1_location[0], a2_location[1], 0, a2_location[0], a1_location[1], 0), r2, Area.get_direction(a2_location[0], a1_location[1], 0, a1_location[0], a2_location[1], 0));
                 }else{
                     r1.new_exit(r2, Area.get_direction(a1_location[0], a2_location[1], 0, a2_location[0], a1_location[1], 0));
@@ -772,13 +768,12 @@ public class World {
         for(count=0;count<r1_avail_exit.size();count++){
             int count2 = 0;
             for(count2=0;count2<dir_list.size();count2++){
-                if(r1_avail_exit.get(count) == dir_list.get(count2)){
+                if(r1_avail_exit.get(count).equals(dir_list.get(count2))){
                     int count3 = 0;
                     for(count3=0;count3<r2_avail_exit.size();count3++){
-                        if(r2_avail_exit.get(count3) == not_dir_list.get(count2)){
+                        if(r2_avail_exit.get(count3).equals(not_dir_list.get(count2))){
                             if(stay_in_edges){
                                 Boolean map_found = false;
-                                x = 0;
                                 for(x=0;x<map.size();x++){
                                     int y = 0;
                                     for(y=0;y<map.get(x).size();y++){
@@ -792,25 +787,25 @@ public class World {
                                                 dir_from_placed = dir_list.get(count2);
                                                 spread_area = a1.id;													
                                             }
-                                            if(dir_from_placed == "North"){
+                                            if(dir_from_placed.equals("North")){
                                                 if(x+1 < map.size())found = true;
-                                            }else if(dir_from_placed == "North-West"){
+                                            }else if(dir_from_placed.equals("North-West")){
                                                 if(x+1 < map.size() && y+1 < max_y)found = true;
-                                            }else if(dir_from_placed == "North-East"){
+                                            }else if(dir_from_placed.equals("North-East")){
                                                 if(x+1 < map.size() && y-1 >= 0)found = true;
-                                            }else if(dir_from_placed == "South-East"){
+                                            }else if(dir_from_placed.equals("South-East")){
                                                 if(x-1 >= 0 && y-1 >= 0)found = true;
-                                            }else if(dir_from_placed == "South-West"){
+                                            }else if(dir_from_placed.equals("South-West")){
                                                 if(x-1 >= 0 && y+1 < max_y)found = true;
-                                            }else if(dir_from_placed == "East"){
+                                            }else if(dir_from_placed.equals("East")){
                                                 if(y-1 >= 0)found = true;
-                                            }else if(dir_from_placed == "West"){
+                                            }else if(dir_from_placed.equals("West")){
                                                 if(y+1 < max_y)found = true;
-                                            }else if(dir_from_placed == "South"){
+                                            }else if(dir_from_placed.equals("South")){
                                                 if(x-1 >= 0 )found = true;
                                             }
                                             if(found){
-                                                if(areas.get(spread_area).fillerTemplate.get(0) != null && a1.description != a2.description){
+                                                if(areas.get(spread_area).fillerTemplate.get(0) != null && !a1.description.equals(a2.description)){
                                                     if(spread_area == a1.id){
                                                         ocean_spread(r1, dir_list.get(count2), r2, not_dir_list.get(count2));
                                                     }else if(spread_area == a2.id){
@@ -900,9 +895,9 @@ public class World {
             for(i=0;i<r.exit_names.size();i++){
                 int j = 0;
                 for(j=0;j<arr.size();j++){
-                    if(r.exit_names.get(i) == arr.get(j)){
+                    if(r.exit_names.get(i).equals(arr.get(j))){
                         //suspicious... 
-                        //arr = arr.slice(0,j).concat(arr.slice(j+1,arr.length));
+                        //arr = arr.slice(0,j).concat(arr.slice(j+1,arr.length))
                         arr.remove(j);
                         break;
                     }
@@ -913,7 +908,7 @@ public class World {
         
         if(arr.size() < 1){
             if(indent > 1){
-                //LOGGER.info("(World)indent already tried while search for available edge exits... heading for failure.");
+                LOGGER.info("(World)indent already tried while search for available edge exits... heading for failure.");
             }else{
                 return get_edge_exits(a, r, indent + 1);
             }
@@ -923,12 +918,14 @@ public class World {
     }
     
     private void ocean_connect(ArrayList<ArrayList<Integer>> map,Area temp_ocean,int old_x,int old_y,int new_x,int new_y){
-        if(map.get(new_x).get(old_y) != null && map.get(old_x).get(new_y) != null && areas.get(map.get(new_x).get(old_y)).description != temp_ocean.description &&
-            areas.get(map.get(old_x).get(new_y)).description != temp_ocean.description){
+        if(map.get(new_x).get(old_y) != null && map.get(old_x).get(new_y) != null && 
+            !areas.get(map.get(new_x).get(old_y)).description.equals(temp_ocean.description) &&
+            !areas.get(map.get(old_x).get(new_y)).description.equals(temp_ocean.description)){
             //if these two areas are connected, I should do nothing
             int count = 0;
             for(count=0;count<links.size();count++){
-                if((links.get(count).get(0) == map.get(new_x).get(old_y)  && (Integer)links.get(count).get(1) == map.get(old_x).get(new_y)) || (links.get(count).get(0) == map.get(old_x).get(new_y)  && (Integer)links.get(count).get(1) == map.get(new_x).get(old_y))){
+                if((links.get(count).get(0) == map.get(new_x).get(old_y)  && ((Integer)links.get(count).get(1)).equals(map.get(old_x).get(new_y))) || 
+                (links.get(count).get(0) == map.get(old_x).get(new_y)  && ((Integer)links.get(count).get(1)).equals(map.get(new_x).get(old_y)))){
                     break;
                 }
             }
@@ -955,30 +952,36 @@ public class World {
         max_y--;
         
         room_loc = spread_to_area.find_room(r2);
-        if(r2_connect_dir == "North" || r2_connect_dir == "South"){
+        if(r2_connect_dir.equals("North") || r2_connect_dir.equals("South")){
             //should move east or west to find the location
             count = 1;
             while(!placed){
                 if(room_loc[1]+count<=max_y && (spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) == null || spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]) == null)){
-                    if(spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) == null)spread_to_area.rooms.get(room_loc[0]).set(room_loc[1]+count, new ArrayList<>());//spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) = new Array();
-                    //spread_to_area.rooms[room_loc[0]][room_loc[1]+count][room_loc[2]] = new_room;
+                    if(spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) == null)spread_to_area.rooms.get(room_loc[0]).set(room_loc[1]+count, new ArrayList<>());//spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) = new Array()
+                    //spread_to_area.rooms[room_loc[0]][room_loc[1]+count][room_loc[2]] = new_room
                     spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).set(room_loc[2], new_room);
-                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
                 }else if(room_loc[1]-count>=0 && (spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count) == null || spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]) == null)){
-                    if(spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count) == null)spread_to_area.rooms.get(room_loc[0]).set(room_loc[1]-count,new ArrayList<>());//spread_to_area.rooms[room_loc[0]][room_loc[1]-count] = new Array();
-                    //spread_to_area.rooms[room_loc[0]][room_loc[1]-count][room_loc[2]] = new_room;
+                    if(spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count) == null)spread_to_area.rooms.get(room_loc[0]).set(room_loc[1]-count,new ArrayList<>());//spread_to_area.rooms[room_loc[0]][room_loc[1]-count] = new Array()
+                    //spread_to_area.rooms[room_loc[0]][room_loc[1]-count][room_loc[2]] = new_room
                     spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).set(room_loc[2], new_room);
-                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
                 }else if((room_loc[1]+count<=max_y && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]) != null) || (room_loc[1]-count>=0 && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]) != null)){
-                    if(room_loc[1]-count>=0 && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count) != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]) != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]).template != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                    if(room_loc[1]-count>=0 && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count) != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]) != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]).template != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                         new_room = spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]-count).get(room_loc[2]);
                         no_spread = true;
                         placed = true;
-                    }else if(room_loc[1]+count<=max_y && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]) != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]).template != null && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                    }else if(room_loc[1]+count<=max_y && spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count) != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]) != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]).template != null && 
+                    spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                         new_room = spread_to_area.rooms.get(room_loc[0]).get(room_loc[1]+count).get(room_loc[2]);
                         no_spread = true;
                         placed = true;
@@ -986,30 +989,34 @@ public class World {
                 }
                 count++;
             }
-        }else if(r2_connect_dir == "West" || r2_connect_dir == "East"){
+        }else if(r2_connect_dir.equals("West") || r2_connect_dir.equals("East")){
             //should move north or south to find the location
             count = 1;
             while(!placed){
                 if(spread_to_area.rooms.get(room_loc[0]+count) != null && (spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) == null)){
-                    if(spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]+count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) = new Array();
-                    //spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) = new_room;
+                    if(spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]+count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) = new Array()
+                    //spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) = new_room
                     spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).set(room_loc[2], new_room);
-                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
                 }else if(spread_to_area.rooms.get(room_loc[0]-count) != null && (spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) == null)){
-                    if(spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]-count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms[room_loc[0]-count][room_loc[1]] = new Array();
-                    //spread_to_area.rooms[room_loc[0]-count][room_loc[1]][room_loc[2]] = new_room;
+                    if(spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]-count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms[room_loc[0]-count][room_loc[1]] = new Array()
+                    //spread_to_area.rooms[room_loc[0]-count][room_loc[1]][room_loc[2]] = new_room
                     spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).set(room_loc[2], new_room);
-                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                    //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
                 }else if((spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null) || (spread_to_area.rooms.get(room_loc[0]-count) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) != null)){
-                    if(spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                    if(spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null && 
+                    spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template != null && 
+                    spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                         new_room = spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]);
                         no_spread = true;
                         placed = true;
-                    }else if(spread_to_area.rooms.get(room_loc[0]-count) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]).template != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                    }else if(spread_to_area.rooms.get(room_loc[0]-count) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) != null &&
+                     spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]).template != null && 
+                     spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                         new_room = spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]);
                         no_spread = true;
                         placed = true;
@@ -1024,23 +1031,27 @@ public class World {
                 if(r2_connect_dir.indexOf("East") >= 0){
                     while(!placed){
                         if(spread_to_area.rooms.get(count).get(0) == null || spread_to_area.rooms.get(count).get(0).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(count).get(0) == null)spread_to_area.rooms.get(count).set(0, new ArrayList<>());//spread_to_area.rooms.get(count).get(0) = new Array();
-                            //spread_to_area.rooms.get(count).get(0).get(room_loc[2]) = new_room;
-                            spread_to_area.room_list.add(new_room);//spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            if(spread_to_area.rooms.get(count).get(0) == null)spread_to_area.rooms.get(count).set(0, new ArrayList<>());//spread_to_area.rooms.get(count).get(0) = new Array()
+                            //spread_to_area.rooms.get(count).get(0).get(room_loc[2]) = new_room
+                            spread_to_area.room_list.add(new_room);//spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             placed = true;
                         }else if((spread_to_area.rooms.get(0).get(count) == null && count <= max_y) || spread_to_area.rooms.get(0).get(count).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(0).get(count) == null)spread_to_area.rooms.get(0).set(count, new ArrayList<>());//spread_to_area.rooms.get(0).get(count) = new Array();
-                            //spread_to_area.rooms.get(0).get(count)[room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(0).get(count) == null)spread_to_area.rooms.get(0).set(count, new ArrayList<>());//spread_to_area.rooms.get(0).get(count) = new Array()
+                            //spread_to_area.rooms.get(0).get(count)[room_loc[2]] = new_room
                             spread_to_area.rooms.get(0).get(count).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             spread_to_area.room_list.add(new_room);
                             placed = true;
                         }else if((count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(0).get(room_loc[2]) != null) || (count <= max_y && spread_to_area.rooms.get(0).get(count).get(room_loc[2]) != null)){
-                            if(count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(0).get(room_loc[2]) != null && spread_to_area.rooms.get(count).get(0).get(room_loc[2]).template != null && spread_to_area.rooms.get(count).get(0).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            if(count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(0).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(count).get(0).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(count).get(0).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(count).get(0).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
-                            }else if(count <= max_y && spread_to_area.rooms.get(0).get(count).get(room_loc[2]) != null && spread_to_area.rooms.get(0).get(count).get(room_loc[2]).template != null && spread_to_area.rooms.get(0).get(count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            }else if(count <= max_y && spread_to_area.rooms.get(0).get(count).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(0).get(count).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(0).get(count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(0).get(count).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
@@ -1051,25 +1062,29 @@ public class World {
                 }else{
                     while(!placed){
                         if(spread_to_area.rooms.get(count).get(max_y) == null || spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(count).get(max_y) == null)spread_to_area.rooms.get(count).set(max_y, new ArrayList<>());//spread_to_area.rooms[count][max_y] = new Array();
-                            //spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) = new_room;
+                            if(spread_to_area.rooms.get(count).get(max_y) == null)spread_to_area.rooms.get(count).set(max_y, new ArrayList<>());//spread_to_area.rooms[count][max_y] = new Array()
+                            //spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) = new_room
                             spread_to_area.rooms.get(count).get(max_y).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             spread_to_area.room_list.add(new_room);
                             placed = true;
                         }else if(count <= max_y && (spread_to_area.rooms.get(0).get(max_y-count) == null || spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]) == null)){
-                            if(spread_to_area.rooms.get(0).get(max_y-count) == null)spread_to_area.rooms.get(0).set(max_y-count, new ArrayList<>());//spread_to_area.rooms[0][max_y-count] = new Array();
-                            //spread_to_area.rooms[0][max_y-count][room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(0).get(max_y-count) == null)spread_to_area.rooms.get(0).set(max_y-count, new ArrayList<>());//spread_to_area.rooms[0][max_y-count] = new Array()
+                            //spread_to_area.rooms[0][max_y-count][room_loc[2]] = new_room
                             spread_to_area.rooms.get(0).get(max_y-count).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             spread_to_area.room_list.add(new_room);
                             placed = true;
                         }else if((count <= max_y && spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]) != null)||(count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) != null)){
-                            if(count <= max_y && spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]) != null && spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]).template != null && spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            if(count <= max_y && spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(0).get(max_y-count).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
-                            }else if(count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) != null && spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]).template != null && spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            }else if(count < spread_to_area.rooms.size() && spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]) != null &&
+                            spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(count).get(max_y).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
@@ -1082,24 +1097,28 @@ public class World {
                 if(r2_connect_dir.indexOf("East") >= 0){
                     while(!placed){
                         if((count <= spread_to_area.rooms.size() - 1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0) == null) || spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).set(0, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1-count][0] = new Array();
-                            //spread_to_area.rooms[spread_to_area.rooms.size()-1-count][0][room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).set(0, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1-count][0] = new Array()
+                            //spread_to_area.rooms[spread_to_area.rooms.size()-1-count][0][room_loc[2]] = new_room
                             spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             placed = true;
                         }else if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count) == null || spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1).set(count, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1][count] = new Array();
-                            //spread_to_area.rooms[spread_to_area.rooms.size()-1][count][room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1).set(count, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1][count] = new Array()
+                            //spread_to_area.rooms[spread_to_area.rooms.size()-1][count][room_loc[2]] = new_room
                             spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             
                             placed = true;
                         }else if((count <= spread_to_area.rooms.size() - 1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]) != null) || (count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]) != null)){
-                            if(count <= spread_to_area.rooms.size() - 1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]) != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]).template != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            if(count <= spread_to_area.rooms.size() - 1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(0).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
-                            }else if(count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]) != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]).template != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            }else if(count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(count).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
@@ -1110,25 +1129,29 @@ public class World {
                 }else{
                     while(!placed){
                         if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y) == null || spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).set(max_y, new ArrayList<>());//spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count][max_y] = new Array();
-                            //spread_to_area.rooms[spread_to_area.rooms.size()-1-count][max_y][room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).set(max_y, new ArrayList<>());//spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count][max_y] = new Array()
+                            //spread_to_area.rooms[spread_to_area.rooms.size()-1-count][max_y][room_loc[2]] = new_room
                             spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             spread_to_area.room_list.add(new_room);
                             placed = true;
                         }else if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count) == null || spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]) == null){
-                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1).set(max_y-count, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1][max_y-count] = new Array();
-                            //spread_to_area.rooms[spread_to_area.rooms.size()-1][max_y-count][room_loc[2]] = new_room;
+                            if(spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count) == null)spread_to_area.rooms.get(spread_to_area.rooms.size()-1).set(max_y-count, new ArrayList<>());//spread_to_area.rooms[spread_to_area.rooms.size()-1][max_y-count] = new Array()
+                            //spread_to_area.rooms[spread_to_area.rooms.size()-1][max_y-count][room_loc[2]] = new_room
                             spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).set(room_loc[2], new_room);
-                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room;
+                            //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                             spread_to_area.room_list.add(new_room);
                             placed = true;
                         }else if((count >= spread_to_area.rooms.size()-1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]) != null) || (count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]) != null)){
-                            if(count >= spread_to_area.rooms.size()-1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]) != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]).template != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            if(count >= spread_to_area.rooms.size()-1 && spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(spread_to_area.rooms.size()-1-count).get(max_y).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
-                            }else if(count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]) != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]).template != null && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]).template.description == r1.area.fillerTemplate.get(0).description){
+                            }else if(count <= max_y && spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]) != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]).template != null && 
+                            spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
                                 new_room = spread_to_area.rooms.get(spread_to_area.rooms.size()-1).get(max_y-count).get(room_loc[2]);
                                 no_spread = true;
                                 placed = true;
@@ -1156,7 +1179,7 @@ public class World {
             ArrayList<String> avail_exits = spread_room.template.get_avail_exits(new_room);
             int temp_str_count = 0;
             for(temp_str_count=0;temp_str_count<avail_exits.size();temp_str_count++){
-                if(to_path == avail_exits.get(temp_str_count)){
+                if(to_path.equals(avail_exits.get(temp_str_count))){
                     good_exit = true;
                     break;
                 }
@@ -1185,15 +1208,15 @@ public class World {
         //ArrayList<String> temp_loc = new ArrayList<>();//was array, but trying this...
         int[] temp_loc = new int[3];//it is x-y-z coords after all
         if(room_count < Math.max(max_y/6,1) && room_loc[0]-1 >= 0 && spread_area.rooms.get(room_loc[0]-1) != null && (spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]) == null || spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]).get(room_loc[2]) == null)){
-            if(spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]) == null)spread_area.rooms.get(room_loc[0]-1).set(room_loc[1],new ArrayList<>());//spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]) = new Array();
+            if(spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]) == null)spread_area.rooms.get(room_loc[0]-1).set(room_loc[1],new ArrayList<>());//spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]) = new Array()
             new_room = spread_room.template.make_room();
             new_room.area = spread_area;
             new_room.set_id(spread_area.room_list.size());
             spread_room.new_exit(new_room, Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0]-1,room_loc[1],room_loc[2]));
             new_room.new_exit(spread_room, Area.get_direction(room_loc[0]-1,room_loc[1],room_loc[2],room_loc[0],room_loc[1],room_loc[2]));
-            //spread_area.rooms.get(room_loc[0]-1][room_loc[1]][room_loc[2]] = new_room;
+            //spread_area.rooms.get(room_loc[0]-1][room_loc[1]][room_loc[2]] = new_room
             spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]).set(room_loc[2], new_room);
-            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room;
+            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room
             temp_loc[0] = room_loc[0] - 1;
             temp_loc[1] = room_loc[1];
             temp_loc[2] = room_loc[2];
@@ -1207,15 +1230,15 @@ public class World {
         }
         
         if(room_count < Math.max(max_y/6,1) && room_loc[0]+1 < spread_area.rooms.size() && (spread_area.rooms.get(room_loc[0]+1).get(room_loc[1]) == null || spread_area.rooms.get(room_loc[0]+1).get(room_loc[1]).get(room_loc[2]) == null)){
-            if(spread_area.rooms.get(room_loc[0]+1).get(room_loc[1]) == null)spread_area.rooms.get(room_loc[0]+1).set(room_loc[1], new ArrayList<>());//spread_area.rooms[room_loc[0]+1][room_loc[1]] = new Array();
+            if(spread_area.rooms.get(room_loc[0]+1).get(room_loc[1]) == null)spread_area.rooms.get(room_loc[0]+1).set(room_loc[1], new ArrayList<>());//spread_area.rooms[room_loc[0]+1][room_loc[1]] = new Array()
             new_room = spread_room.template.make_room();
             new_room.area = spread_area;
             new_room.set_id(spread_area.room_list.size());
             spread_room.new_exit(new_room, Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0]+1,room_loc[1],room_loc[2]));
             new_room.new_exit(spread_room, Area.get_direction(room_loc[0]+1,room_loc[1],room_loc[2],room_loc[0],room_loc[1],room_loc[2]));
-            //spread_area.rooms[room_loc[0]+1][room_loc[1]][room_loc[2]] = new_room;
+            //spread_area.rooms[room_loc[0]+1][room_loc[1]][room_loc[2]] = new_room
             spread_area.rooms.get(room_loc[0]+1).get(room_loc[1]).set(room_loc[2], new_room);
-            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room;
+            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room
             temp_loc[0] = room_loc[0] + 1;
             temp_loc[1] = room_loc[1];
             temp_loc[2] = room_loc[2];
@@ -1229,15 +1252,15 @@ public class World {
         }
         
         if(room_count < Math.max(max_y/6,1) && room_loc[1]-1 >= 0 && (spread_area.rooms.get(room_loc[0]).get(room_loc[1]-1) == null || spread_area.rooms.get(room_loc[0]).get(room_loc[1]-1).get(room_loc[2]) == null)){
-            if(spread_area.rooms.get(room_loc[0]).get(room_loc[1]-1) == null)spread_area.rooms.get(room_loc[0]).set(room_loc[1]-1, new ArrayList<>());//spread_area.rooms[room_loc[0]][room_loc[1]-1] = new Array();
+            if(spread_area.rooms.get(room_loc[0]).get(room_loc[1]-1) == null)spread_area.rooms.get(room_loc[0]).set(room_loc[1]-1, new ArrayList<>());//spread_area.rooms[room_loc[0]][room_loc[1]-1] = new Array()
             new_room = spread_room.template.make_room();
             new_room.area = spread_area;
             new_room.set_id(spread_area.room_list.size());
             spread_room.new_exit(new_room, Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0],room_loc[1]-1,room_loc[2]));
             new_room.new_exit(spread_room, Area.get_direction(room_loc[0],room_loc[1]-1,room_loc[2],room_loc[0],room_loc[1],room_loc[2]));
-            //spread_area.rooms[room_loc[0]][room_loc[1]-1][room_loc[2]] = new_room;
+            //spread_area.rooms[room_loc[0]][room_loc[1]-1][room_loc[2]] = new_room
             spread_area.rooms.get(room_loc[0]).get(room_loc[1]-1).set(room_loc[2], new_room);
-            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room;
+            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room
             temp_loc[0] = room_loc[0];
             temp_loc[1] = room_loc[1] - 1;
             temp_loc[2] = room_loc[2];
@@ -1251,23 +1274,22 @@ public class World {
         }
         
         if(room_count < Math.max(max_y/6,1) && room_loc[1]+1 <= max_y && (spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1) == null || spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1).get(room_loc[2]) == null)){
-            if(spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1) == null)spread_area.rooms.get(room_loc[0]).set(room_loc[1]+1, new ArrayList<>());//spread_area.rooms[room_loc[0]][room_loc[1]+1] = new Array();
+            if(spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1) == null)spread_area.rooms.get(room_loc[0]).set(room_loc[1]+1, new ArrayList<>());//spread_area.rooms[room_loc[0]][room_loc[1]+1] = new Array()
             new_room = spread_room.template.make_room();
             new_room.area = spread_area;
             new_room.set_id(spread_area.room_list.size());
             spread_room.new_exit(new_room, Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0],room_loc[1]+1,room_loc[2]));
             new_room.new_exit(spread_room, Area.get_direction(room_loc[0],room_loc[1]+1,room_loc[2],room_loc[0],room_loc[1],room_loc[2]));
-            //spread_area.rooms.get(room_loc[0]][room_loc[1]+1][room_loc[2]] = new_room;
+            //spread_area.rooms.get(room_loc[0]][room_loc[1]+1][room_loc[2]] = new_room
             spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1).set(room_loc[2], new_room);
-            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room;
+            spread_area.room_list.add(new_room);//spread_area.room_list[spread_area.room_list.size()] = new_room
             temp_loc[0] = room_loc[0];
             temp_loc[1] = room_loc[1] + 1;
             temp_loc[2] = room_loc[2];
             ocean_room_spread(new_room, spread_area, max_y, temp_loc, room_count+1);
-            /*TODO WHAT?!
-        }else if(room_loc[1]+1 <= max_y && spread_area.rooms.size() && spread_area.rooms[room_loc[0]][room_loc[1]+1] != null && spread_area.rooms.size() && spread_area.rooms[room_loc[0]][room_loc[1]+1][room_loc[2]] != null){
-            ocean_existing_room_connect(spread_room, spread_area.rooms[room_loc[0]][room_loc[1]+1][room_loc[2]],Area.get_direction(room_loc[0],room_loc[1]+1,room_loc[2],room_loc[0],room_loc[1],room_loc[2]),Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0],room_loc[1]+1,room_loc[2]));				
-        */
+            //TODO WHAT?! size?!
+        }else if(room_loc[1]+1 <= max_y && /*spread_area.rooms.size() &&*/ spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1) != null && /*spread_area.rooms.size() &&*/ spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1).get(room_loc[2]) != null){
+            ocean_existing_room_connect(spread_room, spread_area.rooms.get(room_loc[0]).get(room_loc[1]+1).get(room_loc[2]),Area.get_direction(room_loc[0],room_loc[1]+1,room_loc[2],room_loc[0],room_loc[1],room_loc[2]),Area.get_direction(room_loc[0],room_loc[1],room_loc[2],room_loc[0],room_loc[1]+1,room_loc[2]));				
         }
             
         if(room_loc[0]-1 >= 0 && room_loc[1]+1 <= max_y && spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]+1) != null && spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]+1).get(room_loc[2]) != null && spread_area.rooms.get(room_loc[0]-1).get(room_loc[1]+1).get(room_loc[2]).template == spread_room.template){
@@ -1307,7 +1329,7 @@ public class World {
             Boolean placed = false;
 
             for(x=0;x<=max_x;x++){
-                if(map.get(x) == null)map.set(x, new ArrayList<>());//map.get(x) = new Array();
+                if(map.get(x) == null)map.set(x, new ArrayList<>());//map.get(x) = new Array()
                 int y = 0;
                 for(y=0;y<max_y;y++){
                     if(map.get(x).get(y) == null && (map.get(x).get(y-1) !=null || map.get(x).get(y+1) != null)){
@@ -1328,7 +1350,6 @@ public class World {
             if(placed){
                 map = make_integer_map();
                 placed = false;
-                x = 0;
                 for(x=0;x<map.size();x++){
                     int y = 0;
                     for(y=0;y<max_y;y++){
@@ -1383,7 +1404,6 @@ public class World {
                     }
                     
                     placed = false;
-                    x = 0;
                     for(x=0;x<map.size();x++){
                         int y = 0;
                         for(y=0;y<max_y;y++){
@@ -1406,7 +1426,7 @@ public class World {
                 }					
             }
             if(!placed){
-                //areas.pop();
+                //areas.pop() original comment
             }
             gen_count--;				
         }
@@ -1421,7 +1441,7 @@ public class World {
     }
     
     public void new_starting_room(Room r){
-        starting_rooms.add(r);//starting_rooms[starting_rooms.length] = r;
+        starting_rooms.add(r);//starting_rooms[starting_rooms.length] = r
     }
     
     public Room get_starting_room(int i){//def 0
@@ -1453,10 +1473,10 @@ public class World {
                     break;
                 }else{
                     if((Integer)links.get(x).get(0) == area_id){
-                        //area_links[area_links.length] = links[x][1];
+                        //area_links[area_links.length] = links[x][1]
                         area_links.add((Integer)links.get(x).get(1));
                     }else{
-                        //area_links[area_links.length] = links[x][0];
+                        //area_links[area_links.length] = links[x][0]
                         area_links.add((Integer)links.get(x).get(0));
                     }
                 }

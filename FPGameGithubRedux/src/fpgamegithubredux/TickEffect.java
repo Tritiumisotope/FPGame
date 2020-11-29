@@ -30,19 +30,19 @@ public class TickEffect {
     public ArrayList<Consequence> tick_consequence;
     public ArrayList<Challenge> tick_challenge;
     
-    public static String get_status_effect_name(int status_id){
+    public static String get_status_effect_name(int statusID){
         String ret = "";
-        if(status_id == prone_status){
+        if(statusID == prone_status){
             ret += "prone";
-        }else if(status_id == poisoned_status){
+        }else if(statusID == poisoned_status){
             ret += "poison";
-        }else if(status_id == lactating_status){
+        }else if(statusID == lactating_status){
             ret += "lactating";
-        }else if(status_id == pregnant_status){
+        }else if(statusID == pregnant_status){
             ret += "pregnant";
-        }else if(status_id == drunk_status){
+        }else if(statusID == drunk_status){
             ret += "drunk";
-        }else if(status_id == worms_status){
+        }else if(statusID == worms_status){
             ret += "worms";
         }
         
@@ -70,12 +70,12 @@ public class TickEffect {
     public int get_id(){
         return status_id;
     }
-    public void set_tick_consequence(double tick_num, Consequence c){
-        set_tick_consequence(tick_num, c, null);
+    public void set_tick_consequence(double tickNum, Consequence c){
+        set_tick_consequence(tickNum, c, null);
     }
-    public void set_tick_consequence(double tick_num, Consequence c, Challenge chall){
+    public void set_tick_consequence(double tickNum, Consequence c, Challenge chall){
         //default Challenge null
-        tick_count.add(tick_num); //tick_count[tick_count.size()] = tick_num
+        tick_count.add(tickNum); //tick_count[tick_count.size()] = tick_num
         tick_consequence.add(c); //tick_consequence[tick_consequence.length] = c
         tick_challenge.add(chall); //tick_challenge[tick_challenge.length] = chall
     }

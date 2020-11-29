@@ -229,7 +229,7 @@ public class Conversation_topic {
                             }
                             
                         }else{
-                            //trace("(Conversation_topic.get_start_step)got id " + stat_check.get(i).get(check_count) + " and don't know what to do about it");
+                            //LOGGER.info("(Conversation_topic.get_start_step)got id " + stat_check.get(i).get(check_count) + " and don't know what to do about it");
                         }
                     }else{
                         //check stat

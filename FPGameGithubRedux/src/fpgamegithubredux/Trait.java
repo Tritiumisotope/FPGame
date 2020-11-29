@@ -40,22 +40,22 @@ public class Trait {
 			trait_strength = i;
 		}
 		
-		public void set_attraction_check(int attraction_check_type){
-			attraction_check = attraction_check_type;
+		public void set_attraction_check(int attractionCheckType){
+			attraction_check = attractionCheckType;
 		}
 		
 		public void set_part_id(int id){
 			part_trait = id;
 		}
-		public void set_stat_trait(int stat_id){
-			set_stat_trait(stat_id,0,true);
+		public void set_stat_trait(int statID){
+			set_stat_trait(statID,0,true);
 		}
-		public void set_stat_trait(int stat_id,Number compare_amt){
-			set_stat_trait(stat_id,compare_amt,true);
+		public void set_stat_trait(int statID,Number compareAmt){
+			set_stat_trait(statID,compareAmt,true);
 		}
-		public void set_stat_trait(int stat_id,Number compare_amt, Boolean aob){//default 0, true
-			stat_trait = stat_id;
-			stat_amt = compare_amt;
+		public void set_stat_trait(int statID,Number compareAmt, Boolean aob){//default 0, true
+			stat_trait = statID;
+			stat_amt = compareAmt;
 			abv_or_blw = aob;
 		}
 		
@@ -63,7 +63,7 @@ public class Trait {
 			racial_trait = r;
 		}
 		
-		public Boolean has_trait(Character c,Character c_self){
+		public Boolean has_trait(Character c,Character cSelf){
 			Boolean ret= false;
 			
 			if(c != null){
@@ -75,7 +75,7 @@ public class Trait {
 				}
 				if(stat_trait > -1){
 					if(stat_amt.intValue() != 0 && (c.get_stat(stat_trait).doubleValue() >= stat_amt.doubleValue() && abv_or_blw) || (c.get_stat(stat_trait).doubleValue() <= stat_amt.doubleValue() && !abv_or_blw))ret = true;
-				}else if(stat_amt.intValue() == -1 &&(c.get_stat(stat_trait).doubleValue() >= c_self.get_stat(stat_trait).doubleValue() && abv_or_blw) || (c.get_stat(stat_trait).doubleValue() <= c_self.get_stat(stat_trait).doubleValue() && !abv_or_blw)){
+				}else if(stat_amt.intValue() == -1 &&(c.get_stat(stat_trait).doubleValue() >= cSelf.get_stat(stat_trait).doubleValue() && abv_or_blw) || (c.get_stat(stat_trait).doubleValue() <= cSelf.get_stat(stat_trait).doubleValue() && !abv_or_blw)){
 					ret = true;
 				}
 			}			
@@ -83,7 +83,7 @@ public class Trait {
 			return ret;
 		}
 		
-		public Number reaction_mod(Character c, int quant, Character c_self){//was number
+		public Number reaction_mod(Character c, int quant, Character cSelf){//was number
 			int ret = 0;//was number
 			if(abv_or_blw){
 				if(quant >= stat_amt.intValue()){
@@ -96,11 +96,11 @@ public class Trait {
 			}
 			
 			if(attraction_check == attracted){
-				if(c != c_self && !(c_self.personality.determine_attraction(c, c_self) > 5 || c_self.personality.check_relationship(c,c_self) > Personality.friends)){
+				if(c != cSelf && !(cSelf.personality.determine_attraction(c, cSelf) > 5 || cSelf.personality.check_relationship(c,cSelf) > Personality.friends)){
 					ret = 0;
 				}
 			}else if(attraction_check == disgusted){
-				if(c == c_self || (c_self.personality.determine_attraction(c, c_self) > 5 || c_self.personality.check_relationship(c,c_self) > Personality.friends)){
+				if(c == cSelf || (cSelf.personality.determine_attraction(c, cSelf) > 5 || cSelf.personality.check_relationship(c,cSelf) > Personality.friends)){
 					ret = 0;
 				}
 			}

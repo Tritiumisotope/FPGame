@@ -43,19 +43,19 @@ public class ItemConsequence extends Consequence {
     public void add_item_reward(Item i,int r){
         add_item_reward(i, r,false,true,false);
     }
-    public void add_item_reward(Item i,int r, Boolean gen_flag){
-        add_item_reward(i, r,gen_flag,true,false);
+    public void add_item_reward(Item i,int r, Boolean genFlag){
+        add_item_reward(i, r,genFlag,true,false);
     }
-    public void add_item_reward(Item i,int r, Boolean gen_flag,Boolean target){
-        add_item_reward(i, r,gen_flag,target,false);
+    public void add_item_reward(Item i,int r, Boolean genFlag,Boolean target){
+        add_item_reward(i, r,genFlag,target,false);
     }
-    public void add_item_reward(Item i,int r, Boolean gen_flag,Boolean target,Boolean r_flag){
+    public void add_item_reward(Item i,int r, Boolean genFlag,Boolean target,Boolean rFlag){
         //default false, true, false
         item_reward.add(i);//item_reward[item_reward.length] = i
         item_reward_roll.add(r);//item_reward_roll[item_reward_roll.length] = r
-        item_gen.add(gen_flag);//item_gen[item_gen.length] = gen_flag
+        item_gen.add(genFlag);//item_gen[item_gen.length] = gen_flag
         item_reward_target.add(target);//item_reward_target[item_reward_target.length] = target
-        remove_flag.add(r_flag);// remove_flag[remove_flag.length] = r_flag
+        remove_flag.add(rFlag);// remove_flag[remove_flag.length] = r_flag
     }
     
     public void add_item_recipe(Item i){
@@ -68,10 +68,10 @@ public class ItemConsequence extends Consequence {
         add_item_use(i,r,target,true);
     }
     public void add_item_use(Item i, int r,Boolean target,Boolean holder){//default true, true
-        item_use.add(i); //item_use[item_use.size()] = i;
-        item_use_roll.add(r); //item_use_roll[item_use_roll.length] = r;
-        item_use_target.add(target); //item_use_target[item_use_target.length] = target;
-        item_use_holder.add(holder); //item_use_holder[item_use_holder.length] = holder;
+        item_use.add(i); //item_use[item_use.size()] = i
+        item_use_roll.add(r); //item_use_roll[item_use_roll.length] = r
+        item_use_target.add(target); //item_use_target[item_use_target.length] = target
+        item_use_holder.add(holder); //item_use_holder[item_use_holder.length] = holder
     }
     
     @Override 
@@ -91,67 +91,64 @@ public class ItemConsequence extends Consequence {
                 item = item_reward.get(i).copyItem();
                 if(item_gen.get(i)){
                     if(extract > 0){
-                        ArrayList<CharAction> consume_effects = c.get_stat_actions(extract);
-                        int consume_count = 0;//TODO ABOVE!!
-                        for(consume_count=0;consume_count<consume_effects.size();consume_count++){
-                            CharAction temp_a = (CharAction)consume_effects.get(consume_count) ;
-                            if(temp_a != null){
-                                if(temp_a.get_consume()){
+                        ArrayList<CharAction> consumeEffects = c.get_stat_actions(extract);
+                        int consumeCount = 0;//TODO ABOVE!!
+                        for(consumeCount=0;consumeCount<consumeEffects.size();consumeCount++){
+                            CharAction tempA = (CharAction)consumeEffects.get(consumeCount) ;
+                            if(tempA != null){
+                                if(tempA.get_consume()){
                                     //Should loop through the Actions challenges/Consequences, and modify them to not need a second participant
-                                    CharAction new_action = new CharAction();
-                                    new_action.copyCharAction(temp_a);
-                                    int chall_count = 0;
-                                    for(chall_count=0;chall_count<new_action.challenges.size();chall_count++){
-                                        Challenge temp_chall = new_action.challenges.get(chall_count);
-                                        if(temp_chall != null){
-                                            if(!temp_chall.static_defense){
+                                    CharAction newAction = new CharAction();
+                                    newAction.copyCharAction(tempA);
+                                    int challCount = 0;
+                                    for(challCount=0;challCount<newAction.challenges.size();challCount++){
+                                        Challenge tempChall = newAction.challenges.get(challCount);
+                                        if(tempChall != null){
+                                            if(!tempChall.static_defense){
                                                 //replace non static defense with what the character would provide.
-                                                temp_chall.set_defense_stat(-1, c.get_stat(temp_chall.defense_stat));
+                                                tempChall.set_defense_stat(-1, c.get_stat(tempChall.defense_stat));
                                             }
                                         }
                                     }
-                                    item.add_action(new_action);
+                                    item.add_action(newAction);
                                 }
                             }
                         }
-                        //ret += c.fluid_extraction(extract);
-                        //TODO
+                        ret += c.fluid_extraction(extract);
                     }else if(extract < 0){
-                        //trace("(Item_Consequence)Something about item generation, and strange consumptions...");
+                        //LOGGER.info("(Item_Consequence)Something about item generation, and strange consumptions...")
                     }
                 }
                 int k = 0;
-                /*
                 if(item_reward_target.get(i)){
-                    if(!remove_flag[i]){
-                        c.add_to_possessions(item);
+                    if(Boolean.FALSE.equals(remove_flag.get(i))){
+                        c.addToPossessions(item);
                     }else{
-                        for(k;k<c.possessions.size();k++){
-                            if(c.possessions.get(k).name == item.name){
+                        for(k=0;k<c.possessions.size();k++){
+                            if(c.possessions.get(k).name.equals(item.name)){
                                 c.drop(k);
                                 break;
                             }
                         }
                     }						
                 }else{
-                    if(!remove_flag[i]){
-                        c2.add_to_possessions(item);
+                    if(Boolean.FALSE.equals(remove_flag.get(i))){
+                        c2.addToPossessions(item);
                     }else{
-                        for(k;k<c2.possessions.size();k++){
-                            if(c2.possessions.get(k).name == item.name){
+                        for(k=0;k<c2.possessions.size();k++){
+                            if(c2.possessions.get(k).name.equals(item.name)){
                                 c2.drop(k);
                                 break;
                             }
                         }
                     }						
                 }
-                */
             }
         }
         
         for(i=0;i<item_use.size();i++){
             if(c!= null && ((r.intValue() >= item_use_roll.get(i) && item_use_roll.get(i) >= 0) || (r.intValue() <= item_use_roll.get(i) && item_use_roll.get(i) < 0))){
-                //trace("(Item_Consequence.trigger)Should be using an item. ");
+                //LOGGER.info("(Item_Consequence.trigger)Should be using an item. ")
                 int k = 0;
                 if(item_use_holder.get(i)){
                     for(k=0;k<c.possessions.size();k++){

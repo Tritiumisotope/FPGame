@@ -48,44 +48,44 @@ public class FPalace_races {
 		//need to finish adding part descriptions
 		//want the descriptions to be able to change based on stat values
 		
-		private static Race goo_race;
-		private static Race human_race;
-		private static Race anthro_rabbit_race;
-		private static Race elf_race;
-		private static Race dwarf_race;
-		private static Race goblin_race;
-		private static Race anthro_feline_race;
-		private static Race anthro_canine_race;
-		private static Race anthro_bovine_race;
-		private static Race anthro_equine_race;
-		private static Race anthro_donkey_race;
-		private static Race anthro_bee_race;
-		private static Race anthro_lizard_race;
-		private static Race anthro_frog_race;
-		private static Race anthro_fish_race;
-		private static Race anthro_spider_race;
-		private static Race anthro_mouse_race;
-		private static Race angelic_race;
-		private static Race demon_race;
-		private static Race orc_race;
-		private static Race anthro_deer_race;
-		private static Race anthro_fox_race;
-		private static Race anthro_penguin_race;
-		private static Race anthro_seal_race;
+		private static Race gooRace;
+		private static Race humanRace;
+		private static Race anthroRabbitRace;
+		private static Race elfRace;
+		private static Race dwarfRace;
+		private static Race goblinRace;
+		private static Race anthroFelinRace;
+		private static Race anthroCanineRace;
+		private static Race anthroBovineRace;
+		private static Race anthroEquineRace;
+		private static Race anthroDonkeyRace;
+		private static Race anthroBeeRace;
+		private static Race anthroLizardRace;
+		private static Race anthroFrogRace;
+		private static Race anthroFishRace;
+		private static Race anthroSpiderRace;
+		private static Race anthroMouseRace;
+		private static Race angelicRace;
+		private static Race demonRace;
+		private static Race orcRace;
+		private static Race anthroDeerRace;
+		private static Race anthroFoxRace;
+		private static Race anthroPenguinRace;
+		private static Race anthroSealRace;
 		
-		private static Race sexsnake_race;
-		private static Race scorpion_race;
-		private static Race horse_race;
-		private static Race wolf_race;
-		private static Race hyena_race;
-		private static Race croc_race;
-		private static Race reindeer_race;
-        private static Race polar_race;
+		private static Race sexsnakeRace;
+		private static Race scorpionRace;
+		private static Race horseRace;
+		private static Race wolfRace;
+		private static Race hyenaRace;
+		private static Race crocRace;
+		private static Race reindeerRace;
+        private static Race polarRace;
         private static String[] outputStrings = new String[]{"</n2> invades </n> nether regions with a tendril of </noun2> goo. ",
         "oval translucent white orbs, with pupils that are circular ","straight, "};
 		
 		public static Race race_goo(){
-			if(goo_race == null){
+			if(gooRace == null){
 				Race race = new Race();
 				
 				race.set_name("goo");
@@ -265,15 +265,15 @@ public class FPalace_races {
 				a.addChallenge(c,cons);
 				
 				race.new_action(a);
-				goo_race = race;
+				gooRace = race;
 			}
 			
-			return goo_race;
+			return gooRace;
         }
         
 		
 		public static Race race_human(){
-			if(human_race == null){
+			if(humanRace == null){
 				Race race = new Race();
 				
 				race.set_name("human");
@@ -378,13 +378,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				human_race = race;
+				humanRace = race;
 			}
-			return human_race;
+			return humanRace;
 		}
 		
 		public static Race race_angel(){
-			if(angelic_race == null){
+			if(angelicRace == null){
 				Race race = new Race();
 				race.set_name("angel");
 				
@@ -481,13 +481,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				angelic_race = race;
+				angelicRace = race;
 			}
-			return angelic_race;
+			return angelicRace;
 		}
 		
 		public static Race race_demon(){
-			if(demon_race == null){
+			if(demonRace == null){
 				Race race = new Race();
 				race.set_name("demon");
 				
@@ -602,13 +602,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				demon_race = race;
+				demonRace = race;
 			}
-			return demon_race;
+			return demonRace;
 		}
 		
 		public static Race race_anthro_rabbit(){
-			if(anthro_rabbit_race == null){
+			if(anthroRabbitRace == null){
 				Race race = new Race();
 				race.set_name("lagomorph");
 				
@@ -729,14 +729,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_rabbit_race = race;
+				anthroRabbitRace = race;
 			}
 			
-			return anthro_rabbit_race;
+			return anthroRabbitRace;
 		}
 		
 		public static Race race_elf(){
-			if(elf_race == null){
+			if(elfRace == null){
 				Race race = new Race();
 				race.set_name("elf");
 				
@@ -851,14 +851,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				elf_race = race;
+				elfRace = race;
 			}
 			
-			return elf_race;
+			return elfRace;
 		}
 		
 		public static Race race_dwarf(){
-			if(dwarf_race == null){
+			if(dwarfRace == null){
 				Race race = new Race();
 				race.set_name("dwarf");
 				
@@ -973,14 +973,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				dwarf_race = race;
+				dwarfRace = race;
 			}
 			
-			return dwarf_race;
+			return dwarfRace;
 		}
 		
 		public static Race race_goblin(){
-			if(goblin_race == null){
+			if(goblinRace == null){
 				Race race = new Race();
 				race.set_name("goblin");
 				
@@ -1093,14 +1093,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				goblin_race = race;
+				goblinRace = race;
 			}
 			
-			return goblin_race;
+			return goblinRace;
 		}
 		
 		public static Race race_orc(){
-			if(orc_race == null){
+			if(orcRace == null){
 				Race race = new Race();
 				race.set_name("orc");
 				
@@ -1209,14 +1209,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				orc_race = race;
+				orcRace = race;
 			}
 			
-			return orc_race;
+			return orcRace;
 		}
 		
 		public static Race race_anthro_feline(){
-			if(anthro_feline_race == null){
+			if(anthroFelinRace == null){
 				Race race = new Race();
 				race.set_name("feline");
 				
@@ -1356,14 +1356,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_feline_race = race;
+				anthroFelinRace = race;
 			}
 			
-			return anthro_feline_race;
+			return anthroFelinRace;
 		}
 		
 		public static Race race_anthro_canine(){
-			if(anthro_canine_race == null){
+			if(anthroCanineRace == null){
 				Race race = new Race();
 				race.set_name("canine");
 				
@@ -1496,14 +1496,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_canine_race = race;
+				anthroCanineRace = race;
 			}
 			
-			return anthro_canine_race;
+			return anthroCanineRace;
 		}
 		
 		public static Race race_anthro_fox(){
-			if(anthro_fox_race == null){
+			if(anthroFoxRace == null){
 				Race race = new Race();
 				race.set_name("vulpe");
 				
@@ -1631,16 +1631,16 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_fox_race = race;
+				anthroFoxRace = race;
 			}
 			
-			return anthro_fox_race;
+			return anthroFoxRace;
 		}
 		
 		
 		
 		public static Race race_anthro_penguin(){
-			if(anthro_penguin_race == null){
+			if(anthroPenguinRace == null){
 				Race race = new Race();
 				race.set_name("sphenis");
 				
@@ -1754,14 +1754,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_penguin_race = race;
+				anthroPenguinRace = race;
 			}
 			
-			return anthro_penguin_race;
+			return anthroPenguinRace;
 		}
 		
 		public static Race race_anthro_seal(){
-			if(anthro_seal_race == null){
+			if(anthroSealRace == null){
 				Race race = new Race();
 				race.set_name("pinnip");
 				
@@ -1868,14 +1868,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_feet(race), 1);
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
-				anthro_seal_race = race;
+				anthroSealRace = race;
 			}
 			
-			return anthro_seal_race;
+			return anthroSealRace;
 		}
 		
 		public static Race race_anthro_mouse(){
-			if(anthro_mouse_race == null){
+			if(anthroMouseRace == null){
 				Race race = new Race();
 				race.set_name("mouse");
 				
@@ -1994,14 +1994,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_mouse_race = race;
+				anthroMouseRace = race;
 			}
 			
-			return anthro_mouse_race;
+			return anthroMouseRace;
 		}
 		
 		public static Race race_anthro_bovine(){
-			if(anthro_bovine_race == null){
+			if(anthroBovineRace == null){
 				Race race = new Race();
 				race.set_name("bovine");
 				
@@ -2145,14 +2145,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_udder(race), 1, FPalaceHelper.sex_female().name);
 				race.add_part(FPalaceHelper.new_udder(race), 1, FPalaceHelper.sex_herm().name);
 				race.add_part(FPalaceHelper.new_udder(race), 1, FPalaceHelper.sex_futa().name);
-				anthro_bovine_race = race;
+				anthroBovineRace = race;
 			}
 			
-			return anthro_bovine_race;
+			return anthroBovineRace;
 		}
 		
 		public static Race race_anthro_deer(){
-			if(anthro_deer_race == null){
+			if(anthroDeerRace == null){
 				Race race = new Race();
 				race.set_name("cervida");
 				
@@ -2267,14 +2267,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
 				race.add_part(FPalaceHelper.new_horns(race), 1);
-				anthro_deer_race = race;
+				anthroDeerRace = race;
 			}
 			
-			return anthro_deer_race;
+			return anthroDeerRace;
 		}
 		
 		public static Race race_anthro_equine(){
-			if(anthro_equine_race == null){
+			if(anthroEquineRace == null){
 				Race race = new Race();
 				race.set_name("equine");
 				
@@ -2403,14 +2403,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
 				
-				anthro_equine_race = race;
+				anthroEquineRace = race;
 			}
 				
-			return anthro_equine_race;
+			return anthroEquineRace;
 		}
 		
 		public static Race race_anthro_donkey(){
-			if(anthro_donkey_race == null){
+			if(anthroDonkeyRace == null){
 				Race race = new Race();
 				race.set_name("equidae");
 				
@@ -2534,14 +2534,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_donkey_race = race;
+				anthroDonkeyRace = race;
 			}
 			
-			return anthro_donkey_race;
+			return anthroDonkeyRace;
 		}
 		
 		public static Race race_anthro_bee(){
-			if(anthro_bee_race == null){
+			if(anthroBeeRace == null){
 				Race race = new Race();
 				race.set_name("Apini");
 				
@@ -2675,14 +2675,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_abdomen(race), 1);
 				
-				anthro_bee_race = race;
+				anthroBeeRace = race;
 			}
 							
-			return anthro_bee_race;
+			return anthroBeeRace;
 		}
 		
 		public static Race race_anthro_lizard(){
-			if(anthro_lizard_race == null){
+			if(anthroLizardRace == null){
 				Race race = new Race();
 				race.set_name("caudata");
 				
@@ -2812,13 +2812,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				anthro_lizard_race = race;
+				anthroLizardRace = race;
 			}
-			return anthro_lizard_race;
+			return anthroLizardRace;
 		}
 		
 		public static Race race_anthro_frog(){
-			if(anthro_frog_race == null){
+			if(anthroFrogRace == null){
 				Race race = new Race();
 				race.set_name("anura");
 				
@@ -2951,13 +2951,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 1);
 				race.add_part(FPalaceHelper.new_right_feet(race), 1);
 				
-				anthro_frog_race = race;
+				anthroFrogRace = race;
 			}
-			return anthro_frog_race;
+			return anthroFrogRace;
 		}
 		
 		public static Race race_anthro_fish(){
-			if(anthro_fish_race == null){
+			if(anthroFishRace == null){
 				Race race = new Race();
 				race.set_name("actino");
 				
@@ -3072,14 +3072,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_hips(race), 1);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
 				
-				anthro_fish_race = race;
+				anthroFishRace = race;
 			}
 							
-			return anthro_fish_race;
+			return anthroFishRace;
 		}
 		
 		public static Race race_anthro_spider(){
-			if(anthro_spider_race == null){
+			if(anthroSpiderRace == null){
 				Race race = new Race();
 				race.set_name("arachnid");
 				
@@ -3228,14 +3228,14 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_right_legs(race), 4);
 				race.add_part(FPalaceHelper.new_right_feet(race), 4);
 				race.add_part(FPalaceHelper.new_abdomen(race), 1);
-				anthro_spider_race = race;
+				anthroSpiderRace = race;
 			}
 						
-			return anthro_spider_race;
+			return anthroSpiderRace;
 		}
 		
 		public static Race race_sexsnake(){
-			if(sexsnake_race == null){
+			if(sexsnakeRace == null){
 				Race race = new Race();
 				race.set_anthropomorphic();
 				race.set_name("sexsnake");
@@ -3266,13 +3266,13 @@ public class FPalace_races {
 							
 				race.set_preg_type(Race.egg_pregnancy);
 				race.set_preg_effect(tf);
-				sexsnake_race = race;
+				sexsnakeRace = race;
 			}
-			return sexsnake_race;
+			return sexsnakeRace;
 		}
 		
 		public static Race race_scorpion(){
-			if(scorpion_race == null){
+			if(scorpionRace == null){
 				Race race = new Race();
 				race.set_anthropomorphic();
 				race.set_name("scorpion");
@@ -3333,13 +3333,13 @@ public class FPalace_races {
 							
 				race.set_preg_type(Race.egg_pregnancy);
 				race.set_preg_effect(tf);
-				scorpion_race = race;
+				scorpionRace = race;
 			}
-			return scorpion_race;
+			return scorpionRace;
 		}
 		
 		public static Race race_horse(){
-			if(horse_race == null){
+			if(horseRace == null){
 				Race race = new Race();
 				race.set_anthropomorphic();
 				race.set_name("horse");
@@ -3376,13 +3376,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_legs(race), 2);
 				race.add_part(FPalaceHelper.new_right_legs(race), 2);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				horse_race = race;
+				horseRace = race;
 			}
-			return horse_race;
+			return horseRace;
 		}
 		
 		public static Race race_wolf(){
-			if(wolf_race == null){
+			if(wolfRace == null){
 				Race race = new Race();
 				race.set_name("wolf");
 				race.set_anthropomorphic();
@@ -3426,13 +3426,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_legs(race), 2);
 				race.add_part(FPalaceHelper.new_right_legs(race), 2);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				wolf_race = race;
+				wolfRace = race;
 			}
-			return wolf_race;
+			return wolfRace;
 		}
 		
 		public static Race race_reindeer(){
-			if(reindeer_race == null){
+			if(reindeerRace == null){
 				Race race = new Race();
 				race.set_name("reindeer");
 				race.set_anthropomorphic();
@@ -3477,13 +3477,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_legs(race), 2);
 				race.add_part(FPalaceHelper.new_right_legs(race), 2);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				reindeer_race = race;
+				reindeerRace = race;
 			}
-			return reindeer_race;
+			return reindeerRace;
 		}
 		
 		public static Race race_hyena(){
-			if(hyena_race == null){
+			if(hyenaRace == null){
 				Race race = new Race();
 				race.set_name("hyena");
 				race.set_anthropomorphic();
@@ -3527,13 +3527,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_legs(race), 2);
 				race.add_part(FPalaceHelper.new_right_legs(race), 2);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				hyena_race = race;
+				hyenaRace = race;
 			}
-			return hyena_race;
+			return hyenaRace;
 		}
 		
 		public static Race race_crocodile(){
-			if(croc_race == null){
+			if(crocRace == null){
 				Race race = new Race();
 				race.set_name("crocodile");
 				race.set_anthropomorphic();
@@ -3578,13 +3578,13 @@ public class FPalace_races {
 				race.add_part(FPalaceHelper.new_left_legs(race), 2);
 				race.add_part(FPalaceHelper.new_right_legs(race), 2);
 				race.add_part(FPalaceHelper.new_tail(race), 1);
-				croc_race = race;
+				crocRace = race;
 			}
-			return croc_race;
+			return crocRace;
 		}
 		
 		public static Race race_polar_bear(){
-			if(polar_race == null){
+			if(polarRace == null){
 				Race race = new Race();
 				race.set_name("polar bear");
 				race.set_anthropomorphic();
@@ -3621,15 +3621,15 @@ public class FPalace_races {
 				
 				race.new_attack(a3, FPalaceHelper.head_slot);
 				
-				polar_race = race;
+				polarRace = race;
 			}
-			return polar_race;
+			return polarRace;
 		}
 		
-		private static TickEffect mamal_preg(int preg_length){
+		private static TickEffect mamal_preg(int pregLength){
 			TickEffect tf = new TickEffect();
 			tf.set_status_id(TickEffect.pregnant_status);
-			tf.set_end_tick(preg_length);
+			tf.set_end_tick(pregLength);
 			Consequence consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.bloat_id,-4, "</n> struggles and pushes, but finally gives birth. ", 0,1);
 			
@@ -3638,23 +3638,23 @@ public class FPalace_races {
 			consequence = new Consequence();
 			consequence.addConsequence(FPalaceHelper.bloat_id,0.3, "</n> can feel the pregnancy setting in, </noun> belly bulging. ", 0,1);
 			
-			for(int count = preg_length/16;count<preg_length;count+= preg_length/16){
+			for(int count = pregLength/16;count<pregLength;count+= pregLength/16){
 				tf.set_tick_consequence(count,consequence);
 			}
-			TickEffect lactate_tf = new TickEffect();
-			lactate_tf.set_status_id(TickEffect.lactating_status);
-			Challenge tf_chal = new Challenge();
-			tf_chal.set_attack_stat(FPalaceHelper.milk_volume_id);
-			tf_chal.set_defense_stat(-1,250);
-			tf_chal.setVariability(0);
-			Consequence  tf_con = new Consequence();
-			tf_con.addConsequence(FPalaceHelper.breast_size_id,0.25, "</n> can feel the pregnancy setting in, </noun> breasts balooning in preparation. ", -1,1);
-			lactate_tf.set_tick_consequence(1,tf_con, tf_chal);
-			lactate_tf.set_end_tick(preg_length);
+			TickEffect lactateTF = new TickEffect();
+			lactateTF.set_status_id(TickEffect.lactating_status);
+			Challenge tfChal = new Challenge();
+			tfChal.set_attack_stat(FPalaceHelper.milk_volume_id);
+			tfChal.set_defense_stat(-1,250);
+			tfChal.setVariability(0);
+			Consequence  tfCon = new Consequence();
+			tfCon.addConsequence(FPalaceHelper.breast_size_id,0.25, "</n> can feel the pregnancy setting in, </noun> breasts balooning in preparation. ", -1,1);
+			lactateTF.set_tick_consequence(1,tfCon, tfChal);
+			lactateTF.set_end_tick(pregLength);
 			
 			consequence = new Consequence();
-			consequence.addConsequence(0,0,"</n> begins to lactate. ",0,0,0,-1,false,lactate_tf);			
-			tf.set_tick_consequence(3*preg_length/4.0,consequence);
+			consequence.addConsequence(0,0,"</n> begins to lactate. ",0,0,0,-1,false,lactateTF);			
+			tf.set_tick_consequence(3*pregLength/4.0,consequence);
 			
 			return tf;
         }

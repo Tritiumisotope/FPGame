@@ -11,7 +11,7 @@ public class Template_Room extends StaticObject {
     protected ArrayList<Number> action_chance;//public var action_chance:Array
     protected ArrayList<Item> item;//public var item:Array
     protected ArrayList<Number> item_chance;//public var item_chance:Array
-    protected ArrayList<Character_template> characters;//public var characters:Array
+    protected ArrayList<Object> characters;//public var characters:Array
     protected ArrayList<Number> characters_chance;//public var characters_chance:Array
     protected ArrayList<Party> parties;//public var parties:Array
     protected ArrayList<Number> parties_chance;//public var parties_chance:Array
@@ -48,7 +48,7 @@ public class Template_Room extends StaticObject {
     public Template_Room(String d){
         this(d,-1,null,null,null,null,null,null,null);
     }
-    public Template_Room(String d, int i, ArrayList<String> descs,ArrayList<Container> c, ArrayList<Number> cc, ArrayList<Item> it,ArrayList<Number> itc, ArrayList<Character_template> ch, ArrayList<Number> chc){
+    public Template_Room(String d, int i, ArrayList<String> descs,ArrayList<Container> c, ArrayList<Number> cc, ArrayList<Item> it,ArrayList<Number> itc, ArrayList<Object> ch, ArrayList<Number> chc){
         //def null, -1, then 7 nulls
         set_description(d);
         id = i;
@@ -398,10 +398,10 @@ public class Template_Room extends StaticObject {
         for(k=0;k<characters.size();k++){
             if (Math.random() <= characters_chance.get(k).doubleValue() && characters.get(k) != null){
                 if(characters.get(k) instanceof Character_template){
-                    clonech1 = characters.get(k).gen_char(level_adjust, r);
+                    clonech1 = ((Character_template)characters.get(k)).gen_char(level_adjust, r);
                 }else{//TODO what would these elses be?
-                    //int rand_char = Math.round(Math.random()*(characters.get(k).size()-1));
-                    //clonech1 = characters.get(k).get(rand_char).gen_char(level_adjust, r);
+                    int rand_char = (int)Math.round(Math.random()*(((ArrayList<Character_template>)characters.get(k)).size()-1));
+                    clonech1 = ((ArrayList<Character_template>)characters.get(k)).get(rand_char).gen_char(level_adjust, r);
                 }//TODO array of arrays? is this still necessary whem characters are added sequentially?
                 clonech1.new_location(r, true);
                 family_array.add(clonech1);//family_array[family_array.length] = clonech1
@@ -424,13 +424,13 @@ public class Template_Room extends StaticObject {
                 Party clone_pty = new Party();
                 parties.get(k).copyParty();
                 int i = 0;
-                /*TODO Array of arrays?
-                for(i=0;i<parties[.get(k).length;i++){
-                    clonech1 = parties[k][i].gen_char(level_adjust, r);
+                //*TODO Array of arrays?
+                for(i=0;i<parties.get(k).members.size();i++){//was just .size()
+                    //clonech1 = parties.get(k).members.get(i).gen_char(level_adjust, r);//was [k][i]
+                    clonech1.copyCharacter(parties.get(k).members.get(i));//maybe?
                     clone_pty.add_member(clonech1);
                     clonech1.set_party(clone_pty);
                 }
-                */
                 for(i=0;i<clone_pty.members.size();i++){
                     clone_pty.members.get(i).new_location(r, true);
                 }
@@ -490,10 +490,10 @@ public class Template_Room extends StaticObject {
                     //rand_z = Math.round(Math.random()*2) - 1;
                 }
                 
-                String to_name = Area.get_direction(0, 0, 0, rand_x, rand_y, rand_z);
-                String from_name = Area.get_direction(rand_x, rand_y, rand_z, 0, 0, 0);
-                if(new_room.new_exit(temp_room, to_name) == 1){
-                    temp_room.new_exit(new_room, from_name);
+                String toName = Area.get_direction(0, 0, 0, rand_x, rand_y, rand_z);
+                String fromName = Area.get_direction(rand_x, rand_y, rand_z, 0, 0, 0);
+                if(new_room.new_exit(temp_room, toName) == 1){
+                    temp_room.new_exit(new_room, fromName);
                 }else{
                     k--;
                 }

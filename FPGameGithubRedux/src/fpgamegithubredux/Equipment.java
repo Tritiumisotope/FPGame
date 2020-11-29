@@ -272,7 +272,7 @@ public class Equipment extends Item {
 			}
 			if(!effects_only){
 				if(statActionAdd.size() > 0){
-					for(i=0;i<Math.ceil(statActionAdd.size());i++){
+					for(i=0;i<statActionAdd.size();i++){
 						c.remove_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
 				}
@@ -315,7 +315,7 @@ public class Equipment extends Item {
 					}
 				}
 				if(statActionAdd.size() > 0){
-					for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
+					for(i=0;i<statActionAdd.size();i++){
 						c.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
 					}
 				}

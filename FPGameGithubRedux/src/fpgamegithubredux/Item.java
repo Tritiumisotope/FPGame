@@ -102,27 +102,23 @@ public class Item {
         multiDroppedDescription = newMultiDropDesc;
     }
     public void add_crafting_requirement(Item craftRequirementItem,int num){
-        //craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num);//was just [craftRequirementItem, num]
+        //craftingRequirements[craftingRequirements.length] = new ItemCntPair(craftRequirementItem, num)//was just [craftRequirementItem, num]
         craftingRequirements.add(new ItemCntPair(craftRequirementItem, num));
     }
     public void add_change_effect(DynamicObject o){
         Consequence consequence = new Consequence();
         consequence.addConsequence(0, 0.0, "", 0);
         consequence.add_change_effect(o);
-        
-        //changeEffects[changeEffects.length] = consequence;
-        changeEffects.add(consequence);
+        changeEffects.add(consequence);//changeEffects[changeEffects.length] = consequence
     }
     public void addConsequence(Consequence c){
-        //changeEffects[changeEffects.length] = c;
-        changeEffects.add(c);
+        changeEffects.add(c);//changeEffects[changeEffects.length] = c
     }
     public void add_action(CharAction a){
-        //changeEffects[changeEffects.length] = a;
-        changeEffects.add(a);
+        changeEffects.add(a);//changeEffects[changeEffects.length] = a
     }
     public void new_stat_action(int statID, CharAction a){
-        //statActionAdd[statActionAdd.length] = new StatAction(statID, a);//replaces above? see accessors
+        //statActionAdd[statActionAdd.length] = new StatAction(statID, a)//replaces above? see accessors
         statActionAdd.add(new StatAction(statID, a));
     }
     public String getName(){
@@ -192,7 +188,7 @@ public class Item {
         }
         
         if(statActionAdd.size() > 0){//.length
-            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){//.length
+            for(i=0;i<statActionAdd.size();i++){//.length
                 //user.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1))
                 user.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());
                 //homemade classes...YES
@@ -281,19 +277,19 @@ public class Item {
             desc += "\n";
             for(count=0;count<changeEffects.size();count++){//.length
                 if(Math.random() <= identChance){
-                    /*
-                    if(changeEffects[count] is Consequence && changeEffects[count].changeEffects[0] != null){
+                    
+                    if(changeEffects.get(count) instanceof Consequence && ((Consequence)changeEffects.get(count)).change_effects.get(0) != null){
                         int change_count = 0;
-                        for(change_count = 0;change_count<changeEffects[count].changeEffects.length;change_count++){
-                            if (changeEffects[count].changeEffects[changeCount] is Sex){
+                        for(change_count = 0;change_count<((Consequence)changeEffects.get(count)).change_effects.size();change_count++){
+                            if (((Consequence)changeEffects.get(count)).change_effects.get(change_count) instanceof Sex){
                                 desc += "You think it might change your sex.\n";
-                            }else if(changeEffects[count].changeEffects[change_count] is Character_class){
+                            }else if(((Consequence)changeEffects.get(count)).change_effects.get(change_count) instanceof Character_class){
                                 desc += "You think it might change your class.\n";
-                            }else if(changeEffects[count].changeEffects[change_count] is Body_part){
+                            }else if(((Consequence)changeEffects.get(count)).change_effects.get(change_count) instanceof BodyPart){
                                 desc += "You think it might change your body.\n";
-                            }else if(changeEffects[count].changeEffects[change_count] is Race){
+                            }else if(((Consequence)changeEffects.get(count)).change_effects.get(change_count) instanceof Race){
                                 desc += "You think it might change your race.\n";
-                            }else if(changeEffects[count].changeEffects[change_count] is Room){
+                            }else if(((Consequence)changeEffects.get(count)).change_effects.get(change_count) instanceof Room){
                                 desc += "You think it might change where you are.\n";
                             }else{
                                 desc += "There's something off about it....\n";
@@ -302,14 +298,12 @@ public class Item {
                     }else{
                         desc += "There's something off about it....\n";
                     }
-                    */
                 }
             }
         }
         if(statActionAdd.size() > 0){
             desc += "\n";
-            //for(count=0;count<Math.ceil(statActionAdd.length/2);count++){
-            for(count=0;count<statActionAdd.size();count++){
+            for(count=0;count<statActionAdd.size();count++){//(count=0;count<Math.ceil(statActionAdd.length/2);count++)
                 if(Math.random() <= identChance){
                     desc += "It seems to be magical.\n";
                     break;
@@ -326,8 +320,8 @@ public class Item {
         int valToReturn = value;
         int roll = 0;
         Challenge valueChallenge = new Challenge();
-        //valueChallenge.setAttackStat(FPalace_skills.valuing_id);
-        //valueChallenge.setDefenseStat(-1, Math.ceil(Math.sqrt(value) + 5));
+        valueChallenge.set_attack_stat(FPalace_skills.valuing_id);
+        valueChallenge.set_defense_stat(-1, Math.ceil(Math.sqrt(value) + 5));
         valueChallenge.setVariability(10);
         roll = valueChallenge.roll(checker);
             double variance = 1;
@@ -351,8 +345,8 @@ public class Item {
         int valToReturn = value;
             int roll = 0;
             Challenge valueChallenge = new Challenge();
-            //set attack stat for valueChallenge
-            //set defense stat for valueChallenge
+            valueChallenge.set_attack_stat(FPalace_skills.valuing_id);
+            valueChallenge.set_defense_stat(-1, Math.ceil(Math.sqrt(value) + 5));
             valueChallenge.setVariability(10);
             if(buyer != seller){
                 roll = valueChallenge.roll(buyer); //roll buyer only method
@@ -371,31 +365,28 @@ public class Item {
                     variance+=(Math.random()-Math.random())*0.01;
                 }
                 int buyerValue = (int)Math.floor(value*variance);
-                //need relationship stuff for this
-                /*
                 int rel_stat = buyer.personality.check_relationship(seller,buyer);
                 int rel_ajust_value = buyerValue;
                 if(rel_stat < -50){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.03125);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.03125);
                 }else if(rel_stat < -25){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.00625);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.00625);
                 }else if(rel_stat < -10){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.0125);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.0125);
                 }else if(rel_stat < 0){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.025);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.025);
                 }else if(rel_stat < Personality.tolerate){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.05);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.05);
                 }else if(rel_stat < Personality.like){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.1);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.1);
                 }else if(rel_stat < Personality.really_like){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.25);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.25);
                 }else if(rel_stat < Personality.friends){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.5);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.5);
                 }else if(rel_stat < Personality.true_love){
-                    rel_ajust_value = Math.round(rel_ajust_value*0.9);
+                    rel_ajust_value = (int)Math.round(rel_ajust_value*0.9);
                 }
                 buyerValue = rel_ajust_value;
-                */
                 //need to go through inventory and adjust value down based on how many the buyer already has
                 if (buyer != null && buyer.possessions.isEmpty()){
                     for(int i = 0; i < buyer.possessions.size();i++){
@@ -420,34 +411,31 @@ public class Item {
                     variance+=(Math.random()-Math.random())*0.01;
                 }
                 int sellerValue = (int)Math.ceil(value*variance);
-                //need relationship stuff for this
-                /*
                 rel_stat = seller.personality.check_relationship(buyer,seller);
-				rel_ajust_value = seller_value;
+				rel_ajust_value = sellerValue;
 				if(rel_stat < -50){
-					rel_ajust_value = Math.round(rel_ajust_value*32);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*32);
 				}else if(rel_stat < -25){
-					rel_ajust_value = Math.round(rel_ajust_value*16);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*16);
 				}else if(rel_stat < -10){
-					rel_ajust_value = Math.round(rel_ajust_value*8);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*8);
 				}else if(rel_stat < 0){
-					rel_ajust_value = Math.round(rel_ajust_value*4);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*4);
 				}else if(rel_stat < Personality.tolerate){
-					rel_ajust_value = Math.round(rel_ajust_value*2.5);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*2.5);
 				}else if(rel_stat < Personality.like){
-					rel_ajust_value = Math.round(rel_ajust_value*2);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*2);
 				}else if(rel_stat < Personality.really_like){
-					rel_ajust_value = Math.round(rel_ajust_value*1.75);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*1.75);
 				}else if(rel_stat < Personality.friends){
-					rel_ajust_value = Math.round(rel_ajust_value*1.5);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*1.5);
 				}else if(rel_stat < Personality.true_love){
-					rel_ajust_value = Math.round(rel_ajust_value*1.1);
+					rel_ajust_value = (int)Math.round(rel_ajust_value*1.1);
 				}
-				seller_value = rel_ajust_value
-                */
+				sellerValue = rel_ajust_value;
                 Challenge barterChallenge = new Challenge();
-                //set attack
-                //set defense
+				barterChallenge.set_attack_stat(FPalace_skills.trade_id);
+				barterChallenge.set_defense_stat(FPalace_skills.trade_id);
                 barterChallenge.setVariability(20);
                 roll = barterChallenge.roll(buyer,seller);
                 if(roll > 20){
@@ -501,9 +489,7 @@ public class Item {
                     }else{
                         valToReturn = ((buyerValue + sellerValue)/2 + buyerValue - (buyerValue*buyerValue/sellerValue));
                     }
-                    */
-                
-                /*
+                  
                 if(roll >= 0){//buyer has the advantage
 					if(roll > 20){
 						if(buyerValue < sellerValue){
@@ -605,12 +591,12 @@ public class Item {
         for(count=0;count<effects.size();count++){        //effects copy, maybe toClone.effects.length?
             retItem.effects.add(effects.get(count));
         }
-        //retItem.effects = Arrays.copyOf(effects, effects.size());//this might be enough? not with ArrayList
-        //Collections.addAll(this.list, source);
+        //retItem.effects = Arrays.copyOf(effects, effects.size())//this might be enough? not with ArrayList
+        //Collections.addAll(this.list, source)
 
         retItem.useDescription = useDescription;
         for(count=0;count<changeEffects.size();count++){
-            //retItem.changeEffects[count] = changeEffects[count];
+            //retItem.changeEffects[count] = changeEffects[count]
             retItem.changeEffects.add(changeEffects.get(count));
         }//change effects copy
         //retItem.changeEffects = Arrays.copyOf(changeEffects, changeEffects.size());//this might be enough? not with ArrayList

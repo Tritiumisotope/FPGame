@@ -2,8 +2,8 @@ package fpgamegithubredux;
 
 public class DamageType {
 
-    public int type_id;
-    public String type_name;
+    protected int type_id;
+    protected String type_name;
     
     public DamageType() {
         // constructor code

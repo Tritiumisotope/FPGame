@@ -22,7 +22,7 @@ public class Stat {
     
     public Boolean stat_desc_ttl_or_indiv;
     
-    protected ArrayList<Integer> stat_desc_ttl_part_limit;//public var stat_desc_ttl_part_limit:Array;
+    protected ArrayList<Integer> stat_desc_ttl_part_limit;//public var stat_desc_ttl_part_limit:Array
     protected ArrayList<String> stat_up;//public var stat_up:Array
     protected ArrayList<Integer> stat_up_requirement;//public var stat_up_requirement:Array
     protected ArrayList<String> stat_up_operators;//public var stat_up_operators:Array
@@ -55,7 +55,7 @@ public class Stat {
 
     
     
-    protected ArrayList<Object> stat_calculation;//public var stat_calculation:Array;
+    protected ArrayList<Object> stat_calculation;//public var stat_calculation:Array
     
     protected ArrayList<CharAction> stat_actions;//public var stat_actions:Array
     public Stat(){
@@ -116,13 +116,13 @@ public class Stat {
         always_calc = !always_calc;
     }
     public void new_stat_action(CharAction a){
-        stat_actions.add(a); //stat_actions[stat_actions.length] = a;
+        stat_actions.add(a); //stat_actions[stat_actions.length] = a
     }
     
     public void remove_stat_action(CharAction a){
         
         for(int i=0;i<stat_actions.size();i++){
-            if(stat_actions.get(i) == a)stat_actions.set(i,null); //stat_actions[i] = null;
+            if(stat_actions.get(i) == a)stat_actions.set(i,null); //stat_actions[i] = null
         }
     }
     
@@ -183,9 +183,9 @@ public class Stat {
     
     public String get_overworld_status(Character c,BodyPart bp){
         String ret = "";
-        int stat_out = check_overworld_status(c, bp);
+        int statOut = check_overworld_status(c, bp);
         for(int i=0 ;i<check_condition.size();i++){
-            if(!check_combat.get(i) && status_outcome.get(i) == stat_out){
+            if(!check_combat.get(i) && status_outcome.get(i) == statOut){
                 ret = incapac_text.get(i);
                 break;
             }
@@ -344,12 +344,10 @@ public class Stat {
                                 temp_calc.set(count, c.get_skill_by_id(Integer.parseInt(((String)stat_calculation.get(count)).substring(((String)stat_calculation.get(count)).indexOf("k") + 1, ((String)stat_calculation.get(count)).length()))));
                             }								
                             
-                            //if(temp_calc.get(count) < 0)temp_calc.get(count) = 0;
-                            if(((Number)temp_calc.get(count)).doubleValue() < 0)temp_calc.set(count, 0);
-                            int temp_count = count + 1;
-                            for(temp_count=count+1;temp_count< stat_calculation.size();temp_count++){
+                            if(((Number)temp_calc.get(count)).doubleValue() < 0)temp_calc.set(count, 0);//(temp_calc.get(count) < 0)temp_calc.get(count) = 0
+                            for(int temp_count=count+1;temp_count< stat_calculation.size();temp_count++){
                                 if(stat_calculation.get(temp_count).equals(stat_calculation.get(count))){
-                                    //temp_calc[temp_count] = temp_calc.get(count);
+                                    //temp_calc[temp_count] = temp_calc.get(count)
                                     temp_calc.set(temp_count, temp_calc.get(count));
                                 }
                             }
@@ -636,7 +634,7 @@ public class Stat {
     public void new_description(String d, int i){
         //default 0
         stat_description.add(d);//stat_description[stat_description.length] = d
-        stat_description_requirement.add(i); //stat_description_requirement[stat_description_requirement.length] = i;
+        stat_description_requirement.add(i); //stat_description_requirement[stat_description_requirement.length] = i
     }
     
     public void new_short_description(String d,int i){
@@ -691,16 +689,18 @@ public class Stat {
         for(i=0;i<stat_description.size();i++){
             if(current_value >= stat_description_requirement.get(i) && stat_description_requirement.get(i) >= req_met){
                 if(!stat_description.get(i).equals(s))s = stat_description.get(i);
-                //LOGGER.info("i: "+i);
-                //LOGGER.info("stat_description.get(i): "+stat_description.get(i));
-                //LOGGER.info("req_met: "+stat_description_requirement.get(i));
                 req_met = stat_description_requirement.get(i);
             }
         }
-        DecimalFormat decimalFormat = new DecimalFormat("0.##");//new
-        s = s.replace("</" + statID + ">",decimalFormat.format(current_value));//current_value.toFixed(show_decimals));
+        String deciString = "#";
+        if(show_decimals>0)deciString = deciString+".";
+        for(int str=0;str<show_decimals;str++){
+            deciString = deciString+"#";
+        }
+        DecimalFormat decimalFormat = new DecimalFormat(deciString);//TODO verify all of these identical decimalFomats...
+        s = s.replace("</" + statID + ">",decimalFormat.format(current_value));//current_value.toFixed(show_decimals))
         s = s.replace("</sd" + statID + ">",get_short_description(current_value));
-        //LOGGER.info("get description: "+s);
+        if(SUPERDEBUG)LOGGER.info("get description: "+s);
         return s;
     }
     
@@ -720,9 +720,13 @@ public class Stat {
                 if(Boolean.TRUE.equals(stat_op(i,c, stat_down_requirement.get(i), stat_down_operators.get(i),stat_down_products.get(i)))) ret = stat_down.get(i);
             }
         }
-        
-        
-        //ret = ret.replace("</" + id + ">",get_stat_value(c).toFixed(show_decimals));			
+        String deciString = "#";
+        if(show_decimals>0)deciString = deciString+".";
+        for(int str=0;str<show_decimals;str++){
+            deciString = deciString+"#";
+        }
+        DecimalFormat decimalFormat = new DecimalFormat(deciString);
+        ret = ret.replace("</" +statID + ">",decimalFormat.format(get_stat_value(c)));//get_stat_value(c).toFixed(show_decimals))		
         
         return ret;
     }
@@ -752,8 +756,13 @@ public class Stat {
         statValRound = statValRound * factor;
         long tmp = Math.round(statValRound);
         statValRound =  (double) tmp / factor;
-        
-        s = s.replace("</" + statID + ">",Double.toString(statValRound));//get_stat_value(c).toFixed(show_decimals));
+        String deciString = "#";
+        if(show_decimals>0)deciString = deciString+".";
+        for(int str=0;str<show_decimals;str++){
+            deciString = deciString+"#";
+        }
+        DecimalFormat decimalFormat = new DecimalFormat(deciString);
+        s = s.replace("</" + statID + ">",decimalFormat.format(statValRound));//get_stat_value(c).toFixed(show_decimals))
         
         return s;			
     }

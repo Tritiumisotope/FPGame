@@ -51,8 +51,7 @@ public class Weapon extends Item {
             if(upgrade_slot_ids.get(i) == ui.upgrade_type_id && upgrade_items.get(i)== null){
                 upgrade_items.set(i, ui);
                 ret += "</n> attaches the " + ui.getName() + " to the " + getName()+". \n";
-                //c.drop_item(ui);
-                //TODO
+                c.drop_item(ui);
                 int effect_count = 0;
                 for(effect_count=0;effect_count<ui.effects.size();effect_count++){
                     if(ui.effects.get(effect_count) != null){
@@ -60,7 +59,6 @@ public class Weapon extends Item {
                     }
                 }
                 
-                effect_count = 0;
                 for(effect_count=0;effect_count<ui.skill_id.size();effect_count++){
                     set_skill_bonus(ui.skill_id.get(effect_count),ui.skill_bonus.get(effect_count));
                 }
@@ -91,8 +89,8 @@ public class Weapon extends Item {
         num_hold_slots_req = i;
     }
     
-    public void set_hold_condition(int stat_id,int min){//default min -1
-        stat_req.add(stat_id); //stat_req[stat_req.length] = stat_id
+    public void set_hold_condition(int statID,int min){//default min -1
+        stat_req.add(statID); //stat_req[stat_req.length] = stat_id
         stat_min.add(min); //stat_min[stat_min.length] = min
     }
     
@@ -107,36 +105,27 @@ public class Weapon extends Item {
     public void equip_effects(Character c){
         int i = 0;
         for (i=0;i<changeEffects.size();i++){
-            if (changeEffects.get(i) != null){
+            if (changeEffects.get(i) != null){//TODO would an else-if instanceof charaction negate this?
                 if(changeEffects.get(i) instanceof Consequence){//was is
-                    Consequence temp = (Consequence)changeEffects.get(i);
-                    temp.trigger(0, c);
-                    //changeEffects.get(i).trigger(0, c)
-                    //TODO verify both!!
+                    ((Consequence)changeEffects.get(i)).trigger(0, c);
                 }else{
-                    CharAction temp = (CharAction)changeEffects.get(i);
-                    //changeEffects.get(i).challenge(0,c)
-                    temp.challenge(0,c);
+                    ((CharAction)changeEffects.get(i)).challenge(0,c);
                 }
             }
         }
         
-        //if(statActionAdd.size() > 0){
-        if(!statActionAdd.isEmpty()){//TODO verify are the same!
-            for(i=0;i<Math.ceil(statActionAdd.size()/(double)2);i++){
-                //c.add_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
-                //TODO add_stat_action in Character
+        if(!statActionAdd.isEmpty()){//TODO verify same as size()>0 being true
+            for(i=0;i<statActionAdd.size();i++){
+                c.add_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());//(i*2, i*2+1)
             }
         }
         
         for(i=0;i<effects.size();i++){
-            //if(effects.get(i) != null)c.apply_equip_affect_by_id(i, effects.get(i));
-            //TODO apply_equip_affect_by_id in Character
+            if(effects.get(i) != null)c.apply_equip_affect_by_id(i, effects.get(i));
         }
         
         for(i=0;i<skill_id.size();i++){
-            //if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], skill_bonus[i]);
-            //TODO set_skill_bonus in Character
+            if(skill_bonus.get(i) != 0)c.set_skill_bonus(skill_id.get(i), skill_bonus.get(i));
         }
         
     }
@@ -144,20 +133,17 @@ public class Weapon extends Item {
     public void remove_effects(Character c){
         int i = 0;
         for(i=0;i<effects.size();i++){
-            //if(effects.get(i) != null)c.apply_equip_affect_by_id(i, -effects.get(i));
-            //TODO in Character
+            if(effects.get(i) != null)c.apply_equip_affect_by_id(i, -effects.get(i));
         }
         
-        if(statActionAdd.size() > 0){
-            for(i=0;i<Math.ceil(statActionAdd.size()/2);i++){
-                //c.remove_stat_action(statActionAdd.get(i*2), statActionAdd.get(i*2+1));
-                //TODO Character remove_stat_action
+        if(!statActionAdd.isEmpty()){//was size()>0
+            for(i=0;i<statActionAdd.size();i++){
+                c.remove_stat_action(statActionAdd.get(i).statID(), statActionAdd.get(i).charAction());//(2*i,2*i+1)
             }
         }
         
         for(i=0;i<skill_id.size();i++){
-            //if(skill_bonus[i] != 0)c.set_skill_bonus(skill_id[i], -skill_bonus[i]);
-            //TODO Character skill_bonus
+            if(skill_bonus.get(i) != 0)c.set_skill_bonus(skill_id.get(i), -skill_bonus.get(i));
         }
     }
  
@@ -165,8 +151,8 @@ public class Weapon extends Item {
         return get_description(c,null,null);
     }
 
-    public String get_description(Character c, ArrayList<Integer> ident_effectiveness){
-        return get_description(c,ident_effectiveness,null);
+    public String get_description(Character c, ArrayList<Integer> identEffectiveness){
+        return get_description(c,identEffectiveness,null);
     }
     public String get_description(Character c, ArrayList<Integer> ident_effectiveness, Boolean keep_tags){//default ident=null, keep=false
         String ret = super.getDescription(c, ident_effectiveness, keep_tags);
@@ -177,7 +163,7 @@ public class Weapon extends Item {
         
         Boolean showing = false;
         int count = 0;
-        if(stat_req.size() > 0){
+        if(stat_req.isEmpty()){//was size()>0
             for(count=0;count < stat_req.size();count ++){
                 if(Math.random() <= ident_chance.doubleValue()){
                     if(!showing){
@@ -190,7 +176,7 @@ public class Weapon extends Item {
         }
         
         showing = false;
-        if(skill_id.size() > 0){
+        if(!skill_id.isEmpty()){//was size()>0
             for(count=0;count < skill_id.size();count ++){
                 if(Math.random() <= ident_chance.doubleValue()){
                     if(!showing){
@@ -215,13 +201,12 @@ public class Weapon extends Item {
                             break;
                         }
                     }
-                    //if(!already_exists)damage_types[damage_types.length] = attack_action.consequences[count].damage_type_id;
                     if(!already_exists)damage_types.add(attack_action.consequences.get(count).damage_type_id);
                 }
             }
         
             showing = false;
-            if(damage_types.size() > 0){
+            if(!damage_types.isEmpty()){//was size()>0 and not !
                 for(count=0;count < damage_types.size();count ++){
                     if(Math.random() <= ident_chance.doubleValue()){
                         if(!showing){
@@ -243,8 +228,8 @@ public class Weapon extends Item {
         
         if(ret && i instanceof Weapon){//was is
             Weapon temp = (Weapon)i;
-            if(temp.skill_bonus.toString() == skill_bonus.toString() && temp.skill_id.toString() == skill_id.toString() && temp.enchantment_level == enchantment_level
-                && temp.stat_min.toString() == stat_min.toString() && temp.stat_req.toString() == stat_req.toString() && temp.num_hold_slots_req == num_hold_slots_req){
+            if(temp.skill_bonus.toString().equals(skill_bonus.toString()) && temp.skill_id.toString().equals(skill_id.toString()) && temp.enchantment_level == enchantment_level
+                && temp.stat_min.toString().equals(stat_min.toString()) && temp.stat_req.toString().equals(stat_req.toString()) && temp.num_hold_slots_req == num_hold_slots_req){
                     ret = true;
                 }else{
                     ret = false;
@@ -266,44 +251,15 @@ public class Weapon extends Item {
         temp.stat_min = this.stat_min;
         temp.droppedDescription = this.droppedDescription;
         temp.value = this.value;
-        //int count = 0;
-        /*
-        for(count=0;count<effects.size();count++){
-            temp.effects[count] = this.effects[count];
-        }
-        */
-        temp.effects = new ArrayList<>(this.effects);
+        temp.effects = new ArrayList<>(this.effects);//TODO each of these was just a copy loop to temp
         temp.useDescription = this.useDescription;
-        /*
-        count = 0;
-        for(count;count<changeEffects.length;count++){
-            temp.changeEffects[count] = this.changeEffects[count];
-        }
-        */
-        //TODO verify both
         temp.changeEffects = new ArrayList<>(this.changeEffects);
         temp.propogate = this.propogate;
         temp.inventoryDescription = inventoryDescription;
         temp.identDifficulty = this.identDifficulty;
         temp.weight = this.weight;
-        /*
-        count = 0;
-        for(count;count < statActionAdd.size();count++){
-            temp.statActionAdd[count] = this.statActionAdd[count];
-        }
-        */
         temp.statActionAdd = new ArrayList<>(this.statActionAdd);
         temp.numUses = this.numUses;
-        /*
-        count = 0;
-        for(count;count<skill_id.length;count++){
-            temp.skill_id[count] = this.skill_id[count];
-        }
-        count = 0;
-        for(count;count<skill_bonus.length;count++){
-            temp.skill_bonus[count] = this.skill_bonus[count];
-        }
-        */
         temp.skill_id = new ArrayList<>(this.skill_id);
         temp.skill_bonus = new ArrayList<>(this.skill_bonus);
         

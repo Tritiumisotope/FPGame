@@ -4,23 +4,30 @@ import java.util.ArrayList;
 
 public class Quest_Consequence extends Consequence {
 		
-    public ArrayList<Quest> quest;//Array
-    public ArrayList<Integer> end_objective;//:Array
+    protected ArrayList<Quest> quest;//Array
+    protected ArrayList<Integer> endObjective;//:Array
     
     public Quest_Consequence() {
         // constructor code
         super();
         quest = new ArrayList<>();
-        end_objective = new ArrayList<>();
+        endObjective = new ArrayList<>();
     }
     public void set_quest(Quest q){
         set_quest(q,-1);
     }
-    public void set_quest(Quest q,int goto_obj_num){//def -1
+    public void set_quest(Quest q,int gotoObjNum){//def -1
         quest.add(q);//quest[quest.length] = q
-        end_objective.add(goto_obj_num);//end_objective[end_objective.length] = goto_obj_num
+        endObjective.add(gotoObjNum);//end_objective[end_objective.length] = goto_obj_num
     }
-    
+    @Override 
+    public String trigger(Number r){
+        return trigger(r, null,null);
+    }
+    @Override 
+    public String trigger(Number r,Character c){
+        return trigger(r, c,null);
+    }
     @Override 
     public String trigger(Number r,Character c,Character c2){//def null, null
         String ret = "";
@@ -31,9 +38,9 @@ public class Quest_Consequence extends Consequence {
             if(quest.get(0) != null){
                 int i = 0;
                 for(i=0;i<quest.size();i++){
-                    if(end_objective.get(i) >= 0){
-                        ret += c.personality.set_obj_step(quest.get(i),end_objective.get(i),c);
-                        c2.personality.set_obj_step(quest.get(i),end_objective.get(i),c2);
+                    if(endObjective.get(i) >= 0){
+                        ret += c.personality.set_obj_step(quest.get(i),endObjective.get(i),c);
+                        c2.personality.set_obj_step(quest.get(i),endObjective.get(i),c2);
                     }else{
                         c.personality.new_objective(quest.get(i), c);
                     }
@@ -49,13 +56,7 @@ public class Quest_Consequence extends Consequence {
         Quest_Consequence ret = new Quest_Consequence();
         ret.statEffected = new ArrayList<>(this.statEffected);
         ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
-        /*
-        int i = 0;
-        for(i=0;i<this.consequenceDescription.size();i++){
-            ret.consequenceDescription[i] = this.consequenceDescription[i];
-        }
-        */
-        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
+        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);//TODO verify, was a loop
         
         ret.roll_required = new ArrayList<>(this.roll_required);
         ret.showEffects = new ArrayList<>(this.showEffects);
@@ -86,7 +87,7 @@ public class Quest_Consequence extends Consequence {
         ret.char_effect = new ArrayList<>(this.char_effect);
         
         ret.quest = new ArrayList<>(this.quest);
-        ret.end_objective = new ArrayList<>(this.end_objective);
+        ret.endObjective = new ArrayList<>(this.endObjective);
         return ret;
     }
     

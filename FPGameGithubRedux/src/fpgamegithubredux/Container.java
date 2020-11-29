@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Container extends StaticObject {
 
-    public ArrayList<Item> contents;//public var contents:Array;
-    public ArrayList<Object> contents_table;//public var contents_table:Array;
+    public ArrayList<Item> contents;//public var contents:Array
+    public ArrayList<Object> contents_table;//public var contents_table:Array
     public String name;
     public Boolean open_or_close;
     public Boolean always_open;
@@ -18,8 +18,8 @@ public class Container extends StaticObject {
     }
     
     public void init(){
-        contents = new ArrayList<>();//contents = new Array();
-        contents_table = new ArrayList<>();//contents_table = new Array();
+        contents = new ArrayList<>();//contents = new Array()
+        contents_table = new ArrayList<>();//contents_table = new Array()
         open_or_close = false;
         always_open = false;
         bury = "";
@@ -48,11 +48,11 @@ public class Container extends StaticObject {
         contents.add(item);
     }
     
-    public void add_to_loot_table(Item item,Number item_probability){
-        //contents_table[contents_table.length] = item;
+    public void add_to_loot_table(Item item,Number itemProbability){
+        //contents_table[contents_table.length] = item
         contents_table.add(item);
-        //contents_table[contents_table.length] = item_probability;
-        contents_table.add(item_probability);
+        //contents_table[contents_table.length] = item_probability
+        contents_table.add(itemProbability);
     }
     
     public String get_content(){
@@ -80,7 +80,7 @@ public class Container extends StaticObject {
         if( 0 <= k && k < contents.size()){
             if (contents.get(k) instanceof Item){//was is
                 Item item = contents.get(k);
-                //remove_content(contents.get(k));
+                //remove_content(contents.get(k))
                 //TODO verify this works better
                 contents.remove(k);
                 return item;
@@ -109,7 +109,7 @@ public class Container extends StaticObject {
         if (i < descriptions.size() && i >= 0) s += descriptions.get(i)+ "\n";
         if (i == 0 && !always_open) s += "The " + name + " is <a href=\"event:open,"+k+"\">" + (open_or_close?"open.":"closed.") + "</a>\n";
         if (open_or_close || always_open){
-            if (contents.size() > 0 ){
+            if (!contents.isEmpty()){//was size()<0
                 s += "The " + name + " contains: " + get_content();
             }else{
                 s += "The " + name + " is empty.";
@@ -127,7 +127,7 @@ public class Container extends StaticObject {
         always_open = !always_open;
     }
     
-    public void clone(Container c,int floor_modifier){//default 0
+    public void copyContainer(Container c,int floorModifier){//default 0
         this.name = c.name;
         this.description = c.description;
         this.descriptions = c.descriptions;
@@ -146,14 +146,15 @@ public class Container extends StaticObject {
         for(i=0;i<contents_table.size()/2;i+=2){//TODO holy fuck check
             if(contents_table.get(i+1) instanceof Integer &&item != null){//had to add because packed with items and Integers
                 if(Math.random() <= (Integer)contents_table.get(i+1)){
-                    //item = contents_table[i].clone();
+                    //item = contents_table[i].clone()
+                    item = ((Item)contents_table.get(i)).copyItem();
 
-                    if(floor_modifier != 0){
+                    if(floorModifier != 0){
                         int count = 0;
                         for(count=0;count<item.effects.size();count++){
                             if(item.effects.get(count) != null){
-                                //item.effects[count]+=floor_modifier;
-                                item.effects.set(count, item.effects.get(count) + floor_modifier);
+                                //item.effects[count]+=floor_modifier
+                                item.effects.set(count, item.effects.get(count) + floorModifier);
                             }
                         }
                     }

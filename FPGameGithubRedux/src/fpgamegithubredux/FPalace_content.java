@@ -179,6 +179,7 @@ public class FPalace_content {
     
     private static int step_num = -1;
     private static final Logger LOGGER = Logger.getLogger(FPalace_content.class.getName());
+    private static String northstr = "North";
     
     public FPalace_content() {
         // constructor code
@@ -833,16 +834,16 @@ public class FPalace_content {
         throne_antechamber.new_exit(throne_room_entrance, "Gilded Door");
         throne_room_entrance.new_exit(throne_antechamber, "Door");
         
-        throne_room_entrance.new_exit(throne_central_carpet1, "North");
+        throne_room_entrance.new_exit(throne_central_carpet1, northstr);
         throne_central_carpet1.new_exit(throne_room_entrance, "South");
         
-        throne_central_carpet1.new_exit(throne_central_carpet2, "North");
+        throne_central_carpet1.new_exit(throne_central_carpet2, northstr);
         throne_central_carpet2.new_exit(throne_central_carpet1, "South");
         
-        throne_central_carpet2.new_exit(throne_central_carpet3, "North");
+        throne_central_carpet2.new_exit(throne_central_carpet3, northstr);
         throne_central_carpet3.new_exit(throne_central_carpet2, "South");
         
-        throne_central_carpet3.new_exit(throne_central_carpet4, "North");
+        throne_central_carpet3.new_exit(throne_central_carpet4, northstr);
         throne_central_carpet4.new_exit(throne_central_carpet3, "South");
         
         throne_room_entrance.new_exit(throne_gallery_east_entrance, "East");
@@ -875,25 +876,25 @@ public class FPalace_content {
         throne_central_carpet4.new_exit(throne_carpet3_east, "South-East");
         throne_carpet3_east.new_exit(throne_central_carpet4, "North-West");
         
-        throne_carpet1_east.new_exit(throne_carpet2_east, "North");
+        throne_carpet1_east.new_exit(throne_carpet2_east, northstr);
         throne_carpet2_east.new_exit(throne_carpet1_east, "South");
         
-        throne_carpet2_east.new_exit(throne_carpet3_east, "North");
+        throne_carpet2_east.new_exit(throne_carpet3_east, northstr);
         throne_carpet3_east.new_exit(throne_carpet2_east, "South");
         
         throne_gallery_east_entrance.new_exit(throne_gallery1_east, "East");
         throne_gallery1_east.new_exit(throne_gallery_east_entrance, "West");
         
-        throne_gallery1_east.new_exit(throne_gallery2_east, "North");
+        throne_gallery1_east.new_exit(throne_gallery2_east, northstr);
         throne_gallery2_east.new_exit(throne_gallery1_east, "South");
         
-        throne_gallery2_east.new_exit(throne_gallery3_east, "North");
+        throne_gallery2_east.new_exit(throne_gallery3_east, northstr);
         throne_gallery3_east.new_exit(throne_gallery2_east, "South");
         
-        throne_gallery3_east.new_exit(throne_gallery4_east, "North");
+        throne_gallery3_east.new_exit(throne_gallery4_east, northstr);
         throne_gallery4_east.new_exit(throne_gallery3_east, "South");
         
-        throne_gallery4_east.new_exit(throne_gallery5_east, "North");
+        throne_gallery4_east.new_exit(throne_gallery5_east, northstr);
         throne_gallery5_east.new_exit(throne_gallery4_east, "South");
         
         throne_central_carpet4.new_exit(throne_gallery6_east, "East");
@@ -929,10 +930,10 @@ public class FPalace_content {
         throne_central_carpet4.new_exit(throne_carpet3_west, "South-West");
         throne_carpet3_west.new_exit(throne_central_carpet4, "North-East");
         
-        throne_carpet1_west.new_exit(throne_carpet2_west, "North");
+        throne_carpet1_west.new_exit(throne_carpet2_west, northstr);
         throne_carpet2_west.new_exit(throne_carpet1_west, "South");
         
-        throne_carpet2_west.new_exit(throne_carpet3_west, "North");
+        throne_carpet2_west.new_exit(throne_carpet3_west, northstr);
         throne_carpet3_west.new_exit(throne_carpet2_west, "South");
         
         throne_room_entrance.new_exit(throne_gallery_west_entrance, "West");
@@ -941,16 +942,16 @@ public class FPalace_content {
         throne_gallery_west_entrance.new_exit(throne_gallery1_west, "West");
         throne_gallery1_west.new_exit(throne_gallery_west_entrance, "East");
         
-        throne_gallery1_west.new_exit(throne_gallery2_west, "North");
+        throne_gallery1_west.new_exit(throne_gallery2_west, northstr);
         throne_gallery2_west.new_exit(throne_gallery1_west, "South");
         
-        throne_gallery2_west.new_exit(throne_gallery3_west, "North");
+        throne_gallery2_west.new_exit(throne_gallery3_west, northstr);
         throne_gallery3_west.new_exit(throne_gallery2_west, "South");
         
-        throne_gallery3_west.new_exit(throne_gallery4_west, "North");
+        throne_gallery3_west.new_exit(throne_gallery4_west, northstr);
         throne_gallery4_west.new_exit(throne_gallery3_west, "South");
         
-        throne_gallery4_west.new_exit(throne_gallery5_west, "North");
+        throne_gallery4_west.new_exit(throne_gallery5_west, northstr);
         throne_gallery5_west.new_exit(throne_gallery4_west, "South");
         
         throne_central_carpet4.new_exit(throne_gallery6_west, "West");
@@ -959,7 +960,7 @@ public class FPalace_content {
         throne_gallery6_west.new_exit(throne_gallery5_west, "West");
         throne_gallery5_west.new_exit(throne_gallery6_west, "East");
         
-        throne_central_carpet4.new_exit(throne_proper, "North");
+        throne_central_carpet4.new_exit(throne_proper, northstr);
         throne_proper.new_exit(throne_central_carpet4, "South");
         
         
@@ -1184,7 +1185,7 @@ public class FPalace_content {
         
         a2.addChallenge(c2,con2);
 
-        trans_hall.new_exit(trans_science,"North");
+        trans_hall.new_exit(trans_science,northstr);
         trans_hall.add_exit_action(trans_science, a2);
         trans_science.addAction(a2);
 
@@ -1621,18 +1622,18 @@ public class FPalace_content {
         creature.set_party(cparty);
         cparty.add_member(creature);
         //Need some futa bouncers...
-        creature = FPalace_npcs.FPalace_bouncer_1();
+        Character bouncer1 = FPalace_npcs.FPalace_bouncer_1();//here to end were 'creature'
                     
-        creature.set_party(cparty);
-        cparty.add_member(creature);
+        bouncer1.set_party(cparty);
+        cparty.add_member(bouncer1);
         
-        creature.new_location(intro_to_plains);
+        bouncer1.new_location(intro_to_plains);
         
-        creature = FPalace_npcs.FPalace_bouncer_2();
-        creature.set_party(cparty);
-        cparty.add_member(creature);
+        Character bouncer2 = FPalace_npcs.FPalace_bouncer_2();
+        bouncer2.set_party(cparty);
+        cparty.add_member(bouncer2);
         
-        creature.new_location(intro_to_plains);
+        bouncer2.new_location(intro_to_plains);
         
         return area;
     }
@@ -2309,11 +2310,11 @@ public class FPalace_content {
         barn_entrance.new_exit(barn_ground_floor1,"West");
         barn_ground_floor1.new_exit(barn_entrance,"East");
         
-        barn_entrance.new_exit(barn_ground_ne_corner,"North");
+        barn_entrance.new_exit(barn_ground_ne_corner,northstr);
         barn_ground_ne_corner.new_exit(barn_entrance,"South");
         
         barn_entrance.new_exit(barn_ground_se_corner,"South");
-        barn_ground_se_corner.new_exit(barn_entrance,"North");
+        barn_ground_se_corner.new_exit(barn_entrance,northstr);
         
         barn_entrance.new_exit(barn_ground_edge1,"North-West");
         barn_ground_edge1.new_exit(barn_entrance,"South-East");
@@ -2330,11 +2331,11 @@ public class FPalace_content {
         barn_ground_floor1.new_exit(barn_ground_se_corner,"South-East");
         barn_ground_se_corner.new_exit(barn_ground_floor1,"North-West");
         
-        barn_ground_floor1.new_exit(barn_ground_edge1,"North");
+        barn_ground_floor1.new_exit(barn_ground_edge1,northstr);
         barn_ground_edge1.new_exit(barn_ground_floor1,"South");
         
         barn_ground_floor1.new_exit(barn_ground_edge2,"South");
-        barn_ground_edge2.new_exit(barn_ground_floor1,"North");
+        barn_ground_edge2.new_exit(barn_ground_floor1,northstr);
         
         barn_ground_floor1.new_exit(barn_ground_edge3,"North-West");
         barn_ground_edge3.new_exit(barn_ground_floor1,"South-East");
@@ -2354,11 +2355,11 @@ public class FPalace_content {
         barn_ground_floor2.new_exit(barn_ground_edge2,"South-East");
         barn_ground_edge2.new_exit(barn_ground_floor2,"North-West");
         
-        barn_ground_floor2.new_exit(barn_ground_edge3,"North");
+        barn_ground_floor2.new_exit(barn_ground_edge3,northstr);
         barn_ground_edge3.new_exit(barn_ground_floor2,"South");
         
         barn_ground_floor2.new_exit(barn_ground_edge4,"South");
-        barn_ground_edge4.new_exit(barn_ground_floor2,"North");
+        barn_ground_edge4.new_exit(barn_ground_floor2,northstr);
         
         barn_ground_floor2.new_exit(barn_ground_floor3,"West");
         barn_ground_floor3.new_exit(barn_ground_floor2,"East");
@@ -2381,11 +2382,11 @@ public class FPalace_content {
         barn_ground_edge4.new_exit(barn_ground_edge6,"West");
         barn_ground_edge6.new_exit(barn_ground_edge4,"East");
         
-        barn_ground_floor3.new_exit(barn_ground_edge5,"North");
+        barn_ground_floor3.new_exit(barn_ground_edge5,northstr);
         barn_ground_edge5.new_exit(barn_ground_floor3,"South");
         
         barn_ground_floor3.new_exit(barn_ground_edge6,"South");
-        barn_ground_edge6.new_exit(barn_ground_floor3,"North");
+        barn_ground_edge6.new_exit(barn_ground_floor3,northstr);
         
         barn_ground_floor3.new_exit(barn_ground_underloft,"West");
         barn_ground_underloft.new_exit(barn_ground_floor3,"East");
@@ -2402,11 +2403,11 @@ public class FPalace_content {
         barn_ground_floor3.new_exit(barn_ground_sw_corner,"South-West");
         barn_ground_sw_corner.new_exit(barn_ground_floor3,"North-East");
         
-        barn_ground_underloft.new_exit(barn_ground_nw_corner,"North");
+        barn_ground_underloft.new_exit(barn_ground_nw_corner,northstr);
         barn_ground_nw_corner.new_exit(barn_ground_underloft,"South");
         
         barn_ground_underloft.new_exit(barn_ground_sw_corner,"South");
-        barn_ground_sw_corner.new_exit(barn_ground_underloft,"North");
+        barn_ground_sw_corner.new_exit(barn_ground_underloft,northstr);
         
         barn_ground_underloft.new_exit(barn_ground_edge5,"North-East");
         barn_ground_edge5.new_exit(barn_ground_underloft,"South-West");
@@ -2501,7 +2502,7 @@ public class FPalace_content {
         farmhouse_entrance.new_exit(farmhouse_livingroom,"West");
         farmhouse_livingroom.new_exit(farmhouse_entrance,"East");
         
-        farmhouse_livingroom.new_exit(farmhouse_kitchen,"North");
+        farmhouse_livingroom.new_exit(farmhouse_kitchen,northstr);
         farmhouse_kitchen.new_exit(farmhouse_livingroom,"South");
         
         farmhouse_kitchen.new_exit(farmhouse_diningroom,"East");
@@ -2511,12 +2512,12 @@ public class FPalace_content {
         farmhouse_rootcellar.new_exit(farmhouse_kitchen, "Up");
         
         farmhouse_diningroom.new_exit(farmhouse_entrance,"South");
-        farmhouse_entrance.new_exit(farmhouse_diningroom,"North");
+        farmhouse_entrance.new_exit(farmhouse_diningroom,northstr);
         
         farmhouse_entrance.new_exit(farmhouse_upstairs,"Up");
         farmhouse_upstairs.new_exit(farmhouse_entrance,"Down");
         
-        farmhouse_upstairs.new_exit(farmhouse_girls_room,"North");
+        farmhouse_upstairs.new_exit(farmhouse_girls_room,northstr);
         farmhouse_girls_room.new_exit(farmhouse_upstairs,"South");
         
         farmhouse_upstairs.new_exit(farmhouse_boys_room,"North-West");
@@ -6901,9 +6902,9 @@ public class FPalace_content {
         Area tower = new Area("Tower");
         tower.set_move_time(1);
         
-        Template_Room template_room = new Template_Room("You're standing in a well lit hall seemingly made of light. ");
-        template_room.set_max_same_exits(4);
-        template_room.set_same_exit_offset(1);
+        Template_Room templateRoom = new Template_Room("You're standing in a well lit hall seemingly made of light. ");
+        templateRoom.set_max_same_exits(4);
+        templateRoom.set_same_exit_offset(1);
         Container cont = new Container();
         cont.set_name("bowl");
         cont.set_description("There is a <a href=\"event:inspect,</id>,0\">bowl</a> on a small table. ");
@@ -6934,7 +6935,7 @@ public class FPalace_content {
         cont.add_to_loot_table(FPalace_items.Stallion_Stout(),0.1);
         cont.add_to_loot_table(FPalace_items.edible_warranty(),0.1);			
         cont.open();
-        template_room.add_container(cont,0.10);
+        templateRoom.add_container(cont,0.10);
         
         CharAction a2 = new CharAction();
         a2.setName("");
@@ -6952,16 +6953,16 @@ public class FPalace_content {
         
         a2.addChallenge(challenge, rconsequence);
         
-        Challenge char_chall = new Challenge();
-        char_chall.set_attack_stat(-1,1);
-        char_chall.set_defense_stat(-1,0);
-        char_chall.setVariability(0);//Slime is 33% more likely to spawn then equine with this. If 1, slime is 50% more likely
-        char_chall.setText("an enemy");
-        Consequence char_consequence = new Consequence();
-        char_consequence.add_char_list(new ArrayList<>(Arrays.asList(FPalace_npcs.heaven_cherub(), FPalace_npcs.heaven_angel(), FPalace_npcs.hell_imp(), FPalace_npcs.hell_succubus())));
-        char_consequence.addConsequence(FPalaceHelper.con_id,0, "The towers defenders decide to attack! ",0);
+        Challenge charChall = new Challenge();
+        charChall.set_attack_stat(-1,1);
+        charChall.set_defense_stat(-1,0);
+        charChall.setVariability(0);//Slime is 33% more likely to spawn then equine with this. If 1, slime is 50% more likely
+        charChall.setText("an enemy");
+        Consequence charConsequence = new Consequence();
+        charConsequence.add_char_list(new ArrayList<>(Arrays.asList(FPalace_npcs.heaven_cherub(), FPalace_npcs.heaven_angel(), FPalace_npcs.hell_imp(), FPalace_npcs.hell_succubus())));
+        charConsequence.addConsequence(FPalaceHelper.con_id,0, "The towers defenders decide to attack! ",0);
         
-        a2.addChallenge(char_chall, char_consequence);
+        a2.addChallenge(charChall, charConsequence);
         
         challenge = new Challenge(true);
         challenge.set_attack_stat(-1,5);
@@ -6973,23 +6974,23 @@ public class FPalace_content {
         rconsequence.addConsequence(FPalaceHelper.con_id,0, "You walk along the way. ",0);
         rconsequence.addConsequence(FPalaceHelper.con_id,0, "",-1,0,0,0);
         
-        template_room.add_exit_action(a2, challenge, rconsequence);
+        templateRoom.add_exit_action(a2, challenge, rconsequence);
         
         
-        tower.add_room_template(template_room);
+        tower.add_room_template(templateRoom);
         tower.random_area(20);
         
-        Template_Room template_filler = new Template_Room("You're standing in a well lit hall seemingly made of light. ");
-        template_filler.set_discovery_difficulty(15);
-        template_filler.set_sight_difficulty(20);
-        template_filler.set_locate_difficulty(15);
+        Template_Room templateFiller = new Template_Room("You're standing in a well lit hall seemingly made of light. ");
+        templateFiller.set_discovery_difficulty(15);
+        templateFiller.set_sight_difficulty(20);
+        templateFiller.set_locate_difficulty(15);
         //template_filler.add_character(FPalace_npcs.heaven_cherub(),0.15);
         //template_filler.add_character(FPalace_npcs.heaven_angel(),0.15);
-        template_filler.add_container(cont,0.10);
+        templateFiller.add_container(cont,0.10);
         
-        template_filler.add_exit_action(a2, challenge, rconsequence);
+        templateFiller.add_exit_action(a2, challenge, rconsequence);
         
-        tower.set_filler_template(template_filler, Area.single_connected_filler);
+        tower.set_filler_template(templateFiller, Area.single_connected_filler);
         
         Template_Room downTemplate = new Template_Room("You're standing in a well lit hall seemingly made of light. A staircase made of clouds looks to lead to another level. ");
         downTemplate.set_discovery_difficulty(15);

@@ -3,11 +3,11 @@ package fpgamegithubredux;
 import java.util.ArrayList;
 
 public class Upgrade_Item extends Item {
-        public static int upgrade_grip = 0;
-		public static int upgrade_tip = 1;
-		public static int upgrade_blade = 2;
-		public static int upgrade_lining = 3;
-		public static int upgrade_plates = 4;
+        public static final int upgrade_grip = 0;
+		public static final int upgrade_tip = 1;
+		public static final int upgrade_blade = 2;
+		public static final int upgrade_lining = 3;
+		public static final int upgrade_plates = 4;
 		
 		public int upgrade_type_id;		
 		public ArrayList<Integer> skill_id;//public var skill_id:Array

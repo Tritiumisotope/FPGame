@@ -9,8 +9,8 @@ public class Race extends DynamicObject {
     private static final Logger LOGGER = Logger.getLogger(Race.class.getName());
 
     //racial stats sound like a good idea? What about actions/attacks?
-    public static int mamal_pregnancy = 0;
-    public static int egg_pregnancy = 1;
+    public static final int mamal_pregnancy = 0;
+    public static final int egg_pregnancy = 1;
 
     protected ArrayList<Integer> bonus_stat;//public var bonus_stat:Array
     protected ArrayList<Number> bonus;//public var bonuArray s
@@ -57,7 +57,7 @@ public class Race extends DynamicObject {
     
     protected ArrayList<Integer> status_immunities;//    public var status_immunitieArray s
 
-    public Boolean anthropomorphic;
+    protected Boolean anthropomorphic;
 
     public Race(){
         name = "";
@@ -152,15 +152,15 @@ public class Race extends DynamicObject {
     
     public ArrayList<BodyPart> get_new_parts(Character c){
         ArrayList<BodyPart> ret = new ArrayList<>();
-        ArrayList<Integer> avail_connect = c.body.get_avail_connect_part();
+        ArrayList<Integer> availConnect = c.body.get_avail_connect_part();
         for(int i=0;i<parts.size();i++){
-            BodyPart temp_bp = parts.get(i);
-            if(c.body.part_count_by_name(temp_bp.name) < parts_count.get(i) && (parts_gender.get(i) == null || parts_gender.get(i).equals(c.sex.name))){
+            BodyPart tempBP = parts.get(i);
+            if(c.body.part_count_by_name(tempBP.name) < parts_count.get(i) && (parts_gender.get(i) == null || parts_gender.get(i).equals(c.sex.name))){
                 int j= 0;
-                for(j=0;j<avail_connect.size();j++){
-                    if(avail_connect.get(j) == temp_bp.get_part_id()){
+                for(j=0;j<availConnect.size();j++){
+                    if(availConnect.get(j) == tempBP.get_part_id()){
                         //ret[ret.length] = temp_bp
-                        ret.add(temp_bp);
+                        ret.add(tempBP);
                         break;
                     }
                 }
@@ -185,10 +185,10 @@ public class Race extends DynamicObject {
             if(preg_type == mamal_pregnancy){
                 ret.set_character_effect(kid);
             }else if(preg_type == egg_pregnancy){
-                if(ret.end_consequence != null && ret.end_consequence instanceof ItemConsequence){//was is
+                if( ret.end_consequence instanceof ItemConsequence){//was is, also this returns false for nulls so we are ok
                     ItemConsequence icons = (ItemConsequence)ret.end_consequence ;
-                    Item temp_egg = icons.item_reward.get(0);
-                    temp_egg.addSpawnAtTick(kid, (int)Math.round(8*FPGameGithub.T1_MONTH*aging_mod.doubleValue()));
+                    Item tempEgg = icons.item_reward.get(0);
+                    tempEgg.addSpawnAtTick(kid, (int)Math.round(8*FPGameGithub.T1_MONTH*aging_mod.doubleValue()));
                 }else{
                     LOGGER.info("(Race.get_preg_effect)Should be getting ready to lay an egg. No item end consequence to alter an egg for. Doing nothing.");
                 }
@@ -202,7 +202,7 @@ public class Race extends DynamicObject {
         preg_effect = t;
     }
     
-    public void new_stat(Stat s){;
+    public void new_stat(Stat s){
         stats.add(s); //stats[stats.length] = s
     }
     
@@ -213,30 +213,30 @@ public class Race extends DynamicObject {
     public void new_attack(CharAction a){
         new_attack(a,-1);
     }
-    public void new_attack(CharAction a, int slot_id){//default -1
+    public void new_attack(CharAction a, int slotID){//default -1
         //attacks[attacks.length] = a
         //attack_slots[attack_slots.length] = slot_id
         attacks.add(a);
-        attack_slots.add(slot_id);
+        attack_slots.add(slotID);
     }
     
     
     public ArrayList<CharAction> get_attacks(BodyPart bp){
-        ArrayList<CharAction> temp_arr = new ArrayList<>();
+        ArrayList<CharAction> tempArr = new ArrayList<>();
         
         int count = 0;
         for(count=0;count< attacks.size();count++){
             if(attack_slots.get(count) > -1){
                 if(attack_slots.get(count) == bp.get_part_id()){
-                    temp_arr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count]
+                    tempArr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count]
                 }
             }else{
-                temp_arr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count]
+                tempArr.add(attacks.get(count)); //temp_arr[temp_arr.length] = attacks[count]
             }
         }
         
         
-        return temp_arr;
+        return tempArr;
     }
     
     
@@ -300,25 +300,25 @@ public class Race extends DynamicObject {
         bonus_part.add(pid); //bonus_part[bonus_part.length] = pid
     }
     
-    public void set_skill_bonus(int skill_id,Number bonus_amt, int pid){//pid def -1
-        skill_bonus_id.add(skill_id); //skill_bonus_id[skill_bonus_id.length] = skill_id
-        skill_bonus.add(bonus_amt); //skill_bonus[skill_bonus.length] = bonus_amt
+    public void set_skill_bonus(int skillID,Number bonusAmt, int pid){//pid def -1
+        skill_bonus_id.add(skillID); //skill_bonus_id[skill_bonus_id.length] = skill_id
+        skill_bonus.add(bonusAmt); //skill_bonus[skill_bonus.length] = bonus_amt
         skill_bonus_part.add(pid);//skill_bonus_part[skill_bonus_part.length] = pid
     }
     
-    public void set_stat_max(int stat_id,Number max, int pid){
-        stat_max_id.add(stat_id); //stat_max_id[stat_max_id.length] = stat_id
+    public void set_stat_max(int statID,Number max, int pid){
+        stat_max_id.add(statID); //stat_max_id[stat_max_id.length] = stat_id
         stat_max.add(max); //stat_max[stat_max.length] = max
         max_part.add(pid); //max_part[max_part.length] = pid
     }
     public void apply_bonuses(Character c,BodyPart p){
         apply_bonuses(c, p, false);
     }
-    public void apply_bonuses(Character c,BodyPart p,Boolean delay_effect){//default false
+    public void apply_bonuses(Character c,BodyPart p,Boolean delayEffect){//default false
         int i= 0;
         for(i=0;i<bonus.size();i++){
             if (bonus.get(i) != null && (p.part_id == bonus_part.get(i) || bonus_part.get(i) == -1)){
-                if(delay_effect && bonus_part.get(i) == -1){
+                if(delayEffect && bonus_part.get(i) == -1){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);
                     Consequence consequence = new Consequence();
@@ -347,11 +347,11 @@ public class Race extends DynamicObject {
         reverse_bonuses(c, p,false);
     }
     
-    public void reverse_bonuses(Character c,BodyPart p,Boolean delay_effect){//default false
+    public void reverse_bonuses(Character c,BodyPart p,Boolean delayEffect){//default false
         int i= 0;
         for(i=0;i<bonus.size();i++){
             if (bonus.get(i) != null && (p.part_id == bonus_part.get(i) || bonus_part.get(i) == -1)){
-                if(delay_effect && bonus_part.get(i) != -1){
+                if(delayEffect && bonus_part.get(i) != -1){
                     TickEffect tf = new TickEffect();
                     tf.set_end_tick(FPGameGithub.T1_HOUR);
                     Consequence consequence = new Consequence();
@@ -390,21 +390,21 @@ public class Race extends DynamicObject {
         return name + ". ";
     }
     
-    public int get_part_image(int part_id){
+    public int get_part_image(int partID){
         for(int i=0;i<image_part_id.size();i++){
-            if(image_part_id.get(i) == part_id)return image_id.get(i);
+            if(image_part_id.get(i) == partID)return image_id.get(i);
         }
         return -1;
     }
     
-    public void add_part_description(int part_id, String d){
+    public void add_part_description(int partID, String d){
         desc.add(d); //desc[desc.length] = d
-        desc_part.add(part_id); //desc_part[desc_part.length] = part_id
+        desc_part.add(partID); //desc_part[desc_part.length] = part_id
     }
     
-    public void add_part_image(int part_id, int img_id){
-        image_part_id.add(part_id);//image_part_id[image_part_id.length] = part_id
-        image_id.add(img_id);//image_id[image_id.length] = img_id
+    public void add_part_image(int partID, int imgId){
+        image_part_id.add(partID);//image_part_id[image_part_id.length] = part_id
+        image_id.add(imgId);//image_id[image_id.length] = img_id
     }
     
     public void add_status_immunity(int statusID){

@@ -54,8 +54,8 @@ public class Quest {
         name = s;
     }
     
-    public void set_end_step(int step_num){
-        end_step = step_num;
+    public void set_end_step(int stepNum){
+        end_step = stepNum;
     }
 
     public void add_end_reward(ArrayList<Object> reward){
@@ -72,28 +72,27 @@ public class Quest {
                 Integer temp = (Integer)end_rewards.get(i);
                 ret += c.set_xp(temp);//ret += c.set_xp(end_rewards.get(i))
             }else if(end_rewards.get(i) instanceof Item){
-                //c.add_to_possessions(end_rewards.get(i));
-                //TODO
+                c.addToPossessions((Item)end_rewards.get(i));
             }else{
-                //trace("(Quest.end_quest)Should be rewarding character for ending the quest, but got " + end_rewards[i] + " and don't know what to do with it");
+                LOGGER.info("(Quest.end_quest)Should be rewarding character for ending the quest, but got " + ((Item)end_rewards.get(i)).getName() + " and don't know what to do with it");
             }
         }
         return ret;
     }
     
     
-    public void new_objective(String s,int action_type,Object action_target){
-        new_objective(s,action_type,action_target,-1,-1);
+    public void new_objective(String s,int actionType,Object actionTarget){
+        new_objective(s,actionType,actionTarget,-1,-1);
     }
-    public void new_objective(String s,int action_type,Object action_target,int go_to_objective,int ticks_to_complete){
+    public void new_objective(String s,int actionType,Object actionTarget,int goToObjective,int ticksToComplete){
         //default -1,-1
         objectives.add(s);//objectives[objectives.length] = s
-        objective_actions.add(action_type);//objective_actions[objective_actions.length] = action_type
+        objective_actions.add(actionType);//objective_actions[objective_actions.length] = action_type
         ArrayList<Object> temp = new ArrayList<>();//objective_targets[objective_targets.length] = action_target
-        temp.add(action_target);
+        temp.add(actionTarget);
         objective_targets.add(temp);
-        next_objective.add(go_to_objective);//next_objective[next_objective.length] = go_to_objective
-        objective_timer.add(ticks_to_complete);  //objective_timer[objective_timer.length] = ticks_to_complete
+        next_objective.add(goToObjective);//next_objective[next_objective.length] = go_to_objective
+        objective_timer.add(ticksToComplete);  //objective_timer[objective_timer.length] = ticks_to_complete
     }
     
     public String get_objectives(Character c){
@@ -115,16 +114,16 @@ public class Quest {
         return ret;
     }
     
-    public void add_conversation_topic(Conversation_topic ct,int obj_num){
+    public void add_conversation_topic(Conversation_topic ct,int objNum){
         topics.add(ct);//topics[topics.length] = ct
-        topics_objective.add(obj_num);//topics_objective[topics_objective.length] = obj_num;
+        topics_objective.add(objNum);//topics_objective[topics_objective.length] = obj_num
     }
     
-    public ArrayList<Conversation_topic> get_conversation_topics(int curr_obj_num){
+    public ArrayList<Conversation_topic> get_conversation_topics(int currObjNum){
         ArrayList<Conversation_topic> ret= new ArrayList<>();
         int i = 0;
         for(i=0;i<topics.size();i++){
-            if(topics_objective.get(i) == curr_obj_num){
+            if(topics_objective.get(i) == currObjNum){
                 ret.add(topics.get(i));//ret = ret.concat(topics[i])
             }
         }
@@ -132,34 +131,34 @@ public class Quest {
         return ret;
     }
     
-    public Room get_target_room(int curr_obj_num){
-        Room target_room = null;
-        if(objective_targets.get(curr_obj_num).get(0) instanceof Room){
-            Room temp = (Room) objective_targets.get(curr_obj_num).get(0);
-            if(objective_actions.get(curr_obj_num) == Quest.area_action){
+    public Room get_target_room(int currObjNum){
+        Room targetRoom = null;
+        if(objective_targets.get(currObjNum).get(0) instanceof Room){
+            Room temp = (Room) objective_targets.get(currObjNum).get(0);
+            if(objective_actions.get(currObjNum) == Quest.area_action){
                 //target_room
-            }else if(objective_actions.get(curr_obj_num) == Quest.room_action){
-                target_room = temp;//TODO why only 2D?
-            }else if(objective_actions.get(curr_obj_num) == Quest.wait_action){
-                target_room = temp;
+            }else if(objective_actions.get(currObjNum) == Quest.room_action){
+                targetRoom = temp;//TODO why only 2D?
+            }else if(objective_actions.get(currObjNum) == Quest.wait_action){
+                targetRoom = temp;
             }
         }
-        return target_room;
+        return targetRoom;
     }
     
-    public Character get_target_char(int curr_obj_num){
-        Character target_char = null;
-        if(objective_targets.get(curr_obj_num).get(0) instanceof Character){
-            Character temp = (Character) objective_targets.get(curr_obj_num).get(0);
-            if(objective_actions.get(curr_obj_num) == Quest.talk_action){
+    public Character get_target_char(int currObjNum){
+        Character targetChar = null;
+        if(objective_targets.get(currObjNum).get(0) instanceof Character){
+            Character temp = (Character) objective_targets.get(currObjNum).get(0);
+            if(objective_actions.get(currObjNum) == Quest.talk_action){
                 //target_char
-            }else if(objective_actions.get(curr_obj_num) == Quest.kill_action){
-                target_char = temp;
-            }else if(objective_actions.get(curr_obj_num) == Quest.incapacitate_action){
-                target_char = temp;
+            }else if(objective_actions.get(currObjNum) == Quest.kill_action){
+                targetChar = temp;
+            }else if(objective_actions.get(currObjNum) == Quest.incapacitate_action){
+                targetChar = temp;
             }
         }
-        return target_char;
+        return targetChar;
     }
     
     public CharAction get_target_action(int curr_obj_num){
@@ -208,27 +207,27 @@ public class Quest {
         return target_item;
     }
     
-    public String get_target_command(int curr_obj_num){
-        String target_command = null;
+    public String get_target_command(int currObjNum){
+        String targetCommand = null;
         
-        if(objective_actions.get(curr_obj_num) == Quest.skill_action){
-            target_command = "show_skills";
-        }else if(objective_actions.get(curr_obj_num) == Quest.equip_action){
-            target_command = "equip";
-        }else if(objective_actions.get(curr_obj_num) == Quest.unequip_action){
-            target_command = "unequip";
-        }else if(objective_actions.get(curr_obj_num) == Quest.hold_action){
-            target_command = "hold";
-        }else if(objective_actions.get(curr_obj_num) == Quest.unhold_action){
-            target_command = "unhold";
-        }else if(objective_actions.get(curr_obj_num) == Quest.pick_up_action){
-            target_command = "loot";//"pick_up"
-        }else if(objective_actions.get(curr_obj_num) == Quest.drop_action){
-            target_command = "use_item";
-        }else if(objective_actions.get(curr_obj_num) == Quest.wait_action){
-            target_command = "wait";
+        if(objective_actions.get(currObjNum) == Quest.skill_action){
+            targetCommand = "show_skills";
+        }else if(objective_actions.get(currObjNum) == Quest.equip_action){
+            targetCommand = "equip";
+        }else if(objective_actions.get(currObjNum) == Quest.unequip_action){
+            targetCommand = "unequip";
+        }else if(objective_actions.get(currObjNum) == Quest.hold_action){
+            targetCommand = "hold";
+        }else if(objective_actions.get(currObjNum) == Quest.unhold_action){
+            targetCommand = "unhold";
+        }else if(objective_actions.get(currObjNum) == Quest.pick_up_action){
+            targetCommand = "loot";//"pick_up"
+        }else if(objective_actions.get(currObjNum) == Quest.drop_action){
+            targetCommand = "use_item";
+        }else if(objective_actions.get(currObjNum) == Quest.wait_action){
+            targetCommand = "wait";
         }
-        return target_command;
+        return targetCommand;
     }
 
 }

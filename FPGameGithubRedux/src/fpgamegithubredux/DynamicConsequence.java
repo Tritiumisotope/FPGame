@@ -93,8 +93,8 @@ public class DynamicConsequence extends Consequence {
             Number skill_amt = c.get_skill_by_id(FPalace_skills.adventure_id)/100;
             Item temp_item=null;//needed to copy
             if(c.location != null && c.location.template != null){
-                int i = c.location.template.item.size() - 1;
-                for(i=c.location.template.item.size() - 1;i>=0;i--){
+                //int i = c.location.template.item.size() - 1
+                for(int i=c.location.template.item.size() - 1;i>=0;i--){
                     temp_item = c.location.template.item.get(i);
                     if(temp_item != null && Math.random() < c.location.template.item_chance.get(i).doubleValue() + skill_amt.doubleValue()){
                         break;
@@ -115,12 +115,12 @@ public class DynamicConsequence extends Consequence {
             if(c.location.exit_actions.get(0) != null && c.location.exit_actions.get(0).consequences.get(0).char_effect != null){
                 ArrayList<Object> char_template_list = new ArrayList<>();
                 for(con_count=0;con_count<c.location.exit_actions.get(0).consequences.size();con_count++){
-                    //char_template_list = char_template_list.concat(c.location.exit_actions.get(0).consequences.get(con_count).char_effect);
+                    //char_template_list = char_template_list.concat(c.location.exit_actions.get(0).consequences.get(con_count).char_effect)
                     char_template_list.add(c.location.exit_actions.get(0).consequences.get(con_count).char_effect);
                 }
                 int rand = (int)Math.round(Math.random()*char_template_list.size()-1);
                 while(char_template_list.get(rand) == null && char_template_list.size() > 0){
-                    //char_template_list = char_template_list.slice(0,rand).concat(char_template_list.slice(rand+1,char_template_list.size()));
+                    //char_template_list = char_template_list.slice(0,rand).concat(char_template_list.slice(rand+1,char_template_list.size()))
                     char_template_list.remove(rand);
                     rand = (int)Math.round(Math.random()*char_template_list.size()-1);
                 }
@@ -134,7 +134,7 @@ public class DynamicConsequence extends Consequence {
                         LOGGER.info("(DynamicConsequence.dynamic_choices)I don't know how to hunt this...");
                     }
                     
-                    if(c.location != null){
+                    if(c.location != null&& new_char != null){//TODO good addition of checking new_char?
                         new_char.new_location(c.location);
                         if(c.location.cm == null) c.location.cm = new Combat_manager();
                         c.location.cm.add_participant(c);
@@ -143,9 +143,11 @@ public class DynamicConsequence extends Consequence {
                     //Start combat
                     c.personality.new_relationship(new_char,c,Relationship.aggressive_change);
                     c.personality.make_aggressive(new_char);
-                    new_char.personality.new_relationship(c,new_char,Relationship.aggressive_change);
-                    new_char.personality.make_aggressive(c);
-                    while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "<a href=\"event:combat,"+c.location.getContentID(c)+",-1,-1\"><i>"+new_char.get_short_description(c)+"</i></a>");
+                    if(new_char != null){//TODO good addition of checking new_char?
+                        new_char.personality.new_relationship(c,new_char,Relationship.aggressive_change);
+                        new_char.personality.make_aggressive(c);
+                        while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "<a href=\"event:combat,"+c.location.getContentID(c)+",-1,-1\"><i>"+new_char.get_short_description(c)+"</i></a>");
+                    }
                 }else{
                     while(s.indexOf("</choice>") > -1) s = s.replace("</choice>", "nothing");
                 }
@@ -226,16 +228,16 @@ public class DynamicConsequence extends Consequence {
         }else if(consequence_list_action == DynamicConsequence.list_target_part){
             //right in combat, don't know about overworld
             temp_bp = c.body.parts.get(choice.get(0));
-            int count= 0;
-            /*
-            for(count=0;count<target_part.length;count++){
-                if(!consequence_target[count])target_part[count] = temp_bp.get_part_id();
+        
+            for(int count=0;count<targetPart.size();count++){
+                while(targetPart.size()<=count)targetPart.add(null);//TODO I dont know if this starts empty, it is an inherited var
+                if(!consequenceTarget.get(count))targetPart.set(count, temp_bp.get_part_id());//targetPart[count] = temp_bp.get_part_id()
             }
-            */
+            
             ret += trigger(roll, c, c2);
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_bp.getName());
         }else if(consequence_list_action == DynamicConsequence.list_dilute){
-            //temp_aitem = c2.possessions.get(choice.get(0));
+            temp_aitem = (AlchemyItem)c2.possessions.get(choice.get(0));
             //TODO How do we know this is an Alchemy Item?!
             while(ret.indexOf("</choice>") > -1) ret = ret.replace("</choice>", temp_aitem.getName());
             if(temp_aitem != null){
@@ -277,7 +279,7 @@ public class DynamicConsequence extends Consequence {
             }
         }else if(consequence_list_action == DynamicConsequence.list_refine){
             //need to list the types available to refine...
-            //temp_aitem = c2.possessions.get(choice.get(0));
+            temp_aitem = (AlchemyItem)c2.possessions.get(choice.get(0));
             //TODO dont know if Alchemy Item
             int alch_ident = 0;
             Character char_for_chal = c2;
@@ -308,7 +310,7 @@ public class DynamicConsequence extends Consequence {
                 }
             }
         }else if(consequence_list_action == DynamicConsequence.list_remove_alchemy){
-            //temp_aitem = c2.possessions.get(choice.get(0));//was[[]]
+            temp_aitem = (AlchemyItem)c2.possessions.get(choice.get(0));//was[[]]
             //TODO how do we know above is Alchemy item?!
             Challenge alch_challenge = new Challenge(true);
             alch_challenge.set_attack_stat(FPalace_skills.alchemy_id);
@@ -352,13 +354,7 @@ public class DynamicConsequence extends Consequence {
         DynamicConsequence ret = new DynamicConsequence();
         ret.statEffected = new ArrayList<>(this.statEffected);
         ret.conseq = new ArrayList<>(this.conseq);//was consequence, presumed same
-        /*better way below?
-        int i = 0;
-        for(i=0;i<this.consequenceDescription.size();i++){
-            ret.consequenceDescription[i] = this.consequenceDescription[i];
-        }
-        */
-        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);
+        ret.consequenceDescription = new ArrayList<>(this.consequenceDescription);//was a loop
         ret.roll_required = new ArrayList<>(this.roll_required);
         ret.showEffects = new ArrayList<>(this.showEffects);
         ret.tempFlag = new ArrayList<>(this.tempFlag);
