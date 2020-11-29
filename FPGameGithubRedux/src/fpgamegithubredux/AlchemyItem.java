@@ -324,12 +324,14 @@ public class AlchemyItem extends Item {
             sa_changes.addAll(item2.statActionAdd);
             
             for(i=0;i<sa_changes.size();i++){
-                //if(sa_changes.get(i) instanceof CharAction){
+                //if   
+                //(sa_changes.get(i) instanceof CharAction)    
+                //bracket
                 //Now that I made a StatAction class...
                 if(Math.random() >= 0.5){
                     item.new_stat_action(sa_changes.get(i).statID(),sa_changes.get(i).charAction());
                 }
-                //}
+                //bracket
             }
             
             				
@@ -387,7 +389,10 @@ public class AlchemyItem extends Item {
     public ArrayList<Integer> get_types(){
         return types;			
     }
-    
+    @Override 
+    public String getDescription(Character c, ArrayList<Integer> identEffectiveness){
+        return getDescription(c, identEffectiveness,false);
+    }
     @Override 
     public String getDescription(Character c, ArrayList<Integer> ident_effectiveness, Boolean keep_tags){
         //c:Character, ident_effectiveness:Array = null, keep_tags:Boolean = false
@@ -409,7 +414,7 @@ public class AlchemyItem extends Item {
         Boolean showing= false;
         int count = 0;
         
-        if(types.size() > 0){
+        if(!types.isEmpty()){//was size()<0
             for(count = 0;count < types.size();count ++){
                 if(ret.indexOf(FPalaceHelper.get_stat_name_by_id(types.get(count))) < 0 && Math.random() <= ident_chance){
                     if(!showing){

@@ -2,7 +2,6 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
 
 public class Combat_manager {
 
@@ -171,7 +170,6 @@ public class Combat_manager {
                     }else{
                         new_participants += " and ";
                     }
-                    i = 0;
                     for(i=0;i<p.size();i++){
                         if(p.get(i) == c) continue;
                         if(p.get(i).location == c.location){
@@ -201,18 +199,18 @@ public class Combat_manager {
             if(participants.get(i).location == null){
                 //s[s.length] = participants[i].get_name() + " has died.";
                 //above was commented
-                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
+                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length))
                 participants.remove(i);
-                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length))
                 initiative.remove(i);
                 i--;
                 continue;
             }
             
             if(participants.get(i).location.cm != this || !participants.get(i).get_combat_status()){
-                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length));
+                //participants = participants.slice(0,i).concat(participants.slice(i+1,participants.length))
                 participants.remove(i);
-                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length));
+                //initiative = initiative.slice(0,i).concat(initiative.slice(i+1,initiative.length))
                 initiative.remove(i);
                 i--;
                 continue;
@@ -264,10 +262,10 @@ public class Combat_manager {
         //check to see if anyone is aggressive against anyone else
         int i = 0;
         for(i=0;i<participants.size();i++){
-            if(participants.get(i).next_attack != "") ret = true;
+            if(!participants.get(i).next_attack.equals("")) ret = true;
             if(!ret){
-                int k = i + 1;
-                for(k=i+1;k<participants.size();k++){
+                //int k = i + 1
+                for(int k=i+1;k<participants.size();k++){
                     if((participants.get(i).get_aggresive(participants.get(k)) || participants.get(k).get_aggresive(participants.get(i))) && i != k && participants.get(i).location == participants.get(k).location) ret = true;
                 }
             }
@@ -284,7 +282,7 @@ public class Combat_manager {
         return -1;
     }
     /*
-    public function chars_since_last_action(c:Character):int{
+    public int chars_since_last_action(Character c){
         if(current_int == 0) return 1;
         var ret:int = 0;
         var start_int:int = get_next_init();
@@ -315,7 +313,7 @@ public class Combat_manager {
         return ret;
     }
     
-    public function chars_to_next_action(c:Character):int{
+    public int chars_to_next_action(Character c){
         var ret:int = 0;
         var next_int:int = get_next_init();
         while(next_char != c){
@@ -377,7 +375,6 @@ public class Combat_manager {
         
         int next_int = 0;
         int multi_act_char_int = 0;
-        i = 0;
         for(i=0;i<initiative.size();i++){
             if(initiative.get(i) > next_int && initiative.get(i) < start_init) next_int = initiative.get(i);
             
@@ -391,7 +388,6 @@ public class Combat_manager {
         }
         
         //NOW find which character that was...
-        i = 0;
         for(i=0;i<initiative.size();i++){
             if(initiative.get(i) == next_int){
                 if(next_int >= start_init){
@@ -413,8 +409,7 @@ public class Combat_manager {
             for(int i=0;i<participants.size();i++){
                 if(participants.get(i) != null){
                     if (c.get_aggresive(participants.get(i)) || participants.get(i).get_aggresive(c)) {
-                        //enemy_list[enemy_list.length] = participants[i];
-                        enemy_list.add(participants.get(i));
+                        enemy_list.add(participants.get(i));//enemy_list[enemy_list.length] = participants[i]
                     }
                 }
             }
@@ -422,35 +417,32 @@ public class Combat_manager {
         
         return enemy_list;
     }
-    /*
-    public function get_sideline(c:Character):Array{
-        var ret_list:Array = new Array();
-        var i:int = 0;
+    public ArrayList<Character> get_sideline(Character c){
+        ArrayList<Character> ret_list = new ArrayList<>();
+        int i = 0;
         if(c.get_party() == null){
-            for(i;i<participants.length;i++){
-                if (!c.get_aggresive(participants[i]) && !participants[i].get_aggresive(c) && participants[i] != c) {
-                    ret_list[ret_list.length] = participants[i];
+            for(i=0;i<participants.size();i++){
+                if (!c.get_aggresive(participants.get(i)) && !participants.get(i).get_aggresive(c) && participants.get(i) != c) {
+                    ret_list.add(participants.get(i));//ret_list[ret_list.length] = participants[i]
                 }
             }
         }else{
-            for(i;i<participants.length;i++){
-                if (!c.get_aggresive(participants[i]) && !participants[i].get_aggresive(c) && participants[i] != c) {
-                    var j:int = 0;
-                    var member_list:Array = c.get_party().members;
-                    var found:Boolean = false;
-                    for(j;j<member_list.length;j++){
-                        if(member_list[j] == participants[i]){
+            for(i=0;i<participants.size();i++){
+                if (!c.get_aggresive(participants.get(i)) && !participants.get(i).get_aggresive(c) && participants.get(i) != c) {
+                    ArrayList<Character> member_list = c.get_party().members;//TODO new ArrayList<>(that)?
+                    Boolean found = false;
+                    for(int j=0;j<member_list.size();j++){
+                        if(member_list.get(j) == participants.get(i)){
                             found = true;
                             break;
                         }
                     }
                                     
-                    if(!found)ret_list[ret_list.length] = participants[i];
+                    if(Boolean.FALSE.equals(found))ret_list.add(participants.get(i));//ret_list[ret_list.length] = participants[i]
                 }
             }
         }
         
         return ret_list;
     }
-    */
 }

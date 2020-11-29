@@ -21,8 +21,7 @@ public class CharActionObject extends StaticObject {
 		}
 		
 		public CharAction get_action(int actionID,Room location){
-            //curr_action_times[action_id]++
-            curr_action_times.set(actionID, curr_action_times.get(actionID)+1) ;
+            curr_action_times.set(actionID, curr_action_times.get(actionID)+1);//curr_action_times[action_id]++
 			if(curr_action_times.get(actionID) >= max_action_times.get(actionID)){//[] and []
                 location.remove_static_contents(id);
 			}

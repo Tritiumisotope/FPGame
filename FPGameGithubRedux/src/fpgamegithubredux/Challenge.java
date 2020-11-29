@@ -325,7 +325,7 @@ public class Challenge {
         if(attack_item != null){
             int count = 0;
             for(count=0;count<c1.possessions.size();count++){
-                if(c1.possessions.get(count).name == attack_item.name){
+                if(c1.possessions.get(count).name.equals(attack_item.name)){
                     attack_roll++;
                 }
             }
@@ -334,7 +334,7 @@ public class Challenge {
         if(attack_quest != null){
             int count = 0;
             for(count=0;count<c1.personality.objectives.size();count++){
-                if(c1.personality.objectives.get(count).name == attack_quest.name){
+                if(c1.personality.objectives.get(count).name.equals(attack_quest.name)){
                     if(attack_quest_step == -1 || c1.personality.curr_obj_step.get(count).get(c1.personality.curr_obj_step.get(count).size()-1) == attack_quest_step){
                         attack_roll++;
                         break;
@@ -370,7 +370,7 @@ public class Challenge {
         if(defense_item != null){
             int count = 0;
             for(count=0;count<c2.possessions.size();count++){
-                if(c2.possessions.get(count).name == defense_item.name){
+                if(c2.possessions.get(count).name.equals(defense_item.name)){
                     defense_roll++;
                     break;
                 }
@@ -414,7 +414,7 @@ public class Challenge {
                         c1.set_challenge_output(c1.apply_affect_by_id(attack_stat, 1));
                     }
                 }else{//skill increase
-                    prob_c1 = 1.0/(prob_c1 * 2 * c1.skills.get_skill_cost(c1,attack_stat,1));//Math.pow(4, c1.get_skill_rank_by_id(attack_stat)));
+                    prob_c1 = 1.0/(prob_c1 * 2 * c1.skills.get_skill_cost(c1,attack_stat,1));//Math.pow(4, c1.get_skill_rank_by_id(attack_stat)))
                     
                     if(prob_c1 < 1/1000000.0) prob_c1 = 1/1000000.0;
                     if(Math.random() <= prob_c1){
@@ -433,7 +433,7 @@ public class Challenge {
                         c2.set_challenge_output(c2.apply_affect_by_id(defense_stat, 1));
                     }
                 }else{//skill increase
-                    prob_c2 = 1.0/(prob_c2 * 2 * c2.skills.get_skill_cost(c2,defense_stat,1));//Math.pow(4, c2.get_skill_rank_by_id(defense_stat)));
+                    prob_c2 = 1.0/(prob_c2 * 2 * c2.skills.get_skill_cost(c2,defense_stat,1));//Math.pow(4, c2.get_skill_rank_by_id(defense_stat)))
                     if(prob_c2 < 1/1000000.0) prob_c2 = 1/1000000.0;
                     if(Math.random() <= prob_c2){
                         c2.set_challenge_output(c2.set_skills_by_id(defense_stat, 1));
@@ -452,7 +452,7 @@ public class Challenge {
                         c2.set_challenge_output(c2.apply_affect_by_id(defense_stat, 1));
                     }
                 }else{//skill increase
-                    prob_c2 = 1.0/(prob_c2 * 2 * c2.skills.get_skill_cost(c2,defense_stat,1));//Math.pow(4, c2.get_skill_rank_by_id(defense_stat)));
+                    prob_c2 = 1.0/(prob_c2 * 2 * c2.skills.get_skill_cost(c2,defense_stat,1));//Math.pow(4, c2.get_skill_rank_by_id(defense_stat)))
                     if(prob_c2 < 1/1000000.0) prob_c2 = 1/1000000.0;
                     if(Math.random() <= prob_c2){
                         c2.set_challenge_output(c2.set_skills_by_id(defense_stat, 1));
@@ -469,7 +469,7 @@ public class Challenge {
                         c1.set_challenge_output(c1.apply_affect_by_id(attack_stat, 1));
                     }
                 }else{//skill increase
-                    prob_c1 = 1.0/(prob_c1 * 2 * c1.skills.get_skill_cost(c1,attack_stat,1));//Math.pow(4, c1.get_skill_rank_by_id(attack_stat)));
+                    prob_c1 = 1.0/(prob_c1 * 2 * c1.skills.get_skill_cost(c1,attack_stat,1));//Math.pow(4, c1.get_skill_rank_by_id(attack_stat)))
                     if(prob_c1 < 1/1000000.0) prob_c1 = 1/1000000.0;
                     if(Math.random() <= prob_c1){
                         c1.set_challenge_output(c1.set_skills_by_id(attack_stat, 1));
