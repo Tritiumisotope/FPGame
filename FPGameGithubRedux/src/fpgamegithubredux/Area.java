@@ -228,7 +228,7 @@ public class Area extends StaticObject{
                     //TODO verify above
                        
                     if(rooms.get(randX).get(randY).get(randZ) == null){//now the innermost! was [][][]
-                        if(r.exits.size() > 0){
+                        if(!r.exits.isEmpty()){//was size()>0 and not !
                             if(existing_exit_check(r, randX, randY, randZ, maxSameRoom)){
                                 existing_exit_add(r, lr, randX, randY, randZ, null);
                                 placed = true;
@@ -249,7 +249,7 @@ public class Area extends StaticObject{
                 return 1;
             }
             
-            ArrayList<Integer> temp_room_list = new ArrayList<>();
+            ArrayList<Integer> tempRoomList = new ArrayList<>();
             
             int i = 0;
             for(i=0;i<room_list.size();i++){
@@ -262,12 +262,12 @@ public class Area extends StaticObject{
                 }
                 
                 if(!check){
-                    temp_room_list.add(i);//temp_room_list[temp_room_list.length] = i
+                    tempRoomList.add(i);//temp_room_list[temp_room_list.length] = i
                 }
                 
             }
             
-            int wakka = temp_room_list.get((int)Math.round(Math.random()*(temp_room_list.size()-1)));
+            int wakka = tempRoomList.get((int)Math.round(Math.random()*(tempRoomList.size()-1)));
             lr = room_list.get(wakka);
         }
         
@@ -306,7 +306,7 @@ public class Area extends StaticObject{
                     String to_path= get_direction(new_x, new_y, new_z, x, y, z);
                     String from_path = get_direction(x, y, z, new_x, new_y, new_z);
                     
-                    if(r.exits.size() > 0){
+                    if(!r.exits.isEmpty()){//was size()>0 and no !
                         other_rooms_ok = existing_exit_check(r, new_x, new_y, new_z, maxSameRoom);
                         if(other_rooms_ok){
                             temp = find_room(lr);
@@ -366,6 +366,7 @@ public class Area extends StaticObject{
                 */
                 //rooms.set(new_x,  new ArrayList<>());//[] =
                 rooms.add(0,null);
+                new_x++;
                 
             }
             int x = 0;
@@ -387,6 +388,7 @@ public class Area extends StaticObject{
                         rooms.get(x).set(new_y, new ArrayList<>());//[][] =
                         */
                         rooms.get(x).add(0,null);
+                        new_y++;
                     }
                 }
                 
@@ -400,6 +402,7 @@ public class Area extends StaticObject{
                         for(int y=0;y<rooms.get(x).size();y++){
                             if(rooms.get(x).get(y) != null)rooms.get(x).get(y).add(0,null);//if(rooms.get(x).get(y) != null)rooms.get(x].get(y).unshift(null)
                             //from https://stackoverflow.com/questions/8452672/java-howto-arraylist-push-pop-shift-and-unshift
+                        new_z++;
                         }
                     }
                 }
@@ -448,8 +451,8 @@ public class Area extends StaticObject{
             }
         }
     }
-    public Boolean existing_exit_check(Room r,int new_x,int new_y,int new_z,int max_same_room ){
-        return existing_exit_check( r, new_x, new_y, new_z, max_same_room, null);
+    public Boolean existing_exit_check(Room r,int newX,int newY,int newZ,int maxSameRoom){
+        return existing_exit_check( r, newX, newY, newZ, maxSameRoom, null);
     }
     public Boolean existing_exit_check(Room r,int new_x,int new_y,int new_z,int max_same_room, ArrayList<Room> already_checked){
         //already checked = null
@@ -483,27 +486,27 @@ public class Area extends StaticObject{
                     Boolean loop_flag = true;
                     while(loop_flag){
                         loop_flag = false;
-                        int rand_direct = (int)Math.random()*26 + 1;
-                        if((rand_direct/9) > 0){
-                            if((rand_direct/9) > 1){
+                        int randDirect = (int)Math.random()*26 + 1;
+                        if((randDirect/9) > 0){
+                            if((randDirect/9) > 1){
                                 offset[0]++;
                             }else{
                                 offset[0]--;
                             }
-                            rand_direct = rand_direct - ((rand_direct / 9)*9);//TODO this is 0
+                            randDirect = randDirect - ((randDirect / 9)*9);//TODO this is 0
                         }
                         
-                        if((rand_direct/3) > 0){
-                            if((rand_direct/3) > 1){
+                        if((randDirect/3) > 0){
+                            if((randDirect/3) > 1){
                                 offset[1]++;
                             }else{
                                 offset[1]--;
                             }
-                            rand_direct = rand_direct - ((rand_direct / 3)*3);//TODO this is 0
+                            randDirect = randDirect - ((randDirect / 3)*3);//TODO this is 0
                         }
                         
-                        if(rand_direct > 0){
-                            if(rand_direct > 1){
+                        if(randDirect > 0){
+                            if(randDirect > 1){
                                 offset[2]++;
                             }else{
                                 offset[2]--;
@@ -511,11 +514,11 @@ public class Area extends StaticObject{
                         }
                         
                         //should check to see if this is actually a good exit... just go through the exits OWN exits to make sure none of their offsets is the same as this one
-                        int exit_exits = 0;
-                        for(exit_exits=0;exit_exits<r.exits.get(counter).exits.size();exit_exits++){
-                            if(r.exits.get(counter).exits.get(exit_exits) == r)continue;
-                            int[] exit_exit_offset = get_offset_by_name(r.exits.get(counter).exit_names.get(exit_exits));
-                            if(offset[0] == -exit_exit_offset[0] && offset[1] == -exit_exit_offset[1] && offset[2] == -exit_exit_offset[2]){
+                        int exitExits = 0;
+                        for(exitExits=0;exitExits<r.exits.get(counter).exits.size();exitExits++){
+                            if(r.exits.get(counter).exits.get(exitExits) == r)continue;
+                            int[] exitExitOffset = get_offset_by_name(r.exits.get(counter).exit_names.get(exitExits));
+                            if(offset[0] == -exitExitOffset[0] && offset[1] == -exitExitOffset[1] && offset[2] == -exitExitOffset[2]){
                                 loop_flag = true;
                                 break;
                             }
@@ -776,27 +779,29 @@ public class Area extends StaticObject{
                         if(rooms.get(x) == null) rooms.set(x, new ArrayList<>());//new Array()
                         if(rooms.get(new_x) == null) rooms.set(new_x, new ArrayList<>());//new Array()
                         //start temporary NPE detection area
-                        if(new_y <rooms.get(x).size()){
-                            if(z < rooms.get(x).get(new_y).size());
+                        if(new_y <rooms.get(x).size() && rooms.get(x).get(new_y)!= null ){
+                            if(z < rooms.get(x).get(new_y).size()){
+                                if(rooms.get(x).get(new_y).get(z) != null);
+                            }
                         }
                         if(y < rooms.get(new_x).size()){
-                            if(z < rooms.get(new_x).get(y).size());
-                        }
-                        if(rooms.get(x).get(new_y) != null);
-                        if(z<rooms.get(x).get(new_y).size()){
-                            if(rooms.get(x).get(new_y).get(z) != null);
+                            if(rooms.get(new_x).get(y) != null){
+                                if(z < rooms.get(new_x).get(y).size());
+                            }
                         }
                         if(y < rooms.get(new_x).size()){//implied above
-                            if(rooms.get(new_x).get(y) != null);
+                            if(rooms.get(new_x).get(y) != null){
+                                if(z<rooms.get(new_x).get(y).size()){
+                                    if(rooms.get(new_x).get(y).get(z) != null);
+                                }
+                            }
                         }
-                        if(z<rooms.get(new_x).get(y).size()){
-                            if(rooms.get(new_x).get(y).get(z) != null);
-                        }
+
                         if((same_room_count < temp_max_same || temp_max_same == -1));
                         if(good_exit);
                         //end temporary NPE detection area
-                        if(new_y <rooms.get(x).size() && z < rooms.get(x).get(new_y).size() && y < rooms.get(new_x).size() && z < rooms.get(new_x).get(y).size() && rooms.get(x).get(new_y) != null &&/*new*/z<rooms.get(x).get(new_y).size() &&rooms.get(x).get(new_y).get(z) != null && rooms.get(new_x).get(y) != null && 
-                        z<rooms.get(new_x).get(y).size()&&rooms.get(new_x).get(y).get(z) != null && (same_room_count < temp_max_same || temp_max_same == -1) && good_exit){
+                        if(new_y <rooms.get(x).size() && rooms.get(x).get(new_y)!= null && z < rooms.get(x).get(new_y).size() && y < rooms.get(new_x).size() && rooms.get(new_x).get(y) != null&& z < rooms.get(new_x).get(y).size() && rooms.get(x).get(new_y).get(z) != null && 
+                        rooms.get(new_x).get(y).get(z) != null && (same_room_count < temp_max_same || temp_max_same == -1) && good_exit){
                             
                             if(rooms.get(x).get(new_y).get(z).get_exit_id(rooms.get(new_x).get(y).get(z)) == -1){
                                 rooms.get(new_x).get(new_y).get(new_z).new_exit(lr, to_path);
@@ -1419,7 +1424,7 @@ public class Area extends StaticObject{
                     }
                 }
             }
-            if(rooms.get(x) != null && rooms.get(x).get(0) != null){
+            if(rooms.get(x) != null &&!rooms.get(x).isEmpty()&& rooms.get(x).get(0) != null){
                 for(z=0;z<rooms.get(x).get(0).size();z++){
                     if(rooms.get(x).get(0).get(z) != null){
                         bottom_x_good = true;
@@ -2254,20 +2259,20 @@ public class Area extends StaticObject{
                             }
                             
                         }else if(room_list.get(i).contents.get(q) instanceof Item){
-                            Item temp_i = (Item)room_list.get(i).contents.get(q);
-                            temp_i.tick(room_list.get(i));
+                            Item tempI = (Item)room_list.get(i).contents.get(q);
+                            tempI.tick(room_list.get(i));
                         }
                     }               
                     for(q=0;q<room_list.get(i).static_contents.size();q++){
                         if(room_list.get(i).static_contents.get(q) instanceof Container){
                             //need to clean up bodies
-                            Container temp_cont = (Container)room_list.get(i).static_contents.get(q);
-                            if(totalActionsTaken%FPGameGithub.T1_DAY == 0 && temp_cont.name.equals("Body")){
+                            Container tempCont = (Container)room_list.get(i).static_contents.get(q);
+                            if(totalActionsTaken%FPGameGithub.T1_DAY == 0 && tempCont.name.equals("Body")){
                                 tick_happenings += "A body deteriorates into the ground.\n";
                                 //doesn't drop gold, but that makes sense... whoever took the body took the gold
                                 int z = 0;
-                                for(z=0;z<temp_cont.contents.size();z++){
-                                    room_list.get(i).newContent(temp_cont.contents.get(z));
+                                for(z=0;z<tempCont.contents.size();z++){
+                                    room_list.get(i).newContent(tempCont.contents.get(z));
                                 }
                                 
                                 room_list.get(i).remove_static_contents(q);
@@ -2288,10 +2293,10 @@ public class Area extends StaticObject{
         LOGGER.info(npcCntOut);
         
         if(npc_count <= npcSpawnThreshold){
-            if(spawnCreatures.size() > 0){
-                int spawn_choice = 0;
-                if(spawnCreatures.size() > 1)spawn_choice = (int)Math.round(Math.random() *(spawnCreatures.size() - 1));
-                Character newChar = spawnCreatures.get(spawn_choice).gen_char();
+            if(!spawnCreatures.isEmpty()){//was size()>0 and no !
+                int spawnChoice = 0;
+                if(spawnCreatures.size() > 1)spawnChoice = (int)Math.round(Math.random() *(spawnCreatures.size() - 1));
+                Character newChar = spawnCreatures.get(spawnChoice).gen_char();
                 newChar.new_location(get_random_room(),true);//(get_random_room(), true)
                 //TODO verify, and why set this in here? do I need to take this outside?
                 
