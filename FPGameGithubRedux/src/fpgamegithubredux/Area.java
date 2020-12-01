@@ -1391,8 +1391,137 @@ public class Area extends StaticObject{
         }			
         return act;
     }
-    
+    public void trimNullEdges(){
+        trimNullX();
+        trimNullY();
+    }
+    public void trimNullX(){
+        Boolean lowXHasEntry = false;
+        Boolean highXHasEntry = false;
+        //x = 0
+        if(rooms.isEmpty())return;//WTF completely empty area!
+        while(!lowXHasEntry){
+            if(rooms.get(0) != null && !rooms.get(0).isEmpty()){//well 0 has at least one arraylist, that is good...
+                for(int y=0;y<rooms.get(0).size();y++){
+                    if(rooms.get(0).get(y) !=null && !rooms.get(0).get(y).isEmpty()){//we have potential z entries!
+                        for(int z = 0;z<rooms.get(0).get(y).size();z++){
+                            if(rooms.get(0).get(y).get(z)!=null){//we found a room
+                                lowXHasEntry = true;
+                                break;
+                            }
+                        }//if we went this whole y-entry with no valid z, next y
+                    }
+                    if(lowXHasEntry)break;
+                }//if we went this whole x-entry, that being 0, with no room... time to delete
+            if(!lowXHasEntry)rooms.remove(0);//we found nothing despite there being at least one array in rooms.get(x)
+            }else{//x=0 has no y entries, let alone z
+                rooms.remove(0);//delete and look at next
+            }
+        }
+        while(!highXHasEntry){
+            if(rooms.get(rooms.size()-1) != null && !rooms.get(rooms.size()-1).isEmpty()){//well size()-1 has an arraylist of y, that is good...
+                for(int y=0;y<rooms.get(rooms.size()-1).size();y++){
+                    if(rooms.get(rooms.size()-1).get(y) != null&&!rooms.get(rooms.size()-1).get(y).isEmpty()){//we have potential z entries!
+                        for(int z = 0;z<rooms.get(rooms.size()-1).get(y).size();z++){
+                            if(rooms.get(rooms.size()-1).get(y).get(z)!=null){
+                                highXHasEntry = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(highXHasEntry)break;
+                }
+            if(!highXHasEntry)rooms.remove(rooms.size()-1);
+            }else{//x=size()-1 has no y entries, let alone z
+                rooms.remove(rooms.size()-1);//delete and look at next
+            }
+            
+        }
+    }
+    public void trimNullY(){
+        Boolean lowYHasEntry = false;
+        Boolean highYHasEntry = false;
+        
+        if(rooms.isEmpty())return;
+        int max_y = 0;
+        for(int x = 0; x<rooms.size();x++){
+            if(rooms.get(x)!= null && rooms.get(x).size()>max_y)max_y = rooms.get(x).size();
+        }//we now have max_y as the highest y entry across all X
+        while(!lowYHasEntry){
+            for(int x = 0;x<rooms.size();x++){//for all x
+                if(rooms.get(x) != null && !rooms.get(x).isEmpty()){//if x has entries
+                    if(rooms.get(x).get(0) != null && !rooms.get(x).get(0).isEmpty()){//if y=0 has entries for that x
+                        for(int z = 0; z<rooms.get(x).get(0).size();z++){//for all such entries
+                            if(rooms.get(x).get(0).get(z) != null){//if one of them is not null (thus a room)
+                                lowYHasEntry = true;//we found one
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(lowYHasEntry)break;//we found one, stop looking
+            }
+            if(!lowYHasEntry){//we checked all x y z, no match, time to remove y=0 for all x!
+                for(int x = 0;x<rooms.size();x++){//for all x
+                    if(rooms.get(x) != null&& !rooms.get(x).isEmpty()){//if there is a y=0 to delete
+                        rooms.get(x).remove(0);
+                    }
+                }
+            }
+        }
+        while(!highYHasEntry){
+            for(int x = 0;x<rooms.size();x++){//for all x
+                if(rooms.get(x) != null && rooms.get(x).size()==max_y){//if x has entries up to max_y-1
+                    if(rooms.get(x).get(max_y-1) != null && !rooms.get(x).get(max_y-1).isEmpty()){//if y=max_y-1 has entries for that x
+                        for(int z = 0; z<rooms.get(x).get(max_y-1).size();z++){//for all such entries
+                            if(rooms.get(x).get(max_y-1).get(z) != null){//if one of them is not null (thus a room)
+                                highYHasEntry = true;//we found one
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(highYHasEntry)break;//we found one, stop looking
+            }
+            if(!highYHasEntry){//we checked all x y z, no match, time to remove y=0 for all x!
+                for(int x = 0;x<rooms.size();x++){//for all x
+                    if(rooms.get(x) != null&& rooms.get(x).size()==max_y){//if there is a y=max_y-1 to delete
+                        //note that for y=max_y-1 to exist, rooms.size() has to equal max_y. any less, index
+                        //out of bounds. any more, and max_y would have been made higher, obviously.
+                        rooms.get(x).remove(max_y-1);
+                    }
+                }
+            }
+        }
+    }
     public void remove_empty_edges(){
+        /*functional explanation:
+        firstly, this starts with the assumption every edge of the map is just full
+        of nulls, not a room in sight. It then defines the y-range (x-range being 
+        immediately detectable) in a loop, keeping that information for a later detection loop.
+        This variable, max_y, is actually one more than the maximum y-axis index.
+        In the main checking loop, looping for all x, first we see if we are on an x-edge, that being 0 or rooms.size()-1.
+        In those two cases, we loop y=0 to max_y, max_y exclusive (because it is one too much), and if that y-index has
+        a valid entry within rooms.get(x), we loop inside that for all indexes of z. If there is an index z, for that x,
+        for that y, then that x (0 or size()-1) is therefor valid. This is done until said valid z entry is found... or 
+        the loop is complete. In the end, either left_y_good or right_y_good have changed to true, or are still false,
+        for one, the other, both, or neither. if both are found slightly early (so 99.9whatever percent completion because
+        one case is literally at the end of the outermost loop) we break as both are already verified true. why the extremes 
+        of x (0 and size()-1)having valid entries is the "left and right y being good" I couldnt say. Inside that same x outer
+        loop, we first check if any y=0 has a valid entry, and if it does, bottom_x is fine. otherwise, it remains false.
+        The same is done in every x loop for y= max_y-1, top_x_good being true if an element is found.
+        Finally, exiting the loop, we have the deletion logic. If !top_x_good, in other words y=max_y-1 has no entries,
+        we delete rooms.get(x).get(max_y-1) for all x. similar for !bottom_x deleting all y=0.
+        Same for !left_y deleting x=0. Same for !right_y deleting all x=rooms.size()-1
+        */
+        /*Pseudocode:
+        set all edges are bad
+        all the indices default 0
+        for all x{
+            ifwe find a y bigger than 
+        }
+
+        */
         Boolean top_x_good = false;
         Boolean bottom_x_good = false;
         Boolean left_y_good = false;
