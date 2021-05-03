@@ -543,7 +543,7 @@ public class FPalace_content {
         
         area.add_room_template(template_room);
         area.random_area(15);
-        
+        /*
         Room fpalace_rest_room = new Room("This room is completely filled with <a0>, many of them occupied. ");
         CharAction rest_action = new CharAction();
         rest_action.set_rest_flag();
@@ -608,7 +608,7 @@ public class FPalace_content {
         c.setText("door");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(room, /*tower_to_intro*/null);//,"Door")
+        rcon.add_room_effect(room, null);//,"Door")
         rcon.set_join_area(23);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -617,6 +617,7 @@ public class FPalace_content {
         room.addAction(a);
         
         area.add_room(room);
+        /*
         Room intro_to_library = new Room("The stone hallway ends here, and you can see a <s0>large door</s0> with the image of a book inscribed in it. ");
         intro_to_library.add_sub_descriptions("The door is solid and wooden, a large <a0> and two wooden handles evident. ");
         intro_to_library.set_id(-1);
@@ -632,7 +633,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_library, /*library_to_into*/null);//,"Door")
+        rcon.add_room_effect(intro_to_library, null);//,"Door")
         rcon.set_join_area(1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -657,7 +658,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_images, /*images_to_intro*/null);//,"Door")
+        rcon.add_room_effect(intro_to_images, null);//,"Door")
         rcon.set_join_area(3);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -682,7 +683,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_writers, /*writers_to_into*/null);//,"Door")
+        rcon.add_room_effect(intro_to_writers, null);//,"Door")
         rcon.set_join_area(4);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -707,7 +708,7 @@ public class FPalace_content {
         c.setText("used");
         rcon = new RoomConsequence();
         rcon.set_always_change();
-        rcon.add_room_effect(intro_to_artist, /*artist_to_intro*/null);//,"Door")
+        rcon.add_room_effect(intro_to_artist, null);//,"Door")
         rcon.set_join_area(5);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You open the door. ",-1);
         rcon.addConsequence(FPalaceHelper.con_id,0, "You close the door. ",0);
@@ -1634,6 +1635,8 @@ public class FPalace_content {
         cparty.add_member(bouncer2);
         
         bouncer2.new_location(intro_to_plains);
+
+        */
         
         return area;
     }

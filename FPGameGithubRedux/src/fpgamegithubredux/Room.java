@@ -55,7 +55,7 @@ public class Room extends StaticObject{
         exit_actions = new ArrayList<>();
         description = d;
 
-        player_discovered = false;
+        player_discovered = true;//false;
 
         show_area_effects = false;
 			
