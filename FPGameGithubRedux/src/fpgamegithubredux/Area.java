@@ -660,6 +660,7 @@ public class Area extends StaticObject{
                     rooms.set(new_x, new ArrayList<>());//new Array
                 }
                 */
+                new_x=0;
                 rooms.add(0,new ArrayList<>());
                 int[] temp = find_room(lr);
                 x = temp[0];//[0]
@@ -1658,27 +1659,40 @@ public class Area extends StaticObject{
             
             for(int i=0;i<connected_rooms.size();i++){
                 int[] temp_loc1= find_room(connected_rooms.get(i));
+                System.out.print("x,y,z1:   " + temp_loc1[0] + "," + temp_loc1[1] + "," + temp_loc1[2]);
                 for(int j=0;j<unconnected_rooms.size();j++){
                     int[] temp_loc2 = find_room(unconnected_rooms.get(j));
-                    if(temp_loc1[2] == temp_loc2[2] && Math.abs(temp_loc1[0] - temp_loc2[0]) <= 1 && Math.abs(temp_loc1[1] - temp_loc2[1]) <= 1){//all .get(x) were [x]
+                    System.out.print(",   x,y,z2:   " + temp_loc2[0] + "," + temp_loc2[1] + "," + temp_loc2[2]);
+                    if(temp_loc1[2] == temp_loc2[2]/*share a z */ && Math.abs(temp_loc1[0] - temp_loc2[0]) <= 1 /*within 1 x*/&& Math.abs(temp_loc1[1] - temp_loc2[1]) <= 1/*within 1 y*/){//all .get(x) were [x]
                         
                         if(unconnected_rooms.get(j).get_exit_id(connected_rooms.get(i)) < 0 && 
                         (temp_loc1[0] < rooms.size() && temp_loc2[0] < rooms.size() 
-                        && temp_loc1[1] < rooms.get(temp_loc2[0]).size() && temp_loc2[1] < rooms.get(temp_loc1[0]).size() 
-                        && temp_loc1[2] < rooms.get(temp_loc1[0]).get(temp_loc2[1]).size() 
-                        && temp_loc1[2] < rooms.get(temp_loc2[0]).get(temp_loc1[1]).size() 
-                        && rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2])!= null 
-                        && rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2]) != null 
-                        && rooms.get(temp_loc1[0]).get(temp_loc2[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0)){
+                        && temp_loc1[1] < rooms.get(temp_loc1[0]).size() && temp_loc2[1] < rooms.get(temp_loc2[0]).size() 
+                        && temp_loc1[2] < rooms.get(temp_loc1[0]).get(temp_loc1[1]).size() 
+                        && temp_loc2[2] < rooms.get(temp_loc2[0]).get(temp_loc2[1]).size() 
+                        && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])!= null 
+                        && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]) != null 
+                        && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2])) < 0)
+                        && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]).get_exit_id(rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0)){
                             //need a new connection
+                            System.out.println("     success");
                             connected_rooms.get(i).new_exit(unconnected_rooms.get(j), get_direction(temp_loc1[0],temp_loc1[1],temp_loc1[2],temp_loc2[0],temp_loc2[1], temp_loc2[2]));
                             unconnected_rooms.get(j).new_exit(connected_rooms.get(i), get_direction(temp_loc2[0],temp_loc2[1], temp_loc2[2],temp_loc1[0],temp_loc1[1],temp_loc1[2]));
+                        }
+                        else{
+                            System.out.println("      failed, despite nearby rooms being found.");
+                            System.out.println("get exit of j?:" + (unconnected_rooms.get(j).get_exit_id(connected_rooms.get(i)) < 0));
+                            System.out.println("I x is valid?:" + (temp_loc1[0] < rooms.size()));
+                            System.out.println("J x is valid?:" + (temp_loc1[0] < rooms.size()));
+                            System.out.println("I y is valid?:" + (temp_loc1[0] < rooms.size()));
+                            System.out.println("J y is valid?:" + (temp_loc1[0] < rooms.size()));
                         }
                         
                         connected_rooms.add(unconnected_rooms.get(j)); //connected_rooms[connected_rooms.length] = unconnected_rooms.get(j)
                         unconnected_rooms.remove(j);//unconnected_rooms = unconnected_rooms.slice(0,j).concat(unconnected_rooms.slice(j+1,unconnected_rooms.length))
                         found = true;							
                     }
+                    //System.out.println("");
                 }
                 if(found)break;
             }				
