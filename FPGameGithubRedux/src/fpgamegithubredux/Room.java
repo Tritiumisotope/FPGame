@@ -598,6 +598,7 @@ public class Room extends StaticObject{
                 if (e.new_exit(this,not_dir_list[i]) != -1){
                     exit_names.add(dir_list[i]); //exit_names[exit_names.length] = dir_list[i]
                     exits.add(e); //exits[exits.length] = e
+                    exit_actions.add(null);
                     if(template != null && template.exit_actions.get(0) != null){
                         add_exit_action(e, Area.generate_filler_exit_action(null, e, dir_list[i], template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
                     }
@@ -606,9 +607,11 @@ public class Room extends StaticObject{
             }
         }else{//defined direction
             for (i=0;i<exit_names.size();i++){
-                if (d.equals(exit_names.get(i)) || e == exits.get(i)) return -1;
-                //TODO is this an Already Connected check?
-                //LOGGER.info("Already Connected!")
+                if (d.equals(exit_names.get(i)) || e == exits.get(i)){
+                    if(d.equals(exit_names.get(i)))LOGGER.info("Exit name already used");
+                    if(e == exits.get(i))LOGGER.info("Already have this exit.");
+                    return -1;
+                } 
             }
             if(exit_names.size() <= 0){
                 exit_names.add(i,d); //exit_names = exit_names.slice(0,i).concat(d).concat(exit_names.slice(i,exit_names.length))
@@ -622,13 +625,16 @@ public class Room extends StaticObject{
                 }
                 
             }else{
+                Boolean added = false;
                 for(i=0;i<exit_names.size();i++){
                     if(exit_names.get(i) == null){
                         exit_names.set(i, d);
                         exits.set(i, e);
+                        exit_actions.add(i,null);
                         if(template != null && template.exit_actions.get(0) != null){
                             add_exit_action(e, Area.generate_filler_exit_action(null, e, d, template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
                         }
+                        added = true;
                         break;
                     }
                     
@@ -642,10 +648,22 @@ public class Room extends StaticObject{
                         for(k=0;k<exit_actions.size();k++){
                             if(exit_actions.get(k) != null)exit_actions.get(k).set_id(k + actions.size());
                         }
+                        added = true;
                         break;
                     }
                     
                 }
+
+                if(!added){
+                    exit_names.add(d);
+                    exits.add(e);
+                    exit_actions.add(null);
+                    if(template != null && template.exit_actions.size() > 0 && template.exit_actions.get(0) != null){
+                        add_exit_action(e, Area.generate_filler_exit_action(null, e, d, template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
+                    }
+                }
+
+
             }				
         }
         

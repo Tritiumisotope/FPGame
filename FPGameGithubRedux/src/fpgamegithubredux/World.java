@@ -344,8 +344,8 @@ public class World {
         a.world = this;
         a.set_id(areas.size());
         areas.add(a); //areas[areas.length] = a
-        a.trimNullEdges();//remove_empty_edges()
-        a.check_connections();
+        //a.trimNullEdges();//remove_empty_edges()
+        //a.check_connections();
     }
     public void connect_areas(int i,int k,Room r1,Room r2){
         connect_areas(i, k, r1, r2,false,false);

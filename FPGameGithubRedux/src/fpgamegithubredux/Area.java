@@ -274,76 +274,74 @@ public class Area extends StaticObject{
         
             //We have to find the room we want to link to
             //but only if it's in the same area as the first
-            if(lr != null && r.area == lr.area && r.area == this){//TODO pulling in lr!=null  okay
-                LOGGER.info("Area equivalency is apparently ok.");
-                temp = find_room(lr);
-                if(temp != null){
-                    int x = temp[0];//[0]
-                    int y = temp[1];//[1]
-                    int z = temp[2];//[2]
-                    
-                    int[] connect_status = is_good_connect(x, y, z, r, lr, maxSameRoom, -1, -1, -1, restrictEdges);//var connect_status:Array = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges)
+        if(lr != null && r.area == lr.area && r.area == this){//TODO pulling in lr!=null  okay
+            temp = find_room(lr);
+            if(temp != null){
+                int x = temp[0];//[0]
+                int y = temp[1];//[1]
+                int z = temp[2];//[2]
+                
+                int[] connect_status = is_good_connect(x, y, z, r, lr, maxSameRoom, -1, -1, -1, restrictEdges);//var connect_status:Array = is_good_connect(x, y, z, r, lr, max_same_room, -1, -1, -1, restrict_edges)
 
-                    if(connect_status[0] == -1){
-                        //exemptRooms.add(lr);//was concat in return call, so maybe...
-                        ArrayList<Room> tempExempt = new ArrayList<>(exemptRooms);
-                        tempExempt.add(lr);
-                        return place_room(r, null, maxSameRoom, tempExempt/*exemptRooms*/, restrictEdges);
-                    }else if(connect_status[0] == -2){
-                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
-                    }
-                    
-                    temp = find_room(lr);
-                    x = temp[0];//[0]
-                    y = temp[1];//[1]
-                    z = temp[2];//[2]
-                    
-                    int new_x = connect_status[1];
-                    int new_y = connect_status[2];
-                    int new_z = connect_status[3];
-                    Boolean other_rooms_ok= true;
-                    
-                    String to_path= get_direction(new_x, new_y, new_z, x, y, z);
-                    String from_path = get_direction(x, y, z, new_x, new_y, new_z);
-                    
-                    if(!r.exits.isEmpty()){//was size()>0 and no !
-                        other_rooms_ok = existing_exit_check(r, new_x, new_y, new_z, maxSameRoom);
-                        if(other_rooms_ok){
-                            temp = find_room(lr);
-                            x = temp[0];//[0]
-                            y = temp[1];//[1]
-                            z = temp[2];//[2]
-                            int[] offset = get_offset_by_name(from_path);
-                            new_x = x + offset[0];
-                            new_y = y + offset[1];
-                            new_z = z + offset[2];
-                        }
-                    }
-                    
-                    if(Boolean.FALSE.equals(other_rooms_ok)){
-                        //return place_room(r, null, max_same_room, exempt_rooms.concat(lr), restrict_edges)
-                        //exemptRooms.add(lr)
-                        ArrayList<Room> tempExempt = new ArrayList<>(exemptRooms);
-                        tempExempt.add(lr);
-                        return place_room(r, null, maxSameRoom, tempExempt/*exemptRooms*/, restrictEdges);
-                    }
-                    
-                    if(lr.new_exit(r, from_path) > -1){
-                        r.new_exit(lr, to_path);
-                        
-                        //need to add r's existing exits to the rooms, room_list, and map_pieces arrays
-                        existing_exit_add(r, lr, new_x, new_y, new_z, to_path);
-                        
-                        return 1;
-                    }else{
-                        return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
-                    }
-                    
-                }else{
-                    LOGGER.info("(Area)Failed to find a room while placing...");
+                if(connect_status[0] == -1){
+                    //exemptRooms.add(lr);//was concat in return call, so maybe...
+                    ArrayList<Room> tempExempt = new ArrayList<>(exemptRooms);
+                    tempExempt.add(lr);
+                    return place_room(r, null, maxSameRoom, tempExempt/*exemptRooms*/, restrictEdges);
+                }else if(connect_status[0] == -2){
                     return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
                 }
+                
+                temp = find_room(lr);
+                x = temp[0];//[0]
+                y = temp[1];//[1]
+                z = temp[2];//[2]
+                
+                int new_x = connect_status[1];
+                int new_y = connect_status[2];
+                int new_z = connect_status[3];
+                Boolean other_rooms_ok= true;
+                
+                String to_path= get_direction(new_x, new_y, new_z, x, y, z);
+                String from_path = get_direction(x, y, z, new_x, new_y, new_z);
+                
+                if(!r.exits.isEmpty()){//was size()>0 and no !
+                    other_rooms_ok = existing_exit_check(r, new_x, new_y, new_z, maxSameRoom);
+                    if(other_rooms_ok){
+                        temp = find_room(lr);
+                        x = temp[0];//[0]
+                        y = temp[1];//[1]
+                        z = temp[2];//[2]
+                        int[] offset = get_offset_by_name(from_path);
+                        new_x = x + offset[0];
+                        new_y = y + offset[1];
+                        new_z = z + offset[2];
+                    }
+                }
+                
+                if(!other_rooms_ok){
+                    //return place_room(r, null, max_same_room, exempt_rooms.concat(lr), restrict_edges)
+                    //exemptRooms.add(lr)
+                    ArrayList<Room> tempExempt = new ArrayList<>(exemptRooms);
+                    tempExempt.add(lr);
+                    return place_room(r, null, maxSameRoom, tempExempt/*exemptRooms*/, restrictEdges);
+                }
+                
+                if(lr.new_exit(r, from_path) > -1){
+                    r.new_exit(lr, to_path);                    
+                    //need to add r's existing exits to the rooms, room_list, and map_pieces arrays
+                    existing_exit_add(r, lr, new_x, new_y, new_z, to_path);
+                    
+                    return 1;
+                }else{
+                    return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
+                }
+                
+            }else{
+                LOGGER.info("(Area)Failed to find a room while placing...");
+                return place_room(r, null, maxSameRoom, exemptRooms, restrictEdges);
             }
+        }
         
         return 1;
     }
@@ -366,7 +364,7 @@ public class Area extends StaticObject{
                 */
                 //rooms.set(new_x,  new ArrayList<>());//[] =
                 rooms.add(0,null);
-                new_x++;
+                new_x = 0;
                 
             }
             int x = 0;
@@ -388,7 +386,7 @@ public class Area extends StaticObject{
                         rooms.get(x).set(new_y, new ArrayList<>());//[][] =
                         */
                         rooms.get(x).add(0,null);
-                        new_y++;
+                        new_y = 0;
                     }
                 }
                 
@@ -402,7 +400,6 @@ public class Area extends StaticObject{
                         for(int y=0;y<rooms.get(x).size();y++){
                             if(rooms.get(x).get(y) != null)rooms.get(x).get(y).add(0,null);//if(rooms.get(x).get(y) != null)rooms.get(x].get(y).unshift(null)
                             //from https://stackoverflow.com/questions/8452672/java-howto-arraylist-push-pop-shift-and-unshift
-                        new_z++;
                         }
                     }
                 }
@@ -699,23 +696,16 @@ public class Area extends StaticObject{
             if(restrict_edges && (new_y < 0 || new_x < 0 || new_x >= rooms.size() || (new_y >= max_y && max_y > -1))){//.length
                 return new int[]{-1};
             }
-            LOGGER.info("size is: "+rooms.size());
-            LOGGER.info("new_x is: "+new_x);
+            
             if(rooms.size() <= new_x){
                     while(rooms.size()<=new_x)rooms.add(null);
                     rooms.set(new_x, new ArrayList<>());//new Array()
-            }else if(new_x<0){//TODO good add? hit this condition and NPE before
-                rooms.add(0,new ArrayList<>());
-                new_x++;
             }else if(rooms.get(new_x)==null){
                 rooms.set(new_x, new ArrayList<>());//new Array()\
             }
             if(rooms.get(new_x).size() <= new_y ){
                     while(rooms.get(new_x).size()<=new_y)rooms.get(new_x).add(null);
                     rooms.get(new_x).set(new_y, new ArrayList<>());
-            }else if(new_y<0){//TODO good add?
-                rooms.get(new_x).add(0, new ArrayList<>());
-                new_y++;
             }else if(rooms.get(new_x).get(new_y) == null){
                 rooms.get(new_x).set(new_y, new ArrayList<>());
             }
@@ -829,7 +819,7 @@ public class Area extends StaticObject{
                     if (rooms.get(x+1) == null) rooms.set(x+1, new ArrayList<>());//new Array()
                     if (x-1 >= 0 && rooms.get(x-1) == null) rooms.set(x-1, new ArrayList<>());//new Array()
                     //fine, i'll pick the damn room
-                    System.out.println(rooms.size());
+                    LOGGER.info("Attempting to manually place room.");
                     if(rooms.size()>x+1 && rooms.get(x+1).size()>y){//TODO good addition?
                         if(rooms.get(x+1).get(y) == null && existing_exit_check(r,  x+1, y, new_z, max_same_room)){
                                 new_x = x+1;
@@ -1666,14 +1656,14 @@ public class Area extends StaticObject{
                     if(temp_loc1[2] == temp_loc2[2]/*share a z */ && Math.abs(temp_loc1[0] - temp_loc2[0]) <= 1 /*within 1 x*/&& Math.abs(temp_loc1[1] - temp_loc2[1]) <= 1/*within 1 y*/){//all .get(x) were [x]
                         
                         if(unconnected_rooms.get(j).get_exit_id(connected_rooms.get(i)) < 0 && 
-                        (temp_loc1[0] < rooms.size() && temp_loc2[0] < rooms.size() 
-                        && temp_loc1[1] < rooms.get(temp_loc1[0]).size() && temp_loc2[1] < rooms.get(temp_loc2[0]).size() 
-                        && temp_loc1[2] < rooms.get(temp_loc1[0]).get(temp_loc1[1]).size() 
-                        && temp_loc2[2] < rooms.get(temp_loc2[0]).get(temp_loc2[1]).size() 
-                        && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])!= null 
-                        && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]) != null 
-                        && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2])) < 0)
-                        && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]).get_exit_id(rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0)){
+                            (temp_loc1[0] < rooms.size() && temp_loc2[0] < rooms.size() 
+                            && temp_loc1[1] < rooms.get(temp_loc1[0]).size() && temp_loc2[1] < rooms.get(temp_loc2[0]).size() 
+                            && temp_loc1[2] < rooms.get(temp_loc1[0]).get(temp_loc1[1]).size() 
+                            && temp_loc2[2] < rooms.get(temp_loc2[0]).get(temp_loc2[1]).size() 
+                            && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])!= null 
+                            && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]) != null 
+                            && rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2]).get_exit_id(rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2])) < 0)
+                        && rooms.get(temp_loc2[0]).get(temp_loc2[1]).get(temp_loc2[2]).get_exit_id(rooms.get(temp_loc1[0]).get(temp_loc1[1]).get(temp_loc1[2])) < 0){
                             //need a new connection
                             System.out.println("     success");
                             connected_rooms.get(i).new_exit(unconnected_rooms.get(j), get_direction(temp_loc1[0],temp_loc1[1],temp_loc1[2],temp_loc2[0],temp_loc2[1], temp_loc2[2]));
@@ -2087,7 +2077,7 @@ public class Area extends StaticObject{
                 if(temp_a != null){
                     char_x = temp_a[0];//[0]
                     char_y = temp_a[1];//[1]
-                    char_z = 0;//temp_a[2];//[2]
+                    char_z = temp_a[2];//[2]
                     LOGGER.info("(Area)Found Character at " + char_x + "," + char_y + "," + char_z);
                     if(char_z != z) z = char_z;
                 }

@@ -543,7 +543,7 @@ public class FPalace_content {
         
         area.add_room_template(template_room);
         area.random_area(15);
-        /*
+        
         Room fpalace_rest_room = new Room("This room is completely filled with <a0>, many of them occupied. ");
         CharAction rest_action = new CharAction();
         rest_action.set_rest_flag();
@@ -617,7 +617,7 @@ public class FPalace_content {
         room.addAction(a);
         
         area.add_room(room);
-        /*
+        
         Room intro_to_library = new Room("The stone hallway ends here, and you can see a <s0>large door</s0> with the image of a book inscribed in it. ");
         intro_to_library.add_sub_descriptions("The door is solid and wooden, a large <a0> and two wooden handles evident. ");
         intro_to_library.set_id(-1);
@@ -1636,7 +1636,7 @@ public class FPalace_content {
         
         bouncer2.new_location(intro_to_plains);
 
-        */
+        
         
         return area;
     }
