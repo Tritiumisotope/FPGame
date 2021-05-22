@@ -9,6 +9,9 @@ import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.*;
+import java.awt.Canvas;  
+import javax.swing.JFrame;  
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -26,12 +29,14 @@ import javax.swing.event.HyperlinkListener;
 public class MainGUIPanel extends GUIButtons implements ComponentListener{
     static final long serialVersionUID = 0;
     
-    protected JTextField inputText;
-    protected JTextPane textField;
+    //protected JTextField inputText;
+    //protected JTextPane textField;
+    protected DrawableTextArea textField;
     private static final Logger LOGGER = Logger.getLogger(MainGUIPanel.class.getName());
     protected Font theFont;
     protected int[] textsizes = new int[]{8,10,11,12,13,14,16};
     protected String contents;
+    protected String textBkp;
     protected OptionsGUI options;
     protected NewGameGUI newgame;
     protected boolean optguion = false;
@@ -53,7 +58,14 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         setLayout(null);
         options = new OptionsGUI();
         newgame = new NewGameGUI();
-        textField = new JTextPane();
+        textField = new DrawableTextArea();//new JTextPane();
+        /*
+        drawArea = new Canvas();
+        drawArea.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
+        add(drawArea);
+        drawArea.setVisible(false);
+        drawArea.setEnabled(false);
+        */
         
         textField.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
         textField.setContentType("text/html");
@@ -249,30 +261,54 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void lookPressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
+        textField.setMap(false);
         textField.setText(player.look());
     }
     @Override
     public void appearancePressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
+        textField.setMap(false);
         textField.setText(capitalize(player.appearance(1, null)));//TODO this everywhere with capitalize if doable.
     }
     @Override
     public void inventoryPressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
+        textField.setMap(false);
         textField.setText(player.inventory());   
     }
     @Override
     public void mapPressed(){
+        /*
         if(player.location != null){
             textField.setText(player.get_area_map());   
         }
+        */
+        //textField.setVisible(false);
+        //textField.setEnabled(false);
+        textField.setVisible(true);
+        textField.setEnabled(true);
+        if(textField.getMap()){
+
+            textField.setText(textBkp);
+            textField.setMap(false);
+        }
+        else{
+            textBkp = textField.getText();
+            textField.setText(/*player.get_area_map()*/ "");
+            textField.setCurRoom(player.location);
+            textField.setMapString(player.get_area_map());
+            textField.setMap(true);
+        }
+        System.out.println(textField.getMap());
+
     }
     @Override
     public void statusPressed(){
         textField.setVisible(true);
         textField.setEnabled(true);
+        textField.setMap(false);
         textField.setText(player.statistics());  
     }
     @Override
@@ -284,6 +320,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         //}
         textField.setVisible(true);
         textField.setEnabled(true);
+        textField.setMap(false);
         //textField.setText(player.showAllSkills());  
     }
     public void enableButtons(){
@@ -648,6 +685,21 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
         world_tick();
     }
+    /*
+    public void paint(Graphics g) {  
+        super.paint(g);
+        g.drawString("Hello",40,40);  
+        setBackground(Color.WHITE);  
+        g.fillRect(130, 30,100, 80);  
+        g.drawOval(30,130,50, 60);  
+        setForeground(Color.RED);  
+        g.fillOval(130,130,50, 60);  
+        g.drawArc(30, 200, 40,50,90,60);  
+        g.fillArc(30, 130, 40,50,180,40);  
+
+          
+    }  
+    */
     /*
     public void new_player(){
         newPlayer(null);

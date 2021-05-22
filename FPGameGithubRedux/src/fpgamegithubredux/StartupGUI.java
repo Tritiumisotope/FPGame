@@ -27,4 +27,8 @@ public class StartupGUI {
         upperTextField.setText(contents+ fpLink);
         upperTextField.setEditable(false);        
     }
+    public void setStartup(DrawableTextArea upperTextField){
+        upperTextField.setText(contents+ fpLink);
+        upperTextField.setEditable(false);        
+    }
 }

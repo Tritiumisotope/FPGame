@@ -798,6 +798,9 @@ public class Room extends StaticObject{
         return -1;
     }
     
+    public int get_exit_count(){
+        return exits.size();
+    }
     public String get_exits(){
         int i;
         String output;
