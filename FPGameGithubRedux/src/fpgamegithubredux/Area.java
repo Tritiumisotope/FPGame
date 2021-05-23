@@ -154,7 +154,7 @@ public class Area extends StaticObject{
     
     public Room get_connect_room(){
         Room r = null;
-        if(connectRooms.size() - 1 > 0 && connectRooms.get(connectRooms.size() - 1) != null) {
+        if(connectRooms.size() - 1 >= 0 && connectRooms.get(connectRooms.size() - 1) != null) {
             r = connectRooms.get(connectRooms.size() - 1);
             //connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
             connectRooms.remove(connectRooms.size()-1);//TODO verify

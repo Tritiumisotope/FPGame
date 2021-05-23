@@ -280,13 +280,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     }
     @Override
     public void mapPressed(){
-        /*
-        if(player.location != null){
-            textField.setText(player.get_area_map());   
-        }
-        */
-        //textField.setVisible(false);
-        //textField.setEnabled(false);
+        /*if(player.location != null){*/
         textField.setVisible(true);
         textField.setEnabled(true);
         if(textField.getMap()){
@@ -296,13 +290,10 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
         else{
             textBkp = textField.getText();
-            textField.setText(/*player.get_area_map()*/ "");
+            textField.setText(/*player.get_area_map()*/"");
             textField.setCurRoom(player.location);
-            textField.setMapString(player.get_area_map());
             textField.setMap(true);
         }
-        System.out.println(textField.getMap());
-
     }
     @Override
     public void statusPressed(){

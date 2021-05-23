@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class DrawableTextArea  extends JTextPane{
     private boolean mapVisible;
-    private String mapString;
     private Room curRoom;
     ArrayList<ArrayList<ArrayList<Room>>> rooms;//reads from player location room area
     public DrawableTextArea()
@@ -51,15 +50,14 @@ public class DrawableTextArea  extends JTextPane{
         //Make JTextArea transparent
         //setOpaque(false);
 
-        //Get image that we use as JTextArea background
+        //Get image that we use as JTextPane background
         //ImageIcon ii=new ImageIcon("textAreaBackground.jpg");
         //Image i=ii.getImage();
 
         //Draw JTextArea background image
         //g.drawImage(i,0,0,null,this);
 
-        //Call super.paint. If we don't do this...We can't see JTextArea
-
+        //Call super.paint. If we don't do this...We can't see JTextPane
         super.paint(g);
         
         if(mapVisible){
@@ -123,6 +121,7 @@ public class DrawableTextArea  extends JTextPane{
                     if(rooms.get(x).get(y)!=null){//x-y is a valid line
                         if(rooms.get(x).get(y).size()>z && z>=0){//z is within a valid range
                             if(rooms.get(x).get(y).get(z)!=null){
+                                //x-y-z is a room (only other option is null)
                                 return true;
                             }
                         }
