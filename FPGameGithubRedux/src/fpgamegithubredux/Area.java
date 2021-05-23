@@ -38,7 +38,7 @@ public class Area extends StaticObject{
     protected ArrayList<Conversation_topic> conversations;//protected var conversations:Array
     protected int backgroundImageID;//var background_image_id:int
     protected int moveTimeMod;//var move_time_mod:int
-    protected static String pathPlaceHldr;
+    protected static String pathPlaceHldr = "</path>";
     private ArrayList<Room> alreadyCheckedPlaceholder;//var already_checked_placeholder:Array
     private int baseFloorZ;//var baseFloorZ:int
        
@@ -224,10 +224,17 @@ public class Area extends StaticObject{
                     int randX = (int)Math.round(Math.random() * (rooms.size()-1));//.length
                     int randY = (int)Math.round(Math.random() * max);
                     int randZ = 0;
-                    if(rooms.get(randX).get(randY) == null)rooms.get(randX).set(randY, new ArrayList<>());//new Array(), [][]
+                    while(randY >= rooms.get(randX).size()){
+                        rooms.get(randX).add(new ArrayList<>());
+                        rooms.get(randX).get(rooms.get(randX).size()-1).add(null);
+                    }
+                    if(rooms.get(randX).get(randY) == null){
+                        rooms.get(randX).set(randY, new ArrayList<>());//new Array(), [][]
+                        rooms.get(randX).get(randY).add(null);
+                    }
                     //TODO verify above
                        
-                    if(rooms.get(randX).get(randY).get(randZ) == null){//now the innermost! was [][][]
+                    if(randZ >= rooms.get(randX).get(randY).size() || rooms.get(randX).get(randY).get(randZ) == null){//now the innermost! was [][][]
                         if(!r.exits.isEmpty()){//was size()>0 and not !
                             if(existing_exit_check(r, randX, randY, randZ, maxSameRoom)){
                                 existing_exit_add(r, lr, randX, randY, randZ, null);
@@ -405,6 +412,7 @@ public class Area extends StaticObject{
                 }
             }				
         }
+        while(new_x >= rooms.size())rooms.add(null);
         if(rooms.get(new_x) == null)rooms.set(new_x, new ArrayList<>());
         while(new_y >= rooms.get(new_x).size())rooms.get(new_x).add(null);
         if(rooms.get(new_x).get(new_y) == null)rooms.get(new_x).set(new_y, new ArrayList<>());
@@ -837,7 +845,7 @@ public class Area extends StaticObject{
                         if((y+1 >= rooms.get(x-1).size() || rooms.get(x-1).get(y+1) == null) && existing_exit_check(r,  x-1, y+1, new_z, max_same_room)){
                                 new_y = y+1;
                                 new_x = x-1;
-                        }else if(rooms.get(x-1).get(y) == null && existing_exit_check(r,  x-1, y, new_z, max_same_room)){
+                        }else if((y >= rooms.get(x-1).size() || rooms.get(x-1).get(y) == null) && existing_exit_check(r,  x-1, y, new_z, max_same_room)){
                                 new_x = x-1;
                         }else if(y-1>=0){
                             if(rooms.get(x-1).get(y-1) == null && existing_exit_check(r,  x-1, y-1, new_z, max_same_room)){
@@ -850,7 +858,7 @@ public class Area extends StaticObject{
                     if(y-1 >= 0){
                         if(rooms.get(x).get(y-1) == null && existing_exit_check(r,  x, y-1, new_z, max_same_room)){
                             new_y = y -1;
-                        }else if(rooms.get(x+1).get(y-1) == null && existing_exit_check(r,  x+1, y-1, new_z, max_same_room)){
+                        }else if((x+1 >= rooms.size() || y-1 >= rooms.get(x+1).size() || rooms.get(x+1).get(y-1) == null) && existing_exit_check(r,  x+1, y-1, new_z, max_same_room)){
                             new_x = x+1;
                             new_y = y -1;
                         }

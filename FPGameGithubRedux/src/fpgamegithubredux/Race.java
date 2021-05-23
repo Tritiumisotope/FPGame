@@ -261,8 +261,8 @@ public class Race extends DynamicObject {
         surnames.add(s); //surnames[surnames.length] = s
     }
     
-    public void new_surname_set(ArrayList<String> s){
-        surnames = s;
+    public void new_surname_set(String[] s){
+        surnames.addAll(Arrays.asList(s));
     }
     
     public String get_random_female_name(){

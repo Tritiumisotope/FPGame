@@ -28,8 +28,8 @@ public class Upgrade_Item extends Item {
 		}
 		
 		public void set_skill_bonus(int id,int bonus){
-            skill_id.set(skill_id.size(),id);//skill_id[skill_id.length] = id
-			skill_bonus.set(skill_bonus.size(),bonus);//skill_bonus[skill_bonus.length] = bonus
+            skill_id.add(skill_id.size(),id);//skill_id[skill_id.length] = id
+			skill_bonus.add(skill_bonus.size(),bonus);//skill_bonus[skill_bonus.length] = bonus
         } 
         @Override
         public Item copyItem(){

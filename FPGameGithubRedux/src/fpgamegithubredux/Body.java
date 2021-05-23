@@ -1509,8 +1509,8 @@ public class Body {
                         }
                     }
                     
-                    item_id = -1;
-                    for(item_id=-1;item_id<c.possessions.size();item_id++){
+                    item_id = 0;
+                    for(item_id=0;item_id<c.possessions.size();item_id++){
                         if(c.possessions.get(item_id) == old_hold) break;
                     }
                     c.drop(item_id);

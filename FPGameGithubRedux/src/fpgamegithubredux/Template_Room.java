@@ -380,8 +380,7 @@ public class Template_Room extends StaticObject {
     }
     
     public void add_character_list(ArrayList<Character_template> c_list, Number n){//def 0.3
-        characters.addAll(c_list); //characters[characters.length] = c_list
-        characters_chance.add(n); //characters_chance[characters_chance.length] = n
+        c_list.forEach((ct) -> add_character(ct,n));
     }
     
     public void add_party(Party party, Number n){//def 0.3

@@ -223,14 +223,14 @@ public class Consequence {//TODO get count of all below
                 if(amt_formula.get(count) instanceof String){
                     if(((String)amt_formula.get(count)).indexOf("r") >= 0){
                         //temp_calc[count] = r
-                        temp_calc.set(count,r);
+                        temp_calc.add(count,r);
                     }else{
                         //temp_calc[count] = amt_formula[count]
-                        temp_calc.set(count,amt_formula.get(count));
+                        temp_calc.add(count,amt_formula.get(count));
                     }
                 }else{
                     //temp_calc[count] = amt_formula[count]
-                    temp_calc.set(count,amt_formula.get(count));
+                    temp_calc.add(count,amt_formula.get(count));
                 }
             }
             StringCalc2 calculator = new StringCalc2();

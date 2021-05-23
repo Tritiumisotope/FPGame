@@ -249,12 +249,12 @@ public class Equipment extends Item {
 		
 		public void add_remove_consequence(Consequence c){
 			//remove_consequence[remove_consequence.length] = c
-			remove_consequence.set(remove_consequence.size(), c);
+			remove_consequence.add(remove_consequence.size(), c);
 		}
 		
 		public void add_remove_action(CharAction a){
 			//remove_consequence[remove_consequence.length] = a
-			remove_consequence.set(remove_consequence.size(), a);
+			remove_consequence.add(remove_consequence.size(), a);
 			//TODO explain why consequence
 		}
 		public String remove_effects(Character c){

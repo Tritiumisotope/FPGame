@@ -1686,8 +1686,8 @@ public class Character extends DynamicObject {
 			String back_string = "<br><font color='#0000FF'><a href=\"event:inventory,"+party_id+"\">Back</a></font>";
 			if(no_back_string) back_string = "";
 			
-			int i = -1;
-			for(i=-1;i<possessions.size();i++){
+			int i = 0;
+			for(i=0;i<possessions.size();i++){
 				if(possessions.get(i) == w) break;
 			}
 			

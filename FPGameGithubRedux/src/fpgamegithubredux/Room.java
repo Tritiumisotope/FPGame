@@ -599,7 +599,7 @@ public class Room extends StaticObject{
                     exit_names.add(dir_list[i]); //exit_names[exit_names.length] = dir_list[i]
                     exits.add(e); //exits[exits.length] = e
                     exit_actions.add(null);
-                    if(template != null && template.exit_actions.get(0) != null){
+                    if(template != null && template.exit_actions.size() > 0 && template.exit_actions.get(0) != null){
                         add_exit_action(e, Area.generate_filler_exit_action(null, e, dir_list[i], template.exit_actions.get(0), template.exit_challenges.get(0), template.exit_consequences.get(0)));
                     }
                     break;

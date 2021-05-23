@@ -2,9 +2,11 @@ package fpgamegithubredux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class Sex extends DynamicObject {
 
+    private static final Logger LOGGER = Logger.getLogger(Area.class.getName());
     public String pronoun;
     public String noun;
     public String obpronoun;
@@ -107,6 +109,8 @@ public class Sex extends DynamicObject {
         
         int starting_age = c.get_stat(FPalaceHelper.age_id).intValue();
         int ending_age = c.get_stat(FPalaceHelper.age_id).intValue() + age_change;
+        LOGGER.info("got starting age of " + starting_age + " and ending age of " + ending_age);
+        if(ending_age < 0)ending_age = 0;
         for (i=0;i<age_stat.size();i++){
             int j;// = starting_age
             double percentChange = 0;//was Number

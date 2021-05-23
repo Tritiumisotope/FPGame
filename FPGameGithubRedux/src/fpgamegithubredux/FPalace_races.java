@@ -184,7 +184,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Aaqua","Jinni","Areena","Seka","Trinity","Amethyst","Bebe","Coco","Desiree","Gigi","Gooey","Oozi","Glo"});
 				race.new_male_name_set(new String[]{"Goon", "Lexington", "Mister", "Mandingo", "Nacho", "Toni", "Boz", "Kid", "Tee", "Slimi","Slus"});
-				race.new_surname_set(new ArrayList<>(Arrays.asList("")));
+				race.new_surname_set(new String[]{""});
 				
 				race.add_part(FPalaceHelper.new_head(race), 1);
 				race.add_part(FPalaceHelper.new_torso(race), 1);
@@ -363,7 +363,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Abby", "Adela", "Becky", "Bianca", "Brittany", "Carol", "Caitlyn", "Casey", "Chelsi", "Crissy", "Dana", "Dara", "Jane", "Erica", "Evelyn", "Felicia", "Franchesca", "Giana", "Gracie", "Hailey", "Hazel", "Heidi", "Ivana", "Janeen", "Janice", "Jazmin", "Jessica", "Josie", "Lana", "Lauren", "Mandy", "Marcy", "Natalie", "Nicole", "Nikki", "Pamela", "Penny", "Priscilla", "Rachel", "Sabrina", "Sarah", "Shannon", "Stacy", "Tammy", "Teresa", "Katherine", "Wendy"});
 				race.new_male_name_set(new String[]{ "Adam", "Bruce", "Bob", "Daniel", "Ed", "Jim", "John", "Tony", "Peter", "Rob", "Ryan", "Will"});
-				race.new_surname_set(new ArrayList<>(Arrays.asList("Armschlong", "Adams", "Anaconda", "Baker", "Batterblaster", "Bonesworth", "Cummings", "Cockswell", "Danglemore", "Doe", "Everhard", "Femwood", "Frankfurter", "Junkstuffer", "Jerkstein", "Jumboner", "Lancealot", "Ramrod", "Smith", "Stinger")));
+				race.new_surname_set(new String[]{"Armschlong", "Adams", "Anaconda", "Baker", "Batterblaster", "Bonesworth", "Cummings", "Cockswell", "Danglemore", "Doe", "Everhard", "Femwood", "Frankfurter", "Junkstuffer", "Jerkstein", "Jumboner", "Lancealot", "Ramrod", "Smith", "Stinger"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 9));
 				
@@ -465,7 +465,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Angela", "Eve"});
 				race.new_male_name_set(new String[]{ "Adam", "Angel"});
-				race.new_surname_set(new ArrayList<>(Arrays.asList("")));
+				race.new_surname_set(new String[]{""});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 9));
 				
@@ -585,7 +585,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Demona", "Lilith"});
 				race.new_male_name_set(new String[]{ "Cain", "Lucifer"});
-				race.new_surname_set(new ArrayList<>(Arrays.asList("")));
+				race.new_surname_set(new String[]{""});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 9));
 				
@@ -713,7 +713,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Fluffy", "Akeeta", "Angel", "April", "Bambi", "Bella", "Bernadette", "Bluebell", "Breezy", "Buffy", "Buttercup", "Caramel", "Chloe", "Cinnamon", "Cookie", "Crystal"});
 				race.new_male_name_set(new String[]{"Thumper", "Cottontail", "Harry", "Sterling", "Franklin", "Redding", "Theodore", "Peter", "Raul"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Bunny", "Altex", "Flopper", "Baladi", "Beveren", "Niklaas", "Chaudry", "Elfin", "Bourgog", "Gotland"));
+				race.new_surname_set(new String[]{"Bunny", "Altex", "Flopper", "Baladi", "Beveren", "Niklaas", "Chaudry", "Elfin", "Bourgog", "Gotland"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 2));
 				
@@ -836,7 +836,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Aywin", "Arwen", "Mirima", "Alya", "Vanya", "Caladwen", "Melda", "Verya", "Euraina", "Lona", "Yellwen"});
 				race.new_male_name_set(new String[]{"Elwin", "Adan", "Durion", "Glandur", "Rimedur", "Thalion", "Beleg", "Voron", "Manwe", "Arthion", "Sellion"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Gemflower", "Moonwhisper", "Silverfrond", "Oakenheel", "Nightbrook"));
+				race.new_surname_set(new String[]{"Gemflower", "Moonwhisper", "Silverfrond", "Oakenheel", "Nightbrook"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 15));
 				
@@ -910,7 +910,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Cheery", "Griia", "Dimundi", "Norumma", "Hergoli", "Harli", "Bina", "Druia"});
 				race.new_male_name_set(new String[]{"Bruenor", "Farund", "Daldin", "Gomond", "Dalak"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Ironfist", "Bulstor", "Gimest", "Thorhak"));
+				race.new_surname_set(new String[]{"Ironfist", "Bulstor", "Gimest", "Thorhak"});
 				//STR: 31	
 				race.set_stat_max(FPalaceHelper.str_id, 3.5, FPalaceHelper.torso_slot);
 				race.set_stat_max(FPalaceHelper.str_id, 3.5, FPalaceHelper.hips_slot);
@@ -1030,7 +1030,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Vagloh", "Loklo", "Ampa", "Zugnook", "Chogasa"});
 				race.new_male_name_set(new String[]{"Chub", "Zig", "Floort"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList(""));				
+				race.new_surname_set(new String[]{""});				
 				//STR: 22	
 				race.set_stat_max(FPalaceHelper.str_id, 3, FPalaceHelper.torso_slot);
 				race.set_stat_max(FPalaceHelper.str_id, 3, FPalaceHelper.hips_slot);
@@ -1146,7 +1146,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Vagloh", "Loklo", "Ampa", "Zugnook", "Chogasa"});
 				race.new_male_name_set(new String[]{"Chub", "Zig", "Floort"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList(""));
+				race.new_surname_set(new String[]{""});
 				//STR: 26	
 				race.set_stat_max(FPalaceHelper.str_id, 3, FPalaceHelper.torso_slot);
 				race.set_stat_max(FPalaceHelper.str_id, 3, FPalaceHelper.hips_slot);
@@ -1320,7 +1320,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Misty","Tiffany","Angel","Lily","Amber","Ellie","Molly","Winnie","Sienna","Kiki","Kiara","Ayla","Maisy","Nikita","Emma","Sophie","Chloe","Vicky"});
 				race.new_male_name_set(new String[]{"Max","Rex","Don","Dave","Napoleon","Peter","Toby","Oliver","Leo","Milo","Tigger", "Ace", "Aaron", "Duncan", "Simba", "Felix", "Loki", "Ash", "Gus", "Tommy"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Kitty", "Aegean", "Mau", "Bengal", "Bombay", "Birman", "Burmilla", "Chantilly", "Chartreux", "Foldex", "Javanese", "Khao", "Korat","Raas","Selkirk","Sphynx"));
+				race.new_surname_set(new String[]{"Kitty", "Aegean", "Mau", "Bengal", "Bombay", "Birman", "Burmilla", "Chantilly", "Chartreux", "Foldex", "Javanese", "Khao", "Korat","Raas","Selkirk","Sphynx"});
 				
 				CharAction a3 = new CharAction();
 					a3.setName("Cat Claws");
@@ -1461,7 +1461,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Angel"});
 				race.new_male_name_set(new String[]{"Rex"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList(""));
+				race.new_surname_set(new String[]{""});
 				
 				CharAction a3 = new CharAction();
 					a3.setName("Bite");
@@ -1596,7 +1596,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Angel"});
 				race.new_male_name_set(new String[]{"Rex"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList(""));
+				race.new_surname_set(new String[]{""});
 				
 				CharAction a3 = new CharAction();
 					a3.setName("Bite");
@@ -1738,7 +1738,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Misty"});
 				race.new_male_name_set(new String[]{"Peter"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Penguin"));
+				race.new_surname_set(new String[]{"Penguin"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 6));
 				
@@ -1853,7 +1853,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Misty"});
 				race.new_male_name_set(new String[]{"Peter"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Seal"));
+				race.new_surname_set(new String[]{"Seal"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 6));
 				
@@ -1978,7 +1978,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Misty"});
 				race.new_male_name_set(new String[]{"Max"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Mouse"));
+				race.new_surname_set(new String[]{"Mouse"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 4));
 				
@@ -2125,7 +2125,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Bess","Jayne","Jyll","Wande","Virginia","Kalee","Hayleigh","Danalee","Elvira","Belle","Beverlee", "Pandora"});
 				race.new_male_name_set(new String[]{"Highball", "Dillinger", "Blueberry", "Bones", "Hammer", "Slim", "Apollo", "Rock"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Abigar","Baoule","Heffer","Braunvieh","Camargue","Caracu","Corsica","Devon","Ennstal","Fleckvieh"));
+				race.new_surname_set(new String[]{"Abigar","Baoule","Heffer","Braunvieh","Camargue","Caracu","Corsica","Devon","Ennstal","Fleckvieh"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -2250,7 +2250,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Bess","Jayne","Jyll","Wande","Virginia","Kalee","Hayleigh","Danalee","Elvira","Belle","Beverlee", "Pandora"});
 				race.new_male_name_set(new String[]{"Highball", "Dillinger", "Blueberry", "Bones", "Hammer", "Slim", "Apollo", "Rock"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Abigar","Baoule","Heffer","Braunvieh","Camargue","Caracu","Corsica","Devon","Ennstal","Fleckvieh"));
+				race.new_surname_set(new String[]{"Abigar","Baoule","Heffer","Braunvieh","Camargue","Caracu","Corsica","Devon","Ennstal","Fleckvieh"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -2386,7 +2386,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Bella","Adobe","Brandy","Autumn","Fiona","Pippi","Rapunzel","Lacey","Bonney","Misty","Dolly","Isabelle","Juliet","Henrietta"});
 				race.new_male_name_set(new String[]{"Adam","Chad","Steve","Cleveland","Opie","Peter","Russel","Napoleon","Monte","Dale","Charlie","Olaf","Randolph"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Stallion", "Pony","Abaco","Berger","Alban","Altai","Boerp","Clydesdale","Banker","Henson","Falabella","Lokai","Marwari","Pampa"));
+				race.new_surname_set(new String[]{"Stallion", "Pony","Abaco","Berger","Alban","Altai","Boerp","Clydesdale","Banker","Henson","Falabella","Lokai","Marwari","Pampa"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -2518,7 +2518,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Bella", "Jenny", "Jubilee", "Muriel", "Cora", "Pixie"});
 				race.new_male_name_set(new String[]{"Duncan", "Jack", "Noah", "Herbert", "Jacob", "Oscar", "Bogart"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Donkey", "Byssin", "Geria", "Merijack", "Anatoli", "Ane", "Bourbon", "Cotent", "Normand", "Berry", "Wallon"));
+				race.new_surname_set(new String[]{"Donkey", "Byssin", "Geria", "Merijack", "Anatoli", "Ane", "Bourbon", "Cotent", "Normand", "Berry", "Wallon"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -2656,7 +2656,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Honee","Beatrice","Deborah"});
 				race.new_male_name_set(new String[]{"Ben","Doug","Steve","Buzz","Ned"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Bee", "Carniola", "Caucasi", "Buckfast", "Starline"));
+				race.new_surname_set(new String[]{"Bee", "Carniola", "Caucasi", "Buckfast", "Starline"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 2));
 				
@@ -2780,7 +2780,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Elle","Abby","Aja","Beanie","Cleo","Eki","Ishi","Jade","Kirra"});
 				race.new_male_name_set(new String[]{"Iggy","Chuck","Gila","Dino","Gorn","Spike","Rex","Sobek","Abel","Darvarus","Draco"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Salamander","Gecko","Tegu","Skink","Basilisk","Walla","Uromastyx","Gargoyle"));
+				race.new_surname_set(new String[]{"Salamander","Gecko","Tegu","Skink","Basilisk","Walla","Uromastyx","Gargoyle"});
 				
 				TickEffect tf = new TickEffect();
 				tf.set_status_id(TickEffect.pregnant_status);
@@ -2919,7 +2919,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Elle","Abby","Aja","Beanie","Cleo","Eki","Ishi","Jade","Kirra"});
 				race.new_male_name_set(new String[]{"Iggy","Chuck","Gila","Dino","Gorn","Spike","Rex","Sobek","Abel","Darvarus","Draco"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Salamander","Gecko","Tegu","Skink","Basilisk","Walla","Uromastyx","Gargoyle"));
+				race.new_surname_set(new String[]{"Salamander","Gecko","Tegu","Skink","Basilisk","Walla","Uromastyx","Gargoyle"});
 				
 				TickEffect tf = new TickEffect();
 				tf.set_status_id(TickEffect.pregnant_status);
@@ -3043,7 +3043,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Ariel"});
 				race.new_male_name_set(new String[]{"Enki"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Marbenlar"));
+				race.new_surname_set(new String[]{"Marbenlar"});
 				
 				TickEffect tf = new TickEffect();
 				tf.set_status_id(TickEffect.pregnant_status);
@@ -3195,7 +3195,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Alystin", "Baltana", "Chandara"});
 				race.new_male_name_set(new String[]{"Alton", "Balok", "Chakos"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Abaeir", "Drider"));
+				race.new_surname_set(new String[]{"Abaeir", "Drider"});
 				
 				TickEffect tf = new TickEffect();
 				tf.set_status_id(TickEffect.pregnant_status);
@@ -3246,7 +3246,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.max_lust_id,-20);
 				race.new_female_name_set(new String[]{"Vag"});
 				race.new_male_name_set(new String[]{"Cock"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Snake"));
+				race.new_surname_set(new String[]{"Snake"});
 				
 				TickEffect tf = new TickEffect();
 				tf.set_status_id(TickEffect.pregnant_status);
@@ -3286,7 +3286,7 @@ public class FPalace_races {
 								
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Scorpion"));
+				race.new_surname_set(new String[]{"Scorpion"});
 				
 				
 				CharAction a3 = new CharAction();
@@ -3366,7 +3366,7 @@ public class FPalace_races {
 				
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Horse"));
+				race.new_surname_set(new String[]{"Horse"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 11));
 				
@@ -3397,7 +3397,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.height_id,-11,FPalaceHelper.legs_slot);
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Wolf"));
+				race.new_surname_set(new String[]{"Wolf"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -3447,7 +3447,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.height_id,-6,FPalaceHelper.legs_slot);
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Reindeer"));
+				race.new_surname_set(new String[]{"Reindeer"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -3498,7 +3498,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.height_id,-13,FPalaceHelper.legs_slot);
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Hyena"));
+				race.new_surname_set(new String[]{"Hyena"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -3549,7 +3549,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.height_id,-5,FPalaceHelper.head_slot);
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Crocodile"));
+				race.new_surname_set(new String[]{"Crocodile"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
@@ -3598,7 +3598,7 @@ public class FPalace_races {
 				race.set_bonus(FPalaceHelper.max_lust_id,-20);
 				race.new_female_name_set(new String[]{"Female"});
 				race.new_male_name_set(new String[]{"Male"});
-				race.new_surname_set((ArrayList<String>)Arrays.asList("Polar Bear"));
+				race.new_surname_set(new String[]{"Polar Bear"});
 				
 				race.set_preg_effect(mamal_preg(FPGameGithub.T1_MONTH * 7));
 				
