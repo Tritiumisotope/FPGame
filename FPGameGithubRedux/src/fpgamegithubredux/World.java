@@ -226,8 +226,16 @@ public class World {
                     int y=0;
                     if(x+temp[0] < 0)x++;
                     if(y + temp[1] < 0)y++;
+                    while(x >= map.size())map.add(new ArrayList<>());
                     if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
+                    while(x+temp[0] >= map.size())map.add(new ArrayList<>());
                     if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array()
+                    
+                    while(y >= map.get(x).size())map.get(x).add(null);
+                    while(y >= map.get(x+temp[0]).size())map.get(x+temp[0]).add(null);
+                    while(y + temp[1] >= map.get(x).size())map.get(x).add(null);
+                    while(y + temp[1] >= map.get(x+temp[0]).size())map.get(x+temp[0]).add(null);
+                    
                     while(map.get(x + temp[0]).get(y + temp[1]) != null || map.get(x).get(y) != null || (temp[0] != 0 && temp[1] != 0 && map.get(x+temp[0]) != null && map.get(x+temp[0]).get(y) != null && map.get(x).get(y+temp[1]) != null)){
                         if(y < max_existing_y+1){
                             y++;
@@ -237,8 +245,15 @@ public class World {
                         }
                         if(y + temp[1] < 0)y++;
                         
+                        while(x >= map.size())map.add(new ArrayList<>());
                         if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
+                        while(x+temp[0] >= map.size())map.add(new ArrayList<>());
                         if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());//map.get(x+temp[0]) = new Array()
+                        
+                        while(y >= map.get(x).size())map.get(x).add(null);
+                        while(y >= map.get(x+temp[0]).size())map.get(x+temp[0]).add(null);
+                        while(y + temp[1] >= map.get(x).size())map.get(x).add(null);
+                        while(y + temp[1] >= map.get(x+temp[0]).size())map.get(x+temp[0]).add(null);
                     }
                     
                     if(map.get(x) == null) map.set(x, new ArrayList<>());//map.get(x) = new Array()
@@ -264,10 +279,7 @@ public class World {
                     if(x + temp[0] < 0 || y + temp[1] < 0){
                         if(x + temp[0] < 0){
                             //int count = map.size()
-                            for(int count=map.size();count>0;count--){
-                                map.set(count, map.get(count-1));//map[count] = map[count - 1]
-                            }
-                            map.set(0,null);//map[0] = null
+                            map.add(0,null);//map[0] = null
                             x++;
                         }
                         
@@ -275,11 +287,7 @@ public class World {
                             int count = 0;
                             for(count=0;count<map.size();count++){
                                 if(map.get(count) != null){
-                                    //int count2 = map.get(count).size()
-                                    for(int count2=map.get(count).size();count2>0;count2--){
-                                        map.get(count).set(count2, map.get(count).get(count2 - 1));//map.get(count).get(count2) = map[count][count2 - 1]
-                                    }
-                                    map.get(count).set(0,null);//map[count][0] = null
+                                    map.get(count).add(0,null);//map[count][0] = null
                                     
                                 }
                             }
@@ -287,7 +295,9 @@ public class World {
                         }
                     }
                     
+                    while(x+temp[0] >= map.size())map.add(new ArrayList<>());
                     if(map.get(x+temp[0]) == null) map.set(x+temp[0], new ArrayList<>());
+                    while(y+temp[1] >= map.get(x+temp[0]).size())map.get(x+temp[0]).add(null);
                     if(map.get(x+temp[0]).get(y+temp[1]) != null && !map.get(x+temp[0]).get(y+temp[1]).equals((Integer)links.get(i).get(1)))LOGGER.info("(World.make_integer_map2)Overwriting an area...");
                     map.get(x+temp[0]).set(y+temp[1], (Integer)links.get(i).get(1));
                     
@@ -493,10 +503,10 @@ public class World {
                         int y = 0;
                         if(map.get(x) != null){
                             for(y=0;y<map.get(x).size();y++){
-                                if(map.get(x).get(y) == i){
+                                if(map.get(x).get(y) != null && map.get(x).get(y) == i){
                                     found1 = true;
                                 }
-                                if(map.get(x).get(y) == k){
+                                if(map.get(x).get(y) != null && map.get(x).get(y) == k){
                                     found2 = true;
                                 }
                                 if(found1 && found2)break;
@@ -659,7 +669,7 @@ public class World {
             int j = 0;
             for(i=0;i<map.size();i++){
                 for(j=0;j<map.get(i).size();j++){
-                    if(map.get(i).get(j) == area_id){
+                    if(map.get(i).get(j) != null && map.get(i).get(j) == area_id){
                         found = true;
                         break;
                     }
@@ -682,7 +692,12 @@ public class World {
                     
                     //need to check if we're making an over-pass exit here too...
                     if(temp[0] != 0 && temp[1] != 0){
-                        if(map.get(i+temp[0]) != null && map.get(i+temp[0]).get(j) != null && map.get(i).get(j+temp[1]) != null){
+                        if(i+temp[0] >= 0 && j+temp[1] >= 0 
+                        && i+temp[0] < map.size() && i < map.size()
+                        && j+temp[1] < map.get(i).size() && j < map.get(i+temp[0]).size()
+                        && map.get(i+temp[0]) != null 
+                        && map.get(i+temp[0]).get(j) != null 
+                        && map.get(i).get(j+temp[1]) != null){
                             int link_count = 0;
                             for(link_count=0;link_count<links.size();link_count++){
                                 if((((Integer)links.get(link_count).get(0)).equals(map.get(i+temp[0]).get(j)) && ((Integer)links.get(link_count).get(1)).equals(map.get(i).get(j+temp[1]))) ||
@@ -694,8 +709,8 @@ public class World {
                     }
                     
                     if(!remove_exit){
-                        if(map.get(i+temp[0]) != null){
-                            if(map.get(i+temp[0]).get(j+temp[1]) != null){
+                        if(i+temp[0] >= 0 && i+temp[0] < map.size() && map.get(i+temp[0]) != null){
+                            if(j+temp[1] >= 0 && j+temp[1] < map.get(i+temp[0]).size() && map.get(i+temp[0]).get(j+temp[1]) != null){
                                 remove_exit = true;
                             }
                         }
@@ -731,10 +746,10 @@ public class World {
             int y = 0;
             if(map.get(x) != null){
                 for(y=0;y<map.get(x).size();y++){
-                    if(areas.get(map.get(x).get(y)) == a1){
+                    if(map.get(x).get(y) != null && areas.get(map.get(x).get(y)) == a1){
                         a1_location = new int[]{x,y};
                     }
-                    if(areas.get(map.get(x).get(y)) == a2){
+                    if(map.get(x).get(y) != null && areas.get(map.get(x).get(y)) == a2){
                         a2_location = new int[]{x,y};
                     }
                     if(a1_location != null && a2_location != null)break;
@@ -857,7 +872,7 @@ public class World {
             if(a.rooms.get(count).size() - 1 >= max_y) max_y = a.rooms.get(count).size() - 1;
         }
         
-        if(a.rooms.get((x + indent) + 1) == null){// .add was arr[arr.length] for all these
+        if((x + indent) + 1 >= a.rooms.size()){// .add was arr[arr.length] for all these
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x + 1, temp_loc[1], temp_loc[2]));
         }
         if((x - indent)-1<0){
@@ -870,7 +885,7 @@ public class World {
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], temp_loc[0], y-1, temp_loc[2]));
         }
          
-        if(a.rooms.get((x + indent) + 1) == null){
+        if((x + indent) + 1 >= a.rooms.size()){
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x + 1, y + 1, temp_loc[2]));
         }else if((x - indent)-1<0){
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x - 1, y + 1, temp_loc[2]));
@@ -879,7 +894,8 @@ public class World {
         }else if((x - indent)-1>=0 && (y + indent)+1 >= max_y){
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x - 1, y + 1, temp_loc[2]));
         }
-        if(a.rooms.get((x + indent) + 1) == null){
+
+        if((x + indent) + 1 >= a.rooms.size()){
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x + 1, y - 1, temp_loc[2]));
         }else if((x - indent)-1<0){
             arr.add(Area.get_direction(temp_loc[0], temp_loc[1], temp_loc[2], x - 1, y - 1, temp_loc[2]));
@@ -1313,7 +1329,7 @@ public class World {
         for(x=0;x<map.size();x++){
             int y = 0;
             for(y=0;y<max_y;y++){
-                if(map.get(x).get(y) == null)gen_count++;
+                if(y >= map.get(x).size() || map.get(x).get(y) == null)gen_count++;
             }
         }
         
@@ -1332,7 +1348,7 @@ public class World {
                 if(map.get(x) == null)map.set(x, new ArrayList<>());//map.get(x) = new Array()
                 int y = 0;
                 for(y=0;y<max_y;y++){
-                    if(map.get(x).get(y) == null && (map.get(x).get(y-1) !=null || map.get(x).get(y+1) != null)){
+                    if(map.get(x).get(y) == null && ((y-1 >= 0 && map.get(x).get(y-1) !=null) || (y+1 < map.get(x).size() && map.get(x).get(y+1) != null))){
                         if(map.get(x).get(y-1) !=null){
                             add_area(temp_ocean);
                             connect_areas(areas.size()- 1,map.get(x).get(y-1),null,null,false,true);

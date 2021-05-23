@@ -154,9 +154,11 @@ public class Area extends StaticObject{
     
     public Room get_connect_room(){
         Room r = null;
-        if(connectRooms.get(connectRooms.size() - 1) != null) r = connectRooms.get(connectRooms.size() - 1);
-        //connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
-        connectRooms.remove(connectRooms.size()-1);//TODO verify
+        if(connectRooms.size() - 1 > 0 && connectRooms.get(connectRooms.size() - 1) != null) {
+            r = connectRooms.get(connectRooms.size() - 1);
+            //connectRooms = connectRooms.slice(0, connectRooms.size() - 1)
+            connectRooms.remove(connectRooms.size()-1);//TODO verify
+        }
         return r;
     }
     
@@ -824,6 +826,7 @@ public class Area extends StaticObject{
                 new_y = y;
                 new_z = z;
                 if (count > 10){//do any of these need to be shifted up with add(0,null)?
+                    if(x+1 >= rooms.size())rooms.add(x+1, new ArrayList<>());//new Array()
                     if (rooms.get(x+1) == null) rooms.set(x+1, new ArrayList<>());//new Array()
                     if (x-1 >= 0 && rooms.get(x-1) == null) rooms.set(x-1, new ArrayList<>());//new Array()
                     //fine, i'll pick the damn room
@@ -848,7 +851,7 @@ public class Area extends StaticObject{
                         }else if((y >= rooms.get(x-1).size() || rooms.get(x-1).get(y) == null) && existing_exit_check(r,  x-1, y, new_z, max_same_room)){
                                 new_x = x-1;
                         }else if(y-1>=0){
-                            if(rooms.get(x-1).get(y-1) == null && existing_exit_check(r,  x-1, y-1, new_z, max_same_room)){
+                            if((y-1 >= rooms.get(x-1).size() || rooms.get(x-1).get(y-1) == null) && existing_exit_check(r,  x-1, y-1, new_z, max_same_room)){
                                 new_x = x-1;
                                 new_y = y -1;
                             }
@@ -1058,7 +1061,8 @@ public class Area extends StaticObject{
         if(filler_template_t != null){		
             
             Boolean dynamic_build = false;
-            Template_Room dynamicBuildTemplate_t = dynamicBuildTemplate.get(0);
+            Template_Room dynamicBuildTemplate_t = null;
+            if(dynamicBuildTemplate.size() > 0)dynamicBuildTemplate_t = dynamicBuildTemplate.get(0);
             for(x=0;x<dynamicBuildTemplate.size();x++){
                 if(dynamicBuildFloorRange.get(x) == null){
                     dynamicBuildTemplate_t = dynamicBuildTemplate.get(x);
@@ -1091,9 +1095,10 @@ public class Area extends StaticObject{
             Boolean double_up = false;
             for(x=0;x<rooms.size();x++){					
                 for(y=max_y - 1;y>=0;y--){
+                    while(y >= rooms.get(x).size())rooms.get(x).add(new ArrayList<>());
                     if(rooms.get(x).get(y) == null)	rooms.get(x).set(y,new ArrayList<>());//new Array()
                     
-                    if(rooms.get(x).get(y).get(z) == null){
+                    if(z >= rooms.get(x).get(y).size() || rooms.get(x).get(y).get(z) == null){
                         Room new_room;
                         int temp_x;
                         int temp_y;
@@ -1158,6 +1163,7 @@ public class Area extends StaticObject{
                         new_room.area = this;
                         new_room.set_id(room_list.size());
                         room_list.add(new_room); //room_list[room_list.size()] = new_room
+                        while(rooms.get(x).get(y).size() <= z)rooms.get(x).get(y).add(null);
                         rooms.get(x).get(y).set(z, new_room); //rooms.get(x).get(y).get(z) = new_room
                         //if(z < -rooms.get(x).get(y).size()) rooms.get(x).get(y).set(-z, null) originally commented
                         
@@ -1241,10 +1247,10 @@ public class Area extends StaticObject{
                             //Boolean all_populated = true
                             for(temp_x=x-1;temp_x<=x+1;temp_x++){
                                 temp_y = y - 1;
-                                if(rooms.get(temp_x) != null){
+                                if(temp_x >= 0 && temp_x < rooms.size() && rooms.get(temp_x) != null){
                                     for(temp_y=y-1;temp_y<=y+1;temp_y++){
-                                        if(rooms.get(temp_x).get(temp_y) != null){
-                                            if(rooms.get(temp_x).get(temp_y).get(temp_z) != null){
+                                        if(temp_y >= 0 && temp_y < rooms.get(temp_x).size() && rooms.get(temp_x).get(temp_y) != null){
+                                            if(temp_z < rooms.get(temp_x).get(temp_y).size() && rooms.get(temp_x).get(temp_y).get(temp_z) != null){
                                                 temp_room = rooms.get(temp_x).get(temp_y).get(temp_z);
                                                 filler_connect = true;
                                                 if(temp_room.template != null){
@@ -1257,7 +1263,14 @@ public class Area extends StaticObject{
                                                     if(filler_template_t.hidden_exit_action != null){
                                                         if(temp_room.description.equals(filler_template_t.description) || (temp_room.template != null && temp_room.template.description.equals(filler_template_t.description))){
                                                             //check if we're making an overpass exit over a nonfiller path...
-                                                            if(temp_x != x && temp_y != y && rooms.get(temp_x).get(y) != null && rooms.get(temp_x).get(y).get(z) != null && rooms.get(x).get(temp_y) != null && rooms.get(x).get(temp_y).get(temp_z) != null && !rooms.get(temp_x).get(y).get(z).description.equals(filler_template_t.description) && !rooms.get(x).get(temp_y).get(temp_z).description.equals(filler_template_t.description) && rooms.get(temp_x).get(y).get(z).get_exit_id(rooms.get(x).get(temp_y).get(temp_z)) >= 0){
+                                                            if(temp_x != x && temp_y != y 
+                                                            && y < rooms.get(temp_x).size() && rooms.get(temp_x).get(y) != null 
+                                                            && z < rooms.get(temp_x).get(y).size() && rooms.get(temp_x).get(y).get(z) != null 
+                                                            && rooms.get(x).get(temp_y) != null 
+                                                            && temp_z < rooms.get(x).get(temp_y).size() && rooms.get(x).get(temp_y).get(temp_z) != null 
+                                                            && !rooms.get(temp_x).get(y).get(z).description.equals(filler_template_t.description) 
+                                                            && !rooms.get(x).get(temp_y).get(temp_z).description.equals(filler_template_t.description) 
+                                                            && rooms.get(temp_x).get(y).get(z).get_exit_id(rooms.get(x).get(temp_y).get(temp_z)) >= 0){
                                                             //TODO can we invert this, with boolean algebra? and simplify by extracting to boolean vars?    
                                                             }else{
                                                            
@@ -2249,12 +2262,12 @@ public class Area extends StaticObject{
         }
 
         for(x=0;x<rooms.size();x++){
-            if(rooms.get(x - 1) == null || rooms.get(x + 1) == null){ 
+            if((x-1 < 0 || rooms.get(x - 1) == null) || (x+1 >= rooms.size() || rooms.get(x + 1) == null)){ 
                 int temp = indent;
-                if(rooms.get(x+1) == null) temp = -indent;
+                if(x+1 >= rooms.size() || rooms.get(x+1) == null) temp = -indent;
                 for(y=0;y<=max_y;y++){
-                    if(rooms.get(x + temp).get(y) != null){
-                        if(rooms.get(x + temp).get(y).get(z) != null && (!rooms.get(x + temp).get(y).get(z).attached_to_other_area() || skip_area_check)){
+                    if(y < rooms.get(x + temp).size() && rooms.get(x + temp).get(y) != null && rooms.get(x + temp).get(y).size() > 0 ){
+                        if(z < rooms.get(x + temp).get(y).size() && rooms.get(x + temp).get(y).get(z) != null && (!rooms.get(x + temp).get(y).get(z).attached_to_other_area() || skip_area_check)){
                             if(rooms.get(x + temp).get(y).get(z).template != null){
                                 if(!rooms.get(x + temp).get(y).get(z).template.get_no_area_exit())list.add(rooms.get(x + temp).get(y).get(z));//list[list.length] = rooms.get(x + temp).get(y).get(z)
                             }else{
@@ -2265,8 +2278,8 @@ public class Area extends StaticObject{
                     }
                 }
             }else{
-                if(rooms.get(x).get(0 + indent) != null){
-                    if(rooms.get(x).get(0 + indent).get(z) != null  && (!rooms.get(x).get(0 + indent).get(z).attached_to_other_area() || skip_area_check)){
+                if(rooms.get(x).get(0 + indent) != null && rooms.get(x).get(0 + indent).size() > 0){
+                    if(z < rooms.get(x).get(0 + indent).size() && rooms.get(x).get(0 + indent).get(z) != null  && (!rooms.get(x).get(0 + indent).get(z).attached_to_other_area() || skip_area_check)){
                         if(rooms.get(x).get(0 + indent).get(z).template != null){
                             if(!rooms.get(x).get(0 + indent).get(z).template.get_no_area_exit())list.add(rooms.get(x).get(0 + indent).get(z));//list[list.length] = rooms.get(x).get(0 + indent).get(z)
                         }else{
@@ -2275,9 +2288,8 @@ public class Area extends StaticObject{
                     }
                     
                 }
-                if(rooms.get(x).get(max_y - indent) != null){
-                    
-                    if(rooms.get(x).get(max_y - indent).get(z) != null && (!rooms.get(x).get(max_y - indent).get(z).attached_to_other_area() || skip_area_check)){
+                if(max_y - indent < rooms.get(x).size() && rooms.get(x).get(max_y - indent) != null && rooms.get(x).get(max_y - indent).size() > 0){                    
+                    if(z < rooms.get(x).get(max_y - indent).size() && rooms.get(x).get(max_y - indent).get(z) != null && (!rooms.get(x).get(max_y - indent).get(z).attached_to_other_area() || skip_area_check)){
                         if(rooms.get(x).get(max_y - indent).get(z).template != null){
                             if(!rooms.get(x).get(max_y - indent).get(z).template.get_no_area_exit())list.add(rooms.get(x).get(max_y - indent).get(z));//list[list.length] = rooms.get(x).get(max_y - indent).get(z)
                         }else{
