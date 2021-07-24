@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class DrawableTextArea  extends JTextPane{
     private boolean mapVisible;
     private Room curRoom;
+    private String mapString;
+
     ArrayList<ArrayList<ArrayList<Room>>> rooms;//reads from player location room area
     public DrawableTextArea()
     {
@@ -30,6 +32,7 @@ public class DrawableTextArea  extends JTextPane{
         //Make JFrame visible
         //frame.setVisible(true);
         mapVisible = false;
+        mapString = "";
     }
     public void setMap(boolean visible){
         mapVisible = visible;

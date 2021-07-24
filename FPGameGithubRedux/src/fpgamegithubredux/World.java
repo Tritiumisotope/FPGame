@@ -792,7 +792,7 @@ public class World {
                                 for(x=0;x<map.size();x++){
                                     int y = 0;
                                     for(y=0;y<map.get(x).size();y++){
-                                        if(map.get(x).get(y) == a1.id || map.get(x).get(y) == a2.id){
+                                        if(map.get(x).get(y) != null && (map.get(x).get(y) == a1.id || map.get(x).get(y) == a2.id)){
                                             String dir_from_placed = "";
                                             int spread_area = -1;
                                             if(map.get(x).get(y) == a1.id){
@@ -1009,21 +1009,21 @@ public class World {
             //should move north or south to find the location
             count = 1;
             while(!placed){
-                if(spread_to_area.rooms.get(room_loc[0]+count) != null && (spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) == null)){
+                if(room_loc[0]+count < spread_to_area.rooms.size() && spread_to_area.rooms.get(room_loc[0]+count) != null && (spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) == null)){
                     if(spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]+count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]) = new Array()
                     //spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) = new_room
                     spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).set(room_loc[2], new_room);
                     //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
-                }else if(spread_to_area.rooms.get(room_loc[0]-count) != null && (spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) == null)){
+                }else if(room_loc[0]-count >= 0 && spread_to_area.rooms.get(room_loc[0]-count) != null && (spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null || spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) == null)){
                     if(spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]) == null)spread_to_area.rooms.get(room_loc[0]-count).set(room_loc[1], new ArrayList<>());//spread_to_area.rooms[room_loc[0]-count][room_loc[1]] = new Array()
                     //spread_to_area.rooms[room_loc[0]-count][room_loc[1]][room_loc[2]] = new_room
                     spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).set(room_loc[2], new_room);
                     //spread_to_area.room_list[spread_to_area.room_list.length] = new_room
                     spread_to_area.room_list.add(new_room);
                     placed = true;
-                }else if((spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null) || (spread_to_area.rooms.get(room_loc[0]-count) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) != null)){
+                }else if((room_loc[0]+count < spread_to_area.rooms.size() && spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null) || (room_loc[0]-count >= 0 && spread_to_area.rooms.get(room_loc[0]-count) != null && spread_to_area.rooms.get(room_loc[0]-count).get(room_loc[1]).get(room_loc[2]) != null)){
                     if(spread_to_area.rooms.get(room_loc[0]+count) != null && spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]) != null && 
                     spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template != null && 
                     spread_to_area.rooms.get(room_loc[0]+count).get(room_loc[1]).get(room_loc[2]).template.description.equals(r1.area.fillerTemplate.get(0).description)){
@@ -1349,7 +1349,7 @@ public class World {
                 int y = 0;
                 for(y=0;y<max_y;y++){
                     if(map.get(x).get(y) == null && ((y-1 >= 0 && map.get(x).get(y-1) !=null) || (y+1 < map.get(x).size() && map.get(x).get(y+1) != null))){
-                        if(map.get(x).get(y-1) !=null){
+                        if(y-1>=0 && map.get(x).get(y-1) !=null){
                             add_area(temp_ocean);
                             connect_areas(areas.size()- 1,map.get(x).get(y-1),null,null,false,true);
                         }else{

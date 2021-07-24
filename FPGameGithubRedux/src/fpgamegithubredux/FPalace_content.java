@@ -445,13 +445,13 @@ public class FPalace_content {
         
         FPalaceHelper.get_monster_mob().initialize_mob();
         FPalaceHelper.get_sin_mob().initialize_mob();
-            FPalaceHelper.get_empress_mob().initialize_mob();
-            FPalaceHelper.get_amazon_mob().initialize_mob();
+        FPalaceHelper.get_empress_mob().initialize_mob();
+        FPalaceHelper.get_amazon_mob().initialize_mob();
         FPalaceHelper.get_humility_mob().initialize_mob();
         FPalaceHelper.get_kindness_mob().initialize_mob();
         FPalaceHelper.get_patience_mob().initialize_mob();
         FPalaceHelper.get_diligence_mob().initialize_mob();
-            FPalaceHelper.get_freedom_farm_mob().initialize_mob();
+        FPalaceHelper.get_freedom_farm_mob().initialize_mob();
         FPalaceHelper.get_charity_mob().initialize_mob();
         FPalaceHelper.get_temperance_mob().initialize_mob();
         FPalaceHelper.get_chastity_mob().initialize_mob();

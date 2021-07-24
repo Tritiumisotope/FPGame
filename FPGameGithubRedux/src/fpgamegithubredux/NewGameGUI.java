@@ -390,7 +390,7 @@ public class NewGameGUI implements ActionListener {
         */
         World temp_world = new World();
         temp_world = FPalace_content.new_world(temp_world);
-        /*
+        
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
@@ -402,11 +402,12 @@ public class NewGameGUI implements ActionListener {
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
-        temp_world = FPalace_content.new_world(temp_world);
-        temp_world = FPalace_content.new_world(temp_world);
-        temp_world = FPalace_content.new_world(temp_world);
-        */
-        Room tempRoom = temp_world.areas.get(0).get_random_room();
+        //temp_world = FPalace_content.new_world(temp_world);
+        //temp_world = FPalace_content.new_world(temp_world);
+        //temp_world = FPalace_content.new_world(temp_world);
+        
+        //Room tempRoom = temp_world.areas.get(0).get_random_room();
+        Room tempRoom = temp_world.areas.get((int)Math.round(Math.random()*(temp_world.areas.size()-1))).get_random_room();
         /*
         Character tempChar = new Character();
         tempChar.location = tempRoom;
