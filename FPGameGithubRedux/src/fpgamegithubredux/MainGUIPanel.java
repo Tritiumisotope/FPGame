@@ -153,13 +153,64 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                 challenge(splitResult[1], splitResult[2], splitResult[3], splitResult[4],temp1);
             }
          }else if(result.contains("event:use_item")&&splitResult.length > 1){
+            if(splitResult.length == 3)
+            {
+                System.out.print("2 var use item!\n");
+                use_item(splitResult[1], splitResult[2]);
+            }
+            else if(splitResult.length == 4)
+            {
+                System.out.print("3 var use item!\n");
+                use_item(splitResult[1], splitResult[2], splitResult[3]);
+            }
+            else if(splitResult.length == 5)
+            {
+                System.out.print("4 var use item!\n");
+                use_item(splitResult[1], splitResult[2], splitResult[3], splitResult[4]);
+            }
+            else if(splitResult.length == 6)
+            {
+                System.out.print("5 var use item!\n");
+                use_item(splitResult[1], splitResult[2], splitResult[3], splitResult[4], splitResult[5]);
+            }
+            else
+            {
+                System.out.print("1 var use item!\n");
+                use_item(splitResult[1]);
+            }
+            /* 
             int inventoryID = Integer.parseInt(splitResult[1]);
-            if(splitResult.length > 2){
+            if(splitResult.length == 3 ){
                 int useCase = Integer.parseInt(splitResult[2]);
                 textField.setText(player.use_item(inventoryID,useCase));
-            }else{
+            }
+            else if(splitResult.length == 4)
+            {
+                int useCase = Integer.parseInt(splitResult[2]);
+                int vara = Integer.parseInt(splitResult[3]);
+                textField.setText(player.use_item(inventoryID,useCase, vara));
+            }
+            else if(splitResult.length == 5)
+            {
+                int useCase = Integer.parseInt(splitResult[2]);
+                int vara = Integer.parseInt(splitResult[3]);
+                int varb = Integer.parseInt(splitResult[4]);
+                textField.setText(player.use_item(inventoryID,useCase, vara, varb));
+            }
+            else if(splitResult.length == 6)
+            {
+                int useCase = Integer.parseInt(splitResult[2]);
+                int vara = Integer.parseInt(splitResult[3]);
+                int varb = Integer.parseInt(splitResult[4]);
+                int varc = Integer.parseInt(splitResult[5]);
+                textField.setText(player.use_item(inventoryID,useCase, vara, varb, varc));   
+            }
+            else{
                 textField.setText(player.use_item(inventoryID));
             }
+            */
+        }else if(result.contains("event:inventory")&&splitResult.length>1){
+            inventory(Integer.parseInt(splitResult[1]));
         }else if(result.contains("event:talk")&&splitResult.length>3){
             if(splitResult.length>5){//tempArray[5] != null){
                 //talk(tempArray[1], tempArray[2], tempArray[3], tempArray[4], tempArray.slice(5, tempArray.length));
@@ -676,6 +727,195 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         }
         world_tick();
     }
+    public void use_item(String Inv_id) {
+        use_item(Inv_id, "null", "null", "null", "null");}
+    public void use_item(String Inv_id, String use_case) {
+        use_item(Inv_id, use_case, "null", "null", "null");}
+    public void use_item(String Inv_id, String use_case, String party_member) {
+        use_item(Inv_id, use_case, party_member, "null", "null");}
+    public void use_item(String Inv_id, String use_case, String party_member, String Something) {
+        use_item(Inv_id, use_case, party_member, Something, "null");}
+    public void use_item(String Inv_id, String use_case,  String party_member, String Something, String num_to_move)
+    {
+        //i k j l num_to_move
+        //inv item, use case, party member, something, num_to_move
+        //var item_image_id:int = -1;
+        //var temp_clip:MovieClip;
+        /* 
+        if (args.length > 1)
+        {
+            int inventoryID = Integer.parseInt(args[1]);
+        }
+
+        if (args.length > 2)
+        {
+            int use_case = Integer.parseInt(args[2]);
+        }
+        int party_member = Integer.parseInt(args[3]);
+        int something = Integer.parseInt(args[4]);
+        int num_to_move = Integer.parseInt(args[5]);
+        */
+        if(player.party == null){
+            //draw the item image...
+            //item_image_id = player.possessions[int(i)].get_image_id();				
+            if(use_case != "null"){
+                if(num_to_move != "null"){
+                    textField.setText(player.use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case),-1,Integer.parseInt(num_to_move)));
+                }else{
+                    textField.setText(player.use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case)));
+                }
+            }else{
+                
+                textField.setText(player.use_item(Integer.parseInt(Inv_id)));
+            }
+            //output = player.sanitize(output,player);
+        }else{
+            //draw the item image...
+            //item_image_id = player.party.members[int(j)].possessions[int(i)].get_image_id();
+            
+            if(use_case != "null"){
+                if(player.party.members.get(Integer.parseInt(party_member)) != player)player.setBusy();
+                if(Something == "null"){
+                    if(num_to_move != "null"){
+                        textField.setText(player.party.members.get(Integer.parseInt(party_member)).use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case),
+                         -1, Integer.parseInt(num_to_move)));
+                    }else{
+                        textField.setText(player.party.members.get(Integer.parseInt(party_member)).use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case)));
+                    }
+                }else{
+                    if(num_to_move != "null"){
+                        //textField.setText(player.party.members[int(j)].use_item(int(i), int(k), int(l),int(num_to_move)));
+                        textField.setText(player.party.members.get(Integer.parseInt(party_member)).use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case),
+                        Integer.parseInt(Something), Integer.parseInt(num_to_move)));
+                    }else{
+                        //textField.setText(player.party.members[int(j)].use_item(int(i), int(k), int(l)));
+                        textField.setText(player.party.members.get(Integer.parseInt(party_member)).use_item(Integer.parseInt(Inv_id), Integer.parseInt(use_case),
+                        Integer.parseInt(Something)));
+                    }
+                }
+            }else{
+                textField.setText(player.party.members.get(Integer.parseInt(party_member)).use_item(Integer.parseInt(Inv_id)));
+            }
+            //output = player.party.members.get(Integer.parseInt(party_member)).sanitize(output, player);
+        }
+        /* 
+        if(item_image_id >= 0){
+            temp_clip = new MovieClip();
+            temp_clip.addChild(FPalace_helper.get_image_by_id(item_image_id));
+            temp_clip.scaleX = 100/temp_clip.width;
+            temp_clip.scaleY = 100/temp_clip.height;
+            temp_clip.x = 663.45;
+            temp_clip.y = 426.45;
+            this.addChild(temp_clip);
+        }
+        */
+        
+        world_tick();
+
+    }
+    /* 
+    public function use_item(i:String, k:String = null, j:String = null, l:String = null, num_to_move:String = null):void{	
+        var item_image_id:int = -1;
+        var temp_clip:MovieClip;
+        if(player.party == null){
+            //draw the item image...
+            item_image_id = player.possessions[int(i)].get_image_id();				
+            if(k != null){
+                if(num_to_move != null){
+                    output = player.use_item(int(i), int(k),-1,int(num_to_move));
+                }else{
+                    output = player.use_item(int(i), int(k));
+                }
+            }else{
+                
+                output = player.use_item(int(i));
+            }
+            output = player.sanitize(output,player);
+        }else{
+            //draw the item image...
+            item_image_id = player.party.members[int(j)].possessions[int(i)].get_image_id();
+            
+            if(k!= null){
+                if(player.party.members[int(j)] != player)player.set_busy();
+                if(l == null){
+                    if(num_to_move != null){
+                        output = player.party.members[int(j)].use_item(int(i), int(k), -1, int(num_to_move));
+                    }else{
+                        output = player.party.members[int(j)].use_item(int(i), int(k));
+                    }
+                }else{
+                    if(num_to_move != null){
+                        output = player.party.members[int(j)].use_item(int(i), int(k), int(l),int(num_to_move));
+                    }else{
+                        output = player.party.members[int(j)].use_item(int(i), int(k), int(l));
+                    }
+                }
+            }else{
+                output = player.party.members[int(j)].use_item(int(i));
+            }
+            output = player.party.members[int(j)].sanitize(output, player);
+        }
+        
+        if(item_image_id >= 0){
+            temp_clip = new MovieClip();
+            temp_clip.addChild(FPalace_helper.get_image_by_id(item_image_id));
+            temp_clip.scaleX = 100/temp_clip.width;
+            temp_clip.scaleY = 100/temp_clip.height;
+            temp_clip.x = 663.45;
+            temp_clip.y = 426.45;
+            this.addChild(temp_clip);
+        }
+        
+        world_tick();
+    }
+    */
+    public void inventory(int in)
+    {
+        if(player.party == null){			
+            textField.setText(player.inventory());
+            //temp_clip.addChild(player.draw_self(714,440, null,true));
+            //this.addChild(temp_clip);
+        }else{
+            String s = "";
+            if(in+1<player.party.members.size()){
+                s += "<font color='#0000FF'><a href=\"event:inventory,"+(in+1)+"\">&gt;&gt;</a></font>\n";
+            }
+            
+            s+= player.party.members.get(in).inventory() + "\n";
+            //temp_clip.addChild(player.party.members[i].draw_self(714,440,player,true));
+            //this.addChild(temp_clip);
+            
+            if(in>0){
+                s += "<font color='#0000FF'><a href=\"event:inventory,"+(in-1)+"\">&lt;&lt;</a></font>";
+            }
+            textField.setText(s);
+        }
+    }
+    /* 
+    public function inventory(i:int = 0):void{
+        //want to include the character.draw_self
+        var temp_clip:MovieClip = new MovieClip();
+        if(player.party == null){			
+            output = player.inventory();
+            temp_clip.addChild(player.draw_self(714,440, null,true));
+            this.addChild(temp_clip);
+        }else{
+            var s:String = "";
+            if(i+1<player.party.members.length){
+                s += "<font color='#0000FF'><a href=\"event:inventory,"+(i+1)+"\">&gt;&gt;</a></font>\n";
+            }
+            
+            s+= player.party.members[i].inventory() + "\n";
+            temp_clip.addChild(player.party.members[i].draw_self(714,440,player,true));
+            this.addChild(temp_clip);
+            
+            if(i>0){
+                s += "<font color='#0000FF'><a href=\"event:inventory,"+(i-1)+"\">&lt;&lt;</a></font>";
+            }
+            output = s;
+        }
+    }
+    */
     /*
     public void paint(Graphics g) {  
         super.paint(g);

@@ -844,9 +844,10 @@ public class CharAction {
                 
                 if(consequences.get(next_challenge) instanceof RoomConsequence && consequences.get(challengeID) instanceof RoomConsequence
                 && ((RoomConsequence)consequences.get(next_challenge)).join_room == null && ((RoomConsequence)consequences.get(next_challenge)).move_area == -1
-                && ((RoomConsequence)consequences.get(next_challenge)).join_area == -1 && ((RoomConsequence)consequences.get(next_challenge)).actions_to_add.get(0) == null
+                && ((RoomConsequence)consequences.get(next_challenge)).join_area == -1 && ((RoomConsequence)consequences.get(next_challenge)).actions_to_add.size() == 0 //WAS .get(0) == null
                 && ((RoomConsequence)consequences.get(challengeID)).move_room != null && ((RoomConsequence)consequences.get(challengeID)).join_room == null && ((RoomConsequence)consequences.get(challengeID)).move_area == -1
-                && ((RoomConsequence)consequences.get(challengeID)).join_area == -1 && ((RoomConsequence)consequences.get(challengeID)).actions_to_add.get(0) == null){
+                && ((RoomConsequence)consequences.get(challengeID)).join_area == -1 && ((RoomConsequence)consequences.get(challengeID)).actions_to_add.size() == 0)//WAS .get(0) == null)
+                {
                     ((RoomConsequence)consequences.get(next_challenge)).add_room_effect(((RoomConsequence)consequences.get(challengeID)).move_room);
                 }
                 

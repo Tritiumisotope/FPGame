@@ -406,7 +406,7 @@ public class AlchemyItem extends Item {
             ident_roll = ident_effectiveness.get(ident_effectiveness.size() - 1);
             //ident_effectiveness = ident_effectiveness.slice(0, ident_effectiveness.length -1)
             //ident_effectiveness = Arrays.copyOfRange(ident_effectiveness,0, ident_effectiveness.size()-1)
-            ident_effectiveness.remove(ident_effectiveness.size());//TODO verify
+            ident_effectiveness.remove(ident_effectiveness.size()-1);//TODO verify
         }
         
         ret += super.getDescription(c,ident_effectiveness, keep_tags) + "\n";

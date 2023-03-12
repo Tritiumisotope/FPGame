@@ -844,7 +844,8 @@ public class FPalaceHelper{
 				stat_names[scale_colour_id] = stat_scale_colour();
 			}
 			
-			if(stat_names[statID] != null) ret = stat_names[statID].getName();
+			if(stat_names[Math.abs(statID)] != null) ret = stat_names[Math.abs(statID)].getName();
+			//TODO verify that using absolute value to circumvent the names crash is the proper way. Heavy testing.
 			
 			return ret;
 		}

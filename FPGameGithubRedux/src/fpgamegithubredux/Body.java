@@ -1440,9 +1440,10 @@ public class Body {
                 }
             }
         }
-        /*TODO RegEx
-        Pattern myPattern = Pattern.compile("(<\/2pd[0-9]*>)");
+        //TODO RegEx
+        //Pattern myPattern = Pattern.compile("(<\/2pd[0-9]*>)");
         //var myPattern:RegExp = /(<\/2pd[0-9]*>)/g;
+        /* 
         ret = ret.replace(myPattern, target_change);
         myPattern = /(<\/2p[0-9]*rn>)/g;
         ret = ret.replace(myPattern, target_change);
@@ -1452,8 +1453,14 @@ public class Body {
         ret = ret.replace(myPattern, target_change);
         */
         
+        
         return ret;
     }
+    /* 
+    private String target_change(String in){
+        return in.substring(0,2).concat(in.substring(3,in.length()));
+    }
+    */
     /*TODO For above
     private String target_change(){
         return arguments[0].substr(0,2).concat(arguments[0].substr(3,arguments.get(0).length));
