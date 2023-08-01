@@ -725,7 +725,7 @@ public class Body {
         int parts_count = 0;
         for (j=0;j<parts.size();j++){
             BodyPart p = (BodyPart)parts.get(j) ;//as Body_part;
-            if(parts.get(j).name.equals(n)){//TODO why not use p?!
+            if(p.name.equals(n)){//TODO why not use p?!
                 parts_count++;
             }				
         }
@@ -737,7 +737,7 @@ public class Body {
         int parts_count = 0;
         for (j=0;j<parts.size();j++){
             BodyPart p = (BodyPart)parts.get(j);//TODO why not use p?!
-            if(parts.get(j).get_part_id() == part_id){
+            if(p.get_part_id() == part_id){
                 parts_count++;
             }				
         }

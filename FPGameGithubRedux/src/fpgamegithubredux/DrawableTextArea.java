@@ -4,13 +4,16 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class DrawableTextArea  extends JTextPane{
     private boolean mapVisible;
     private Room curRoom;
     private String mapString;
+    private static final Logger LOGGER = Logger.getLogger(MainGUIPanel.class.getName());
 
-    ArrayList<ArrayList<ArrayList<Room>>> rooms;//reads from player location room area
+    //ArrayList<ArrayList<ArrayList<Room>>> rooms;//reads from player location room area
+    protected RoomsMap rooms_map;
     public DrawableTextArea()
     {
 
@@ -63,9 +66,9 @@ public class DrawableTextArea  extends JTextPane{
         //Call super.paint. If we don't do this...We can't see JTextPane
         super.paint(g);
         
-        if(mapVisible){
-            int center_x = this.getWidth()/2-8;
-            int center_y = this.getHeight()/2-8;
+        if(mapVisible){ //x positive is north... yeah.
+            int center_x = this.getHeight()/2-8;//int center_x = this.getWidth()/2-8;
+            int center_y = this.getWidth()/2-8;//int center_y = this.getHeight()/2-8;
             int sightDistance = 99; //later use a return from player skill in main
             g.setColor(Color.black);
             g.drawRect(center_y+3, center_x+3, 10, 10);
@@ -73,15 +76,15 @@ public class DrawableTextArea  extends JTextPane{
             g.fillRect(center_y+4, center_x+4, 8, 8);
             g.setColor(Color.black);
             Area curArea = curRoom.area;
-            int[] coords = curArea.find_room(curRoom);
-            System.out.println("x: " + coords[0] + 
+            int[] coords = curArea.rooms_map.find_room(curRoom);
+            LOGGER.info("x: " + coords[0] + 
             "y: " + coords[1] + "z: " + coords[2]);
-            rooms = curArea.rooms;
+            rooms_map = curArea.rooms_map;
             int z = coords[2];
             for(int minix = -1;minix<=1;minix++){//draw all cardinal directions
                 for(int miniy = -1;miniy<=1;miniy++){                              
                     if(checkValidRoom(coords[0]+minix, coords[1]+miniy, z) &&/*rooms.get(coords[0]+minix).get(coords[1]+miniy).get(z) !=null &&*/ 
-                    /*check connected*/ rooms.get(coords[0]+minix).get(coords[1]+miniy).get(z).get_exit_id(curRoom)!=-1){
+                    /*check connected*/ rooms_map.get_room(coords[0]+minix, coords[1]+miniy, z).get_exit_id(curRoom)!=-1){//rooms.get(coords[0]+minix).get(coords[1]+miniy).get(z).get_exit_id(curRoom)!=-1){
                         g.drawLine(
                             center_y+8 - miniy*5,
                             center_x+8 + minix*5,
@@ -92,8 +95,10 @@ public class DrawableTextArea  extends JTextPane{
                 }
             }
 
-            for(int x = 0; x<rooms.size();x++){
-                for(int y =0;y<rooms.get(x).size();y++){
+            //for(int x = 0; x<rooms.size();x++){
+            for(int x : rooms_map.x_keys()){
+                //for(int y =0;y<rooms.get(x).size();y++){
+                for( int y : rooms_map.y_keys_for_x(x)){
                     if(checkValidRoom(x,y,z) &&/*valid room stack, was .get(y) != null*/
                     Math.pow((Math.abs(x-coords[0]) + Math.abs(y-coords[1])),2)
                     <Math.pow(sightDistance,2)){//pythagorean theorem of right angle distance
@@ -102,7 +107,8 @@ public class DrawableTextArea  extends JTextPane{
                         for(int minix = -1;minix<=1;minix++){//draw all cardinal directions
                             for(int miniy = -1;miniy<=1;miniy++){                                                                            
                                 if(checkValidRoom(x+minix, y+miniy, z) && /*check connected*/ 
-                                rooms.get(x+minix).get(y+miniy).get(z).get_exit_id(rooms.get(x).get(y).get(z))!=-1){
+                                rooms_map.get_room(x+minix, y+miniy,z).get_exit_id(rooms_map.get_room(x,y,z))!= -1){
+                                //rooms.get(x+minix).get(y+miniy).get(z).get_exit_id(rooms.get(x).get(y).get(z))!=-1){
                                     g.drawLine(center_y+8+(coords[1]-y)*16 - miniy*5,
                                     center_x+8+(x-coords[0])*16 + minix*5,
                                     center_y+8+(coords[1]-y)*16 - miniy*8,
@@ -118,6 +124,7 @@ public class DrawableTextArea  extends JTextPane{
 
     }
     public boolean checkValidRoom(int x, int y, int z){
+        /*
         if(rooms.size()>x && x>=0){//x is within a valid range
             if(rooms.get(x)!=null){//x is a valid plane
                 if(rooms.get(x).size()>y && y>=0){//y is within a valid range
@@ -133,6 +140,8 @@ public class DrawableTextArea  extends JTextPane{
             }
         }
         return false;
+        */
+        return rooms_map.loc_exists(x,y,z);
     }
 
 }

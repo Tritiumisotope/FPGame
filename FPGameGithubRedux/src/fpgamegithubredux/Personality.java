@@ -1644,7 +1644,8 @@ public class Personality {
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}else{
 								//TODO ask author
-								//curr_obj_step.get(i).add( objectives.get(i).next_objective.get(curr_obj_step.get(i)));
+								//TODO maybe it's the final one?
+								curr_obj_step.get(i).add( objectives.get(i).next_objective.get(curr_obj_step.get(i).get(curr_obj_step.size()-1)));
 								curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 							}
 						}else{
@@ -1802,7 +1803,7 @@ public class Personality {
 									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}else{
 									//TODO ask Author
-									//curr_obj_step.get(i)[curr_obj_step.get(i).length] = objectives.get(i).next_objective[curr_obj_step.get(i)];
+									//curr_obj_step.get(i).set(curr_obj_step.get(i).size(), objectives.get(i).next_objective.get(curr_obj_step.get(i)));
 									curr_obj_start_tick.set(i, c.get_tick()); //curr_obj_start_tick[i] = c.get_tick()
 								}
 							}

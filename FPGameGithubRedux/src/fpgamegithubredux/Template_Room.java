@@ -272,19 +272,21 @@ public class Template_Room extends StaticObject {
         int exit_idx;//can be 0 to 7 by definition
         for(int i=0;i<r.exit_names.size();i++){
             exit_idx = full_arr.indexOf(r.exit_names.get(i));
-            Able[exit_idx]=false;
-            for(int j = 0; j<same_exit_offset;j++){
-                if(exit_idx+j<8){//0 to 7 is ok
-                    Able[exit_idx+j]=false;
-                }else{
-                    Able[exit_idx+j-8]=false;//max index is size -1,but indices start at 0, so... 
-                    //example 7(North-West)+2 = 9, which becomes 1, the second index, North-East
-                }
-                if(exit_idx-j>=0){//0 to 7 is ok
-                    Able[exit_idx-j]=false;
-                }else{
-                    Able[exit_idx-j+8]=false;
-                    //example 0(North)-2 = -2, which becomes 6, or West
+            if(exit_idx != -1){
+                Able[exit_idx]=false;
+                for(int j = 0; j<same_exit_offset;j++){
+                    if(exit_idx+j<8){//0 to 7 is ok
+                        Able[exit_idx+j]=false;
+                    }else{
+                        Able[exit_idx+j-8]=false;//max index is size -1,but indices start at 0, so... 
+                        //example 7(North-West)+2 = 9, which becomes 1, the second index, North-East
+                    }
+                    if(exit_idx-j>=0){//0 to 7 is ok
+                        Able[exit_idx-j]=false;
+                    }else{
+                        Able[exit_idx-j+8]=false;
+                        //example 0(North)-2 = -2, which becomes 6, or West
+                    }
                 }
             }
         }

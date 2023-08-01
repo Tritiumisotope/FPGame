@@ -1,7 +1,6 @@
 package fpgamegithubredux;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Consequence {//TODO get count of all below
@@ -234,9 +233,9 @@ public class Consequence {//TODO get count of all below
                 }
             }
             StringCalc2 calculator = new StringCalc2();
-            LOGGER.info("Input is: "+temp_calc);
+            //LOGGER.info("Input is: "+temp_calc);
             ret = ret.doubleValue() + calculator.calculate(temp_calc);
-            LOGGER.info("Output is: "+ret);
+            //LOGGER.info("Output is: "+ret);
             /*
             var char_stack:Array = new Array();
             var num_stack:Array = new Array();
@@ -620,7 +619,7 @@ public class Consequence {//TODO get count of all below
                     Room spawn_loc = c.location;
                     int level_mod = 0;
                     
-                    if(spawn_loc != null)level_mod = Math.abs(spawn_loc.area.find_room(spawn_loc)[2]);
+                    if(spawn_loc != null)level_mod = Math.abs(spawn_loc.area.rooms_map.find_room(spawn_loc)[2]);
                     
                     if(char_effect.get(0) instanceof Character_template){
                         c2 = ((Character_template)char_effect.get(i)).gen_char(level_mod);

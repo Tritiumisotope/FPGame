@@ -180,7 +180,9 @@ public class RoomConsequence extends Consequence{
 							
 						if(template != null){
 							//should be generating more than just one of these... and making sure it's within the existing limits of the map
-							int room_count = (c.location.area.rooms.size() * c.location.area.rooms.get(0).size())/2;//I really don't know what this number should be...
+							//TODO what the crap
+							//int room_count = (c.location.area.rooms.size() * c.location.area.rooms.get(0).size())/2;//I really don't know what this number should be...
+							int room_count = (c.location.area.rooms_map.x_keys().size() * c.location.area.rooms_map.y_keys_for_x(0).size())/2;
 							int x = 0;
 							for(x=0;x<room_count;x++){
 								Room newRoom = template.make_room(Math.abs(c.location.area.get_base_floor() - floor_to_generate));

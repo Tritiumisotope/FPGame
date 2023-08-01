@@ -608,8 +608,8 @@ public class Room extends StaticObject{
         }else{//defined direction
             for (i=0;i<exit_names.size();i++){
                 if (d.equals(exit_names.get(i)) || e == exits.get(i)){
-                    if(d.equals(exit_names.get(i)))LOGGER.info("Exit name already used");
-                    if(e == exits.get(i))LOGGER.info("Already have this exit.");
+                    //if(d.equals(exit_names.get(i)))LOGGER.info("Exit name already used");
+                    //if(e == exits.get(i))LOGGER.info("Already have this exit.");
                     return -1;
                 } 
             }
@@ -849,4 +849,6 @@ public class Room extends StaticObject{
         
         return ret;
     }
+
+    
 }

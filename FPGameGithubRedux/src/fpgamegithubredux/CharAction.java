@@ -629,6 +629,7 @@ public class CharAction {
             Consequence con = consequences.get(challengeID);
             int roll = 0;
             //if(dynamic_choice == null || dynamic_choice.get(0) == null || !(con instanceof DynamicConsequence)){
+            LOGGER.info("Challenge dynamic choice");
             System.out.println(dynamic_choice);
             if(dynamic_choice == null || dynamic_choice.isEmpty() || !(con instanceof DynamicConsequence)){
                 Boolean pass_requirements = false;
@@ -758,7 +759,7 @@ public class CharAction {
                         if(sanitize_for != null){
                             ret += reactiveCharacter.sanitize(triggeringCharacter.sanitize(triggerConsequence(triggeringCharacter, origin, reactiveCharacter, roll, challengeID),sanitize_for),sanitize_for);
                         }else{
-                            LOGGER.info(triggeringCharacter+" "+ origin+" "+ reactiveCharacter+" "+ roll+" "+ challengeID);
+                            //LOGGER.info(triggeringCharacter+" "+ origin+" "+ reactiveCharacter+" "+ roll+" "+ challengeID);
                             ret += triggerConsequence(triggeringCharacter, origin, reactiveCharacter, roll, challengeID);
                         }
                     }						

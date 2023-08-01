@@ -230,22 +230,22 @@ public class NewGameGUI implements ActionListener {
                         if ("hairColor,2".equals(result)) {
                             LOGGER.info("Black");
                             hair_flag = 2;
-                            // body_flag = 1;
+                            body_flag = 1;
                             //newPlayer.applyAffectByID(2, 2);
                         } else if ("hairColor,5".equals(result)) {
                             LOGGER.info("Brown");
                             hair_flag = 5;
-                            // body_flag = 2;
+                            body_flag = 2;
                             //newPlayer.applyAffectByID(2, 5);
                         } else if ("hairColor,7".equals(result)) {
                             LOGGER.info("Red");
                             hair_flag = 7;
-                            // body_flag = 3;
+                            body_flag = 3;
                             //newPlayer.applyAffectByID(2, 7);
                         } else if ("hairColor,4".equals(result)) {
                             LOGGER.info("Blonde");
                             hair_flag = 4;
-                            // body_flag = 3;
+                            body_flag = 3;
                             //newPlayer.applyAffectByID(2, 4);
                         } else {
                             String msg = "(newGameGui.java) got unexpected result: " + result;
@@ -402,8 +402,8 @@ public class NewGameGUI implements ActionListener {
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
         temp_world = FPalace_content.new_world(temp_world);
-        //temp_world = FPalace_content.new_world(temp_world);
-        //temp_world = FPalace_content.new_world(temp_world);
+        temp_world = FPalace_content.new_world(temp_world);
+        temp_world = FPalace_content.new_world(temp_world);
         //temp_world = FPalace_content.new_world(temp_world);
         
         //Room tempRoom = temp_world.areas.get(0).get_random_room();

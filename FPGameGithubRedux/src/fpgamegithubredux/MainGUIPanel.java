@@ -32,6 +32,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     //protected JTextField inputText;
     //protected JTextPane textField;
     protected DrawableTextArea textField;
+    protected DrawableTextArea minimap;
     private static final Logger LOGGER = Logger.getLogger(MainGUIPanel.class.getName());
     protected Font theFont;
     protected int[] textsizes = new int[]{8,10,11,12,13,14,16};
@@ -39,6 +40,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     protected String textBkp;
     protected OptionsGUI options;
     protected NewGameGUI newgame;
+    protected CombatGui combat_gui;
     protected boolean optguion = false;
     protected boolean startingagame = false;
     protected StartupGUI startup = new StartupGUI();
@@ -59,6 +61,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         options = new OptionsGUI();
         newgame = new NewGameGUI();
         textField = new DrawableTextArea();//new JTextPane();
+        minimap = new DrawableTextArea();
         /*
         drawArea = new Canvas();
         drawArea.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
@@ -66,14 +69,18 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         drawArea.setVisible(false);
         drawArea.setEnabled(false);
         */
-        
-        textField.setBounds(124,69,super.getWidth()-124,super.getHeight()-69);
+        textField.setBounds(124,69,super.getWidth()-124-80,super.getHeight()-69-120);
+        minimap.setBounds(super.getWidth()-80,69,80,80);
         textField.setContentType("text/html");
+        minimap.setContentType("text/html");
+
+
 
         theFont = new Font("Serif", Font.ITALIC, 12);
         textField.setFont(theFont);
         startup.setStartup(textField);
         add(textField);
+        add(minimap);
         addComponentListener(this);
 
         player = null;
@@ -123,6 +130,9 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             int dir = Integer.parseInt(splitResult[1]);  
             go_to_new_room(dir);    
             textField.setText(player.go_to_new_location(dir, 1, 1)+"\n"+player.look());//TODO temporary?
+            minimap.setCurRoom(player.location);
+            if(!minimap.getMap())minimap.setMap(true);
+            repaint();
          }else if(result.contains("event:pick_up")&&splitResult.length > 1){
              int contentID = Integer.parseInt(splitResult[1]);
              textField.setText(player.pickUp(contentID));
@@ -143,6 +153,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
              textField.setText(player.fire_challenge(contentID, actionID, challengeID, triggeringContentID));
              */
             if(splitResult.length==4){
+                challenge(splitResult[1], splitResult[2], splitResult[3]);
+            }else if(splitResult.length==5){
                 challenge(splitResult[1], splitResult[2], splitResult[3], splitResult[4]);
             }else{
                 ArrayList<Integer> temp1 = new ArrayList<>();
@@ -152,30 +164,38 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
                 }
                 challenge(splitResult[1], splitResult[2], splitResult[3], splitResult[4],temp1);
             }
+        }else if(result.contains("event:challenge")&&splitResult.length > 2){
+            if(splitResult.length == 3){
+                combat(splitResult[1], splitResult[2], splitResult[3]);
+            }else if(splitResult.length == 4){
+                combat(splitResult[1], splitResult[2], splitResult[3], splitResult[4]);
+            }else{
+                ArrayList<Integer> temp1 = new ArrayList<>();
+                String[] temp2 = Arrays.copyOfRange(splitResult,5,splitResult.length);
+                for(int i=0;i<temp2.length;i++){
+                    temp1.add(Integer.parseInt(temp2[i]));
+                }
+                combat(splitResult[1], splitResult[2], splitResult[3], splitResult[4], temp1);
+            }
          }else if(result.contains("event:use_item")&&splitResult.length > 1){
             if(splitResult.length == 3)
             {
-                System.out.print("2 var use item!\n");
                 use_item(splitResult[1], splitResult[2]);
             }
             else if(splitResult.length == 4)
             {
-                System.out.print("3 var use item!\n");
                 use_item(splitResult[1], splitResult[2], splitResult[3]);
             }
             else if(splitResult.length == 5)
             {
-                System.out.print("4 var use item!\n");
                 use_item(splitResult[1], splitResult[2], splitResult[3], splitResult[4]);
             }
             else if(splitResult.length == 6)
             {
-                System.out.print("5 var use item!\n");
                 use_item(splitResult[1], splitResult[2], splitResult[3], splitResult[4], splitResult[5]);
             }
             else
             {
-                System.out.print("1 var use item!\n");
                 use_item(splitResult[1]);
             }
             /* 
@@ -307,6 +327,7 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             }
             
         }
+        
     }
     @Override
     public void lookPressed(){
@@ -411,7 +432,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
     public void componentResized(ComponentEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         options.reSize(this);
-        textField.setBounds(124,69,super.getWidth()-124-60,super.getHeight()-69-120);
+        textField.setBounds(124,69,super.getWidth()-124-80,super.getHeight()-69-120);
+        minimap.setBounds(super.getWidth()-80,69,80,80);
     }
 
     @Override
@@ -469,6 +491,8 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         //output = "";
         move_to_id = i;
         world_tick();
+
+
     }
     public void world_tick(){
         world_tick(0);
@@ -637,6 +661,9 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
         System.out.println("Trying to set to html...");
         textField.setText("<html><body><p>"+s+ "</p></body></html>");
     }
+    public void challenge(String i,String k,String j){
+        challenge(i, k, j,null,null);
+    }
     public void challenge(String i,String k,String j,String l){
         challenge(i, k, j,l,null);
     }
@@ -680,8 +707,82 @@ public class MainGUIPanel extends GUIButtons implements ComponentListener{
             world_tick();
         }
         
-        
         textField.setText(s);
+    }
+    public void combat(String i, String k, String j){combat(i,k,j,null,null);}
+    public void combat(String i, String k, String j, String l){combat(i,k,j,l,null);}
+    public void combat(String i, String k, String j, String l, ArrayList<Integer> m){ // def l=null, array=null
+        //disable and make the existing gui invisible
+        /* TODO implement! 
+        int count = 0;
+        for(count = 0;count<this.numChildren;count++){
+            Object temp_s = this.getChildAt(count);
+            temp_s.visible = false;
+            temp_s.enabled = false;
+        }
+        */
+        LOGGER.info("Initiating combat (not implemented!)");
+        //make the combat_gui visible
+        if(Integer.parseInt(j) >= 0){
+            Character temp_char = (Character)player.location.getContent(Integer.parseInt(j)) ;
+            if(temp_char != null && temp_char.busy <= 1)temp_char.setBusy();
+        }
+        /*var combat_mc:MovieClip = null; //TODO implement
+        try{
+            combat_mc = Main_gui.combat_gui(player, Integer.parseInt(i),Integer.parseInt(k),Integer.parseInt(j), this, l, m);
+        }catch(e:Error){
+            trace("Combat Error: " + e.getStackTrace());
+        }finally{
+            
+        }
+        */
+        
+        /*
+        Boolean re_enable = false;
+        if(combat_mc != null){
+            this.addChild(combat_mc);
+        }else{
+            re_enable = true;
+        }			
+        */
+        
+        if(player.location != null){
+            if(player.location.cm != null){
+                if(player.location.cm.get_init(player) == player.location.cm.current_int.intValue() && Integer.parseInt(k) == -1 && Integer.parseInt(j) == -1){
+                    world_tick(1);
+                }
+            }
+        }
+        
+        //need to check if combat is active for the player/player party
+        /* 
+        if(player.location != null){
+            if(player.location.cm != null){
+                if (player.location.cm.active_combat()){
+                    save_button.enabled = false;
+                    appearance.enabled = false;
+                    status.enabled = false;
+                    skill_button.enabled = false;
+                    newgame_button.enabled = false;
+                    Inventory_button.enabled = false;
+                    map_button.enabled = false;
+                    Look_button.enabled = false;
+                    wait_button.enabled = false;
+                }else{
+                    re_enable = true;
+                }
+            }else{
+                re_enable = true;
+            }
+        }else{
+            re_enable = true;
+        }
+        
+        if(re_enable){
+            reenable_gui();
+        }
+        */
+        
     }
     public void death(){
         /*

@@ -244,7 +244,7 @@ public String getName(){
     }
     
     public void set_part_count(int i){
-        LOGGER.info("Part count is: " + i);
+        //LOGGER.info("Part count is: " + i);
         part_count = i;			
     }
     
